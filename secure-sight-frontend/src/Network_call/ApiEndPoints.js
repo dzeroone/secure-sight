@@ -58,7 +58,7 @@ const ApiEndPoints = {
   ConnectorParameterSave: createEndpoint("/connector/connector-parameter-save"),
   UploadFileData: createEndpoint("/document/upload-document"),
   FileList: createEndpoint("/document/document-list"),
-  FileGet: createEndpoint("/document/get-document"),
+  FileGet: createEndpoint("/document/get-document/"),
   FileDelete: createEndpoint("/document/delete-document"),
   ConformityChecks: createEndpoint("/elastic/conformity-new-checks"),
   ContainerRuntimeSensor: createEndpoint("/elastic/container-runtime-sensor"),
@@ -69,7 +69,7 @@ const ApiEndPoints = {
   ChangeLanguage: createEndpoint("/connector/change-language"),
   
   // New CSV Upload endpoint
-  FileGet: "/api/file-get",
+  // FileGet: "/api/file-get",
   UploadDocument: "/api/document/upload-document",
 };
 

@@ -23,8 +23,17 @@ router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, functio
     res.send(data);
 }));
 router.post('/login', auth_1.CompareDate, auth_util_1.setDbName, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let data = yield authController_1.default.login(req.body);
-    res.send(data);
+    try {
+        const data = yield authController_1.default.login(req.body);
+        if (!data) {
+            return res.status(401).json({ message: 'Invalid credentials' }); // Handle invalid login attempts
+        }
+        res.status(200).json(data); // Send back user data or token on successful login
+    }
+    catch (error) {
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ message: 'Internal Server Error' }); // Generic error message for server issues
+    }
 }));
 router.post('/info', passport_1.default.authenticate('jwt', { session: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(req.user);

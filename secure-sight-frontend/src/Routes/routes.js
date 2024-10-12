@@ -1,6 +1,6 @@
 import React from "react";
 
-//Dashboard
+// Dashboard
 import Dashboard from "../Pages/Dashboard";
 
 // Import Authentication pages
@@ -36,7 +36,7 @@ import RawData from "../Pages/reports/rawData";
 import ConnectorLogFile from "../Pages/connector/connectorLogFile";
 import ImportCSVData from "../Pages/reports/csvData/importCSVData";
 import CSVDataList from "../Pages/reports/csvData/importedDataList";
-import CSVData from "../Pages/reports/csvData/importedData";
+import CSVData from "../Pages/reports/csvData/importedData"; // Your component to view specific CSV data
 import CloudoneConformityDashboard from "../Pages/Dashboard/dashboard/cloudoneConformity";
 import ContainerSecurityDashboard from "../Pages/Dashboard/dashboard/containerSecurity";
 import CloudOneConformity from "../Pages/reports/reports/cloud one conformity";
@@ -50,115 +50,110 @@ import SmartChecksDashboard from "../Pages/Dashboard/dashboard/smartChecks";
 import TenableReport from "../Pages/reports/reports/tenable";
 import ScanDetails from "../Pages/reports/reports/scanDetails";
 import RegistriesDetails from "../Pages/reports/reports/registriesDetail";
+import CSVFileView from "../Pages/reports/csvData/csvFileView";
 
 const authProtectedRoutes = [
-	//dashboard
-	{ path: "/", component: <CreateDashboard /> },
-	{ path: "/dashboard/create-dashboard", component: <CreateDashboard /> },
-	{ path: "/dashboard/:id", component: <Dashboard /> },
-	{ path: "/dashboard", component: <Dashboard /> },
-	{ path: "/dashboard/dashboard-list", component: <MultipleDragList /> },
-	{ path: "/dashboard/row-Data", component: <RawData /> },
-	{
-		path: "/dashboard/container-security",
-		component: <ContainerSecurityDashboard />,
-	},
-	{
-		path: "/dashboard/cloudone-conformity",
-		component: <CloudoneConformityDashboard />,
-	},
-	{
-		path: "/dashboard/smart-checks",
-		component: <SmartChecksDashboard />,
-	},
+  // Dashboard
+  { path: "/", component: <CreateDashboard /> },
+  { path: "/dashboard/create-dashboard", component: <CreateDashboard /> },
+  { path: "/dashboard/:id", component: <Dashboard /> },
+  { path: "/dashboard", component: <Dashboard /> },
+  { path: "/dashboard/dashboard-list", component: <MultipleDragList /> },
+  { path: "/dashboard/row-Data", component: <RawData /> },
+  {
+    path: "/dashboard/container-security",
+    component: <ContainerSecurityDashboard />,
+  },
+  {
+    path: "/dashboard/cloudone-conformity",
+    component: <CloudoneConformityDashboard />,
+  },
+  {
+    path: "/dashboard/smart-checks",
+    component: <SmartChecksDashboard />,
+  },
 
-	//Report
-	{ path: "/reports/:id", component: <Report /> },
-	{ path: "/report/create-report", component: <CreateReport /> },
-	{ path: "/report/report-list", component: <DeleteReport /> },
-	// { path: "/report/report-schedule", component: <ReportSchedule /> },
-	{ path: "/report/create-sub-report", component: <CreateSubReport /> },
+  // Report
+  { path: "/reports/:id", component: <Report /> },
+  { path: "/report/create-report", component: <CreateReport /> },
+  { path: "/report/report-list", component: <DeleteReport /> },
+  // { path: "/report/report-schedule", component: <ReportSchedule /> },
+  { path: "/report/create-sub-report", component: <CreateSubReport /> },
 
-	// Conformity
-	{
-		path: "/cloudone/cloudone-conformity",
-		component: <CloudOneConformity />,
-	},
-	// Container Secirity
-	{
-		path: "/cloudone/container-security",
-		component: <ContainerSecurity />,
-	},
-	{
-		path: "/cloudone/smart-checks",
-		component: <SmartChecks />,
-	},
-	{
-		path: "/cloudone/smart-checks/scan/:id",
-		component: <ScanDetails />,
-	},
-	{
-		path: "/cloudone/smart-checks/registries/:id",
-		component: <RegistriesDetails />,
-	},
-	{
-		path: "/report/tenable",
-		component: <TenableReport />,
-	},
-	{
-		path: "/inventory/aws-inventory",
-		component: <AWSInventoryReport />,
-	},
-	// {
-	//   path: "/report/inventory-report",
-	//   component: <InventoryReport />,
-	// },
-	{
-		path: "/inventory/azure-inventory",
-		component: <AzureInventoryReport />,
-	},
-	{
-		path: "/inventory/gcp-inventory",
-		component: <GCPInventoryReport />,
-	},
-	//csv
-	{ path: "/csv-upload", component: <ImportCSVData /> },
-	{ path: "/csv-list", component: <CSVDataList /> },
-	{ path: "/csv-data/:id", component: <CSVData /> },
+  // Conformity
+  {
+    path: "/cloudone/cloudone-conformity",
+    component: <CloudOneConformity />,
+  },
+  // Container Security
+  {
+    path: "/cloudone/container-security",
+    component: <ContainerSecurity />,
+  },
+  {
+    path: "/cloudone/smart-checks",
+    component: <SmartChecks />,
+  },
+  {
+    path: "/cloudone/smart-checks/scan/:id",
+    component: <ScanDetails />,
+  },
+  {
+    path: "/cloudone/smart-checks/registries/:id",
+    component: <RegistriesDetails />,
+  },
+  {
+    path: "/report/tenable",
+    component: <TenableReport />,
+  },
+  {
+    path: "/inventory/aws-inventory",
+    component: <AWSInventoryReport />,
+  },
+  {
+    path: "/inventory/azure-inventory",
+    component: <AzureInventoryReport />,
+  },
+  {
+    path: "/inventory/gcp-inventory",
+    component: <GCPInventoryReport />,
+  },
+  // CSV
+  { path: "/csv-upload", component: <ImportCSVData /> },
+  { path: "/csv-list", component: <CSVDataList /> },
+  { path: "/csv-list/:id", component: <CSVFileView /> }, // Added route for viewing a specific CSV file
 
-	// connector
-	{ path: "/connector-list", component: <ConnectorList /> },
-	{ path: "/connector-log/:id", component: <ConnectorLogFile /> },
-	{ path: "/connector-schedule", component: <ConnectorSchedule /> },
-	{ path: "/connector-upload", component: <ConnectorUploader /> },
-	// { path: "/connector-index-delete", component: <DeleteConnectorIndexs /> },
+  // Connector
+  { path: "/connector-list", component: <ConnectorList /> },
+  { path: "/connector-log/:id", component: <ConnectorLogFile /> },
+  { path: "/connector-schedule", component: <ConnectorSchedule /> },
+  { path: "/connector-upload", component: <ConnectorUploader /> },
 
-	// Profile
-	{ path: "/userprofile", component: <UserProfile /> },
-	{ path: "/help", component: <Help /> },
-	{ path: "/help/:id", component: <Help /> },
-	{ path: "/", component: <CreateDashboard /> },
+  // Profile
+  { path: "/userprofile", component: <UserProfile /> },
+  { path: "/help", component: <Help /> },
+  { path: "/help/:id", component: <Help /> },
 ];
 
 const publicRoutes = [
-	// Authentication Page
-	{ path: "/logout", component: <Logout /> },
-	{ path: "/", component: <Login /> },
-	{ path: "/login", component: <Login /> },
-	{ path: "/forgot-password", component: <ForgetPasswordPage /> },
-	{ path: "/register", component: <Register /> },
+  // Authentication Page
+  { path: "/logout", component: <Logout /> },
+  { path: "/", component: <Login /> },
+  { path: "/login", component: <Login /> },
+  { path: "/forgot-password", component: <ForgetPasswordPage /> },
+  { path: "/register", component: <Register /> },
 
-	// Authentication Inner Pages
-	{ path: "/auth-login", component: <Login1 /> },
-	{ path: "/auth-register", component: <Register1 /> },
-	{ path: "/auth-recoverpw", component: <RecoverPassword /> },
-	{ path: "/auth-lock-screen", component: <LockScreen /> },
+  // Authentication Inner Pages
+  { path: "/auth-login", component: <Login1 /> },
+  { path: "/auth-register", component: <Register1 /> },
+  { path: "/auth-recoverpw", component: <RecoverPassword /> },
+  { path: "/auth-lock-screen", component: <LockScreen /> },
 
-	// Utility Pages
-	{ path: "/pages-404", component: <Error404 /> },
-	{ path: "/pages-500", component: <Error500 /> },
-	{ path: "/pages-maintenance", component: <Maintenance /> },
-	{ path: "/pages-comingsoon", component: <ComingSoon /> },
+  // Utility Pages
+  { path: "/pages-404", component: <Error404 /> },
+  { path: "/pages-500", component: <Error500 /> },
+  { path: "/pages-maintenance", component: <Maintenance /> },
+  { path: "/pages-comingsoon", component: <ComingSoon /> },
 ];
 
 export { authProtectedRoutes, publicRoutes };

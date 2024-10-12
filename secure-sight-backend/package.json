@@ -15,6 +15,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/convert-array-to-csv": "^2.0.0",
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.13",
     "@types/express-session": "^1.17.5",
     "@types/json2csv": "^5.0.3",
