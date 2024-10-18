@@ -12,10 +12,10 @@ const SidebarData = [
 		bgcolor: "bg-primary",
 		// badgeValue: "3",
 		subItem: [
-			// {
-			// 	sublabel: "Create Dashboard",
-			// 	link: "/dashboard/create-dashboard",
-			// },
+			{
+				sublabel: "Create Dashboard",
+				link: "/dashboard/create-dashboard",
+			},
 			{
 				sublabel: "Dashboard ",
 				link: "/dashboard/dashboard-list",
@@ -143,7 +143,7 @@ const SidebarData = [
 		url: "/csv",
 		bgcolor: "bg-primary",
 		subItem: [
-			{ sublabel: "CSV Upload", link: "/csv-upload" },
+			// { sublabel: "CSV Upload", link: "/csv-upload" },
 			{ sublabel: "CSV List", link: "/csv-list" },
 			// { sublabel: "Delete", link: "/csv-delete" },
 		],

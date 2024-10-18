@@ -11,13 +11,13 @@ import { ToastContainer } from "react-toastify";
 
 const Login = () => {
   document.title = "Login | Upzet - React Admin & Dashboard Template";
-    useEffect(() => {
-        document.body.className = "bg-pattern";
-        // remove classname when component will unmount
-        return function cleanup() {
-          document.body.className = "";
-        };
-      });
+  useEffect(() => {
+    document.body.className = "bg-pattern";
+    // remove classname when component will unmount
+    return function cleanup() {
+      document.body.className = "";
+    };
+  });
   return (
     <React.Fragment>
       <ToastContainer />
