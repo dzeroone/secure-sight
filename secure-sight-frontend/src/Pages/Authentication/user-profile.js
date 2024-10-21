@@ -31,7 +31,6 @@ import { editProfile, resetProfileFlag } from "../../store/actions";
 import user1 from "../../assets/images/logo/Images/profile.png";
 
 const UserProfile = () => {
-  // document.title = "Profile | Trend Micro Unity";
   document.title = "Profile | Secure Sight";
 
   const dispatch = useDispatch();
@@ -49,19 +48,10 @@ const UserProfile = () => {
   useEffect(() => {
     if (localStorage.getItem("authUser")) {
       const obj = JSON.parse(localStorage.getItem("authUser"));
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-        setname(obj.full_name);
-        setemail(obj.email);
-        setidx(obj._id);
-      } else if (
-        process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-        process.env.REACT_APP_DEFAULTAUTH === "jwt"
-      ) {
-        setname(obj.full_name);
-        setemail(obj.email);
-        setidx(obj._id);
-        setDbName(obj.dbName);
-      }
+      setname(obj.full_name);
+      setemail(obj.email);
+      setidx(obj._id);
+      setDbName(obj.dbName);
       setTimeout(() => {
         dispatch(resetProfileFlag());
       }, 3000);
@@ -69,15 +59,17 @@ const UserProfile = () => {
   }, [dispatch, success]);
 
   const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
     initialValues: {
       username: name || "",
+      email: email || "",
+      dbName: dbName || "",
       idx: idx || "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().required("Please Enter Your UserName"),
+      username: Yup.string().required("Please Enter Your Username"),
+      email: Yup.string().email("Invalid email").required("Please Enter Your Email"),
+      dbName: Yup.string().required("Please Enter Your Database Name"),
     }),
     onSubmit: (values) => {
       dispatch(editProfile(values));
@@ -90,8 +82,8 @@ const UserProfile = () => {
         <Container fluid>
           <Breadcrumb title="User" breadcrumbItem="Profile" />
 
-          <Row>
-            <Col lg="12">
+          <Row className="justify-content-center">
+            <Col lg="8">
               {error && error ? (
                 <Alert color="danger">
                   <div>{error}</div>
@@ -103,82 +95,118 @@ const UserProfile = () => {
                 </Alert>
               ) : null}
 
-              <Card>
-                <CardBody>
-                  <div className="d-flex">
-                    <div className="ms-3">
+              <Card className="shadow-lg border-0" style={{ borderRadius: "12px", background: "linear-gradient(to bottom right, #333, #1a1a1a)" }}>
+                <CardBody className="p-4 text-white">
+                  <Row className="align-items-center">
+                    <Col md={4} className="text-center">
                       <img
                         src={user1}
-                        alt=""
-                        className="avatar-md rounded-circle img-thumbnail"
+                        alt="User"
+                        className="avatar-lg rounded-circle img-thumbnail shadow"
                       />
-                    </div>
-                    <div className="flex-grow-1 align-self-center">
-                      <div className="text-muted">
-                        <Col lg="6">
-                          <h5>{name}</h5>
-                        </Col>
-                        <Col lg="6">
-                          <p className="mb-1">{email}</p>
-                        </Col>
-                        <Col lg="6">
-                          <p className="mb-0">{dbName}</p>
-                        </Col>
-                        <Col lg="6">
-                          <p className="mb-0">Id no: {idx}</p>
-                        </Col>
+                    </Col>
+                    <Col md={8}>
+                      <div className="text-center text-md-start">
+                        <h3 className="text-white fw-bold">{name}</h3>
+                        {/* Updated details to be displayed in white */}
+                        <p className="text-white mb-1">{email}</p>
+                        <p className="text-white">{dbName}</p>
+                        <p className="text-white mb-0">ID: {idx}</p>
                       </div>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+
+              {/* Edit Profile Form */}
+              <Card className="shadow mt-4" style={{ borderRadius: "12px", background: "#2d2d2d" }}>
+                <CardBody>
+                  <h4 className="card-title mb-4 text-center text-white">Edit Profile</h4>
+                  <Form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      validation.handleSubmit();
+                      return false;
+                    }}
+                  >
+                    {/* Username Field */}
+                    <div className="form-group mb-3">
+                      <Label className="form-label text-white">Username</Label>
+                      <Input
+                        name="username"
+                        placeholder="Enter new username"
+                        type="text"
+                        className="form-control"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.username || ""}
+                        invalid={
+                          validation.touched.username && validation.errors.username
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.username && validation.errors.username ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.username}
+                        </FormFeedback>
+                      ) : null}
                     </div>
-                  </div>
+
+                    {/* Email Field */}
+                    <div className="form-group mb-3">
+                      <Label className="form-label text-white">Email</Label>
+                      <Input
+                        name="email"
+                        placeholder="Enter new email"
+                        type="email"
+                        className="form-control"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.email || ""}
+                        invalid={
+                          validation.touched.email && validation.errors.email ? true : false
+                        }
+                      />
+                      {validation.touched.email && validation.errors.email ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.email}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+
+                    {/* Database Name Field */}
+                    <div className="form-group mb-3">
+                      <Label className="form-label text-white">Database Name</Label>
+                      <Input
+                        name="dbName"
+                        placeholder="Enter new database name"
+                        type="text"
+                        className="form-control"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.dbName || ""}
+                        invalid={
+                          validation.touched.dbName && validation.errors.dbName ? true : false
+                        }
+                      />
+                      {validation.touched.dbName && validation.errors.dbName ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.dbName}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+
+                    <div className="text-center">
+                      <Button type="submit" color="primary" className="w-100">
+                        Update Profile
+                      </Button>
+                    </div>
+                  </Form>
                 </CardBody>
               </Card>
             </Col>
           </Row>
-
-          {/* <h4 className="card-title mb-4">Change User Name</h4> */}
-
-          {/* <Card>
-            <CardBody>
-              <Form
-                className="form-horizontal"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  validation.handleSubmit();
-                  return false;
-                }}
-              >
-                <div className="form-group">
-                  <Label className="form-label">User Name</Label>
-                  <Input
-                    name="username"
-                    // value={name}
-                    className="form-control"
-                    placeholder="Enter User Name"
-                    type="text"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.username || ""}
-                    invalid={
-                      validation.touched.username && validation.errors.username
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.username && validation.errors.username ? (
-                    <FormFeedback type="invalid">
-                      <div>{validation.errors.username}</div>
-                    </FormFeedback>
-                  ) : null}
-                  <Input name="idx" value={idx} type="hidden" />
-                </div>
-                <div className="text-center mt-4">
-                  <Button type="submit" color="danger">
-                    Update User Name
-                  </Button>
-                </div>
-              </Form>
-            </CardBody>
-          </Card> */}
         </Container>
       </div>
     </React.Fragment>

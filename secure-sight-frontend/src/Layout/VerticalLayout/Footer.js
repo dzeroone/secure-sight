@@ -5,6 +5,7 @@ const Footer = () => {
   return (
     <React.Fragment>
       <footer className="footer">
+       <div className="bg-[#0E0F1B]">
         <Container fluid ={true}>
           <Row>
             {/* <Col sm={6}>{new Date().getFullYear()} © Trend Micro Unity Tools.</Col> */}
@@ -17,6 +18,7 @@ const Footer = () => {
             </Col>
           </Row>
         </Container>
+        </div>
       </footer>
     </React.Fragment>
 

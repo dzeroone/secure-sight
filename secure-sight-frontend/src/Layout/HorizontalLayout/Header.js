@@ -1,21 +1,13 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
-
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-
 import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDropdown";
 import NotificationDropdown from "../../components/Common/TopbarDropdown/NotificationDropdown";
-
-//i18n
 import { withTranslation } from "react-i18next";
-
-//import images
 import logoSm from "../../assets/images/logo-sm.png";
 import logoDark from "../../assets/images/logo-dark.png";
 import logoLight from "../../assets/images/logo-light.png";
-
-// Redux Store
 import {
   showRightSidebarAction,
   toggleLeftmenu,
@@ -56,7 +48,7 @@ const Header = (props) => {
 
   return (
     <React.Fragment>
-      <header id="page-topbar">
+      <header id="page-topbar" style={{ background: 'linear-gradient(to bottom right, #0F0720, #1C1033, #261541)', color: '#fff' }}>
         <div className="navbar-header">
           <div className="d-flex">
             <div className="navbar-brand-box text-center">

@@ -8,6 +8,7 @@ import {
   CardBody,
   CardTitle,
   Spinner,
+  Button,
 } from "reactstrap";
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
 import { toast, ToastContainer } from "react-toastify";
@@ -15,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import MaterialTable from "../../Tables/Table";
 import ApiServices from "../../../Network_call/apiservices";
 import ApiEndPoints from "../../../Network_call/ApiEndPoints";
+import { Trash2 } from "lucide-react";
 import {
   deepKeys,
   formatCapilize,
@@ -54,10 +56,32 @@ const CSVFileView = () => {
     fetchCSVFile();
   }, [id]);
 
+  const handleDelete = async (rowIndex) => {
+    try {
+      // Assuming you have an API endpoint for deleting a specific row
+      const apiUrl = `${ApiEndPoints.FileDeleteRow}${id}/${rowIndex}`;
+      const response = await ApiServices("delete", {}, apiUrl);
+
+      if (response.success) {
+        // Update the local state by removing the deleted row
+        setCsvData(prevData => ({
+          ...prevData,
+          data: prevData.data.filter((_, index) => index !== rowIndex)
+        }));
+        toast.success("Row deleted successfully");
+      } else {
+        toast.error(response.msg || "Failed to delete row");
+      }
+    } catch (error) {
+      console.error("Error deleting row:", error);
+      toast.error("Error deleting row: " + error.message);
+    }
+  };
+
   const getColumns = (data) => {
     if (!data || data.length === 0) return [];
     const keys = Array.from(deepKeys(data[0]));
-    return keys.map((name) => ({
+    const columns = keys.map((name) => ({
       accessorKey: name,
       header: formatCapilize(
         replaceDot(
@@ -70,6 +94,24 @@ const CSVFileView = () => {
         )
       ),
     }));
+
+    // Add delete button column
+    columns.push({
+      accessorKey: 'actions',
+      header: 'Actions',
+      cell: ({ row }) => (
+        <Button
+          color="danger"
+          size="sm"
+          className="btn-icon"
+          onClick={() => handleDelete(row.index)}
+        >
+          <Trash2 size={16} />
+        </Button>
+      ),
+    });
+
+    return columns;
   };
 
   return (

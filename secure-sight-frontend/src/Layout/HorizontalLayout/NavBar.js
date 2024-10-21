@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Collapse, Row, Col, Container } from "reactstrap";
 import classname from "classnames";
-
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -12,7 +11,6 @@ import navdata from "./Navdata";
 
 const Navbar = (props) => {
   const navData = navdata().props.children;
-
 
   useEffect(() => {
     var matchingMenuItem = null;
@@ -71,7 +69,7 @@ const Navbar = (props) => {
     }
     return false;
   }
-  
+
   return (
     <React.Fragment>
       <div className="topnav">
@@ -79,6 +77,11 @@ const Navbar = (props) => {
           <nav
             className="navbar navbar-light navbar-expand-lg topnav-menu"
             id="navigation"
+            style={{
+              background: 'linear-gradient(to bottom right, #0F0720, #1C1033, #261541)',
+              color: '#fff', // Ensure text is visible on the gradient background
+              padding: '10px 20px' // Optional: Add padding for better appearance
+            }}
           >
             <Collapse
               isOpen={props.leftMenu}
@@ -106,7 +109,6 @@ const Navbar = (props) => {
                           className="nav-link dropdown-toggle arrow-none"
                           onClick={item.click}
                         >
-
                           <i className={item.icon}></i>
                           {props.t(item.label)}{" "}
                           <div className="arrow-down"></div>
@@ -134,7 +136,7 @@ const Navbar = (props) => {
                           </div>
                         ) : (
                           <div
-                            className={classname("dropdown-menu", {
+                            className ={classname("dropdown-menu", {
                               show: item.currentState,
                             })}
                           >

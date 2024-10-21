@@ -1,30 +1,15 @@
 import React, { useState } from "react";
-
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-
 import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDropdown";
 import NotificationDropdown from "../../components/Common/TopbarDropdown/NotificationDropdown";
-
-//i18n
 import { withTranslation } from "react-i18next";
-
-//import images
-import logoSm from "../../assets/images/logo-sm.png";
-import logoDark from "../../assets/images/logo-dark.png";
-import logoLight from "../../assets/images/logo-light.png";
-import trendLogo from "../../assets/images/logo/Images/new_logo.png";
-import trendLogofull from "../../assets/images/logo/Images/TM_Logo_Primary_2c_reverse_1200x255.png";
-
-// Redux Store
 import {
 	showRightSidebarAction,
 	toggleLeftmenu,
 	changeSidebarType,
 } from "../../store/actions";
 import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
-import AppsDropdown from "../../components/Common/TopbarDropdown/AppsDropdown";
-import "./logo.css"
+import "./logo.css";
 
 const Header = (props) => {
 	const [search, setsearch] = useState(false);
@@ -32,10 +17,9 @@ const Header = (props) => {
 	function toggleFullscreen() {
 		if (
 			!document.fullscreenElement &&
-      /* alternative standard method */ !document.mozFullScreenElement &&
+			!document.mozFullScreenElement &&
 			!document.webkitFullscreenElement
 		) {
-			// current working methods
 			if (document.documentElement.requestFullscreen) {
 				document.documentElement.requestFullscreen();
 			} else if (document.documentElement.mozRequestFullScreen) {
@@ -69,110 +53,105 @@ const Header = (props) => {
 	return (
 		<React.Fragment>
 			<header id="page-topbar">
-				<div className="navbar-header" style={{backgroundColor: "#191C24"}}>
-					<div className="d-flex" >
-						<a href="/" className="navbar-brand mx-4 mt-4">
-							<h2 className="text-gradient"><i className="fa fa-shield-alt me-2"></i>Secure Sight</h2>
-						</a>
-						<button
-							type="button"
-							className="btn btn-sm px-3 font-size-24 header-item waves-effect paddingLeft"
-							id="vertical-menu-btn"
-							onClick={() => {
-								tToggle();
-							}}
-						>
-							<i className="ri-menu-2-line align-middle"></i>
-						</button>
-
-						<form className="app-search d-none d-lg-block" style={{ color: "#191C24 !important"}}>
-							<div className="position-relative">
-								<input
-									type="text"
-									className="form-control"
-									placeholder="Search..."
-									style={{backgroundColor : "#000000"}}
-								/>
-								<span className="ri-search-line"></span>
-							</div>
-						</form>
-					</div>
-
-					<div className="d-flex">
-						<div className="dropdown d-inline-block d-lg-none ms-2">
+				<div
+					className="navbar-header"
+					style={{
+						background: '#0E0F1B',// Black to purple gradient
+						color: '#fff', // Ensure text is visible on the gradient background
+						height: "8vh",
+						padding: '10px 20px', // Adjust padding for spacing
+					}}
+				>
+					<div className="d-flex align-items-center justify-content-between w-100">
+						<h2 style={{ fontWeight: 'bold', fontSize: '30px', marginTop:"2vh" }}>
+							SECURE-SIGHT
+						</h2>
+						<div className="d-flex align-items-center">
 							<button
-								onClick={() => {
-									setsearch(!search);
-								}}
 								type="button"
-								className="btn header-item noti-icon "
-								id="page-header-search-dropdown"
+								className="btn btn-sm px-3 font-size-24 header-item waves-effect paddingLeft"
+								id="vertical-menu-btn"
+								onClick={() => {
+									tToggle();
+								}}
 							>
-								<i className="ri-search-line" />
+								<i className="ri-menu-2-line align-middle"></i>
 							</button>
-							<div
-								className={
-									search
-										? "dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 show"
-										: "dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-								}
-								aria-labelledby="page-header-search-dropdown"
-							>
-								<form className="p-3">
-									<div className="form-group m-0">
-										<div className="input-group">
-											<input
-												type="text"
-												className="form-control"
-												placeholder="Search ..."
-												aria-label="Recipient's username"
-											/>
-											<div className="input-group-append">
-												<button className="btn btn-primary" type="submit">
-													<i className="ri-search-line" />
-												</button>
+
+							<form className="app-search d-none d-lg-block mx-3">
+								<div className="position-relative">
+									<input
+										type="text"
+										className="form-control"
+										placeholder="Search..."
+										style={{ backgroundColor: "#000000", color: "#fff" }} // Ensure text is visible
+									/>
+									<span className="ri-search-line"></span>
+								</div>
+							</form>
+
+							<div className="dropdown d-inline-block d-lg-none ms-2">
+								<button
+									onClick={() => {
+										setsearch(!search);
+									}}
+									type="button"
+									className="btn header-item noti-icon"
+									id="page-header-search-dropdown"
+								>
+									<i className="ri-search-line" />
+								</button>
+								<div
+									className={
+										search
+											? "dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 show"
+											: "dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+									}
+									aria-labelledby="page-header-search-dropdown"
+								>
+									<form className="p-3">
+										<div className="form-group m-0">
+											<div className="input-group">
+												<input
+													type="text"
+													className="form-control"
+													placeholder="Search ..."
+													aria-label="Recipient's username"
+												/>
+												<div className="input-group-append">
+													<button className="btn btn-primary" type="submit">
+														<i className="ri-search-line" />
+													</button>
+												</div>
 											</div>
 										</div>
-									</div>
-								</form>
+									 {/* Add some margin to the search form */}
+										<div style={{ marginTop: '10px' }}>
+											{/* Add your search results or suggestions here */}
+										</div>
+									</form>
+								</div>
+							</div>
+
+							<ProfileMenu />
+
+							<div className="dropdown d-inline-block"
+								onClick={() => {
+									props.showRightSidebarAction(!props.showRightSidebar);
+								}}
+							>
+								<button
+									type="button"
+									className="btn header-item noti-icon right-bar-toggle waves-effect"
+								>
+									<i className="mdi mdi-cog"></i>
+								</button>
 							</div>
 						</div>
-
-						{/* <LanguageDropdown /> */}
-						{/* <AppsDropdown /> */}
-
-						{/* <div className="dropdown d-none d-lg-inline-block ms-1">
-							<button
-								type="button"
-								onClick={() => {
-									toggleFullscreen();
-								}}
-								className="btn header-item noti-icon"
-								data-toggle="fullscreen"
-							>
-								<i className="ri-fullscreen-line" />
-							</button>
-						</div> */}
-
-						{/* <NotificationDropdown /> */}
-
-						<ProfileMenu />
-
-						<div
-							className="dropdown d-inline-block"
-							onClick={() => {
-								props.showRightSidebarAction(!props.showRightSidebar);
-							}}
-						>
-							<button
-								type="button"
-								className="btn header-item noti-icon right-bar-toggle waves-effect"
-							>
-								<i className="mdi mdi-cog"></i>
-							</button>
-						</div>
 					</div>
+
 				</div>
+
 			</header>
 		</React.Fragment>
 	);

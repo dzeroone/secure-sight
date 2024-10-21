@@ -61,19 +61,46 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
   }, []);
 
   // ############################################ get report data ########################################
+  // const HandleConnectorChange = async (event) => {
+  //   setOpenLoader(true);
+  //   setIndexList([]);
+  //   setIndexName("");
+  //   let payload = { name: allReplace(event.target.value, { _: "-" }) };
+  //   const response = await ApiServices(
+  //     "POST",
+  //     payload,
+  //     ApiEndPoints.ElasticIndexList
+  //   );
+  //   if (response) {
+  //     setIndexList(response);
+  //   }
+  //   setReportTitle("");
+  //   setOpenLoader(false);
+  // };
   const HandleConnectorChange = async (event) => {
     setOpenLoader(true);
     setIndexList([]);
     setIndexName("");
-    let payload = { name: allReplace(event.target.value, { _: "-" }) };
-    const response = await ApiServices(
-      "POST",
-      payload,
-      ApiEndPoints.ElasticIndexList
-    );
-    if (response) {
-      setIndexList(response);
+
+    const payload = { name: allReplace(event.target.value, { _: "-" }) };
+
+    try {
+      const response = await ApiServices(
+        "POST",
+        payload,
+        ApiEndPoints.ElasticIndexList // Ensure this points to your Express API
+      );
+
+      // Assuming the response contains an array of index names
+      if (response && Array.isArray(response)) {
+        setIndexList(response);
+      } else {
+        console.error("Unexpected response structure:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching index list:", error);
     }
+
     setReportTitle("");
     setOpenLoader(false);
   };
@@ -175,10 +202,15 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
     postData();
   }, [checkbox]);
   const postData = () => {
-    const flatData = tableData && tableData.map((i) => flattenObj(i));
-    const datafilter = checkbox.map((item, index) => getFields(flatData, item));
-    setReportData(datafilter);
+    if (Array.isArray(tableData)) { // Check if tableData is an array
+      const flatData = tableData.map((i) => flattenObj(i));
+      const datafilter = checkbox.map((item) => getFields(flatData, item));
+      setReportData(datafilter);
+    } else {
+      console.error("tableData is not an array:", tableData); // Log an error for debugging
+    }
   };
+
   // ############################################ FilterData  ########################################
 
   const filterColumnChange = (e) => {
@@ -214,7 +246,7 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
       filterColumnValue ? payloadsearch : payload,
       ApiEndPoints.SearchData
     );
-    console.log("before filtering the columns response ", response)
+    console.log("before filtering the columns response ", response);
     toast(response.msg);
     setTableData(response);
     setOpenLoader(false);
@@ -227,28 +259,30 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
     setOpenLoader(true);
     // var firstRecord = tableData.length > 0 ? Array(1).fill(tableData) : [];
     var firstRecord = tableData;
-    const filteredData = (tableData.length > 0 && firstRecord.map(row => {
-      const newRow = {};
+    const filteredData =
+      tableData.length > 0 &&
+      firstRecord.map((row) => {
+        const newRow = {};
 
-      selectedColumns.forEach(column => {
-        const columnParts = column.split('.');
+        selectedColumns.forEach((column) => {
+          const columnParts = column.split(".");
 
-        if (columnParts.length === 1) {
-          newRow[column] = row[column];
-        } else {
-          const parentProp = columnParts[0];
-          const childProp = columnParts[1];
+          if (columnParts.length === 1) {
+            newRow[column] = row[column];
+          } else {
+            const parentProp = columnParts[0];
+            const childProp = columnParts[1];
 
-          if (!newRow[parentProp]) {
-            newRow[parentProp] = {};
+            if (!newRow[parentProp]) {
+              newRow[parentProp] = {};
+            }
+
+            newRow[parentProp][childProp] = row[parentProp][childProp];
           }
+        });
 
-          newRow[parentProp][childProp] = row[parentProp][childProp];
-        }
+        return newRow;
       });
-
-      return newRow;
-    }));
     setFilteredData(filteredData);
     let payload = {
       info: {
@@ -274,7 +308,7 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
     setTableData(filteredData);
   };
   // console.log("table data after filtering out the columns", tableData)
-  const ImportCSVData = () => { };
+  const ImportCSVData = () => {};
   const onFileLoad = (data) => {
     setTableData(data);
     setDataModal(false);
@@ -304,7 +338,9 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
                         className="form-select"
                         id="floatingSelectGrid"
                         aria-label="Floating label select example"
-                        onChange={(e) => { HandleConnectorChange(e) }}
+                        onChange={(e) => {
+                          HandleConnectorChange(e);
+                        }}
                       >
                         <option value="">Select Report</option>
                         {connectorList &&
@@ -326,21 +362,32 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
                     </div>
                   </Col>
                   <Col md={6}>
-                    <div className="form-floating mb-3">
-                      <select
-                        className="form-select"
-                        id="floatingSelectGrid"
-                        aria-label="Floating label select example"
-                        onChange={(e) => {
-                          setIndexName(e.target.value);
-                        }}
-                      >
-                        <option value="">Select Table</option>
-                        {indexList &&
-                          indexList.map((i) => <option value={i}>{i}</option>)}
-                      </select>
-                      <label htmlFor="floatingSelectGrid">Select Index</label>
-                    </div>
+                    <Col md={6}>
+                      <div className="form-floating mb-3">
+                        <select
+                          className="form-select"
+                          id="floatingSelectGrid"
+                          aria-label="Floating label select example"
+                          onChange={(e) => {
+                            setIndexName(e.target.value);
+                          }}
+                        >
+                          <option value="">Select Table</option>
+                          {Array.isArray(indexList) && indexList.length > 0 ? (
+                            indexList.map((i, index) => (
+                              <option key={index} value={i}>
+                                {i}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="" disabled>
+                              No indices available
+                            </option>
+                          )}
+                        </select>
+                        <label htmlFor="floatingSelectGrid">Select Index</label>
+                      </div>
+                    </Col>
                   </Col>
                   <Col md={6}>
                     <div className="form-floating mb-3">
@@ -406,7 +453,9 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
                                         id={i}
                                         value={i}
                                         // checked={selectedColumns.includes(allReplace(i, { "_source.": "" }))}
-                                        onChange={(e) => { handleCheckboxChange(e) }}
+                                        onChange={(e) => {
+                                          handleCheckboxChange(e);
+                                        }}
                                       />
                                       <label
                                         htmlFor={i}
