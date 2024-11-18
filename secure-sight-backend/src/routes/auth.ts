@@ -14,7 +14,7 @@ router.post('/register', async (req: Request<UserProps>, res: Response) => {
 router.post('/login', CompareDate, setDbName, async (req: Request<UserProps>, res: Response) => {
     try {
         const data = await AuthController.login(req.body);
-        
+
         if (!data) {
             return res.status(401).json({ message: 'Invalid credentials' }); // Handle invalid login attempts
         }

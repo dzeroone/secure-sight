@@ -11,7 +11,7 @@ import swal from "sweetalert";
 import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import { DashboardList, ReportList } from "../ulit/dashboardlist";
- 
+
 import EditModals from "../../components/Common/editModel";
 import { Link } from "react-router-dom";
 import { Backdrop, CircularProgress } from "@mui/material";
@@ -256,3 +256,48 @@ const DeleteReport = () => {
 };
 
 export default DeleteReport;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

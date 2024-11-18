@@ -1,8 +1,8 @@
-import { ConstructionOutlined, Download } from "@mui/icons-material";
-import { Backdrop, Box, CircularProgress, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ConstructionOutlined, Download } from '@mui/icons-material';
+import { Backdrop, Box, CircularProgress, useTheme } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Card,
   CardBody,
@@ -10,12 +10,12 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownToggle,
-  Row,
-} from "reactstrap";
-import Breadcrumbs, { Breadcrumbsub } from "../../components/Common/Breadcrumb";
-import ApiEndPoints from "../../Network_call/ApiEndPoints";
-import ApiServices from "../../Network_call/apiservices";
-import MaterialTable from "../Tables/Table";
+  Row
+} from 'reactstrap';
+import Breadcrumbs, { Breadcrumbsub } from '../../components/Common/Breadcrumb';
+import ApiEndPoints from '../../Network_call/ApiEndPoints';
+import ApiServices from '../../Network_call/apiservices';
+import MaterialTable from '../Tables/Table';
 import {
   Columns,
   allReplace,
@@ -23,9 +23,9 @@ import {
   flattenObj,
   formatCapilize,
   getFields,
-  hidencolumn,
-} from "../ulit/commonFunction";
-import ExportCSV from "../ulit/exportCSV";
+  hidencolumn
+} from '../ulit/commonFunction';
+import ExportCSV from '../ulit/exportCSV';
 
 const CreateSubReport = ({ reportId, GetReportData }) => {
   const theme = useTheme();
@@ -35,27 +35,27 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
   const [indexList, setIndexList] = useState([]);
   const [checkbox, setCheckbox] = useState([]);
   const [reportData, setReportData] = useState([]);
-  const [reportTitle, setReportTitle] = useState("");
-  const [indexName, setIndexName] = useState("");
-  const [filterIndexName, setFilterIndexName] = useState("");
-  const [filterColumnValue, setFilterColumnValue] = useState("");
+  const [reportTitle, setReportTitle] = useState('');
+  const [indexName, setIndexName] = useState('');
+  const [filterIndexName, setFilterIndexName] = useState('');
+  const [filterColumnValue, setFilterColumnValue] = useState('');
   const [dataModal, setDataModal] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [hour, setHour] = useState(0);
   const [selectedColumns, setSelectedColumns] = useState([]);
   const [filteredTableData, setFilteredData] = useState([]);
   const [userData, setUserData] = React.useState({
-    email: "",
-    dbName: "",
-    user_id: "",
+    email: '',
+    dbName: '',
+    user_id: ''
   });
   useEffect(() => {
-    let userObject = localStorage.getItem("authUser");
-    var userInfo = userObject ? JSON.parse(userObject) : "";
+    let userObject = localStorage.getItem('authUser');
+    var userInfo = userObject ? JSON.parse(userObject) : '';
     setUserData(() => ({
       email: userInfo.email,
       dbName: userInfo.dbName,
-      user_id: userInfo._id,
+      user_id: userInfo._id
     }));
     connectorData(userInfo.dbName);
   }, []);
@@ -80,13 +80,13 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
   const HandleConnectorChange = async (event) => {
     setOpenLoader(true);
     setIndexList([]);
-    setIndexName("");
+    setIndexName('');
 
-    const payload = { name: allReplace(event.target.value, { _: "-" }) };
+    const payload = { name: allReplace(event.target.value, { _: '-' }) };
 
     try {
       const response = await ApiServices(
-        "POST",
+        'POST',
         payload,
         ApiEndPoints.ElasticIndexList // Ensure this points to your Express API
       );
@@ -95,13 +95,13 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
       if (response && Array.isArray(response)) {
         setIndexList(response);
       } else {
-        console.error("Unexpected response structure:", response);
+        console.error('Unexpected response structure:', response);
       }
     } catch (error) {
-      console.error("Error fetching index list:", error);
+      console.error('Error fetching index list:', error);
     }
 
-    setReportTitle("");
+    setReportTitle('');
     setOpenLoader(false);
   };
 
@@ -109,11 +109,11 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
   const connectorData = async (item) => {
     setOpenLoader(true);
     const payload = {
-      headers: { "Access-Control-Allow-Origin": "*" },
-      info: { dbName: item },
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      info: { dbName: item }
     };
     const response = await ApiServices(
-      "post",
+      'post',
       payload,
       ApiEndPoints.ConectoreList
     );
@@ -124,12 +124,12 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
   function getAllKeys(data) {
     const keys = [];
 
-    function collectKeys(obj, prefix = "") {
+    function collectKeys(obj, prefix = '') {
       if (Array.isArray(obj)) {
         obj.forEach((item, index) => {
           collectKeys(item, `${prefix}[${index}]`);
         });
-      } else if (typeof obj === "object" && obj !== null) {
+      } else if (typeof obj === 'object' && obj !== null) {
         Object.keys(obj).forEach((key) => {
           const newPrefix = prefix ? `${prefix}.${key}` : key;
           collectKeys(obj[key], newPrefix);
@@ -202,12 +202,13 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
     postData();
   }, [checkbox]);
   const postData = () => {
-    if (Array.isArray(tableData)) { // Check if tableData is an array
+    if (Array.isArray(tableData)) {
+      // Check if tableData is an array
       const flatData = tableData.map((i) => flattenObj(i));
       const datafilter = checkbox.map((item) => getFields(flatData, item));
       setReportData(datafilter);
     } else {
-      console.error("tableData is not an array:", tableData); // Log an error for debugging
+      console.error('tableData is not an array:', tableData); // Log an error for debugging
     }
   };
 
@@ -231,27 +232,27 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
       index: indexName,
       column: clear ? checkbox : [],
       curruntTime: dateNow.toISOString().slice(0, -1),
-      lessTime: datetimeString,
+      lessTime: datetimeString
     };
     let payloadsearch = {
       index: indexName,
       column: checkbox,
       search,
       curruntTime: dateNow.toISOString(),
-      lessTime: datetimeString,
+      lessTime: datetimeString
     };
 
     const response = await ApiServices(
-      "post",
+      'post',
       filterColumnValue ? payloadsearch : payload,
       ApiEndPoints.SearchData
     );
-    console.log("before filtering the columns response ", response);
+    console.log('before filtering the columns response ', response);
     toast(response.msg);
     setTableData(response);
     setOpenLoader(false);
     setCheckbox([]);
-    setFilterColumnValue("");
+    setFilterColumnValue('');
   };
   // ############################################ post report data ########################################
 
@@ -265,7 +266,7 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
         const newRow = {};
 
         selectedColumns.forEach((column) => {
-          const columnParts = column.split(".");
+          const columnParts = column.split('.');
 
           if (columnParts.length === 1) {
             newRow[column] = row[column];
@@ -291,19 +292,19 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
         user_id: userData.user_id,
         title: reportTitle,
         column: checkbox,
-        headerName: checkbox,
+        headerName: checkbox
       },
-      data: { data: filteredData, column: checkbox },
+      data: { data: filteredData, column: checkbox }
     };
     const response = await ApiServices(
-      "post",
+      'post',
       payload,
       ApiEndPoints.AddReportData
     );
     toast(response.msg);
     GetReportData(reportId);
     setCheckbox([]);
-    setReportTitle("");
+    setReportTitle('');
     setOpenLoader(false);
     setTableData(filteredData);
   };
@@ -314,293 +315,501 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
     setDataModal(false);
   };
   return (
-    <React.Fragment>
-      {/* <ImportCSVDataModals
-        title="Import CSV Data"
-        show={dataModal}
-        onCloseClick={() => setDataModal(false)}
-        onFileLoad={onFileLoad}
-      /> */}
-      <Row>
-        <Col xl={12}>
-          <Card>
-            <CardBody>
-              <form
-                action="javascript:void(0)"
-                onSubmit={() => {
-                  FilterData({ clear: true });
-                }}
-              >
-                <Row>
-                  <Col md={6}>
-                    <div className="form-floating mb-3">
-                      <select
-                        className="form-select"
-                        id="floatingSelectGrid"
-                        aria-label="Floating label select example"
-                        onChange={(e) => {
-                          HandleConnectorChange(e);
-                        }}
+    <div>
+
+      <div className="dark-dashboard">
+        <div className="gradient-overlay" />
+
+        {/* Header Section */}
+        <div className="dashboard-header">
+          <div className="header-content">
+            <h1 className="main-title">
+              <i className="bx bx-chart" />
+              Create Report
+            </h1>
+            <p className="header-description">
+              Generate and customize reports from your data sources
+            </p>
+          </div>
+        </div>
+
+        {/* Connector Selection Card */}
+        <div className="dark-card form-section">
+          <form
+            action="javascript:void(0)"
+            onSubmit={() => FilterData({ clear: true })}
+            className="p-6"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Connector Select */}
+              <div className="form-group">
+                <label className="dark-label">Select Connector</label>
+                <div className="dark-input-group">
+                  <select
+                    className="dark-input"
+                    onChange={(e) => HandleConnectorChange(e)}
+                  >
+                    <option value="">Select Report</option>
+                    {connectorList?.map((item, index) => (
+                      <option key={index} value={item.display_name}>
+                        {index + 1 + "  "}
+                        {formatCapilize(
+                          allReplace(item.display_name, {
+                            _: " ",
+                            "-": " ",
+                          })
+                        )}
+                      </option>
+                    ))}
+                  </select>
+                  <i className="bx bx-chevron-down input-icon" />
+                </div>
+              </div>
+
+              {/* Index Select */}
+              <div className="form-group">
+                <label className="dark-label">Select Index</label>
+                <div className="dark-input-group">
+                  <select
+                    className="dark-input"
+                    onChange={(e) => setIndexName(e.target.value)}
+                  >
+                    <option value="">Select Table</option>
+                    {Array.isArray(indexList) && indexList.length > 0 ? (
+                      indexList.map((i, index) => (
+                        <option key={index} value={i}>
+                          {i}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        No indices available
+                      </option>
+                    )}
+                  </select>
+                  <i className="bx bx-table input-icon" />
+                </div>
+              </div>
+
+              {/* Time Select */}
+              <div className="form-group">
+                <label className="dark-label">Select Time Range</label>
+                <div className="dark-input-group">
+                  <select
+                    className="dark-input"
+                    onChange={(e) => setHour(e.target.value)}
+                  >
+                    <option value="">Select Time</option>
+                    {hourData?.map((i, index) => (
+                      <option key={index} value={i.value}>
+                        {i.lable}
+                      </option>
+                    ))}
+                  </select>
+                  <i className="bx bx-time input-icon" />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex items-center justify-end">
+                <button type="submit" className="dark-button">
+                  <i className="bx bx-search" />
+                  Submit
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        {/* Column Selection and Filtering */}
+        {tableData.length > 0 && keys.length > 0 && (
+          <div className="dark-card form-section mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+              {/* Column Selection */}
+              <div className="column-selection">
+                <h4 className="dark-label mb-4">Select Columns</h4>
+                <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+                  {keys?.map((i) => (
+                    <div key={i} className="checkbox-wrapper mb-2">
+                      <input
+                        type="checkbox"
+                        id={i}
+                        value={i}
+                        onChange={handleCheckboxChange}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor={i}
+                        className="flex items-center cursor-pointer text-sky-100 hover:text-sky-200"
                       >
-                        <option value="">Select Report</option>
-                        {connectorList &&
-                          connectorList.map((item, index) => (
-                            <option value={item.display_name}>
-                              {index + 1 + "  "}
-                              {formatCapilize(
-                                allReplace(item.display_name, {
-                                  _: " ",
-                                  "-": " ",
-                                })
-                              )}
-                            </option>
-                          ))}
-                      </select>
-                      <label htmlFor="floatingSelectGrid">
-                        Select Connector
+                        <span className="w-5 h-5 border-2 border-sky-400 rounded mr-3 flex items-center justify-center">
+                          <i className="bx bx-check text-sky-400" />
+                        </span>
+                        {i}
                       </label>
                     </div>
-                  </Col>
-                  <Col md={6}>
-                    <Col md={6}>
-                      <div className="form-floating mb-3">
-                        <select
-                          className="form-select"
-                          id="floatingSelectGrid"
-                          aria-label="Floating label select example"
-                          onChange={(e) => {
-                            setIndexName(e.target.value);
-                          }}
-                        >
-                          <option value="">Select Table</option>
-                          {Array.isArray(indexList) && indexList.length > 0 ? (
-                            indexList.map((i, index) => (
-                              <option key={index} value={i}>
-                                {i}
-                              </option>
-                            ))
-                          ) : (
-                            <option value="" disabled>
-                              No indices available
-                            </option>
-                          )}
-                        </select>
-                        <label htmlFor="floatingSelectGrid">Select Index</label>
-                      </div>
-                    </Col>
-                  </Col>
-                  <Col md={6}>
-                    <div className="form-floating mb-3">
+                  ))}
+                </div>
+              </div>
+
+              {/* Report Configuration */}
+              <div className="report-config">
+                <div className="space-y-6">
+                  {/* Report Title Input */}
+                  <div className="form-group">
+                    <label className="dark-label">Report Title</label>
+                    <div className="dark-input-group">
+                      <input
+                        type="text"
+                        className="dark-input"
+                        placeholder="Enter Report Title"
+                        value={reportTitle}
+                        onChange={(e) => setReportTitle(e.target.value)}
+                      />
+                      <i className="bx bx-edit input-icon" />
+                    </div>
+                  </div>
+
+                  {/* Filter Column Select */}
+                  <div className="form-group">
+                    <label className="dark-label">Filter Column</label>
+                    <div className="dark-input-group">
                       <select
-                        className="form-select"
-                        id="floatingSelectGrid"
-                        aria-label="Floating label select example"
-                        onChange={(e) => {
-                          setHour(e.target.value);
-                        }}
+                        className="dark-input"
+                        onChange={filterColumnChange}
                       >
-                        <option value="">Select Time</option>
-                        {hourData &&
-                          hourData.map((i) => (
-                            <option value={i.value}>{i.lable}</option>
-                          ))}
+                        <option value="">Select Filter Column</option>
+                        {keys?.map((i) => (
+                          <option key={i} value={i}>
+                            {i}
+                          </option>
+                        ))}
                       </select>
-                      <label htmlFor="floatingSelectGrid">Select Time</label>
+                      <i className="bx bx-filter input-icon" />
                     </div>
-                  </Col>{" "}
-                  <Col md={6}>
-                    <div>
-                      <button type="submit" className="btn btn-primary w-md">
-                        Submit
-                      </button>
+                  </div>
+
+                  {/* Filter Value Input */}
+                  <div className="form-group">
+                    <label className="dark-label">Filter Value</label>
+                    <div className="dark-input-group">
+                      <input
+                        type="text"
+                        className="dark-input"
+                        placeholder="Enter Filter Value"
+                        value={filterColumnValue}
+                        onChange={(e) => setFilterColumnValue(e.target.value)}
+                      />
+                      <i className="bx bx-search input-icon" />
                     </div>
-                  </Col>
-                </Row>
-              </form>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-      {tableData.length > 0 && keys.length > 0 && (
-        <Row>
-          <Col xl={12}>
-            <Card>
-              <CardBody>
-                <form action="javascript:void(0)">
-                  <Row>
-                    <Col md={6}>
-                      <Card>
-                        <CardBody>
-                          <h4 className="mb-0 pb-0 font-size-18">
-                            Select Columns{" "}
-                          </h4>
-                          <p>Select Columns to Create the new Report</p>
-                          <ul
-                            className="message-list mb-0 maxh-3"
-                            style={{
-                              maxHeight: "500px",
-                              overflow: "scroll",
-                              scrollbarWidth: "0 !impotent",
-                            }}
-                          >
-                            {keys &&
-                              keys.map((i) => (
-                                <li>
-                                  <span className="col-mail-1">
-                                    <span className="checkbox-wrapper-mail">
-                                      <input
-                                        type="checkbox"
-                                        id={i}
-                                        value={i}
-                                        // checked={selectedColumns.includes(allReplace(i, { "_source.": "" }))}
-                                        onChange={(e) => {
-                                          handleCheckboxChange(e);
-                                        }}
-                                      />
-                                      <label
-                                        htmlFor={i}
-                                        className="toggle"
-                                      ></label>
-                                    </span>
-                                  </span>
+                  </div>
 
-                                  <option value={i}>{i}</option>
-                                </li>
-                              ))}
-                          </ul>
-                          <br />
-                        </CardBody>
-                      </Card>
-                    </Col>
-                    <Col md={6}>
-                      <div className="form-floating mb-3">
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="floatingFirstnameInput"
-                          placeholder="Enter Chart Title"
-                          value={reportTitle}
-                          onChange={(e) => {
-                            setReportTitle(e.target.value);
-                          }}
-                        />
-                        <label htmlFor="floatingFirstnameInput">
-                          Enter Report Title
-                        </label>
-                      </div>
-
-                      <div className="form-floating mb-3">
-                        <select
-                          className="form-select"
-                          id="floatingSelectGrid"
-                          aria-label="Floating label select example"
-                          onChange={filterColumnChange}
-                        >
-                          <option value="">Select Filter Column</option>
-                          {keys &&
-                            keys.map((i) => <option value={i}>{i}</option>)}
-                        </select>
-                        <label htmlFor="floatingSelectGrid">Select Index</label>
-                      </div>
-                      <div className="form-floating mb-3">
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="floatingFirstnameInput"
-                          placeholder="Enter Chart Title"
-                          value={filterColumnValue}
-                          onChange={(e) => {
-                            setFilterColumnValue(e.target.value);
-                          }}
-                        />
-                        <label htmlFor="floatingFirstnameInput">
-                          Enter Filter Value
-                        </label>
-                      </div>
-
-                      <div>
-                        <Breadcrumbsub
-                          title={
-                            <button
-                              onClick={() => {
-                                FilterData({ clear: true });
-                              }}
-                              className="btn btn-primary w-md"
-                            >
-                              Filter Data
-                            </button>
-                          }
-                          breadcrumbItem={
-                            <button
-                              onClick={createReport}
-                              className="btn btn-primary w-md"
-                            >
-                              Create Report
-                            </button>
-                          }
-                        />
-                      </div>
-                    </Col>
-                  </Row>
-                </form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      )}
-      {tableData.length > 0 && (
-        <Row>
-          <Col xl={12}>
-            <Card>
-              <CardBody>
-                <Breadcrumbsub
-                  title={indexName}
-                  breadcrumbItem={
-                    <Dropdown
-                      isOpen={btnprimary1}
-                      toggle={() => setBtnprimary1(!btnprimary1)}
+                  {/* Action Buttons */}
+                  <div className="flex gap-4 justify-end">
+                    <button
+                      onClick={() => FilterData({ clear: true })}
+                      className="dark-button"
                     >
-                      <DropdownToggle tag="button" className="btn ">
-                        <Download />
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        {/* <DropdownItem>fgfdgdg</DropdownItem> */}
-                        <ExportCSV data={tableData} title={indexName} />
-                      </DropdownMenu>
-                    </Dropdown>
-                  }
-                />
-                <MaterialTable
-                  data={tableData}
-                  columns={columns}
-                  hidecolumn={hidecolumn}
-                />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      )}{" "}
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openLoader}
-        onClick={() => setOpenLoader(false)}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </React.Fragment>
-  );
-};
+                      <i className="bx bx-filter" />
+                      Filter Data
+                    </button>
+                    <button
+                      onClick={createReport}
+                      className="dark-button"
+                    >
+                      <i className="bx bx-plus" />
+                      Create Report
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Data Table */}
+        {tableData.length > 0 && (
+          <div className="dark-card mt-6">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-sky-100 text-xl font-semibold">{indexName}</h3>
+                <Dropdown
+                  isOpen={btnprimary1}
+                  toggle={() => setBtnprimary1(!btnprimary1)}
+                >
+                  <DropdownToggle tag="button" className="dark-button">
+                    <Download />
+                    Export
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    <ExportCSV data={tableData} title={indexName} />
+                  </DropdownMenu>
+                </Dropdown>
+              </div>
+
+              <MaterialTable
+                data={tableData}
+                columns={columns}
+                hidecolumn={hidecolumn}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Loading Backdrop */}
+        <Backdrop
+          sx={{
+            color: "#fff",
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+            background: "rgba(15, 23, 42, 0.8)",
+            backdropFilter: "blur(4px)"
+          }}
+          open={openLoader}
+          onClick={() => setOpenLoader(false)}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
+
+        <style>{`
+      .dark-dashboard {
+        background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+        min-height: 100vh;
+        padding: 2rem 1rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .gradient-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 25%),
+          radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 25%);
+        pointer-events: none;
+      }
+
+      .dashboard-header {
+        margin-bottom: 1.0rem;
+        padding: 1rem 0;
+        position: relative;
+      }
+
+      .header-content {
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .main-title {
+        margin-top: 1vh;
+        font-size: 2.5rem;
+        color: #f0f9ff;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      }
+
+      .main-title i {
+        font-size: 2rem;
+        color: #38bdf8;
+      }
+
+      .header-description {
+        color: #bae6fd;
+        font-size: 1.1rem;
+        margin-bottom: 0;
+        margin-right: vh;
+      }
+
+      .form-section {
+        margin-bottom: 2rem;
+      }
+
+      .dark-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #7dd3fc;
+        margin-bottom: 0.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .dark-input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-bottom:1rem;
+      }
+
+      .dark-input {
+        height: 3.4rem;
+        border-radius: 16px;
+        border: 2px solid rgba(56, 189, 248, 0.2);
+        padding: 0 1rem;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        padding-right: 3rem;
+        background: rgba(15, 23, 42, 0.8);
+        color: #f0f9ff;
+        width: 100%;
+      }
+
+      .dark-input:focus {
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1);
+        outline: none;
+      }
+
+      .dark-input:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .dark-input::placeholder {
+        color: #94a3b8;
+      }
+
+      .input-icon {
+        position: absolute;
+        right: 2rem;
+        color: #38bdf8;
+        font-size: 1.25rem;
+      }
+
+      .workspace-info {
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 16px;
+        padding: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(56, 189, 248, 0.1);
+      }
+
+      .workspace-icon {
+        background: #0284c7;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.2);
+      }
+
+      .workspace-details {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .workspace-label {
+        font-size: 0.875rem;
+        color: #7dd3fc;
+        font-weight: 500;
+      }
+
+      .workspace-name {
+        font-weight: 600;
+        color: #f0f9ff;
+        font-size: 1.1rem;
+      }
+
+      .action-section {
+        text-align: center;
+      }
+
+      .dark-button {
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        color: white;
+        border: none;
+        border-radius: 16px;
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 1.5rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.2);
+        margin-top: 2rem;
+        margin-right:2rem;
+        narggin-bottom:0.3rem;
+      }
+
+      .dark-button:hover:not(:disabled) {
+        background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 12px -1px rgba(56, 189, 248, 0.3);
+      }
+
+      .dark-button:disabled {
+        background: #475569;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .dark-button i {
+        font-size: 1.4rem;
+      }
+
+      @media (max-width: 768px) {
+        .dark-dashboard {
+          padding: 1rem;
+        }
+
+        .main-title {
+          font-size: 1.8rem;
+        }
+
+        .header-description {
+          font-size: 1rem;
+        }
+
+        .dark-button {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      @keyframes glow {
+        0% {
+          box-shadow: 0 0 5px rgba(56, 189, 248, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+        100% {
+          box-shadow: 0 0 5px rgba(56, 189, 248, 0.2);
+        }
+      }
+    `}</style>
+    </div>
+//     </div>
+   )};
 
 export default CreateSubReport;
 const hourData = [
-  { lable: "Last 5 min Data", value: 5 },
-  { lable: "Last 10 min Data", value: 10 },
-  { lable: "Last 30 min Data", value: 30 },
-  { lable: "Last 60 min Data", value: 60 },
-  { lable: "Last 5 hour Data", value: 300 },
-  { lable: "Last 12 hour Data", value: 600 },
-  { lable: "Last 1 day Data", value: 1200 },
-  { lable: "Last 5 day Data", value: 6000 },
-  { lable: "Last 10 day Data", value: 12000 },
-  { lable: "Last 30 day Data", value: 36000 },
+  { lable: 'Last 5 min Data', value: 5 },
+  { lable: 'Last 10 min Data', value: 10 },
+  { lable: 'Last 30 min Data', value: 30 },
+  { lable: 'Last 60 min Data', value: 60 },
+  { lable: 'Last 5 hour Data', value: 300 },
+  { lable: 'Last 12 hour Data', value: 600 },
+  { lable: 'Last 1 day Data', value: 1200 },
+  { lable: 'Last 5 day Data', value: 6000 },
+  { lable: 'Last 10 day Data', value: 12000 },
+  { lable: 'Last 30 day Data', value: 36000 }
 ];
