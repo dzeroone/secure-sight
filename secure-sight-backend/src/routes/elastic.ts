@@ -311,7 +311,7 @@ const eUrl = 'http://localhost:9200/_cat/indices?v&pretty=true';
 // Basic Authentication configuration
 const auth = {
   username: 'elastic',
-  password: 'iRLkXbVh'
+  password: 'EP0VJl52'
 };
 
 // Endpoint to retrieve list of indices

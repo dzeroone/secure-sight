@@ -388,3 +388,56 @@ const ConnectorUploader = () => {
 };
 
 export default ConnectorUploader;
+
+
+
+
+
+
+
+
+
+// src/FileDrop.js
+// import React from 'react';
+// import { useDropzone } from 'react-dropzone';
+
+// const ConnectorUploader = () => {
+//     const onDrop = (acceptedFiles) => {
+//         const pythonFile = acceptedFiles.find(file => file.type === "text/x-python" || file.name.endsWith('.py'));
+
+//         if (pythonFile) {
+//             const formData = new FormData();
+//             formData.append('file', pythonFile);
+
+//             // Send the file to the backend
+//             fetch('http://localhost:5001/api/upload', { // Make sure this matches your backend endpoint
+//                 method: 'POST',
+//                 body: formData,
+//             })
+//                 .then(response => response.json())
+//                 .then(data => {
+//                     console.log('Success:', data);
+//                     alert(data.output || "Script executed successfully.");
+//                 })
+//                 .catch((error) => {
+//                     console.error('Error:', error);
+//                     alert('Error executing script.');
+//                 });
+//         } else {
+//             alert('Please drop a valid Python file (.py)');
+//         }
+//     };
+
+//     const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+//     return (
+//         <div {...getRootProps({ className: 'dropzone' })} style={{ width: '400px', height: '200px', border: '2px dashed #ccc', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+//             <input {...getInputProps()} />
+//             <p>Drag and drop your Python script here, or click to select one</p>
+//         </div>
+//     );
+// };
+
+// export default ConnectorUploader;
+
+

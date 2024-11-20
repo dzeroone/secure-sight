@@ -20,6 +20,29 @@ import {
   showRightSidebarAction
 } from "../../store/actions";
 
+// Add these styles to your CSS
+const layoutStyles = {
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh'
+  },
+  contentWrapper: {
+    display: 'flex',
+    flex: '1 0 auto'
+  },
+  mainContent: {
+    flex: '1 0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh'
+  },
+  childrenWrapper: {
+    flex: '1 0 auto',
+    paddingBottom: '20px' // Add some spacing above footer
+  }
+};
+
 const Layout = props => {
   const dispatch = useDispatch();
 
@@ -47,25 +70,20 @@ const Layout = props => {
     }
   };
 
-  //hides right sidebar on body click
   const hideRightbar = useCallback((event) => {
     var rightbar = document.getElementById("right-bar");
-    //if clicked in inside right bar, then do nothing
     if (rightbar && rightbar.contains(event.target)) {
       return;
     } else {
-      //if clicked in outside of rightbar then fire action for hide rightbar
       dispatch(showRightSidebarAction(false));
     }
   }, [dispatch]);
 
-  /*
-  layout  settings
-  */
-
   useEffect(() => {
-    //init body click event fot toggle rightbar
     document.body.addEventListener("click", hideRightbar, true);
+    return () => {
+      document.body.removeEventListener("click", hideRightbar, true);
+    };
   }, [hideRightbar]);
 
   useEffect(() => {
@@ -102,15 +120,21 @@ const Layout = props => {
 
   return (
     <React.Fragment>
-      <div id="layout-wrapper">
+      <div id="layout-wrapper" style={layoutStyles.wrapper}>
         <Header toggleMenuCallback={toggleMenuCallback} />
-        <Sidebar
-          theme={leftSideBarTheme}
-          type={leftSideBarType}
-          isMobile={isMobile}
-        />
-        <div className="main-content">{props.children}</div>
-        <Footer />
+        <div style={layoutStyles.contentWrapper}>
+          <Sidebar
+            theme={leftSideBarTheme}
+            type={leftSideBarType}
+            isMobile={isMobile}
+          />
+          <div className="main-content" style={layoutStyles.mainContent}>
+            <div style={layoutStyles.childrenWrapper}>
+              {props.children}
+            </div>
+            <Footer />
+          </div>
+        </div>
       </div>
       {showRightSidebar ? <RightSidebar /> : null}
     </React.Fragment>

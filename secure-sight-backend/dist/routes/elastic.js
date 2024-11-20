@@ -303,7 +303,7 @@ const eUrl = 'http://localhost:9200/_cat/indices?v&pretty=true';
 // Basic Authentication configuration
 const auth = {
     username: 'elastic',
-    password: 'iRLkXbVh'
+    password: 'xDpN2k3N'
 };
 // Endpoint to retrieve list of indices
 router.get('/list', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
