@@ -31,7 +31,7 @@ import EditModals, {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CostomDropdow from "../../components/Common/costomDropdown";
-import CreateChart from "./createChart";
+import CreateChart from "./d";
 import { Backdrop, CircularProgress } from "@mui/material";
 import "./index.css";
 import BarChartWithGroup from "../usedCharts/barChartWithGroup";
