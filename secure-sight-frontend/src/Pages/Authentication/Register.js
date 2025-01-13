@@ -14,6 +14,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ApiEndPoints from '../../Network_call/ApiEndPoints'
 
 const Register = (props) => {
   document.title = "Sign Up | Upzet - React Admin & Dashboard Template";
@@ -35,7 +36,7 @@ const Register = (props) => {
     onSubmit: async (values) => {
       try {
         const response = await axios.post(
-          "http://localhost:5001/api/auth/register",
+          ApiEndPoints.Register,
           values
         );
         // Handle success (optional)
@@ -188,9 +189,15 @@ const Register = (props) => {
                                 : false
                             }
                             style={{
-                              borderColor: "black",
-                              backgroundColor: "white",
+                              backgroundColor: "#f4f4f4",
+                              border: "2px solid #ddd",
+                              color: "#444",
+                              height: "50px",
+                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Add shadow effect
+                              transition: "all 0.3s ease", // Add transition for smooth hover effect
                             }}
+                            onMouseEnter={(e) => e.target.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)"}
+                            onMouseLeave={(e) => e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)"}
                           />
                           {validation.touched.email &&
                           validation.errors.email ? (
@@ -217,9 +224,15 @@ const Register = (props) => {
                                 : false
                             }
                             style={{
-                              borderColor: "black",
-                              backgroundColor: "white",
+                              backgroundColor: "#f4f4f4",
+                              border: "2px solid #ddd",
+                              color: "#444",
+                              height: "50px",
+                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Add shadow effect
+                              transition: "all 0.3s ease", // Add transition for smooth hover effect
                             }}
+                            onMouseEnter={(e) => e.target.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)"}
+                            onMouseLeave={(e) => e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)"}
                           />
                           {validation.touched.username &&
                           validation.errors.username ? (
@@ -246,9 +259,15 @@ const Register = (props) => {
                                 : false
                             }
                             style={{
-                              borderColor: "black",
-                              backgroundColor: "white",
+                              backgroundColor: "#f4f4f4",
+                              border: "2px solid #ddd",
+                              color: "#444",
+                              height: "50px",
+                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Add shadow effect
+                              transition: "all 0.3s ease", // Add transition for smooth hover effect
                             }}
+                            onMouseEnter={(e) => e.target.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)"}
+                            onMouseLeave={(e) => e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)"}
                           />
                           {validation.touched.password &&
                           validation.errors.password ? (

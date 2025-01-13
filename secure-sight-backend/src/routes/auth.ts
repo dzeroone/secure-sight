@@ -11,7 +11,9 @@ router.post('/register', async (req: Request<UserProps>, res: Response) => {
     res.send(data)
 })
 
-router.post('/login', CompareDate, setDbName, async (req: Request<UserProps>, res: Response) => {
+router.post('/login',
+    // CompareDate,
+    setDbName, async (req: Request<UserProps>, res: Response) => {
     try {
         const data = await AuthController.login(req.body);
 

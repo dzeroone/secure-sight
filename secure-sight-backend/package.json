@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && set NODE_ENV=development && node dist/app.js",
-    "dev": "NODE_ENV=dev nodemon --watch './**/*.ts' --exec 'ts-node' src/app.ts",
+    "dev": "NODE_ENV=dev nodemon --watch './**/*.ts' -L --exec 'ts-node' src/app.ts",
     "prod": "NODE_ENV=prod node dist/app.js",
     "build": "tsc -p ."
   },
