@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 
 import {
   Row,
-  Container,
   Col,
   Card,
   CardBody,
-  Dropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
 } from "reactstrap";
 
 //Import Breadcrumb
-import Breadcrumbs, { Breadcrumbsub } from "../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { useParams } from "react-router-dom";
 import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
@@ -26,7 +21,6 @@ import ReactGridLayout from "react-grid-layout";
 import RadialChart from "../usedCharts/radialChart";
 import EditModals, {
   RawDataModel,
-  ReorderColumnsModels,
 } from "../../components/Common/editModel";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -49,19 +43,23 @@ const Dashboard = () => {
   // document.title = "Dashboard | trend micro unity";
   document.title = "Dashboard | Secure Sight";
   const [deleteModal, setDeleteModal] = useState(false);
-  const [openLoader, setOpenLoader] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [openLoader, setOpenLoader] = useState(false);
+  const [open, setOpen] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [dashboardId, setDashboardId] = useState("");
   const [chartTitle, setChartTitle] = useState("");
   const [chartId, setChartId] = useState("");
-  const [dashboardData, setDashboardData] = React.useState([]);
-  const [rowData, setRowData] = React.useState([]);
-  const [userData, setUserData] = React.useState({
+  const [dashboardData, setDashboardData] = useState([]);
+  const [rowData, setRowData] = useState([]);
+  const [userData, setUserData] = useState({
     email: "",
     dbName: "",
     user_id: "",
   });
+
+  const dashboardRef = useRef();
+
+
   useEffect(() => {
     let userObject = localStorage.getItem("authUser");
     var userInfo = userObject ? JSON.parse(userObject) : "";
@@ -117,8 +115,6 @@ const Dashboard = () => {
             : 3,
       };
     });
-
-  const dashboardRef = React.useRef();
 
   //   ############################################ dashboard list ##########################################
 
@@ -201,7 +197,7 @@ const Dashboard = () => {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <div className="page-content">
         <ToastContainer />
         <Breadcrumbs title="Dashboard" breadcrumbItem={param.id} />
@@ -396,25 +392,25 @@ const Dashboard = () => {
                   </div>
                 ))}
           </ResponsiveReactGridLayout>
-          {dashboardData &&
-            dashboardData
-              .filter((i) => i.type === "Table")
-              .map((i) => (
-                <div key={i._id}>
-                  <Col xl={12}>
-                    <Card>
-                      <CardBody>
-                        <CostomDropdow
-                          i={i}
-                          OpenEditModel={OpenEditModel}
-                          OpenDeleteModel={OpenDeleteModel}
-                        />
-                        <MaterialTableBasic data={i} />
-                      </CardBody>
-                    </Card>
-                  </Col>
-                </div>
-              ))}
+          {dashboardData && dashboardData
+            .filter((i) => i.type === "Table")
+            .map((i) => (
+              <div key={i._id}>
+                <Col xl={12}>
+                  <Card>
+                    <CardBody>
+                      <CostomDropdow
+                        i={i}
+                        OpenEditModel={OpenEditModel}
+                        OpenDeleteModel={OpenDeleteModel}
+                      />
+                      <MaterialTableBasic data={i} />
+                    </CardBody>
+                  </Card>
+                </Col>
+              </div>
+            ))
+          }
         </Row>
       </div>
       <Backdrop
@@ -424,7 +420,7 @@ const Dashboard = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-    </React.Fragment>
+    </Fragment>
   );
 };
 

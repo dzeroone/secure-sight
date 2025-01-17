@@ -1,34 +1,23 @@
-import { CheckBox, Download } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
-import {
-  Backdrop,
-  Checkbox,
-  CircularProgress,
-  FormControl,
-  FormHelperText,
-  ListItemText,
-  MenuItem,
-  OutlinedInput,
-  Select,
-} from "@mui/material";
+import { Download } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 
-import ReactGridLayout from "react-grid-layout";
-import { Link, useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Card,
   CardBody,
-  CardTitle,
   Col,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  Modal,
+  ModalBody,
   Row,
+  Spinner,
 } from "reactstrap";
 
-import Breadcrumbs, { Breadcrumbsub } from "../../components/Common/Breadcrumb";
+import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
 import Loader from "../../components/Common/loader";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
@@ -47,7 +36,7 @@ const CreateChart = ({ dashboardId, updateFun }) => {
   const [reportData, setReportData] = useState([]);
   const [checkbox, setCheckbox] = useState([]);
   const [btnprimary1, setBtnprimary1] = useState(false);
-  const [openLoader, setOpenLoader] = React.useState(false);
+  const [openLoader, setOpenLoader] = useState(false);
   const [chartData, setChartData] = useState([]);
   const [reportTitle, setReportTitle] = useState("");
   const [loader, setLoader] = useState(false);
@@ -60,7 +49,7 @@ const CreateChart = ({ dashboardId, updateFun }) => {
   });
   const [tableId, setTableId] = useState("");
   const [tableData, setTableData] = useState([]);
-  const [userData, setUserData] = React.useState({
+  const [userData, setUserData] = useState({
     email: "",
     dbName: "",
     user_id: "",
@@ -151,7 +140,7 @@ const CreateChart = ({ dashboardId, updateFun }) => {
     // const response = await ApiServices("post", payload, ApiEndPoints.FileList);
 
     // setCSVDataList(response?.data);
-    // setOpenLoader(false);
+    setOpenLoader(false);
   };
   // ############################################ get csv data list ########################################
 
@@ -228,7 +217,7 @@ const CreateChart = ({ dashboardId, updateFun }) => {
                     </div>
                   </Col>
                 </Row>
-                <form action="javascript:void(0)" onSubmit={getTableData}>
+                <form onSubmit={getTableData}>
                   {!switchCSVData && (
                     <Row>
                       <Col md={6}>
@@ -312,7 +301,7 @@ const CreateChart = ({ dashboardId, updateFun }) => {
             <Col xl={12}>
               <Card className="dashboard-card">
                 <CardBody>
-                  <form action="javascript:void(0)" onSubmit={createChart}>
+                  <form onSubmit={createChart}>
                     <Row>
                       <Col md={6}>
                         <Card className="dashboard-card">
@@ -451,13 +440,19 @@ const CreateChart = ({ dashboardId, updateFun }) => {
           </Row>
         )}
 
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={openLoader}
-          onClick={() => setOpenLoader(false)}
+        <Modal
+          isOpen={openLoader}
+          backdrop={true}
+          centered={true}
+          contentClassName="bg-transparent border-0 text-center"
+          toggle={() => {
+            setOpenLoader(false)
+          }}
         >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+          <ModalBody>
+            <Spinner color="inherit" />
+          </ModalBody>
+        </Modal>
 
         <style>{`
           .dark-dashboard {
