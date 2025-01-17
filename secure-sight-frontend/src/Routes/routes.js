@@ -135,7 +135,7 @@ const authProtectedRoutes = [
   { path: "/help/:id", component: <Help /> },
 ];
 
-const publicRoutes = [
+const nonAuthRoutes = [
   // Authentication Page
   { path: "/logout", component: <Logout /> },
   { path: "/", component: <Login /> },
@@ -148,7 +148,9 @@ const publicRoutes = [
   { path: "/auth-register", component: <Register1 /> },
   { path: "/auth-recoverpw", component: <RecoverPassword /> },
   { path: "/auth-lock-screen", component: <LockScreen /> },
+];
 
+const publicRoutes = [
   // Utility Pages
   { path: "/pages-404", component: <Error404 /> },
   { path: "/pages-500", component: <Error500 /> },
@@ -156,4 +158,4 @@ const publicRoutes = [
   { path: "/pages-comingsoon", component: <ComingSoon /> },
 ];
 
-export { authProtectedRoutes, publicRoutes };
+export { authProtectedRoutes, nonAuthRoutes, publicRoutes };

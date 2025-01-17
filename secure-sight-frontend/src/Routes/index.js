@@ -9,11 +9,12 @@ import { layoutTypes } from "../constants/layout";
 
 // layouts
 import NonAuthLayout from "../Layout/NonAuthLayout";
+import PublicLayout from "../Layout/PublicLayout";
 import VerticalLayout from "../Layout/VerticalLayout/index";
 import HorizontalLayout from "../Layout/HorizontalLayout/index";
 import { AuthProtected } from "./AuthProtected";
 
-import { authProtectedRoutes, publicRoutes } from "./routes";
+import { authProtectedRoutes, nonAuthRoutes, publicRoutes } from "./routes";
 
 const getLayout = (layoutType) => {
   let Layout = VerticalLayout;
@@ -41,6 +42,16 @@ const Index = () => {
     <Routes>
       <Route>
         {publicRoutes.map((route, idx) => (
+          <Route
+            path={route.path}
+            element={<PublicLayout>{route.component}</PublicLayout>}
+            key={idx}
+            exact={true}
+          />
+        ))}
+      </Route>
+      <Route>
+        {nonAuthRoutes.map((route, idx) => (
           <Route
             path={route.path}
             element={<NonAuthLayout>{route.component}</NonAuthLayout>}

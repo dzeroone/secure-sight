@@ -24,7 +24,7 @@ const AccessRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={props => {
-        return (<> <Component {...props} /> </>);
+        return <Component {...props} />;
       }}
     />
   );
