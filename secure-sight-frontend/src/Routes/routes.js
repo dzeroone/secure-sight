@@ -54,6 +54,7 @@ import CSVFileView from "../Pages/reports/csvData/csvFileView";
 
 const authProtectedRoutes = [
   // Dashboard
+  { path: "/logout", component: <Logout /> },
   { path: "/", component: <CreateDashboard /> },
   { path: "/dashboard/create-dashboard", component: <CreateDashboard /> },
   { path: "/dashboard/:id", component: <Dashboard /> },
@@ -137,7 +138,6 @@ const authProtectedRoutes = [
 
 const nonAuthRoutes = [
   // Authentication Page
-  { path: "/logout", component: <Logout /> },
   { path: "/", component: <Login /> },
   { path: "/login", component: <Login /> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },

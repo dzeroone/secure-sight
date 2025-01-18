@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import { graphqlHTTP } from 'express-graphql'
 import passport from 'passport'
 import cors from 'cors'
-import express, { Application, Request, Response, NextFunction } from 'express'
+import express, { Application, Request, Response, NextFunction, ErrorRequestHandler } from 'express'
 import dotenv from 'dotenv'
 import schema from './schema/schema'
 import routes from './routes'
@@ -62,6 +62,16 @@ if (process.env.NODE_ENV === 'prod') {
         res.sendFile(path.resolve(__dirname, "../../client/build/index.html"))
     })
 }
+
+const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
+    if (res.headersSent) {
+        return next(err)
+    }
+    res.status(500)
+    res.send({ error: err })
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 5001
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))

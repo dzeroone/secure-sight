@@ -4,11 +4,22 @@ const router = express.Router();
 import { UserProps } from '../types/types'
 import AuthController from '../controllers/authController'
 import { setDbName } from '../utils/auth-util'
-import { CompareDate } from '../middleware/auth'
 
 router.post('/register', async (req: Request<UserProps>, res: Response) => {
-    let data = await AuthController.register(req.body)
-    res.send(data)
+    try {
+        let data = await AuthController.register(req.body)
+        res.send({
+            success: true,
+            data
+        })
+    }catch(e: any) {
+        res.status(400).send({
+            success: false,
+            data: {
+                message: e.message
+            }
+        })
+    }
 })
 
 router.post('/login',

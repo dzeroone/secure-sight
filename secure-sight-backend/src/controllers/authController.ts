@@ -6,10 +6,7 @@ import { sendEmail } from '../helper/email.helper';
 
 class AuthController {
   async register(params: UserProps) {
-    return new Promise(async (resolve) => {
-      const res = await sendRegisterInfo(params);
-      resolve(res);
-    });
+    return sendRegisterInfo(params);
   }
 
   async login(params: UserProps) {

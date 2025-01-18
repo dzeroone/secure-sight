@@ -55,8 +55,9 @@ function* loginUser({ payload: { user, history } }) {
           reload: true,
         });
         history("/dashboard/create-dashboard");
+      }else{
+        toast(response.msg, { autoClose: 2000 });
       }
-      toast(response.msg, { autoClose: 2000 });
     }
   } catch (error) {
     yield put(apiError(error));

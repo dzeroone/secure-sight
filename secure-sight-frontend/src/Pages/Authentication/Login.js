@@ -16,8 +16,8 @@ import withRouter from "../../components/Common/withRouter";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { loginUser  } from "../../store/actions";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PointDropBG from "../../components/point-drop-bg";
 
 const Login = (props) => {
   document.title = "Login | Secure Sight";
@@ -52,98 +52,8 @@ const Login = (props) => {
 
   return (
     <React.Fragment>
-      <ToastContainer />
-      <style>
-        {`
-          * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box !important;
-          }
-
-          html, body {
-            height: 100%;
-          }
-
-          body {
-            display: table;
-            width: 100%;
-            height: 100%;
-            background-color: #171717;
-            color: #000;
-            line-height: 1.6;
-            position: relative;
-            font-family: sans-serif;
-            overflow: hidden;
-          }
-
-          .lines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            margin: auto;
-            width: 90vw;
-          }
-
-          .line {
-            position: absolute;
-            width: 1px;
-            height: 100%;
-            top: 0;
-            left: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-          }
-
-          .line::after {
-            content: '';
-            display: block;
-            position: absolute;
-            height: 15vh;
-            width: 100%;
-            top: -50%;
-            left: 0;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
-            animation: drop 7s 0s infinite;
-            animation-fill-mode: forwards;
-            animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
-          }
-
-          .line:nth-child(1) {
-            margin-left: -25%;
-          }
-
-          .line:nth-child(1)::after {
-            animation-delay: 2s;
-          }
-
-          .line:nth-child(3) {
-            margin-left: 25%;
-          }
-
-          .line:nth-child(3)::after {
-            animation-delay: 2.5s;
-          }
-
-          @keyframes drop {
-            0% {
-              top: -50%;
-            }
-            100% {
-              top: 110%;
-            }
-          }
-        `}
-      </style>
-      <div className="lines"> {/* Add lines div here */}
-        <div className="line"></div>
-        <div className="line"></div>
-        <div className="line"></div>
-      </div>
-      <div className="bg-overlay"></div>
-      <div className="account-pages my-5 pt-5">
+      <PointDropBG />
+      <div className="account-pages py-5">
         <Container>
           <Row className="justify-content-between align-items-center">
             <Col lg={6} className="text-center">
@@ -229,139 +139,103 @@ const Login = (props) => {
                         <div>{error}</div>
                       </div>
                     ) : null}
-                    <Row>
-                      <Col md={12}>
-                        <div className="mb-4">
-                          <Label className="form-label" style={{ color: "#444" }}>
-                            Email
-                          </Label>
-                          <Input
-                            name="email"
-                            className="form-control"
-                            placeholder="Enter your email"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.email || ""}
-                            invalid={
-                              validation.touched.email && validation.errors.email
-                                ? true
-                                : false
-                            }
-                            style={{
-                              backgroundColor: "#f4f4f4",
-                              border: "2px solid #ddd",
-                              color: "#444",
-                              height: "50px",
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Add shadow effect
-                              transition: "all 0.3s ease", // Add transition for smooth hover effect
-                            }}
-                            onMouseEnter={(e) => e.target.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)"}
-                            onMouseLeave={(e) => e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)"}
+                    <div className="d-flex flex-column gap-4">
+                      <div>
+                        <Label className="form-label" style={{ color: "#444" }}>
+                          Email
+                        </Label>
+                        <Input
+                          name="email"
+                          className="elevated-input"
+                          placeholder="Enter your email"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.email || ""}
+                          invalid={
+                            validation.touched.email && validation.errors.email
+                              ? true
+                              : false
+                          }
+                        />
+                        {validation.touched.email && validation.errors.email ? (
+                          <FormFeedback type="invalid">
+                            <div>{validation.errors.email}</div>
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                      <div>
+                        <Label className="form-label" style={{ color: "#444" }}>
+                          Password
+                        </Label>
+                        <Input
+                          className="elevated-input"
+                          name="password"
+                          type="password"
+                          placeholder="Enter your password"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.password || ""}
+                          invalid={
+                            validation.touched.password && validation.errors.password
+                              ? true
+                              : false
+                          }
+                        />
+                        {validation.touched.password && validation.errors.password ? (
+                          <FormFeedback type="invalid">
+                            <div>{validation.errors.password}</div>
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                      <div className="d-flex flex-row justify-content-between">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id="customControlInline"
                           />
-                          {validation.touched.email && validation.errors.email ? (
-                            <FormFeedback type="invalid">
-                              <div>{validation.errors.email}</div>
-                            </FormFeedback>
-                          ) : null}
-                        </div>
-                        <div className="mb-4">
-                          <Label className="form-label" style={{ color: "#444" }}>
-                            Password
-                          </Label>
-                          <Input
-                            name="password"
-                            type="password"
-                            placeholder="Enter your password"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.password || ""}
-                            invalid={
-                              validation.touched.password && validation.errors.password
-                                ? true
-                                : false
-                            }
-                            style={{
-                              backgroundColor: "#f4f4f4",
-                              border: "2px solid #ddd",
-                              color: "#444",
-                              height: "50px",
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Add shadow effect
-                              transition: "all 0.3s ease", // Add transition for smooth hover effect
-                            }}
-                            onMouseEnter={(e) => e.target.style.boxShadow = " 0 8px 16px rgba(0, 0, 0, 0.2)"}
-                            onMouseLeave={(e) => e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)"}
-                          />
-                          {validation.touched.password && validation.errors.password ? (
-                            <FormFeedback type="invalid">
-                              <div>{validation.errors.password}</div>
-                            </FormFeedback>
-                          ) : null}
-                        </div>
-                        <Row>
-                          <Col>
-                            <div className="form-check">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                                id="customControlInline"
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor="customControlInline"
-                                style={{ color: "#444" }}
-                              >
-                                Remember me
-                              </label>
-                            </div>
-                          </Col>
-                          <Col className="col-7">
-                            <div className="text-md-end mt-3 mt-md-0">
-                              <Link
-                                to="/auth-recoverpw"
-                                className="text-muted"
-                                style={{
-                                  textDecoration: "underline",
-                                  color: "#27294F",
-                                }}
-                              >
-                                Forgot your password?
-                              </Link>
-                            </div>
-                          </Col>
-                        </Row>
-                        <div className="d-grid mt-4">
-                          <button
-                            className="btn"
-                            style={{
-                              backgroundColor: "#27294F",
-                              color: "white",
-                              padding: "15px 20px",
-                              borderRadius: "8px",
-                              fontSize: "16px",
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Add shadow effect
-                              transition: "all 0.3s ease", // Add transition for smooth hover effect
-                            }}
-                            onMouseEnter={(e) => e.target.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)"}
-                            onMouseLeave={(e) => e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)"}
-                            type="submit"
+                          <label
+                            className="form-check-label"
+                            htmlFor="customControlInline"
+                            style={{ color: "#444" }}
                           >
-                            Log In
-                          </button>
+                            Remember me
+                          </label>
                         </div>
-                        <div className="mt-4 text-left">
-                          <p style={{ color: "#777" }}>
-                            Don't have an account?{" "}
-                            <Link
-                              to="/register"
-                              className="fw-medium"
-                              style={{ color: "#27294F" }}
-                            >
-                              Register
-                            </Link>
-                          </p>
+                        <div className="text-md-end mt-3 mt-md-0">
+                          <Link
+                            to="/auth-recoverpw"
+                            className="text-muted"
+                            style={{
+                              textDecoration: "underline",
+                              color: "#27294F",
+                            }}
+                          >
+                            Forgot your password?
+                          </Link>
                         </div>
-                      </Col>
-                    </Row>
+                      </div>
+                      <div className="d-grid mt-4">
+                        <button
+                          className="btn btn-lg-submit"
+                          type="submit"
+                        >
+                          Log In
+                        </button>
+                      </div>
+                      <div className="mt-4 text-left">
+                        <p style={{ color: "#777" }}>
+                          Don't have an account?{" "}
+                          <Link
+                            to="/register"
+                            className="fw-medium"
+                            style={{ color: "#27294F" }}
+                          >
+                            Register
+                          </Link>
+                        </p>
+                      </div>
+                    </div>
                   </Form>
                 </CardBody>
               </div>

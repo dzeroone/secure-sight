@@ -72,25 +72,16 @@ export const sendUserDetail = async (params: any) => {
 }
 
 export const sendRegisterInfo = async (params: any) => {
-    return new Promise(async resolve => {
-        const dm = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.USERS)
-        let user = await dm.findOne({ email: params.email })
-        if (user) {
-            resolve({ msg: AUTH.USER_EXIST })
-        } else {
-            bcryptjs.genSalt(10, async (_err: any, salt: string) => {
-                bcryptjs.hash(params.password, salt, async (err2, hash) => {
-                    if (err2) {
-                        resolve({ err2 })
-                    } else {
-                        params.password = hash
-                        const doc = new dm(params)
-                        await doc.save({ password: 0 })
-                        const response = await dm.findOne({ email: params.email }, { password: 0 })
-                        resolve(response)
-                    }
-                })
-            })
-        }
-    })
+    const dm = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    let user = await dm.findOne({ email: params.email })
+    if (user) {
+        throw new Error(AUTH.USER_EXIST)
+    } else {
+        const salt = await bcryptjs.genSalt(10)
+        const hashedPassword = await bcryptjs.hash(params.password, salt)
+        params.password = hashedPassword
+        const doc = new dm(params)
+        await doc.save({ password: 0 })
+        return dm.findOne({ email: params.email }, { password: 0 })
+    }
 }
