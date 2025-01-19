@@ -272,44 +272,43 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 		} else if (repeat.toLowerCase() == 'weekly') {
 			schedulingString = `${minute} ${hour} * * ${day}`
 		} else if (repeat.toLowerCase() == 'monthly') {
-			schedulingString = `${minute} ${hour} ${date} * *`
+			schedulingString = `${minute} ${hour} ${date < 1 ? 1 : date} * *`
 		} else if (repeat.toLowerCase() == 'minute') {
-			schedulingString = `*/${minute} * * * *`
+			schedulingString = `*/${minute < 1 ? 1 : minute} * * * *`
 		} else {
 			schedulingString = `0 */23 * * *`
 		}
+
 		let argsOfConnector = argsList.join(' ').trim()
-		let command = `python ${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension} ${argsOfConnector} > ${serverPath}/cron.log 2>&1`
+		let command = `python ${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension} ${argsOfConnector} > ${serverPath}/cron.log`
 		// let command = `python3 ${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension} ${argsOfConnector} > ${serverPath}/cron.log 2>&1`
 		let zipFilePath = path.join(serverPath, connectorBasePath + `.zip`)
 		console.log("-------------------the connetor main file is being executed-----------------")
-		const isFileExists = await fs.access(
+		fs.access(
 			`${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension}`,
 			fs.constants.F_OK,
-			(err: any) => {
+			async (err: any) => {
 				console.log('Err', err)
-				console.log('Connector not exists trying to uncompress....')
-				decompress(zipFilePath, serverPath)
-					.then((files) => {
-						console.log(`unzipped the ${connectorBasePath}`)
-						const job = schedule(
-							schedulingString,
-							() => {
-								child_process.exec(command, {}, (err, stdout, stderr) => {})
-
-								console.log('***Connector scheduled!***')
-							},
-							{ scheduled: true },
-						)
-						scheduledControllerDB[connectorId] = job
-						job.start()
-						return true
-					})
-					.catch((err: any) => {
-						console.log('Unzip not done::', err.message)
-						return false
-					})
-				return !err
+				if(err) {
+					console.log('Connector not exists trying to uncompress....')
+					await decompress(zipFilePath, serverPath)
+					console.log(`unzipped the ${connectorBasePath}`)
+				}
+				
+				const job = schedule(
+					schedulingString,
+					() => {
+						console.log('starting... the job')
+						child_process.exec(command, {}, (err, stdout, stderr) => {
+							console.log(err, stdout, stderr)
+							console.log('job running completed')
+						})
+					}
+				)
+				scheduledControllerDB[connectorId] = job
+				console.log('***Connector scheduled!***')
+				// job.start()
+				return true
 			},
 		)
 	} catch (e: any) {

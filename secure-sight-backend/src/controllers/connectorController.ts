@@ -109,11 +109,19 @@ class ConnectorController {
             let response;
             const { info } = params
             const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.CONNECTOR);
-            const connector = await dm.findOne({ connectorId: info.connectorId }).lean();
+            const connector = await dm.findOne({ _id: info.connectorId }).lean();
             if (connector) {
-                await dm.deleteOne({ "connectorId": info.connectorId });
+                await dm.deleteOne({ _id: info.connectorId });
+
+								const cc = dynamicModelWithDBConnection(
+									info.dbName,
+									COLLECTIONS.CONNECTOR_CONFIG,
+								)
+								await cc.deleteMany({ "connectorId": connector._id });
+
                 const um = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.USERCONNECTOR);
-                await um.deleteMany({ "connectorId": info.connectorId });
+                await um.deleteMany({ "connectorId": connector._id });
+								
                 response = { success: true, status: 200, msg: `Connector delete successfully.` };
                 resolve(response);
                 return;
@@ -344,7 +352,7 @@ class ConnectorController {
 			}
 
 			const { dbName, connectorId, isScheduled } = info
-			const dbConnection = await dynamicModelWithDBConnection(
+			const dbConnection = dynamicModelWithDBConnection(
 				dbName,
 				COLLECTIONS.CONNECTOR_CONFIG,
 			)
@@ -403,6 +411,19 @@ class ConnectorController {
 					let responseData = { ...info, ...data }
 					let dataScheduler = [{ ...data.config }]
 					await connectorTestScheduler(responseData, dataScheduler)
+
+					const connectorModel = dynamicModelWithDBConnection(
+						dbName,
+						COLLECTIONS.CONNECTOR,
+					)
+					await connectorModel.findOneAndUpdate({
+						_id: connectorId
+					}, {
+						$set: {
+							scheduleInfo: data
+						}
+					})
+
 					await dbConnection.findOneAndUpdate(
 						{
 							connectorId: new mongoose.Types.ObjectId(connectorId),

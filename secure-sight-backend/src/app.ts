@@ -35,8 +35,8 @@ app.use(function (req: Request, res: Response, next: NextFunction) {
 })
 
 // Cron Job
-const cronJobEmailSender = new cronScheduler()
-cronJobEmailSender.schedule.start()
+// const cronJobEmailSender = new cronScheduler()
+// cronJobEmailSender.schedule.start()
 
 // Routes
 app.use('/api', routes)
