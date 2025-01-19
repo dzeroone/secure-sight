@@ -30,6 +30,7 @@ import {
   hidencolumn,
 } from "../ulit/commonFunction";
 import ExportCSV from "../ulit/exportCSV";
+import ModalLoading from "../../components/modal-loading";
 
 const CreateChart = ({ dashboardId, updateFun }) => {
   const [reportList, setReportList] = useState([]);
@@ -440,19 +441,12 @@ const CreateChart = ({ dashboardId, updateFun }) => {
           </Row>
         )}
 
-        <Modal
+        <ModalLoading
           isOpen={openLoader}
-          backdrop={true}
-          centered={true}
-          contentClassName="bg-transparent border-0 text-center"
-          toggle={() => {
+          onClose={() => {
             setOpenLoader(false)
           }}
-        >
-          <ModalBody>
-            <Spinner color="inherit" />
-          </ModalBody>
-        </Modal>
+        />
 
         <style>{`
           .dark-dashboard {

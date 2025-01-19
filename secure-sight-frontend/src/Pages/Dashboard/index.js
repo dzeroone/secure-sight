@@ -26,7 +26,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CostomDropdow from "../../components/Common/costomDropdown";
 import CreateChart from "./d";
-import { Backdrop, CircularProgress } from "@mui/material";
 import "./index.css";
 import BarChartWithGroup from "../usedCharts/barChartWithGroup";
 import { MaterialTableBasic } from "../Tables/Table";
@@ -34,6 +33,7 @@ import DashboardTable from "../Tables/tableChart";
 import DashboardTableCluster from "../Tables/clousterTable";
 import { DashboardList, ReportList } from "../ulit/dashboardlist";
 import DeleteModal from "../../components/Common/DeleteModal";
+import ModalLoading from "../../components/modal-loading";
 // import './dark-theme.css';
 const ResponsiveReactGridLayout = ReactGridLayout.WidthProvider(
   ReactGridLayout.Responsive
@@ -413,13 +413,10 @@ const Dashboard = () => {
           }
         </Row>
       </div>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openLoader}
-        onClick={() => setOpenLoader(false)}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <ModalLoading
+        isOpen={openLoader}
+        onClose={() => setOpenLoader(false)}
+      />
     </Fragment>
   );
 };

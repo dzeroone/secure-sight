@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { Row, Col, Card, CardBody, Input } from "reactstrap";
-import Breadcrumbs, { Breadcrumbsub } from "../../components/Common/Breadcrumb";
-import { useParams } from "react-router-dom";
-import ApiServices from "../../Network_call/apiservices";
+import { Fragment, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { Col, Row } from "reactstrap";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
+import ModalLoading from "../../components/modal-loading";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Backdrop, CircularProgress } from "@mui/material";
+import ApiServices from "../../Network_call/apiservices";
 import {
 	allReplace,
 	formatCapilize,
 	objectkey,
 	uperCase,
 } from "../ulit/commonFunction";
-import ConnectorList from "./connectorList";
 import ConnectorListTwo from "./new-table";
 
 const ConnectorSchedule = () => {
 	// document.title = "scheduler | trend micro unity";
 	document.title ="scheduler | Secure Sight";
-	const [openLoader, setOpenLoader] = React.useState(false);
+	const [openLoader, setOpenLoader] = useState(false);
 	const [connectorList, setConnectorList] = useState([]);
 	const [connectorName, setConnectorName] = useState("");
-	const [config, setConfig] = React.useState(true);
+	const [config, setConfig] = useState(true);
 	const [configData, setConfigData] = useState([]);
-	const [schedulerData, setSchedulerData] = React.useState({
+	const [schedulerData, setSchedulerData] = useState({
 		connectorId: "",
 		repeat: "",
 		minute: "",
@@ -32,7 +29,7 @@ const ConnectorSchedule = () => {
 		weekDay: "",
 		monthDay: "",
 	});
-	const [userData, setUserData] = React.useState({
+	const [userData, setUserData] = useState({
 		email: "",
 		dbName: "",
 		user_id: "",
@@ -175,9 +172,8 @@ const ConnectorSchedule = () => {
 	};
 
 	return (
-		<React.Fragment>
+		<Fragment>
 			<div className="page-content">
-				<ToastContainer />
 				<Breadcrumbs title="Schedule" breadcrumbItem="Connector" />
 				{/* <Row>
 					<Col xl={12}>
@@ -320,14 +316,11 @@ const ConnectorSchedule = () => {
 					</Col>
 				</Row>
 			</div>
-			<Backdrop
-				sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-				open={openLoader}
-				onClick={() => setOpenLoader(false)}
-			>
-				<CircularProgress color="inherit" />
-			</Backdrop>
-		</React.Fragment>
+			<ModalLoading
+				isOpen={openLoader}
+				onClose={() => setOpenLoader(false)}
+			/>
+		</Fragment>
 	);
 };
 
@@ -335,7 +328,7 @@ export default ConnectorSchedule;
 
 const SelectOption = ({ data, name, handelChange }) => {
 	return (
-		<React.Fragment>
+		<Fragment>
 			<Col md={6}>
 				<div className="form-floating mb-3">
 					<select
@@ -371,7 +364,7 @@ const SelectOption = ({ data, name, handelChange }) => {
 					<label htmlFor="floatingSelectGrid">Select {name}</label>
 				</div>
 			</Col>
-		</React.Fragment>
+		</Fragment>
 	);
 };
 

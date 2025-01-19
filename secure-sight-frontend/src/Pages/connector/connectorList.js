@@ -1,34 +1,29 @@
 import { CloseOutlined } from "@mui/icons-material";
-import { Backdrop, CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Fragment, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
-  Container,
-  Col,
-  Row,
+  Card,
   CardBody,
   CardTitle,
-  Card,
-  Table,
+  Col,
+  Row,
+  Spinner,
+  Table
 } from "reactstrap";
 import swal from "sweetalert";
 
 //Import Breadcrumb
-import Breadcrumbs, { Breadcrumbsub } from "../../components/Common/Breadcrumb";
+import { Link } from "react-router-dom";
+import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
-import { Link } from "react-router-dom";
 import { allReplace, formatCapilize } from "../ulit/commonFunction";
 
 const ConnectorList = () => {
-  // document.title = "Connector List | Trend Micro Unity";
-  document.title = "Connector List | Secure Sight";
-
-  const [openLoader, setOpenLoader] = React.useState(false);
-  const [connectorListData, setConnectorListData] = React.useState([]);
+  const [openLoader, setOpenLoader] = useState(false);
+  const [connectorListData, setConnectorListData] = useState([]);
   const [searchedVal, setSearchedVal] = useState("");
-  const [userData, setUserData] = React.useState({
+  const [userData, setUserData] = useState({
     email: "",
     dbName: "",
     user_id: "",
@@ -45,11 +40,10 @@ const ConnectorList = () => {
   }, []);
 
   //   ######################################## connector list  ##########################################
-  const connectorData = async (item) => {
+  const connectorData = async (dbName) => {
     setOpenLoader(true);
     const payload = {
-      headers: { "Access-Control-Allow-Origin": "*" },
-      info: { dbName: item },
+      info: { dbName },
     };
     const response = await ApiServices(
       "post",
@@ -113,7 +107,7 @@ const ConnectorList = () => {
   // };
 
   return (
-    <React.Fragment>
+    <Fragment>
       {/* <ToastContainer />
       <div className="page-content"> */}
       {/* <Container fluid={true}>
@@ -125,7 +119,7 @@ const ConnectorList = () => {
               <CardTitle>
                 <div>
                   <Breadcrumbsub
-                    title="Connector List"
+                    title={<span>Connector List { openLoader ? <Spinner color="dark" size="sm" /> : null }</span>}
                     breadcrumbItem={
                       <div className="input-group">
                         <button
@@ -185,7 +179,7 @@ const ConnectorList = () => {
                       //   page * rowsPerPage + rowsPerPage
                       // )
                       .map((item, index) => (
-                        <tr>
+                        <tr key={index}>
                           <th scope="row">{index + 1}</th>
                           <td>
                             {formatCapilize(
@@ -251,14 +245,7 @@ const ConnectorList = () => {
       </Row>
       {/* </Container> */}
       {/* </div> */}
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openLoader}
-        onClick={() => setOpenLoader(false)}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </React.Fragment>
+    </Fragment>
   );
 };
 

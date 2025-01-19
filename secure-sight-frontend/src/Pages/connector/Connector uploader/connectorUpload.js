@@ -1,48 +1,48 @@
-import React, { useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
+import Dropzone from "react-dropzone";
 import {
 	Card,
 	CardBody,
 	Col,
-	Row,
-	CardTitle,
 	Container,
-	Label,
-	Input,
-	Form,
 	Dropdown,
-	DropdownToggle,
-	DropdownMenu,
 	DropdownItem,
+	DropdownMenu,
+	DropdownToggle,
+	Form,
+	Row
 } from "reactstrap";
-import Dropzone from "react-dropzone";
 
 // Breadcrumb
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
 
-import { Link } from "react-router-dom";
-import JSZip from "jszip";
-import ApiServices from "../../../Network_call/apiservices";
-import ApiEndPoints from "../../../Network_call/ApiEndPoints";
-import "react-toastify/dist/ReactToastify.css";
-import { toast, ToastContainer } from "react-toastify";
-import ConnectorList from "../connectorList";
 import axios from "axios";
-import { setSelectedLanguage,  } from "../../ulit/dashboardlist";
+import JSZip from "jszip";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ApiEndPoints from "../../../Network_call/ApiEndPoints";
+import ApiServices from "../../../Network_call/apiservices";
+import ConnectorList from "../connectorList";
+import ModalLoading from "../../../components/modal-loading";
 
 
 
 const chunkSize = 10000 * 1000;
 const ConnectorUploader = () => {
 	document.title =
-		"Connector Upload | Upzet - React Admin & Dashboard Template";
-	const [selectedFiles, setselectedFiles] = useState([]);
-	const [connectortData, setConnectortData] = useState([]);
+		"Connector Upload | Secure Sight";
+	const [selectedFiles, setSelectedFiles] = useState([]);
+	const [connectorData, setConnectorData] = useState([]);
+	const [refreshSeed, setRefreshSeed] = useState(0);
+
 	const [openLoader, setOpenLoader] = useState(false);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [selectedLanguage, setSelectedLanguage] = useState('');
 	const [state, setState] = useState({
 		currentFile: undefined,
 		previewImage: undefined,
+		uploadFiles: false,
 		progress: 0,
 		message: "",
 		imageInfos: [],
@@ -56,7 +56,7 @@ const ConnectorUploader = () => {
 		calculatePercentage: 0,
 		totalHit: 0,
 	});
-	const [userData, setUserData] = React.useState({
+	const [userData, setUserData] = useState({
 		email: "",
 		dbName: "",
 		user_id: "",
@@ -71,6 +71,7 @@ const ConnectorUploader = () => {
 			user_id: userInfo._id,
 		}));
 	}, []);
+
 	const info = { email: userData.email, dbName: userData.dbName };
 
 	const handleAcceptedFiles = async (files) => {
@@ -80,29 +81,27 @@ const ConnectorUploader = () => {
 				formattedSize: formatBytes(file.size),
 			})
 		);
-		setselectedFiles(files);
+		setSelectedFiles(files);
 		let multiConnectorInfo = [];
 		for (let file of files) {
 			try {
-				const response = await JSZip.loadAsync(file)
-					.then(async (content) => {
-						return await new Promise((resolve) => {
-							content.forEach((relativePath, zipEntry) => {
-								if (relativePath.split("/").includes("integration.json"))
-									resolve(content.files[zipEntry.name].async("text"));
-							});
-						});
-					})
-					.then((p) => p);
-				setConnectortData([JSON.parse(response)]);
+				const fileContent = await JSZip.loadAsync(file)
+				let text = '';
+				for(let filePath in fileContent.files) {
+					if (filePath.split("/").includes("integration.json"))
+						text = await fileContent.files[filePath].async("text");
+				}
+				const ctorData = JSON.parse(text);
+				setConnectorData([ctorData]);
 
-				multiConnectorInfo = [...multiConnectorInfo, JSON.parse(response)];
+				multiConnectorInfo = [...multiConnectorInfo, ctorData];
 			} catch (err) {
+				console.log(err)
 				setState((prevState) => ({
 					...prevState,
 					multiConnectorInfo: [],
 				}));
-				setConnectortData([]);
+				setConnectorData([]);
 
 				return;
 			}
@@ -126,42 +125,61 @@ const ConnectorUploader = () => {
 
 	const onSubmit = async () => {
 		setOpenLoader(true);
-		const payload = {
-			info: { email: userData.email, dbName: userData.dbName },
-			data: connectortData,
-		};
-		const response = ApiServices(
-			"post",
-			payload,
-			ApiEndPoints.InsertMultiConnector
-		);
-		if (!response.error) {
-			setState((prevState) => ({
-				...prevState,
-				btnLoader: true,
-				selectedFileInfo: state.files[state.currentFileIndex],
-			}));
-			if (state.currentFileIndex !== null) {
-				setState((prevState) => ({ ...prevState, currentChunkIndex: 0 }));
-			}
-		} else {
-			setState((prevState) => ({
-				...prevState,
-			}));
-		}
-		setselectedFiles([]);
-		setConnectortData([]);
+		setState(s => ({
+			...s,
+			uploadFiles: true
+		}))
 	};
+
+	const refreshConnectorList = () => {
+		setRefreshSeed(Math.random())
+	}
+
+	const startUploadingConnector = useCallback(async () => {
+		if(state.uploadFiles) {
+			if(state.currentFileIndex !== null) {
+				const payload = {
+					info: { email: userData.email, dbName: userData.dbName },
+					data: [state.multiConnectorInfo[state.currentFileIndex]],
+				};
+				const response = ApiServices(
+					"post",
+					payload,
+					ApiEndPoints.InsertMultiConnector
+				);
+				if (!response.error) {
+					setState((prevState) => ({
+						...prevState,
+						btnLoader: true,
+						selectedFileInfo: state.files[state.currentFileIndex],
+					}));
+					if (state.currentFileIndex !== null) {
+						setState((prevState) => ({ ...prevState, currentChunkIndex: 0 }));
+					}
+					return
+				}
+			}
+		}
+	}, [state.uploadFiles, state.currentFileIndex, userData])
+
+	useEffect(() => {
+		startUploadingConnector();
+	}, [startUploadingConnector])
 
 	useEffect(() => {
 		if (state.lastUploadedFileIndex === null) {
 			return;
 		}
 		const isLastFile = state.lastUploadedFileIndex === state.files.length - 1;
-		const nextFileIndex = isLastFile ? null : state.currentFileIndex + 1;
+		if(isLastFile) {
+			setSelectedFiles([]);
+			setConnectorData([]);
+			refreshConnectorList();
+		}
 		setState((prevState) => ({
 			...prevState,
-			currentFileIndex: nextFileIndex,
+			uploadFiles: isLastFile ? false : prevState.uploadFiles,
+			currentFileIndex: isLastFile ? null : prevState.currentFileIndex + 1,
 		}));
 	}, [state.lastUploadedFileIndex]);
 
@@ -180,17 +198,13 @@ const ConnectorUploader = () => {
 
 	useEffect(() => {
 		if (state.files.length > 0) {
-			if (state.currentFileIndex === null) {
-				setState((prevState) => ({
-					...prevState,
-					currentFileIndex:
-						state.lastUploadedFileIndex === null
-							? 0
-							: state.lastUploadedFileIndex + 1,
-				}));
-			}
+			setState((prevState) => ({
+				...prevState,
+				lastUploadedFileIndex: null,
+				currentFileIndex: 0
+			}));
 		}
-	}, [state.files.length]);
+	}, [state.files]);
 
 	useEffect(() => {
 		if (state.currentChunkIndex !== null) {
@@ -212,7 +226,7 @@ const ConnectorUploader = () => {
 	}
 
 	const uploadChunk = async (readerEvent) => {
-		setOpenLoader(!openLoader);
+		setOpenLoader(true);
 		const file = state.files[state.currentFileIndex];
 		const data = readerEvent.target.result;
 		const params = new URLSearchParams();
@@ -239,8 +253,6 @@ const ConnectorUploader = () => {
 		const filesize = state.files[state.currentFileIndex].size;
 		const chunks = Math.ceil(filesize / chunkSize) - 1;
 		const isLastChunk = state.currentChunkIndex === chunks;
-		setOpenLoader(false);
-		toast("Connector Add Seccessfull!");
 
 		if (isLastChunk) {
 			// respFile.finalFilename = response.finalFilename;
@@ -253,6 +265,8 @@ const ConnectorUploader = () => {
 				// calculatePercentage: calculatePercentageFn(),
 				totalHit: prevState.totalHit + 1,
 			}));
+			setOpenLoader(false);
+			toast("Connector has been added!");
 		} else {
 			setState((prevState) => ({
 				...prevState,
@@ -280,9 +294,7 @@ const ConnectorUploader = () => {
 
 
 	return (
-		<React.Fragment>
-			{/* <ToastContainer /> */}
-
+		<Fragment>
 			<div className="page-content">
 				<Container fluid={true}>
 					<Breadcrumbs title="Connector" breadcrumbItem="Connector Upload" />
@@ -367,7 +379,7 @@ const ConnectorUploader = () => {
 							<div className="d-line-block mt-4">
 								<button
 									type="button"
-									disabled={!connectortData.length > 0}
+									disabled={!connectorData.length > 0}
 									onClick={onSubmit}
 									className="btn btn-primary "
 								>
@@ -378,12 +390,19 @@ const ConnectorUploader = () => {
 					</Row>
 					<Row>
 						<Col className="col-12 col-md-12">
-							<ConnectorList />
+							<ConnectorList key={refreshSeed} />
 						</Col>
 					</Row>
 				</Container>
 			</div>
-		</React.Fragment >
+			<ModalLoading
+        isOpen={openLoader}
+				persistent={true}
+        onClose={() => {
+          setOpenLoader(false)
+        }}
+      />
+		</Fragment >
 	);
 };
 
