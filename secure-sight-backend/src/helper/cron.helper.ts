@@ -295,17 +295,22 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 					console.log(`unzipped the ${connectorBasePath}`)
 				}
 				
-				const job = schedule(
-					schedulingString,
-					() => {
-						console.log('starting... the job')
-						child_process.exec(command, {}, (err, stdout, stderr) => {
-							console.log(err, stdout, stderr)
-							console.log('job running completed')
-						})
-					}
-				)
-				scheduledControllerDB[connectorId] = job
+				// need to enable for scheduling
+				// const job = schedule(
+				// 	schedulingString,
+				// 	() => {
+				// 		console.log('starting... the job')
+				// 		child_process.exec(command, {}, (err, stdout, stderr) => {
+				// 			console.log(err, stdout, stderr)
+				// 			console.log('job running completed')
+				// 		})
+				// 	}
+				// )
+				// scheduledControllerDB[connectorId] = job
+				child_process.exec(command, {}, (err, stdout, stderr) => {
+					console.log(err, stdout, stderr)
+					console.log('job running completed')
+				})
 				console.log('***Connector scheduled!***')
 				// job.start()
 				return true
