@@ -182,12 +182,12 @@ const ConnectorList = () => {
                         <tr key={index}>
                           <th scope="row">{index + 1}</th>
                           <td>
-                            {formatCapilize(
+                            {item.display_name ? formatCapilize(
                               allReplace(item.display_name, {
                                 _: " ",
                                 "-": " ",
                               })
-                            )}
+                            ) : ''}
                           </td>
                           <td>{item.category}</td>
                           <td>{item.created_at}</td>
@@ -196,12 +196,12 @@ const ConnectorList = () => {
                               to={"/connector-log/" + item.display_name}
                               state={{ display_name: item.display_name }}
                             >
-                              {formatCapilize(
+                              {item.display_name ? formatCapilize(
                                 allReplace(item.display_name, {
                                   _: " ",
                                   "-": " ",
                                 })
-                              )}
+                              ) : ''}
                             </Link>
                           </td>
                           <td>

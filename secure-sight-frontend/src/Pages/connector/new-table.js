@@ -115,14 +115,18 @@ const ConnectorListTwo = () => {
 				}
 			}, {}))
 			setConfigData(objectkey(jsonData.data.config).reduce((p, c) => {
-				console.log(scheduleInfo, scheduleInfo.config, scheduleInfo.config[c])
 				return {
 					...p,
 					[c]: scheduleInfo.config[c]
 				}
 			}, {}))
 		}else{
-			setConfigData(jsonData.data.config);
+			setConfigData(objectkey(jsonData.data.config).reduce((p, c) => {
+				return {
+					...p,
+					[c]: ''
+				}
+			}, {}));
 		}
 		//  }
 	};
