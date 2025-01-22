@@ -2,7 +2,9 @@ import { ConnectorProps } from '../types/types'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
 import { OTHER, COLLECTIONS } from '../constant'
 import { connectorTestScheduler, stopTestConnectorScheduler } from '../helper/cron.helper'
-import { response } from 'express'
+import crypto from 'crypto'
+import path from 'path'
+import fs from 'fs'
 import mongoose from 'mongoose'
 // import { createUpdateClientDb, updateDbName } from '../utils/tenantUtil'
 
@@ -45,7 +47,8 @@ class ConnectorController {
         const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.CONNECTOR)
         for (let index in data) {
             let obj = data[index]
-            const query = { email: obj.email, name: obj.name, display_name: obj.display_name, category: obj.category }
+            // const query = { email: obj.email, name: obj.name, display_name: obj.display_name, category: obj.category }
+						const query = { email: obj.email, name: obj.name, display_name: obj.display_name }
             const res = await dm.findOne(query).lean()
             if (!res) {
                 const doc = new dm({ ...obj, type: "default" })
@@ -106,10 +109,13 @@ class ConnectorController {
 
     async tenantDeleteConnector(params: any) {
         return new Promise(async (resolve, reject) => {
+						const localDirPath = path.resolve(process.env.PWD || '', `../secure-sight-scheduler/server`)
+
             let response;
             const { info } = params
             const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.CONNECTOR);
             const connector = await dm.findOne({ _id: info.connectorId }).lean();
+						const connectorDirName = crypto.createHash('md5').update(connector.email + connector.display_name).digest('hex')
             if (connector) {
                 await dm.deleteOne({ _id: info.connectorId });
 
@@ -121,7 +127,18 @@ class ConnectorController {
 
                 const um = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.USERCONNECTOR);
                 await um.deleteMany({ "connectorId": connector._id });
-								
+
+								try {
+									await fs.promises.rm(path.join(localDirPath, connectorDirName), {
+										recursive: true,
+										force: true
+									})
+									await fs.promises.unlink(connector.filePath)
+									await fs.promises.unlink(path.join(localDirPath, connectorDirName + '.log'))
+								}catch(e) {
+									console.log(e)
+								}
+
                 response = { success: true, status: 200, msg: `Connector delete successfully.` };
                 resolve(response);
                 return;
@@ -280,6 +297,16 @@ class ConnectorController {
 					dbName,
 					COLLECTIONS.CONNECTOR_CONFIG,
 				)
+				const connectorModel = await dynamicModelWithDBConnection(
+					dbName,
+					COLLECTIONS.CONNECTOR,
+				)
+
+				const connector = await connectorModel.findOne({_id: new mongoose.Types.ObjectId(connectorId)})
+				if(!connector) throw new Error('connector not found!')
+
+				// forcing connector basepath change
+				data.connectorBasePath = crypto.createHash('md5').update(connector.email + connector.display_name).digest('hex')
 
 				const configData = {
 					connectorId: new mongoose.Types.ObjectId(connectorId),
@@ -410,12 +437,14 @@ class ConnectorController {
 
 					let responseData = { ...info, ...data }
 					let dataScheduler = [{ ...data.config }]
-					await connectorTestScheduler(responseData, dataScheduler)
 
 					const connectorModel = dynamicModelWithDBConnection(
 						dbName,
 						COLLECTIONS.CONNECTOR,
 					)
+
+					await connectorTestScheduler(responseData, dataScheduler)
+
 					await connectorModel.findOneAndUpdate({
 						_id: connectorId
 					}, {

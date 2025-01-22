@@ -280,7 +280,7 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 		}
 
 		let argsOfConnector = argsList.join(' ').trim()
-		let command = `python3 ${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension} ${argsOfConnector} > ${serverPath}/cron.log`
+		let command = `python3 ${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension} ${argsOfConnector} > ${serverPath}/${connectorBasePath}.log`
 		// let command = `python3 ${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension} ${argsOfConnector} > ${serverPath}/cron.log 2>&1`
 		let zipFilePath = path.join(serverPath, connectorBasePath + `.zip`)
 		console.log("-------------------the connetor main file is being executed-----------------")
@@ -291,7 +291,7 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 				console.log('Err', err)
 				if(err) {
 					console.log('Connector not exists trying to uncompress....')
-					await decompress(zipFilePath, serverPath)
+					await decompress(zipFilePath, path.join(serverPath, connectorBasePath))
 					console.log(`unzipped the ${connectorBasePath}`)
 				}
 				
