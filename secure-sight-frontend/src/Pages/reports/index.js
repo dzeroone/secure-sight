@@ -1,23 +1,19 @@
-import { Backdrop, CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import ReactGridLayout from "react-grid-layout";
 import { useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-import { Row, Container } from "reactstrap";
+import { toast } from "react-toastify";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import CostomDropdow from "../../components/Common/costomDropdown";
+import DeleteModal from "../../components/Common/DeleteModal";
 import EditModals, {
   EditHeaderModals,
   ReorderColumnsModels,
 } from "../../components/Common/editModel";
+import ModalLoading from "../../components/modal-loading";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
-import { DashboardList, ReportList } from "../ulit/dashboardlist";
 import CreateSubReport from "./createSubReport";
-import UserReport from "./userReport";
-import DeleteModal from "../../components/Common/DeleteModal";
+import CostomDropdow from "../../components/Common/costomDropdown";
+import UserReport from './userReport'
 
 const ResponsiveReactGridLayout = ReactGridLayout.WidthProvider(
   ReactGridLayout.Responsive
@@ -28,30 +24,25 @@ const Report = () => {
   document.title = "Report | Secure Sight";
   let param = useParams();
   const [deleteModal, setDeleteModal] = useState(false);
-  const [openLoader, setOpenLoader] = React.useState(false);
+  const [openLoader, setOpenLoader] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [editHeaderModal, setEditHeaderModal] = useState(false);
   const [reorderHeaderModal, setReorderHeaderModal] = useState(false);
-  const [reportData, setReportData] = React.useState([]);
-  const [report_id, setReport_id] = React.useState("");
-  const [tableData, setTableData] = React.useState({
+  const [reportData, setReportData] = useState(null);
+  const [tableData, setTableData] = useState({
     title: "",
     Id: "",
   });
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
-  const [headerEdit, setHeaderEdit] = React.useState({
+  const [headerEdit, setHeaderEdit] = useState({
     column: [],
     data: [],
     headerName: [],
   });
-  const [userData, setUserData] = React.useState({
-    email: "",
-    dbName: "",
-    user_id: "",
-  });
+  const [userData, setUserData] = useState(null);
 
-  const reportRef = React.useRef();
+  const reportRef = useRef();
 
   useEffect(() => {
     let userObject = localStorage.getItem("authUser");
@@ -62,43 +53,28 @@ const Report = () => {
       dbName: userInfo.dbName,
       user_id: userInfo._id,
     }));
-    ReportList({
-      dbName: userInfo.dbName,
-      userId: userInfo._id,
-      reload: false,
-    });
-    DashboardList({
-      dbName: userInfo.dbName,
-      userId: userInfo._id,
-      reload: false,
-    });
   }, []);
 
   useEffect(() => {
-    const userReport = localStorage.getItem("report");
-    var userReportData = userReport ? JSON.parse(userReport) : [];
-    const reportid =
-      userReportData &&
-      userReportData.filter((i) => i.reportName == param.id).map((i) => i._id);
-    setReport_id(reportid[0]);
-    GetReportData(reportid[0]);
+    if(userData)
+      GetReportData(param.id);
   }, [param.id, userData]);
   //   ############################################ report list ##########################################
   const GetReportData = async (item) => {
     setOpenLoader(true);
-    setReportData([]);
+    setReportData(null);
     setTableData({ title: "", Id: "" });
     let payload = {
       info: { dbName: userData.dbName },
-      data: { report_id: item, user_id: userData.user_id },
+      data: { report_id: param.id, user_id: userData.user_id },
     };
     const response = await ApiServices(
       "post",
       payload,
       ApiEndPoints.GetReportData
     );
-    if (response.data) {
-      setReportData(response?.data);
+    if (response.success) {
+      setReportData(response.data);
     }
     setOpenLoader(false);
   };
@@ -164,7 +140,7 @@ const Report = () => {
         dbName: userData.dbName,
         user_id: userData.user_id,
         table_id: tableData.Id,
-        report_id: report_id,
+        report_id: param.id,
       },
       data: { title: tableData.title },
     };
@@ -175,7 +151,7 @@ const Report = () => {
     );
 
     toast(response.msg);
-    GetReportData(report_id);
+    GetReportData(param.id);
     setEditModal(false);
     setOpenLoader(false);
   };
@@ -186,7 +162,7 @@ const Report = () => {
         dbName: userData.dbName,
         user_id: userData.user_id,
         id: tableData.Id,
-        report_id: report_id,
+        report_id: param.id,
         column: headerEdit.column,
         headerName: headerEdit.headerName,
       },
@@ -201,7 +177,7 @@ const Report = () => {
     toast(response.msg);
     setReorderHeaderModal(false);
     setEditHeaderModal(false);
-    GetReportData(report_id);
+    GetReportData(param.id);
     setOpenLoader(false);
   };
 
@@ -210,7 +186,7 @@ const Report = () => {
     let payload = {
       dbName: userData.dbName,
       user_id: userData.user_id,
-      report_id: report_id,
+      report_id: param.id,
       id: tableData.Id,
     };
     const response = await ApiServices(
@@ -219,26 +195,21 @@ const Report = () => {
       ApiEndPoints.DeleteReportData
     );
     toast(response.msg);
-    GetReportData(report_id);
+    GetReportData(param.id);
     setDeleteModal(false);
     setOpenLoader(false);
   };
   //   ############################################ export report   ##########################################
-  const exportContent = React.useCallback(() => {
+  const exportContent = useMemo(() => {
     return reportRef.current;
   }, [reportRef.current]);
 
   //   ############################################ report show ##########################################
 
-  const layout =
-    reportData &&
-    reportData.map((item) => {
-      return { i: item._id, x: 0, y: 0, w: 12, h: 5 };
-    });
+  const layout = reportData && { i: reportData._id, x: 0, y: 0, w: 12, h: 5 };
 
   return (
-    <React.Fragment>
-      <ToastContainer />
+    <Fragment>
       <DeleteModal
         show={deleteModal}
         onDeleteClick={DeleteReport}
@@ -269,8 +240,8 @@ const Report = () => {
         onChange={handelReorderHeader}
       />
       <div className="page-content">
-        <Breadcrumbs title="Report" breadcrumbItem={param.id} />
-        <CreateSubReport reportId={report_id} GetReportData={GetReportData} />
+        <Breadcrumbs title="Report" breadcrumbItem={reportData ? reportData.reportName : param.id} />
+        <CreateSubReport reportId={param.id} GetReportData={GetReportData} />
         {/* <ResponsiveReactGridLayout
           layouts={{ lg: layout }}
           measureBeforeMount={true}
@@ -279,35 +250,29 @@ const Report = () => {
           isResizable={true}
           margin={[0, 25]}
         > */}
-        {reportData &&
-          reportData.map((data) => (
-            <div key={data._id} ref={reportRef}>
-              <CostomDropdow
-                i={data}
-                OpenEditModel={OpenEditModel}
-                OpenHeaderEditModel={OpenHeaderEditModel}
-                OpenDeleteModel={OpenDeleteModel}
-                exportContent={exportContent}
-                OpenHeaderReorderModel={OpenHeaderReorderModel}
-              />
-              <UserReport
-                data={data}
-                key={data._id}
-                userData={userData}
-                report_id={report_id}
-              />
-            </div>
-          ))}{" "}
         {/* </ResponsiveReactGridLayout> */}
+        {reportData && <div key={reportData._id} ref={reportRef}>
+          <CostomDropdow
+            i={reportData}
+            OpenEditModel={OpenEditModel}
+            OpenHeaderEditModel={OpenHeaderEditModel}
+            OpenDeleteModel={OpenDeleteModel}
+            exportContent={exportContent}
+            OpenHeaderReorderModel={OpenHeaderReorderModel}
+          />
+          <UserReport
+            data={reportData}
+            userData={userData}
+            report_id={reportData._id}
+          />
+        </div> }{" "}
+
       </div>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openLoader}
-        onClick={() => setOpenLoader(false)}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </React.Fragment>
+      <ModalLoading
+        isOpen={openLoader}
+        onClose={() => setOpenLoader(fales)}
+      />
+    </Fragment>
   );
 };
 

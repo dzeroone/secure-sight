@@ -66,7 +66,7 @@ class reportController {
             const { info, data } = params
             const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.REPORT);
             const getEntry = await dm.findOne({ _id: info.report_id }).lean();
-            const query = { report_id: info.report_id, user_id: info.user_id, type: "table", title: info.title, data: data.data };
+            const query = { user_id: info.user_id, type: "table", title: info.title, data: data.data };
             if (getEntry) {
                 const doc = new dm({ ...query, created_at: new Date() })
                 await doc.save();
@@ -87,7 +87,7 @@ class reportController {
         return new Promise(async (resolve) => {
             const { info, data } = params
             const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.REPORT);
-            const getEntry = await dm.find({ $and: [{ report_id: data.report_id }, { user_id: data.user_id }] }).lean();
+            const getEntry = await dm.findOne({ _id: data.report_id }).lean();
             if (getEntry) {
                 response = { success: true, status: 200, data: getEntry, msg: `Get report data successfully.`, error: false }
                 resolve(response)

@@ -1,34 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
-import { Row, Col, Card, CardBody, CardTitle, CardSubtitle } from "reactstrap";
+import { Row, Col, Card, CardBody } from "reactstrap";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 
 //Import Breadcrumb
 import Breadcrumbs, { Breadcrumbsub } from "../../components/Common/Breadcrumb";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import swal from "sweetalert";
+import { toast } from "react-toastify";
 import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
-import { DashboardList, ReportList } from "../ulit/dashboardlist";
 
 import EditModals from "../../components/Common/editModel";
 import { Link } from "react-router-dom";
-import { Backdrop, CircularProgress } from "@mui/material";
 import { CloseOutlined } from "@mui/icons-material";
 import DeleteModal from "../../components/Common/DeleteModal";
+import ModalLoading from "../../components/modal-loading";
 
 const DeleteReport = () => {
-  // document.title = "Report | trend micro unity";
   document.title = "Report | Secure Sight";
   const [reportList, setReportList] = useState([]);
-  const [openLoader, setOpenLoader] = React.useState(false);
+  const [openLoader, setOpenLoader] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [reportsName, setReportName] = useState("");
   const [searchedVal, setSearchedVal] = useState("");
   const [reportId, setReportId] = useState("");
-  const [userData, setUserData] = React.useState({
+  const [userData, setUserData] = useState({
     email: "",
     dbName: "",
     user_id: "",
@@ -41,20 +37,30 @@ const DeleteReport = () => {
       dbName: userInfo.dbName,
       user_id: userInfo._id,
     }));
-    ReportList({
+    loadReportList({
       dbName: userInfo.dbName,
-      userId: userInfo._id,
-      reload: false,
+      userId: userInfo._id
     });
-    DashboardList({
-      dbName: userInfo.dbName,
-      userId: userInfo._id,
-      reload: false,
-    });
-    const userReport = localStorage.getItem("report");
-    var userReportData = userReport ? JSON.parse(userReport) : [];
-    setReportList(userReportData);
   }, []);
+
+  const loadReportList = async ({ dbName, userId }) => {
+    try {
+      setOpenLoader(true)
+      let payload = { dbName: dbName, user_id: userId };
+      const response = await ApiServices(
+        "post",
+        payload,
+        ApiEndPoints.GetReportList
+      );
+      if(response.success) {
+        setReportList(response.data);
+      }
+    }catch(e) {
+      toast(e.message, { autoClose: 5000 })
+    }finally{
+      setOpenLoader(false)
+    }
+  }
 
   // ####################################delete dashboard ####################################
   const DeleteAlert = (item) => {
@@ -75,10 +81,9 @@ const DeleteReport = () => {
     );
     toast(response.msg, { autoClose: 2000 });
 
-    ReportList({
+    loadReportList({
       dbName: userData.dbName,
-      userId: userData.user_id,
-      reload: true,
+      userId: userData.user_id
     });
     setOpenLoader(false);
   };
@@ -108,17 +113,15 @@ const DeleteReport = () => {
     );
     toast(response.msg);
     if (response) {
-      ReportList({
+      loadReportList({
         dbName: userData.dbName,
-        userId: userData.user_id,
-        reload: true,
+        userId: userData.user_id
       });
     }
     setOpenLoader(false);
   };
   return (
-    <React.Fragment>
-      <ToastContainer />
+    <Fragment>
       <div className="page-content">
         <div className="container-fluid">
           <DeleteModal
@@ -200,10 +203,10 @@ const DeleteReport = () => {
                                   )
                             )
                             .map((item, index) => (
-                              <tr>
+                              <tr key={item._id}>
                                 <th scope="row">{index + 1}</th>
                                 <td>
-                                  <Link to={"/reports/" + item.reportName}>
+                                  <Link to={"/reports/" + item._id}>
                                     {item.reportName}
                                   </Link>
                                 </td>
@@ -244,14 +247,11 @@ const DeleteReport = () => {
           </Row>
         </div>
       </div>{" "}
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openLoader}
-        onClick={() => setOpenLoader(false)}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </React.Fragment>
+      <ModalLoading
+        isOpen={openLoader}
+        onClose={() => setOpenLoader(false)}
+      />
+    </Fragment>
   );
 };
 

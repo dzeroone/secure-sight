@@ -1,15 +1,9 @@
 import express, { Request, Response } from 'express'
 import axios from 'axios';
 const router = express.Router();
-//public
-// const esUrl = "http://13.234.237.238:9200/";
-// const eUrl = "http://13.234.237.238:9200/_cat/indices?v&pretty=true";
-const esUrl = "http://localhost:9200/";
-const eUrl = "http://localhost:9200/_cat/indices?v&pretty=true"
-//client techm
-//const esUrl = "http://10.179.25.132:9200/";
-//fifa
-//const esUrl = "http://10.130.100.80:9200/";
+
+const esUrl = process.env.ELASTIC_BASE || "http://localhost:9200";
+const eUrl = `${esUrl}/_cat/indices?v&pretty=true`
 
 router.post("/data/", async (req, res) => {
   try {
@@ -17,7 +11,7 @@ router.post("/data/", async (req, res) => {
     const test = req.body.test;
     switch (test) {
       case "filtering":
-        response = await axios.post(`${esUrl}${req.body.index}/_search?size=10000`, {
+        response = await axios.post(`${esUrl}/${req.body.index}/_search?size=10000`, {
           query: {
             bool: {
               filter: {
@@ -30,7 +24,7 @@ router.post("/data/", async (req, res) => {
         });
         break;
       default:
-        response = await axios.get(`${esUrl}${req.body.index}/_search?size=10000`);
+        response = await axios.get(`${esUrl}/${req.body.index}/_search?size=10000`);
         break;
     }
     res.json(response.data);
@@ -47,7 +41,7 @@ router.post("/data/search", async (req, res) => {
     const test = req.body.test;
     switch (test) {
       case "filtering":
-        response = await axios.post(`${esUrl}${req.body.index}/_search?size=10000`, {
+        response = await axios.post(`${esUrl}/${req.body.index}/_search?size=10000`, {
           query: {
             bool: {
               filter: {
@@ -60,7 +54,7 @@ router.post("/data/search", async (req, res) => {
         });
         break;
       default:
-        response = await axios.get(`${esUrl}${req.body.index}/_search?size=10000`);
+        response = await axios.get(`${esUrl}/${req.body.index}/_search?size=10000`);
         break;
     }
     res.json(response.data.hits.hits);
@@ -112,7 +106,7 @@ router.post("/dataSource", async (req, res) => {
 
 router.post("/cveSearch", async (req, res) => {
   try {
-    let cve = await axios.post(`${esUrl}${req.body.index1}/_search?size=10000`);
+    let cve = await axios.post(`${esUrl}/${req.body.index1}/_search?size=10000`);
     const cveList = cve.data.hits.hits.map((a: any) => {
       return a['_source']
     })
@@ -135,7 +129,7 @@ router.post("/cveSearch", async (req, res) => {
       return name.keys
     });
     const rule_id = results
-    let assignedRuleIds = await axios.post(`${esUrl}${req.body.index2}/_search?size=10000`, {
+    let assignedRuleIds = await axios.post(`${esUrl}/${req.body.index2}/_search?size=10000`, {
       query: {
         bool: {
           filter: {
@@ -146,7 +140,7 @@ router.post("/cveSearch", async (req, res) => {
         }
       }
     });
-    let unAssignedRuleIds = await axios.post(`${esUrl}${req.body.index2}/_search?size=10000`, {
+    let unAssignedRuleIds = await axios.post(`${esUrl}/${req.body.index2}/_search?size=10000`, {
       query: {
         bool: {
           filter: {
@@ -159,7 +153,7 @@ router.post("/cveSearch", async (req, res) => {
     });
     const ips = assignedRuleIds.data.hits.hits.concat(unAssignedRuleIds.data.hits.hits)
     const ip = ips.map((a: any) => { return a['_source'].comp_id })
-    let computer = await axios.post(`${esUrl}${req.body.index3}/_search?size=10000`, {
+    let computer = await axios.post(`${esUrl}/${req.body.index3}/_search?size=10000`, {
       query: {
         bool: {
           filter: {
@@ -180,7 +174,7 @@ router.post("/cveSearch", async (req, res) => {
 
 router.delete("/index", async (req, res) => {
   try {
-    let data = await axios.post(`${esUrl}${req.body.index}/_delete_by_query`, {
+    let data = await axios.post(`${esUrl}/${req.body.index}/_delete_by_query`, {
       query: {
         match: {
           _index: req.body.index
@@ -197,7 +191,7 @@ router.delete("/index", async (req, res) => {
 export default router;
 
 // case "sorting":
-//   response = await axios.post(`${esUrl}${req.params.index}/_search`, {
+//   response = await axios.post(`${esUrl}/${req.params.index}/_search`, {
 //     sort: {
 //       createdAt: "desc",
 //     },
@@ -205,7 +199,7 @@ export default router;
 //   break;
 
 // case "matching":
-//     response = await axios.post(`${esUrl}${req.params.index}/_search?size=500`, {
+//     response = await axios.post(`${esUrl}/${req.params.index}/_search?size=500`, {
 //         query: {
 //             match: {
 //                 _accountID: req.query.id,
@@ -214,7 +208,7 @@ export default router;
 //     });
 //     break;
 // case "multi-matching":
-//   response = await axios.post(`${esUrl}${req.body.index}/_search`, {
+//   response = await axios.post(`${esUrl}/${req.body.index}/_search`, {
 //     query: {
 //       bool: {
 //         must: [
@@ -239,7 +233,7 @@ router.post("/create-index", async (req, res) => {
     const checkIndexExist = () =>
       new Promise((resolve) => {
         axios
-          .get(`${esUrl}${req.body.index}`)
+          .get(`${esUrl}/${req.body.index}`)
           .then((_) => {
             resolve(true);
           })
@@ -250,7 +244,7 @@ router.post("/create-index", async (req, res) => {
 
     const ifIndexExist = await checkIndexExist();
     if (!ifIndexExist) {
-      const esResponse = await axios.put(`${esUrl}${req.body.index}`, {
+      const esResponse = await axios.put(`${esUrl}/${req.body.index}`, {
         mappings: {
           properties: {
             name: {
@@ -358,7 +352,7 @@ router.post("/create-index", async (req, res) => {
 //     switch (test) {
 //       case 'filtering':
 //         response = await axios.post(
-//           `${esUrl}${req.body.index}/_search?size=10000`,
+//           `${esUrl}/${req.body.index}/_search?size=10000`,
 //           {
 //             query: {
 //               bool: {
@@ -375,7 +369,7 @@ router.post("/create-index", async (req, res) => {
 //         break;
 //       default:
 //         response = await axios.get(
-//           `${esUrl}${req.body.index}/_search?size=10000`,
+//           `${esUrl}/${req.body.index}/_search?size=10000`,
 //           { auth }
 //         );
 //         break;
@@ -396,7 +390,7 @@ router.post("/create-index", async (req, res) => {
 //     switch (test) {
 //       case 'filtering':
 //         response = await axios.post(
-//           `${esUrl}${req.body.index}/_search?size=10000`,
+//           `${esUrl}/${req.body.index}/_search?size=10000`,
 //           {
 //             query: {
 //               bool: {
@@ -413,7 +407,7 @@ router.post("/create-index", async (req, res) => {
 //         break;
 //       default:
 //         response = await axios.get(
-//           `${esUrl}${req.body.index}/_search?size=10000`,
+//           `${esUrl}/${req.body.index}/_search?size=10000`,
 //           { auth }
 //         );
 //         break;
@@ -430,7 +424,7 @@ router.post("/create-index", async (req, res) => {
 //   try {
 //     const checkIndexExist = async () => {
 //       try {
-//         await axios.get(`${esUrl}${req.body.index}`, { auth });
+//         await axios.get(`${esUrl}/${req.body.index}`, { auth });
 //         return true;
 //       } catch {
 //         return false;
@@ -440,7 +434,7 @@ router.post("/create-index", async (req, res) => {
 //     const ifIndexExist = await checkIndexExist();
 //     if (!ifIndexExist) {
 //       const esResponse = await axios.put(
-//         `${esUrl}${req.body.index}`,
+//         `${esUrl}/${req.body.index}`,
 //         {
 //           mappings: {
 //             properties: {
@@ -471,7 +465,7 @@ router.post("/create-index", async (req, res) => {
 // router.delete('/index', async (req: Request, res: Response) => {
 //   try {
 //     let data = await axios.post(
-//       `${esUrl}${req.body.index}/_delete_by_query`,
+//       `${esUrl}/${req.body.index}/_delete_by_query`,
 //       {
 //         query: {
 //           match: {
@@ -571,7 +565,7 @@ router.post("/create-index", async (req, res) => {
 // //     switch (test) {
 // //       case 'filtering':
 // //         response = await axios.post(
-// //           `${esUrl}${req.body.index}/_search?size=10000`,
+// //           `${esUrl}/${req.body.index}/_search?size=10000`,
 // //           {
 // //             query: {
 // //               bool: {
@@ -588,7 +582,7 @@ router.post("/create-index", async (req, res) => {
 // //         break;
 // //       default:
 // //         response = await axios.get(
-// //           `${esUrl}${req.body.index}/_search?size=10000`,
+// //           `${esUrl}/${req.body.index}/_search?size=10000`,
 // //           { auth }
 // //         );
 // //         break;
@@ -609,7 +603,7 @@ router.post("/create-index", async (req, res) => {
 // //     switch (test) {
 // //       case 'filtering':
 // //         response = await axios.post(
-// //           `${esUrl}${req.body.index}/_search?size=10000`,
+// //           `${esUrl}/${req.body.index}/_search?size=10000`,
 // //           {
 // //             query: {
 // //               bool: {
@@ -626,7 +620,7 @@ router.post("/create-index", async (req, res) => {
 // //         break;
 // //       default:
 // //         response = await axios.get(
-// //           `${esUrl}${req.body.index}/_search?size=10000`,
+// //           `${esUrl}/${req.body.index}/_search?size=10000`,
 // //           { auth }
 // //         );
 // //         break;
@@ -643,7 +637,7 @@ router.post("/create-index", async (req, res) => {
 // //   try {
 // //     const checkIndexExist = async () => {
 // //       try {
-// //         await axios.get(`${esUrl}${req.body.index}`, { auth });
+// //         await axios.get(`${esUrl}/${req.body.index}`, { auth });
 // //         return true;
 // //       } catch {
 // //         return false;
@@ -653,7 +647,7 @@ router.post("/create-index", async (req, res) => {
 // //     const ifIndexExist = await checkIndexExist();
 // //     if (!ifIndexExist) {
 // //       const esResponse = await axios.put(
-// //         `${esUrl}${req.body.index}`,
+// //         `${esUrl}/${req.body.index}`,
 // //         {
 // //           mappings: {
 // //             properties: {
@@ -684,7 +678,7 @@ router.post("/create-index", async (req, res) => {
 // // router.delete('/index', async (req: Request, res: Response) => {
 // //   try {
 // //     let data = await axios.post(
-// //       `${esUrl}${req.body.index}/_delete_by_query`,
+// //       `${esUrl}/${req.body.index}/_delete_by_query`,
 // //       {
 // //         query: {
 // //           match_all: {}

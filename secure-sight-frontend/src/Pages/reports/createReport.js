@@ -1,7 +1,5 @@
-import { Backdrop, CircularProgress } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Fragment, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import {
   Card,
@@ -15,7 +13,7 @@ import {
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import ApiEndPoints from '../../Network_call/ApiEndPoints';
 import ApiServices from '../../Network_call/apiservices';
-import { ReportList } from '../ulit/dashboardlist';
+import ModalLoading from '../../components/modal-loading';
 
 const CreateReport = () => {
   document.title = 'Create Report | Secure Sight';
@@ -36,12 +34,6 @@ const CreateReport = () => {
       dbName: userInfo.dbName,
       user_id: userInfo._id,
     });
-
-    ReportList({
-      dbName: userInfo.dbName,
-      userId: userInfo._id,
-      reload: false,
-    });
   }, []);
 
   const handleSubmit = async (e) => {
@@ -53,22 +45,15 @@ const CreateReport = () => {
     };
 
     const response = await ApiServices('post', payload, ApiEndPoints.CreateReport);
-    toast(response.msg, { autoClose: 10000 });
-
-    if (response) {
-      ReportList({
-        dbName: userData.dbName,
-        userId: userData.user_id,
-        reload: true,
-      });
-      window.location.reload();
+    if(response.success) {
+      setReportName('')
     }
+    toast(response.msg, { autoClose: 10000 });
     setOpenLoader(false);
   };
 
   return (
-    <React.Fragment>
-      <ToastContainer />
+    <Fragment>
       <div className="page-content dark-dashboard">
         <div className="gradient-overlay"></div>
         <Container fluid>
@@ -129,9 +114,10 @@ const CreateReport = () => {
         </Container>
       </div>
 
-      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openLoader}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <ModalLoading
+        isOpen={openLoader}
+        onClose={() => setOpenLoader(false)}
+      />
 
       <style>
           {`
@@ -377,7 +363,7 @@ const CreateReport = () => {
             }
           `}
         </style>
-    </React.Fragment>
+    </Fragment>
   );
 };
 

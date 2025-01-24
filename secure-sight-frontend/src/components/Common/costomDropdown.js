@@ -1,5 +1,5 @@
 import { MoreVert } from "@mui/icons-material";
-import React, { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -16,9 +16,7 @@ import {
   formatText,
 } from "../../Pages/ulit/commonFunction";
 import { RawDataModel } from "./editModel";
-import MaterialTable from "../../Pages/Tables/Table";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 
 const CostomDropdow = ({
   i,
@@ -43,7 +41,7 @@ const CostomDropdow = ({
     });
   };
   return (
-    <React.Fragment>
+    <Fragment>
       <RawDataModel
         data={i?.data}
         open={open}
@@ -82,9 +80,9 @@ const CostomDropdow = ({
                 Delete
               </DropdownItem> */}
 
-              <ExportCSV data={i?.data} title={i.title} />
+              {Array.isArray(i.data) ? <ExportCSV data={i.data} title={i.title} /> : null }
               <DropdownItem>
-                <ExportPdf content={exportContent} Title={i?.title} />
+                <ExportPdf content={exportContent} Title={i.title} />
               </DropdownItem>
 
               {OpenHeaderEditModel && (
@@ -119,7 +117,7 @@ const CostomDropdow = ({
           </Dropdown>
         }
       />
-    </React.Fragment>
+    </Fragment>
   );
 };
 

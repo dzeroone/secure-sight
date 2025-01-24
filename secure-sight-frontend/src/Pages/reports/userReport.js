@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
+import { useCallback, useMemo, useRef, useState, useEffect, Fragment } from "react";
 
 import {
   Container,
@@ -35,7 +35,7 @@ const UserReport = ({ data, userData, report_id }) => {
   const [editModal, setEditModal] = useState(false);
   const [reportTitle, setReportTitle] = useState("");
   const [testdata, setTestdata] = useState([])
-  const keys = Array.from(deepKeys(data && data?.data[0]));
+  const keys = Array.from(deepKeys(data && Array.isArray(data.data) && data.data[0]));
 
   useEffect(() => {
     const GetElasticData = async (elasticIndex) => {
@@ -62,7 +62,7 @@ const UserReport = ({ data, userData, report_id }) => {
     ? data?.column.length > 0
       ? ColumnsHeadWithEdit(data?.column, data?.headerName)
       : Columns(keys)
-    : Columns(keys);
+    : keys.length ? Columns(keys) : [];
 
   const hidecolumn = hidencolumn(keys);
 
@@ -96,7 +96,7 @@ const UserReport = ({ data, userData, report_id }) => {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <EditModals
         title="Edit Report Title"
         show={editModal}
@@ -118,7 +118,7 @@ const UserReport = ({ data, userData, report_id }) => {
         <Row>
           <Col md={12}>
             <MaterialTable
-              data={testdata.length > 0 ? testdata : data.data}
+              data={testdata.length > 0 ? testdata : Array.isArray(data.data) ? data.data : []}
               columns={columns}
               hidecolumn={hidecolumn}
               // enableFilterMatchHighlighting
@@ -146,7 +146,7 @@ const UserReport = ({ data, userData, report_id }) => {
           </Col>
         </Row>
       </div>
-    </React.Fragment>
+    </Fragment>
   );
 };
 

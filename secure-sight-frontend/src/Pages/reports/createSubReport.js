@@ -1,18 +1,13 @@
 import { ConstructionOutlined, Download } from '@mui/icons-material';
-import { Backdrop, Box, CircularProgress, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
-  Card,
-  CardBody,
-  Col,
   Dropdown,
   DropdownMenu,
   DropdownToggle,
   Row
 } from 'reactstrap';
-import Breadcrumbs, { Breadcrumbsub } from '../../components/Common/Breadcrumb';
 import ApiEndPoints from '../../Network_call/ApiEndPoints';
 import ApiServices from '../../Network_call/apiservices';
 import MaterialTable from '../Tables/Table';
@@ -26,11 +21,11 @@ import {
   hidencolumn
 } from '../ulit/commonFunction';
 import ExportCSV from '../ulit/exportCSV';
+import ModalLoading from '../../components/modal-loading';
 
 const CreateSubReport = ({ reportId, GetReportData }) => {
-  const theme = useTheme();
   const [btnprimary1, setBtnprimary1] = useState(false);
-  const [openLoader, setOpenLoader] = React.useState(false);
+  const [openLoader, setOpenLoader] = useState(false);
   const [connectorList, setConnectorList] = useState([]);
   const [indexList, setIndexList] = useState([]);
   const [checkbox, setCheckbox] = useState([]);
@@ -44,7 +39,7 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
   const [hour, setHour] = useState(0);
   const [selectedColumns, setSelectedColumns] = useState([]);
   const [filteredTableData, setFilteredData] = useState([]);
-  const [userData, setUserData] = React.useState({
+  const [userData, setUserData] = useState({
     email: '',
     dbName: '',
     user_id: ''
@@ -77,6 +72,7 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
   //   setReportTitle("");
   //   setOpenLoader(false);
   // };
+
   const HandleConnectorChange = async (event) => {
     setOpenLoader(true);
     setIndexList([]);
@@ -336,8 +332,10 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
         {/* Connector Selection Card */}
         <div className="dark-card form-section">
           <form
-            action="javascript:void(0)"
-            onSubmit={() => FilterData({ clear: true })}
+            onSubmit={(e) => {
+              e.preventDefault()
+              FilterData({ clear: true })
+            }}
             className="p-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -349,7 +347,7 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
                     className="dark-input"
                     onChange={(e) => HandleConnectorChange(e)}
                   >
-                    <option value="">Select Report</option>
+                    <option value="">No connector selected</option>
                     {connectorList?.map((item, index) => (
                       <option key={index} value={item.display_name}>
                         {index + 1 + "  "}
@@ -374,7 +372,7 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
                     className="dark-input"
                     onChange={(e) => setIndexName(e.target.value)}
                   >
-                    <option value="">Select Table</option>
+                    <option value="">No index selected</option>
                     {Array.isArray(indexList) && indexList.length > 0 ? (
                       indexList.map((i, index) => (
                         <option key={index} value={i}>
@@ -557,18 +555,10 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
         )}
 
         {/* Loading Backdrop */}
-        <Backdrop
-          sx={{
-            color: "#fff",
-            zIndex: (theme) => theme.zIndex.drawer + 1,
-            background: "rgba(15, 23, 42, 0.8)",
-            backdropFilter: "blur(4px)"
-          }}
-          open={openLoader}
-          onClick={() => setOpenLoader(false)}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+        <ModalLoading
+          isOpen={openLoader}
+          onClose={() => setOpenLoader(false)}
+        />
       </div>
 
         <style>{`
