@@ -261,7 +261,7 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 			const { type, position, isPathArg } = config[keyOfSecretData]
 			argsList[position] = isPathArg=='true'
 				? `${serverPath}/${connectorBasePath}/${data[0][keyOfSecretData]}`
-				: data[0][keyOfSecretData]
+				: `--${keyOfSecretData} ${data[0][keyOfSecretData]}`
 		})
 		let schedulingString: string = ''
 
