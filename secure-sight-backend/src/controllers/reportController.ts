@@ -26,20 +26,18 @@ class reportController {
     }
 
     async getReport(params: any) {
-        let response;
-        return new Promise(async (resolve) => {
-            const dm = dynamicModelWithDBConnection(params.dbName, COLLECTIONS.REPORT);
-            const report = await dm.find({ $and: [{ user_id: params.user_id }, { type: 'report' }] }).lean();
-            if (report.length > 0) {
-                response = { success: true, status: 200, data: report, msg: `User reports.` };
-                resolve(response)
-                return
-            } else {
-                response = { success: false, status: 404, msg: `User reports not found.` };
-                resolve(response)
-                return
-            }
-        })
+        const dm = dynamicModelWithDBConnection(params.dbName, COLLECTIONS.REPORT);
+        const report = await dm.find({ $and: [{ user_id: params.user_id }, { type: 'report' }] }).lean();
+        if (report.length > 0) {
+            return { success: true, status: 200, data: report, msg: `User reports.` };
+        } else {
+            return { success: false, status: 404, msg: `User reports not found.` };
+        }
+    }
+
+    async getReportById(id: string) {
+        const reportModel = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.REPORT);
+        return reportModel.findOne({_id: id}).lean()
     }
 
     async deleteReport(info: any) {
@@ -66,7 +64,7 @@ class reportController {
             const { info, data } = params
             const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.REPORT);
             const getEntry = await dm.findOne({ _id: info.report_id }).lean();
-            const query = { user_id: info.user_id, type: "table", title: info.title, data: data.data };
+            const query = { report_id: info.report_id, user_id: info.user_id, type: "table", title: info.title, data: data.data };
             if (getEntry) {
                 const doc = new dm({ ...query, created_at: new Date() })
                 await doc.save();
@@ -87,7 +85,7 @@ class reportController {
         return new Promise(async (resolve) => {
             const { info, data } = params
             const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.REPORT);
-            const getEntry = await dm.findOne({ _id: data.report_id }).lean();
+            const getEntry = await dm.find({ $and: [{ report_id: data.report_id }, { user_id: data.user_id }] }).lean();
             if (getEntry) {
                 response = { success: true, status: 200, data: getEntry, msg: `Get report data successfully.`, error: false }
                 resolve(response)

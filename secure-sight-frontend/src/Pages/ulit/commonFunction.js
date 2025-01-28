@@ -12,11 +12,11 @@ const capitalizedArray = (myArray) => {
   return newData;
 };
 
-function deepKeys(t, pre = []) {
+function* deepKeys(t, pre = []) {
   if (Array.isArray(t)) return;
   else if (Object(t) === t)
-    for (const [k, v] of Object.entries(t)) return deepKeys(v, [...pre, k]);
-  else return pre.join(".");
+    for (const [k, v] of Object.entries(t)) yield* deepKeys(v, [...pre, k]);
+  else yield pre.join(".");
 }
 
 const Columns = (data) => {

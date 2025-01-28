@@ -10,6 +10,10 @@ router.post('/get-report', async (req: Request, res: Response) => {
     let data = await reportController.getReport(req.body)
     res.send(data)
 })
+router.get('/:id', async (req, res) => {
+    const data = await reportController.getReportById(req.params.id)
+    res.send(data)
+})
 router.post('/update-report', async (req: Request, res: Response) => {
     let data = await reportController.updateReport(req.body)
     res.send(data)
@@ -24,10 +28,6 @@ router.post('/add-report-data', async (req: Request, res: Response) => {
 })
 router.post('/update-reportTable-title', async (req: Request, res: Response) => {
     let data = await reportController.updateReportTableTitle(req.body)
-    res.send(data)
-})
-router.post('/get-report-data', async (req: Request, res: Response) => {
-    let data = await reportController.getReportData(req.body)
     res.send(data)
 })
 router.post('/get-report-data', async (req: Request, res: Response) => {

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactGridLayout from "react-grid-layout";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -28,7 +28,8 @@ const Report = () => {
   const [editModal, setEditModal] = useState(false);
   const [editHeaderModal, setEditHeaderModal] = useState(false);
   const [reorderHeaderModal, setReorderHeaderModal] = useState(false);
-  const [reportData, setReportData] = useState(null);
+  const [reportInfo, setReportInfo] = useState(null);
+  const [reportData, setReportData] = useState([]);
   const [tableData, setTableData] = useState({
     title: "",
     Id: "",
@@ -44,6 +45,19 @@ const Report = () => {
 
   const reportRef = useRef();
 
+  const loadReportInfo = useCallback(async () => {
+    try {
+      const response = await ApiServices(
+        "get",
+        null,
+        `${ApiEndPoints.Report}/${param.id}`
+      );
+      setReportInfo(response)
+    }catch(e) {
+      console.log(e)
+    }
+  }, [])
+
   useEffect(() => {
     let userObject = localStorage.getItem("authUser");
     var userInfo = userObject ? JSON.parse(userObject) : "";
@@ -56,13 +70,16 @@ const Report = () => {
   }, []);
 
   useEffect(() => {
-    if(userData)
-      GetReportData(param.id);
+    if(userData) {
+      GetReportList(param.id);
+      loadReportInfo();
+    }
   }, [param.id, userData]);
+
   //   ############################################ report list ##########################################
-  const GetReportData = async (item) => {
+  const GetReportList = async (item) => {
     setOpenLoader(true);
-    setReportData(null);
+    setReportData([]);
     setTableData({ title: "", Id: "" });
     let payload = {
       info: { dbName: userData.dbName },
@@ -151,7 +168,7 @@ const Report = () => {
     );
 
     toast(response.msg);
-    GetReportData(param.id);
+    GetReportList(param.id);
     setEditModal(false);
     setOpenLoader(false);
   };
@@ -177,7 +194,7 @@ const Report = () => {
     toast(response.msg);
     setReorderHeaderModal(false);
     setEditHeaderModal(false);
-    GetReportData(param.id);
+    GetReportList(param.id);
     setOpenLoader(false);
   };
 
@@ -195,7 +212,7 @@ const Report = () => {
       ApiEndPoints.DeleteReportData
     );
     toast(response.msg);
-    GetReportData(param.id);
+    GetReportList(param.id);
     setDeleteModal(false);
     setOpenLoader(false);
   };
@@ -240,8 +257,8 @@ const Report = () => {
         onChange={handelReorderHeader}
       />
       <div className="page-content">
-        <Breadcrumbs title="Report" breadcrumbItem={reportData ? reportData.reportName : param.id} />
-        <CreateSubReport reportId={param.id} GetReportData={GetReportData} />
+        <Breadcrumbs title="Report" breadcrumbItem={reportInfo ? reportInfo.reportName : param.id} />
+        <CreateSubReport reportId={param.id} GetReportData={GetReportList} />
         {/* <ResponsiveReactGridLayout
           layouts={{ lg: layout }}
           measureBeforeMount={true}
@@ -251,9 +268,9 @@ const Report = () => {
           margin={[0, 25]}
         > */}
         {/* </ResponsiveReactGridLayout> */}
-        {reportData && <div key={reportData._id} ref={reportRef}>
+        {reportData.map(data => (<div key={data._id} ref={reportRef}>
           <CostomDropdow
-            i={reportData}
+            i={data}
             OpenEditModel={OpenEditModel}
             OpenHeaderEditModel={OpenHeaderEditModel}
             OpenDeleteModel={OpenDeleteModel}
@@ -261,11 +278,11 @@ const Report = () => {
             OpenHeaderReorderModel={OpenHeaderReorderModel}
           />
           <UserReport
-            data={reportData}
+            data={data}
             userData={userData}
-            report_id={reportData._id}
+            report_id={data._id}
           />
-        </div> }{" "}
+        </div>)) }{" "}
 
       </div>
       <ModalLoading

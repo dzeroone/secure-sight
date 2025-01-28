@@ -29,6 +29,7 @@ const ApiEndPoints = {
   GetDashboardData: createEndpoint("/dashboard/get-dashborad-data"),
   DeleteData: createEndpoint("/dashboard/delete-dashborad-data"),
   AddDashboardData: createEndpoint("/dashboard/add-dashborad-data"),
+  Report: createEndpoint("/report"),
   CreateReport: createEndpoint("/report/create-report"),
   GetReportList: createEndpoint("/report/get-report"),
   AddReportData: createEndpoint("/report/add-report-data"),
