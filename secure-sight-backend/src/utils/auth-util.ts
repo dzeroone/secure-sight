@@ -9,8 +9,8 @@ export const setDbName = async (req: Request<UserProps>, _res: Response, next: N
     if ([OTHER.ROLE2, OTHER.ROLE3].includes(req.body.role)) {
         const dm = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.TENANT)
         const user = await dm.findOne({ tenantCode: req.body.tenantCode }).lean()
-        req.body.dbName = user.dbName
-        req.body.companyName = user.companyName
+        req.body.dbName = user?.dbName
+        req.body.companyName = user?.companyName
     } else {
         req.body.dbName = OTHER.MASTER_ADMIN_DB
     }
@@ -55,7 +55,7 @@ function matchCredential(params: any, user: any) {
 export const sendUserDetail = async (params: any) => {
     let response;
     return new Promise(async resolve => {
-        const dm = await dynamicModelWithDBConnection(params.dbName, COLLECTIONS.USERS)
+        const dm = dynamicModelWithDBConnection(params.dbName, COLLECTIONS.USERS)
         let user = await dm.findOne({ email: params.email }).lean()
         if (user) {
             resolve(await matchCredential(params, user))
@@ -81,7 +81,7 @@ export const sendRegisterInfo = async (params: any) => {
         const hashedPassword = await bcryptjs.hash(params.password, salt)
         params.password = hashedPassword
         const doc = new dm(params)
-        await doc.save({ password: 0 })
+        await doc.save()
         return dm.findOne({ email: params.email }, { password: 0 })
     }
 }

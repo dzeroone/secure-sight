@@ -21,7 +21,7 @@ class AuthController {
       try {
         let response;
         let dbName = process.env.mongo_db || '';
-        const dm = await dynamicModelWithDBConnection(
+        const dm = dynamicModelWithDBConnection(
           dbName,
           COLLECTIONS.LICENSE
         );
@@ -40,7 +40,7 @@ class AuthController {
           createdAt: new Date(),
           updatedAt: new Date()
         };
-        const doc = await dm(userScheduleData);
+        const doc = new dm(userScheduleData);
         await doc.save();
         if (doc) {
           let htmlBody = `<h3>Your license key is <b style="color:red;font-size: 20px"> ${licenseKey}</b> and it is expired on <b style="color:red;font-size: 20px"> ${params.expiryDate}</b></h3>`;

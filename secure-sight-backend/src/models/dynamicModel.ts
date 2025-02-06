@@ -1,18 +1,20 @@
-import mongoose, { Connection } from "mongoose";
+import mongoose, { Connection, Model } from "mongoose";
 const Schema = mongoose.Schema;
-const dynamicSchema = new Schema({}, { versionKey: false, strict: false, minimize: false })
 
-let dynamicModels: any = {}
+const dynamicSchema = new Schema<{ [key: string]: any }>({}, { versionKey: false, strict: false, minimize: false })
+
+let dynamicModels: Map<string, Model<{ [key: string]: any }, {}, {}, {}, typeof dynamicSchema>> = new Map()
 let dbConnectionPool: Map<string, Connection> = new Map()
 
 export const dynamicModelWithDBConnection = (dbName: string, collectionName: string) => {
-    let cacheId = dbName + collectionName
+    const cacheId = dbName + collectionName
     // const url = `${process.env.mongo_base_url}/${dbName}?authSource=admin&authMechanism=SCRAM-SHA-256`
-    
-    if (!(cacheId in dynamicModels)) {
+    const model = dynamicModels.get(cacheId)
+
+    if (!model) {
         const url = `${process.env.mongo_base_url}/${dbName}`
         let connection = dbConnectionPool.get(dbName)
-        if(!connection) {
+        if (!connection) {
             let conn = mongoose.createConnection(url, { maxPoolSize: 10 })
             conn.once('open', () => {
                 console.log(`Mongodb (${dbName}) called the (${collectionName}) collection!`)
@@ -20,10 +22,12 @@ export const dynamicModelWithDBConnection = (dbName: string, collectionName: str
             connection = conn
             dbConnectionPool.set(dbName, conn)
         }
-        
-        dynamicModels[cacheId] = connection!.model(collectionName, dynamicSchema, collectionName)
+
+        const newModel = connection.model(collectionName, dynamicSchema, collectionName)
+        dynamicModels.set(cacheId, newModel)
+        return newModel
     }
-    return dynamicModels[cacheId]
+    return model
 }
 
 // let dynamicModels: any = {};

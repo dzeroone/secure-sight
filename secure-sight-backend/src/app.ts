@@ -7,8 +7,8 @@ import express, { Application, Request, Response, NextFunction, ErrorRequestHand
 import dotenv from 'dotenv'
 import schema from './schema/schema'
 import routes from './routes'
-import cronScheduler from './helper/cron.helper'
 import csvRoutes from './routes/csvRoutes'
+import scheduler from './helper/cron.helper'
 
 dotenv.config()
 
@@ -34,10 +34,6 @@ app.use(function (req: Request, res: Response, next: NextFunction) {
     next()
 })
 
-// Cron Job
-// const cronJobEmailSender = new cronScheduler()
-// cronJobEmailSender.schedule.start()
-
 // Routes
 app.use('/api', routes)
 app.use('/api', csvRoutes)  // Add this line to include CSV routes
@@ -54,6 +50,8 @@ mongoose.connect(CONNECTION_STRING)
 mongoose.connection.once('open', () => {
     console.log(`Connection to database has been established successfully ${CONNECTION_STRING}`)
 })
+
+scheduler.start()
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'prod') {
@@ -75,6 +73,26 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT || 5001
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+
+/**
+ * Gracefully stop job scheduler
+ */
+async function graceful() {
+    await scheduler.stop();
+    process.exit(0);
+}
+
+process.on('SIGTERM', graceful);
+process.on('SIGINT', graceful);
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    graceful();
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception thrown', error);
+    graceful();
+});
 
 export default app
 
@@ -105,7 +123,6 @@ export default app
 // // Import routes and helpers
 // import schema from './schema/schema'
 // import routes from './routes'
-// import cronScheduler from './helper/cron.helper'
 // import csvRoutes from './routes/csvRoutes'
 // import errorHandler from './middleware/errorHandler'
 // import logger from './utils/logger'
@@ -160,10 +177,6 @@ export default app
 //   logger.info(`${req.method} ${req.path}`)
 //   next()
 // })
-
-// // Cron Job
-// const cronJobEmailSender = new cronScheduler()
-// cronJobEmailSender.schedule.start()
 
 // // Routes
 // app.use('/api', routes)

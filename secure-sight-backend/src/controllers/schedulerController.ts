@@ -1,7 +1,3 @@
-import { schedule } from 'node-cron'
-import { SchedulingSchema } from './../helper/cron.helper'
-import { emailPayload } from './../helper/email.helper'
-import cronScheduler from '../helper/cron.helper'
 import mongoose from 'mongoose'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
 import { OTHER, COLLECTIONS } from '../constant'
@@ -38,7 +34,7 @@ class schedulerController {
 					updatedAt: new Date(),
 				}
 
-				const doc = await dm(userScheduleData)
+				const doc = new dm(userScheduleData)
 				await doc.save()
 
 				if (doc) {

@@ -1,5 +1,5 @@
 import { ConstructionOutlined, Download } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -44,16 +44,6 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
     dbName: '',
     user_id: ''
   });
-  useEffect(() => {
-    let userObject = localStorage.getItem('authUser');
-    var userInfo = userObject ? JSON.parse(userObject) : '';
-    setUserData(() => ({
-      email: userInfo.email,
-      dbName: userInfo.dbName,
-      user_id: userInfo._id
-    }));
-    connectorData(userInfo.dbName);
-  }, []);
 
   // ############################################ get report data ########################################
   // const HandleConnectorChange = async (event) => {
@@ -138,49 +128,6 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
     collectKeys(data);
     return keys;
   }
-  var keys = tableData && Array.from(deepKeys(tableData[0]));
-  var columns = tableData && Columns(keys);
-  // keys.map((name) => ({
-  //   accessorKey: name,
-  //   header: name,
-
-  //   Cell: ({ cell }) =>
-  //     name == "Risk" || name == "severity" || name == "risk-level" ? (
-  //       <Box
-  //         component="span"
-  //         sx={(theme) => ({
-  //           backgroundColor:
-  //             cell.getValue() == "High" || cell.getValue() == "high"
-  //               ? theme.palette.error.dark
-  //               : cell.getValue() == "low" || cell.getValue() == "Low"
-  //               ? theme.palette.warning.dark
-  //               : cell.getValue() == "Medium" || cell.getValue() == "medium"
-  //               ? theme.palette.warning.dark
-  //               : cell.getValue() == "critical" ||
-  //                 cell.getValue() == "Critical"
-  //               ? theme.palette.success.dark
-  //               : "",
-  //           borderRadius: "0.25rem",
-  //           // color: "#fff",
-  //           maxWidth: "9ch",
-  //           p: "0.25rem",
-  //         })}
-  //       >
-  //         {cell.getValue()?.toLocaleString?.("", {
-  //           style: "currency",
-  //           currency: "USD",
-  //           minimumFractionDigits: 0,
-  //           maximumFractionDigits: 0,
-  //         })}
-  //       </Box>
-  //     ) : (
-  //       cell.getValue()
-  //     ),
-  // }));
-
-  const hidecolumn = keys && hidencolumn(keys);
-
-  console.log(keys, columns, hidecolumn)
   // ############################################ handek checkbox ########################################
 
   const handleCheckboxChange = (e) => {
@@ -193,20 +140,6 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
       setSelectedColumns((prevColumns) =>
         prevColumns.filter((item) => item !== columnName)
       );
-    }
-  };
-
-  useEffect(() => {
-    postData();
-  }, [checkbox]);
-  const postData = () => {
-    if (Array.isArray(tableData)) {
-      // Check if tableData is an array
-      const flatData = tableData.map((i) => flattenObj(i));
-      const datafilter = checkbox.map((item) => getFields(flatData, item));
-      setReportData(datafilter);
-    } else {
-      console.error('tableData is not an array:', tableData); // Log an error for debugging
     }
   };
 
@@ -305,10 +238,83 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
     setTableData(filteredData);
   };
   // console.log("table data after filtering out the columns", tableData)
-  const ImportCSVData = () => {};
+  const ImportCSVData = () => { };
   const onFileLoad = (data) => {
     setTableData(data);
     setDataModal(false);
+  };
+
+  const [keys, columns, hidecolumn] = useMemo(() => {
+    var keys = tableData && Array.from(deepKeys(tableData[0]));
+    var columns = tableData && Columns(keys);
+    // keys.map((name) => ({
+    //   accessorKey: name,
+    //   header: name,
+
+    //   Cell: ({ cell }) =>
+    //     name == "Risk" || name == "severity" || name == "risk-level" ? (
+    //       <Box
+    //         component="span"
+    //         sx={(theme) => ({
+    //           backgroundColor:
+    //             cell.getValue() == "High" || cell.getValue() == "high"
+    //               ? theme.palette.error.dark
+    //               : cell.getValue() == "low" || cell.getValue() == "Low"
+    //               ? theme.palette.warning.dark
+    //               : cell.getValue() == "Medium" || cell.getValue() == "medium"
+    //               ? theme.palette.warning.dark
+    //               : cell.getValue() == "critical" ||
+    //                 cell.getValue() == "Critical"
+    //               ? theme.palette.success.dark
+    //               : "",
+    //           borderRadius: "0.25rem",
+    //           // color: "#fff",
+    //           maxWidth: "9ch",
+    //           p: "0.25rem",
+    //         })}
+    //       >
+    //         {cell.getValue()?.toLocaleString?.("", {
+    //           style: "currency",
+    //           currency: "USD",
+    //           minimumFractionDigits: 0,
+    //           maximumFractionDigits: 0,
+    //         })}
+    //       </Box>
+    //     ) : (
+    //       cell.getValue()
+    //     ),
+    // }));
+
+    const hidecolumn = keys && hidencolumn(keys);
+    return [keys, columns, hidecolumn]
+  }, [tableData])
+
+
+  console.log(keys, columns, hidecolumn)
+
+  useEffect(() => {
+    let userObject = localStorage.getItem('authUser');
+    var userInfo = userObject ? JSON.parse(userObject) : '';
+    setUserData(() => ({
+      email: userInfo.email,
+      dbName: userInfo.dbName,
+      user_id: userInfo._id
+    }));
+    connectorData(userInfo.dbName);
+  }, []);
+
+  useEffect(() => {
+    postData();
+  }, [checkbox]);
+  const postData = () => {
+    if (Array.isArray(tableData)) {
+      // Check if tableData is an array
+      const flatData = tableData.map((i) => flattenObj(i));
+      const datafilter = checkbox.map((item) => getFields(flatData, item));
+      setReportData(datafilter);
+    } else {
+      console.error('tableData is not an array:', tableData); // Log an error for debugging
+    }
   };
   return (
     <div>
@@ -561,8 +567,9 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
         />
       </div>
     </div>
-//     </div>
-   )};
+    //     </div>
+  )
+};
 
 export default CreateSubReport;
 const hourData = [

@@ -1,6 +1,6 @@
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
 import { OTHER, COLLECTIONS } from '../constant'
-import {jsonFlattenObject} from '../helper/reports.helper'
+import { jsonFlattenObject } from '../helper/reports.helper'
 import { Parser } from 'json2csv'
 import mongoose from 'mongoose'
 
@@ -37,7 +37,7 @@ class reportController {
 
     async getReportById(id: string) {
         const reportModel = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.REPORT);
-        return reportModel.findOne({_id: id}).lean()
+        return reportModel.findOne({ _id: id }).lean()
     }
 
     async deleteReport(info: any) {
@@ -151,103 +151,103 @@ class reportController {
         })
     }
 
-    
-	async crossTableReport(params: any, res: any) {
-		const { info, data } = params
-		let response
-		return new Promise(async (resolve) => {
-			let user_id = info.user_id
-			let reportData = data
 
-			if (!user_id) {
-				response = {
-					success: false,
-					status: 400,
-					msg: `user_id is not provided.`,
-				}
-				resolve(res.status(400).json(response))
-				return
-			}
+    async crossTableReport(params: any, res: any) {
+        const { info, data } = params
+        let response
+        return new Promise(async (resolve) => {
+            let user_id = info.user_id
+            let reportData = data
 
-			let finalDataToBeConvert: any = []
-			let flattenData: any = []
+            if (!user_id) {
+                response = {
+                    success: false,
+                    status: 400,
+                    msg: `user_id is not provided.`,
+                }
+                resolve(res.status(400).json(response))
+                return
+            }
 
-			if (
-				reportData.length == 0 ||
-				reportData == undefined ||
-				reportData == null
-			) {
-				response = {
-					success: false,
-					status: 404,
-					msg: `reports data is not provided.`,
-				}
-				res.status(404).json(response)
-				resolve(res)
-				return
-			}
-			try {
-				for (let i = 0; i < reportData.length; i++) {
-					let { id, dbName } = reportData[i]
-					id = new mongoose.Types.ObjectId(id)
-                    
-					const dmReport = await dynamicModelWithDBConnection(
+            let finalDataToBeConvert: any = []
+            let flattenData: any = []
+
+            if (
+                reportData.length == 0 ||
+                reportData == undefined ||
+                reportData == null
+            ) {
+                response = {
+                    success: false,
+                    status: 404,
+                    msg: `reports data is not provided.`,
+                }
+                res.status(404).json(response)
+                resolve(res)
+                return
+            }
+            try {
+                for (let i = 0; i < reportData.length; i++) {
+                    let { id, dbName } = reportData[i]
+                    id = new mongoose.Types.ObjectId(id)
+
+                    const dmReport = await dynamicModelWithDBConnection(
                         dbName,
-						COLLECTIONS.REPORT,
-                        )   
-                        let repData = await dmReport.findOne({ _id: id, user_id }).lean()
-					if (repData.type === 'table') {
-						const reports = await dmReport
-							.find({
-								_id: String(id),
-								user_id,
-							})
-							.lean()  
-						if (reports.length > 0) {
-							reports.forEach((dRep: any) => {
-								const data = dRep.data
-								if (data.length > 0) {
-									finalDataToBeConvert = [...finalDataToBeConvert, ...data]
-								}
-							})
-						}
-					} else {
-						const data = repData.data
+                        COLLECTIONS.REPORT,
+                    )
+                    let repData = await dmReport.findOne({ _id: id, user_id }).lean()
+                    if (repData?.type === 'table') {
+                        const reports = await dmReport
+                            .find({
+                                _id: String(id),
+                                user_id,
+                            })
+                            .lean()
+                        if (reports.length > 0) {
+                            reports.forEach((dRep: any) => {
+                                const data = dRep.data
+                                if (data.length > 0) {
+                                    finalDataToBeConvert = [...finalDataToBeConvert, ...data]
+                                }
+                            })
+                        }
+                    } else {
+                        const data = repData?.data
 
-						if (data.length > 0) {
-							finalDataToBeConvert = [...finalDataToBeConvert, ...data]
-						}
-					}
-				}
-				for (let i = 0; i < finalDataToBeConvert.length; i++) {
-					let flatData = await jsonFlattenObject(finalDataToBeConvert[i])
-					flattenData.push(flatData)
-				}
+                        if (data.length > 0) {
+                            finalDataToBeConvert = [...finalDataToBeConvert, ...data]
+                        }
+                    }
+                }
+                for (let i = 0; i < finalDataToBeConvert.length; i++) {
+                    let flatData = await jsonFlattenObject(finalDataToBeConvert[i])
+                    flattenData.push(flatData)
+                }
 
-				const json2csvParser = new Parser()
-				if (flattenData.length > 0) {
-					// const csvFromArrayOfObjects = json2csvParser.parse(flattenData)
-					// const report_data = new Date()
-					// res.setHeader('Content-Type', 'json/csv')
-					// let fileName = `combined_report_${Number(report_data)}.csv`
-					// res.attachment(fileName)
+                const json2csvParser = new Parser()
+                if (flattenData.length > 0) {
+                    // const csvFromArrayOfObjects = json2csvParser.parse(flattenData)
+                    // const report_data = new Date()
+                    // res.setHeader('Content-Type', 'json/csv')
+                    // let fileName = `combined_report_${Number(report_data)}.csv`
+                    // res.attachment(fileName)
 
-					res.status(200).send(flattenData)
+                    res.status(200).send(flattenData)
 
-					resolve(res)
-					return
-				}
-			} catch (err: any) {
-				response = {
-					success: false,
-					status: 500,
-					msg: String(err.message),
-				}
-				res.status(500).json(response)
-				resolve(res)
-				return
-			}
-		})
-	}
+                    resolve(res)
+                    return
+                }
+            } catch (err: any) {
+                response = {
+                    success: false,
+                    status: 500,
+                    msg: String(err.message),
+                }
+                res.status(500).json(response)
+                resolve(res)
+                return
+            }
+        })
+    }
 }
 export default new reportController()

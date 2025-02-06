@@ -20,65 +20,62 @@ function* deepKeys(t, pre = []) {
 }
 
 const Columns = (data) => {
-  var columns = useMemo(
-    () =>
-      data &&
-      data.map((name) => ({
-        accessorKey: name,
-        header: formatCapilize(
-          replaceDot(
-            allReplace(name, {
-              "source.": " ",
-              "attributes.": " ",
-              "-": " ",
-              _: " ",
-            })
-          )
-        ),
-        Cell: ({ cell }) =>
-          name === "Severity" ||
-            name === "severity" ||
-            name === "risk-level" ||
-            name === "Risk-Level" ||
-            name === "Risk" ? (
-            <Box
-              component="span"
-              sx={(theme) => ({
-                backgroundColor:
-                  cell.getValue() === "High" || cell.getValue() === "high"
-                    ? theme.palette.error.dark
-                    : cell.getValue() === "low" || cell.getValue() === "Low"
+  var columns = data &&
+    data.map((name) => ({
+      accessorKey: name,
+      header: formatCapilize(
+        replaceDot(
+          allReplace(name, {
+            "source.": " ",
+            "attributes.": " ",
+            "-": " ",
+            _: " ",
+          })
+        )
+      ),
+      Cell: ({ cell }) =>
+        name === "Severity" ||
+          name === "severity" ||
+          name === "risk-level" ||
+          name === "Risk-Level" ||
+          name === "Risk" ? (
+          <Box
+            component="span"
+            sx={(theme) => ({
+              backgroundColor:
+                cell.getValue() === "High" || cell.getValue() === "high"
+                  ? theme.palette.error.dark
+                  : cell.getValue() === "low" || cell.getValue() === "Low"
+                    ? theme.palette.warning.dark
+                    : cell.getValue() === "Medium" || cell.getValue() === "medium"
                       ? theme.palette.warning.dark
-                      : cell.getValue() === "Medium" || cell.getValue() === "medium"
-                        ? theme.palette.warning.dark
-                        : cell.getValue() === "critical" ||
-                          cell.getValue() === "Critical"
-                          ? theme.palette.success.dark
-                          : "",
-                borderRadius: "0.25rem",
-                // color: "#fff",
-                maxWidth: "9ch",
-                p: "0.25rem",
-              })}
-            >
-              {cell.getValue()?.toLocaleString?.("", {
-                style: "currency",
-                currency: "USD",
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              })}
-            </Box>
-          ) : cell.getValue() === null ? (
-            "N/A"
-          ) : cell.getValue() === false ? (
-            "false"
-          ) : cell.getValue() === true ? (
-            "true"
-          ) : (
-            cell.getValue()
-          ),
-      }))
-  );
+                      : cell.getValue() === "critical" ||
+                        cell.getValue() === "Critical"
+                        ? theme.palette.success.dark
+                        : "",
+              borderRadius: "0.25rem",
+              // color: "#fff",
+              maxWidth: "9ch",
+              p: "0.25rem",
+            })}
+          >
+            {cell.getValue()?.toLocaleString?.("", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
+          </Box>
+        ) : cell.getValue() === null ? (
+          "N/A"
+        ) : cell.getValue() === false ? (
+          "false"
+        ) : cell.getValue() === true ? (
+          "true"
+        ) : (
+          cell.getValue()
+        ),
+    }))
   return columns;
 };
 const ColumnsHeadWithEdit = (access, headername) => {

@@ -27,7 +27,7 @@ class TenantController {
             }
         } else {
             const check2 = await dm.findOne({ dbName: obj.dbName, tenantCode: obj.tenantCode }).lean()
-            await dm.findOneAndUpdate(check2, { ...obj, updated_at: new Date() })
+            await dm.findOneAndUpdate(check2!, { ...obj, updated_at: new Date() })
             await createUpdateClientDb(obj)
             return { msg: `${data.companyName} info updated successfully!`, error: false }
         }
