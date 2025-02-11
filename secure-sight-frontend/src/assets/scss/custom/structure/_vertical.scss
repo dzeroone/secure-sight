@@ -2,7 +2,7 @@
 // _menu.scss
 //
 
-.body{
+.body {
   font-size: 1rem !important;
   font-weight: 800;
 }
@@ -51,8 +51,10 @@
 
 .main-content {
   margin-left: $sidebar-width;
+  width: calc(100% - $sidebar-width);
   overflow: hidden;
   background-color: $gray-300;
+
   .content {
     padding: 0 15px 10px 15px;
     margin-top: $header-height;
@@ -63,34 +65,34 @@
   padding: 10px 0 30px 0;
 
   .mm-active {
-    > .has-arrow {
+    >.has-arrow {
       &:after {
         transform: rotate(-180deg);
       }
     }
   }
 
-  li.mm-active{
-   > a.sidebarHighlight {
-    color: #EB1616 !important;
-    background: #000000 !important;
-    border-radius: 0 30px 30px 0;
-    border-left: 3px solid #EB1616;
-
-    i.sidebarHighlight{
+  li.mm-active {
+    >a.sidebarHighlight {
       color: #EB1616 !important;
-    }
+      background: #000000 !important;
+      border-radius: 0 30px 30px 0;
+      border-left: 3px solid #EB1616;
+
+      i.sidebarHighlight {
+        color: #EB1616 !important;
+      }
     }
   }
 
-  li.mm-active{
-    > a.sub-menu-higlight {
-     color: #8590a5 !important;
-     background: #000000 !important;
-     border-radius: 0 30px 30px 0;
-     }
-   }
-  
+  li.mm-active {
+    >a.sub-menu-higlight {
+      color: #8590a5 !important;
+      background: #000000 !important;
+      border-radius: 0 30px 30px 0;
+    }
+  }
+
 
 
   .has-arrow {
@@ -165,20 +167,20 @@
   }
 }
 
-#sidebar-menu .sidebarHighlight:hover{
+#sidebar-menu .sidebarHighlight:hover {
   color: #EB1616 !important;
   background: #000000;
   border-radius: 0 30px 30px 0;
   border-left: 3px solid #EB1616;
 }
 
-#sidebar-menu .sidebarHighlight:hover > i{
+#sidebar-menu .sidebarHighlight:hover>i {
   color: #EB1616 !important;
 
-  
+
 }
 
-.sub-menu-higlight:hover{
+.sub-menu-higlight:hover {
   color: #8590a5 !important;
   background: #000000;
   border-radius: 0 30px 30px 0;
@@ -199,15 +201,19 @@
 
 .mm-active {
   color: $sidebar-menu-item-active-color !important;
-  > a {
+
+  >a {
     color: $sidebar-menu-item-active-color !important;
+
     i {
       color: $sidebar-menu-item-active-color !important;
     }
   }
-  > i {
+
+  >i {
     color: $sidebar-menu-item-active-color !important;
   }
+
   .active {
     color: $sidebar-menu-item-active-color !important;
 
@@ -224,6 +230,7 @@
 
   .main-content {
     margin-left: 0 !important;
+    width: 100%;
   }
 
   body.sidebar-enable {
@@ -237,6 +244,7 @@
 .vertical-collpsed {
   .main-content {
     margin-left: $sidebar-collapsed-width;
+    width: calc(100% - $sidebar-collapsed-width);
   }
 
   .navbar-brand-box {
@@ -275,6 +283,7 @@
 
     // Sidebar Menu
     #sidebar-menu {
+
       .menu-title,
       .badge,
       .collapse.in {
@@ -291,12 +300,12 @@
         }
       }
 
-      > ul {
-        > li {
+      >ul {
+        >li {
           position: relative;
           white-space: nowrap;
 
-          > a {
+          >a {
             padding: 15px 20px;
             min-height: 55px;
             transition: none;
@@ -319,7 +328,7 @@
           }
 
           &:hover {
-            > a {
+            >a {
               position: relative;
               width: calc(190px + #{$sidebar-collapsed-width});
               color: $primary;
@@ -335,7 +344,7 @@
               }
             }
 
-            > ul {
+            >ul {
               display: block;
               left: $sidebar-collapsed-width;
               position: absolute;
@@ -371,7 +380,7 @@
 
           li {
             &:hover {
-              > ul {
+              >ul {
                 display: block;
                 left: 190px;
                 height: auto !important;
@@ -381,7 +390,7 @@
               }
             }
 
-            > a {
+            >a {
               span.pull-right {
                 position: absolute;
                 right: 20px;
@@ -440,28 +449,32 @@ body[data-sidebar="dark"] {
       }
     }
   }
+
   // Enlarge menu
   &.vertical-collpsed {
     min-height: 1400px;
 
     // Side menu
     .vertical-menu {
+
       // Sidebar Menu
       #sidebar-menu {
-        > ul {
-          > li {
+        >ul {
+          >li {
             &:hover {
-              > a {
+              >a {
                 background: lighten($sidebar-dark-bg, 2%);
                 color: $sidebar-dark-menu-item-hover-color;
+
                 i {
                   color: $sidebar-dark-menu-item-hover-color;
                 }
               }
 
-              > ul {
+              >ul {
                 a {
                   color: $sidebar-dark-menu-sub-item-color;
+
                   &:hover {
                     color: $sidebar-menu-item-hover-color;
                   }
@@ -476,8 +489,8 @@ body[data-sidebar="dark"] {
         }
 
         ul {
-          > li {
-            > a {
+          >li {
+            >a {
               &.mm-active {
                 color: $sidebar-dark-menu-item-active-color !important;
               }
@@ -486,14 +499,16 @@ body[data-sidebar="dark"] {
 
           li {
             li {
+
               &.mm-active,
               &.active {
-                > a {
+                >a {
                   color: $sidebar-menu-item-active-color !important;
                 }
               }
 
               a {
+
                 &.mm-active,
                 &.active {
                   color: $sidebar-menu-item-active-color !important;
@@ -508,15 +523,19 @@ body[data-sidebar="dark"] {
 
   .mm-active {
     color: $sidebar-dark-menu-item-active-color !important;
-    > a {
+
+    >a {
       color: $sidebar-dark-menu-item-active-color !important;
+
       i {
         color: $sidebar-dark-menu-item-active-color !important;
       }
     }
-    > i {
+
+    >i {
       color: $sidebar-dark-menu-item-active-color !important;
     }
+
     .active {
       color: $sidebar-dark-menu-item-active-color !important;
 
@@ -534,6 +553,7 @@ body[data-sidebar="dark"] {
 body[data-layout="horizontal"] {
   .main-content {
     margin-left: 0 !important;
+    width: 100%;
   }
 }
 
@@ -557,11 +577,15 @@ body[data-sidebar-size="small"] {
       display: none !important;
     }
   }
+
   .main-content {
     margin-left: $sidebar-width-sm;
+    width: calc(100% - $sidebar-width-sm);
   }
+
   .footer {
     left: $sidebar-width-sm;
+
     @media (max-width: 991px) {
       left: 0;
     }
@@ -572,11 +596,13 @@ body[data-sidebar-size="small"] {
       &.menu-title {
         background-color: lighten($sidebar-dark-bg, 2%);
       }
+
       a {
         i {
           display: block;
         }
       }
+
       ul.sub-menu {
         li {
           a {
@@ -594,16 +620,20 @@ body[data-sidebar-size="small"] {
       }
     }
   }
+
   &.vertical-collpsed {
     .main-content {
       margin-left: $sidebar-collapsed-width;
+      width: calc(100% - $sidebar-collapsed-width);
     }
+
     .vertical-menu {
       #sidebar-menu {
         text-align: left;
-        > ul {
-          > li {
-            > a {
+
+        >ul {
+          >li {
+            >a {
               i {
                 display: inline-block;
               }
@@ -612,16 +642,17 @@ body[data-sidebar-size="small"] {
         }
       }
     }
+
     .footer {
       left: $sidebar-collapsed-width;
     }
   }
 }
 
-.paddingLeft{
+.paddingLeft {
   padding-left: 25px !important;
 }
 
-.color{
+.color {
   color: #8590a5 !important;
 }

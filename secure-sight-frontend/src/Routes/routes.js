@@ -26,17 +26,12 @@ import Error500 from "../Pages/Utility/Error500-Page";
 import ConnectorList from "../Pages/connector/connectorList";
 import ConnectorUploader from "../Pages/connector/Connector uploader/connectorUpload";
 import CreateDashboard from "../Pages/Dashboard/createdashboard";
-import CreateReport from "../Pages/reports/createReport";
-import Report from "../Pages/reports";
 import MultipleDragList from "../Pages/Dashboard/deleteDashboard";
-import DeleteReport from "../Pages/reports/deleteReport";
-import CreateSubReport from "../Pages/reports/createSubReport";
 import ConnectorSchedule from "../Pages/connector/connectorSchedul";
 import RawData from "../Pages/reports/rawData";
 import ConnectorLogFile from "../Pages/connector/connectorLogFile";
 import ImportCSVData from "../Pages/reports/csvData/importCSVData";
 import CSVDataList from "../Pages/reports/csvData/importedDataList";
-import CSVData from "../Pages/reports/csvData/importedData"; // Your component to view specific CSV data
 import CloudoneConformityDashboard from "../Pages/Dashboard/dashboard/cloudoneConformity";
 import ContainerSecurityDashboard from "../Pages/Dashboard/dashboard/containerSecurity";
 import CloudOneConformity from "../Pages/reports/reports/cloud one conformity";
@@ -51,6 +46,8 @@ import TenableReport from "../Pages/reports/reports/tenable";
 import ScanDetails from "../Pages/reports/reports/scanDetails";
 import RegistriesDetails from "../Pages/reports/reports/registriesDetail";
 import CSVFileView from "../Pages/reports/csvData/csvFileView";
+import MonthlyReport from "../Pages/reports/monthly-report";
+import WeeklyReport from "../Pages/reports/weekly-report";
 
 const authProtectedRoutes = [
   // Dashboard
@@ -75,11 +72,8 @@ const authProtectedRoutes = [
   },
 
   // Report
-  { path: "/reports/:id", component: <Report /> },
-  { path: "/report/create-report", component: <CreateReport /> },
-  { path: "/report/report-list", component: <DeleteReport /> },
-  // { path: "/report/report-schedule", component: <ReportSchedule /> },
-  { path: "/report/create-sub-report", component: <CreateSubReport /> },
+  { path: "/reports/monthly", component: <MonthlyReport /> },
+  { path: "/reports/weekly", component: <WeeklyReport /> },
 
   // Conformity
   {

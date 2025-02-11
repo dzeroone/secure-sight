@@ -43,22 +43,13 @@ const SidebarData = [
 		icon: "ri-table-2",
 		subItem: [
 			{
-				sublabel: "Create Report",
-				link: "/report/create-report",
+				sublabel: "Monthly report",
+				link: "/reports/monthly",
 			},
-			// {
-			//   sublabel: "Report Schedule",
-			//   link: "/report/report-schedule",
-			// },
 			{
-				sublabel: "Report List",
-				link: "/report/report-list",
-			},
-
-			// {
-			//   sublabel: "Cloud Inventory",
-			//   link: "/report/inventory-report",
-			// },
+				sublabel: "Weekly report",
+				link: "/reports/weekly",
+			}
 		],
 	},
 	// {

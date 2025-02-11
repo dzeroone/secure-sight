@@ -2,8 +2,9 @@ import React from "react";
 import Routes from "./Routes/index";
 
 // Import Scss
-import "./assets/scss/theme.scss";
 import { ToastContainer } from "react-toastify";
+import "react-datepicker/dist/react-datepicker.css";
+import "./assets/scss/theme.scss";
 
 function App() {
   return (

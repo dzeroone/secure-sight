@@ -1,13 +1,14 @@
-
 //
 // apexcharts.scss
 //
 .apex-charts {
     min-height: 10px !important;
+
     text {
         font-family: $font-family-base !important;
         fill: $gray-500;
     }
+
     .apexcharts-canvas {
         margin: 0 auto;
     }
@@ -21,8 +22,9 @@
 .apexcharts-legend-series {
     font-weight: $font-weight-medium;
 }
+
 .apexcharts-legend {
-    display: none !important;
+    // display: none !important;
 }
 
 .apexcharts-gridline {

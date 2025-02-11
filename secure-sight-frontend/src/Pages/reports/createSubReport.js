@@ -289,9 +289,6 @@ const CreateSubReport = ({ reportId, GetReportData }) => {
     return [keys, columns, hidecolumn]
   }, [tableData])
 
-
-  console.log(keys, columns, hidecolumn)
-
   useEffect(() => {
     let userObject = localStorage.getItem('authUser');
     var userInfo = userObject ? JSON.parse(userObject) : '';
