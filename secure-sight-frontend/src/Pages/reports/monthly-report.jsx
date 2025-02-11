@@ -56,7 +56,7 @@ export default function MonthlyReport() {
 
   return (
     <div className="page-content">
-      <Form onSubmit={formik.handleSubmit}>
+      <Form onSubmit={formik.handleSubmit} className="mb-4">
         <Row>
           <Col xs="auto">
             <FormGroup>
