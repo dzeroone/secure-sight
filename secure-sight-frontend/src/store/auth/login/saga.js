@@ -54,8 +54,8 @@ function* loginUser({ payload: { user, history } }) {
           userId: response.data.user_id,
           reload: true,
         });
-        history("/dashboard/create-dashboard");
-      }else{
+        history("/dashboard");
+      } else {
         toast(response.msg, { autoClose: 2000 });
       }
     }

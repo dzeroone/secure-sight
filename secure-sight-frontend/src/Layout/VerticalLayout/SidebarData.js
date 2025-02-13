@@ -7,18 +7,18 @@ const SidebarData = [
 	{
 		label: "Dashboard",
 		icon: "ri-dashboard-fill",
-		url: "/dashboard/create-dashboard",
+		url: "/dashboard",
 		// issubMenubadge: true,
 		bgcolor: "bg-primary",
 		// badgeValue: "3",
 		subItem: [
 			{
-				sublabel: "Create Dashboard",
-				link: "/dashboard/create-dashboard",
+				sublabel: "Monthly report",
+				link: "/dashboard/monthly-report",
 			},
 			{
-				sublabel: "Dashboard ",
-				link: "/dashboard/dashboard-list",
+				sublabel: "Weekly report ",
+				link: "/dashboard/weekly-report",
 			},
 			// {
 			// 	sublabel: "Container Security",
@@ -44,11 +44,11 @@ const SidebarData = [
 		subItem: [
 			{
 				sublabel: "Monthly report",
-				link: "/reports/monthly",
+				link: "/reports/monthly-report",
 			},
 			{
 				sublabel: "Weekly report",
-				link: "/reports/weekly",
+				link: "/reports/weekly-report",
 			}
 		],
 	},

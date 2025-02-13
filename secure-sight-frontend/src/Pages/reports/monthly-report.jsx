@@ -38,14 +38,16 @@ export default function MonthlyReport() {
         setOpenLoader(true);
         const month = format(values.selectedDate, 'MMMM').toLowerCase()
         const year = getYear(values.selectedDate)
-        const tenant = values.tenant
+        const tenant = values.tenant.toLowerCase()
 
         let payload = {
           index: `${month}_${year}_${tenant}_report`,
           column: []
         }
-        const data = await ApiServices('post', payload, ApiEndPoints.SearchData)
-        setReportData(data)
+        // console.log(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}?index=${payload.index}`)
+        window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}?index=${payload.index}`, "_blank")
+        // const data = await ApiServices('post', payload, ApiEndPoints.SearchData)
+        // setReportData(data)
       } catch (e) {
         console.log(e)
       } finally {

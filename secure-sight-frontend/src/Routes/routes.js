@@ -1,7 +1,7 @@
 import React from "react";
 
 // Dashboard
-import Dashboard from "../Pages/Dashboard";
+import Dashboard from "../Pages/Dashboard/index";
 
 // Import Authentication pages
 import Login from "../Pages/Authentication/Login";
@@ -48,12 +48,16 @@ import RegistriesDetails from "../Pages/reports/reports/registriesDetail";
 import CSVFileView from "../Pages/reports/csvData/csvFileView";
 import MonthlyReport from "../Pages/reports/monthly-report";
 import WeeklyReport from "../Pages/reports/weekly-report";
+import DashboardMonthlyReport from "../Pages/Dashboard/monthly-report";
+import DashboardWeeklyReport from "../Pages/Dashboard/weekly-report";
 
 const authProtectedRoutes = [
   // Dashboard
   { path: "/logout", component: <Logout /> },
   { path: "/", component: <CreateDashboard /> },
   { path: "/dashboard/create-dashboard", component: <CreateDashboard /> },
+  { path: "/dashboard/monthly-report", component: <DashboardMonthlyReport /> },
+  { path: "/dashboard/weekly-report", component: <DashboardWeeklyReport /> },
   { path: "/dashboard/:id", component: <Dashboard /> },
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/dashboard/dashboard-list", component: <MultipleDragList /> },
@@ -72,8 +76,8 @@ const authProtectedRoutes = [
   },
 
   // Report
-  { path: "/reports/monthly", component: <MonthlyReport /> },
-  { path: "/reports/weekly", component: <WeeklyReport /> },
+  { path: "/reports/monthly-report", component: <MonthlyReport /> },
+  { path: "/reports/weekly-report", component: <WeeklyReport /> },
 
   // Conformity
   {

@@ -49,8 +49,8 @@ router.post("/data/search", async (req, res) => {
     //       "Email Summary": {
     //         "Email_Status": {
     //           "Email Status": {
-    //             "Quarantined": 0,
-    //             "Deleted": 0
+    //             "Quarantined": 20,
+    //             "Deleted": 30
     //           },
     //           "chart_type": "horizontal_bar",
     //           "label": "Status",
@@ -61,12 +61,12 @@ router.post("/data/search", async (req, res) => {
     //           "Top 3 Receipts": []
     //         },
     //         "Threat Type": {
-    //           "Malicious Files": 0,
-    //           "Malicious URLs": 0,
-    //           "Phishing": 0,
-    //           "Spoofing": 0,
-    //           "Suspicious Object": 0,
-    //           "Blocked Object": 0
+    //           "Malicious Files": 10,
+    //           "Malicious URLs": 20,
+    //           "Phishing": 30,
+    //           "Spoofing": 40,
+    //           "Suspicious Object": 50,
+    //           "Blocked Object": 60
     //         }
     //       },
     //       "Overall Incidents Summary": {
@@ -104,17 +104,17 @@ router.post("/data/search", async (req, res) => {
     //       "Detection Summary from A1": {
     //         "Detection Summary form Apex One": {
     //           "Virus/Malware & Spyware/Grayware": {
-    //             "File Cleaned (Virus/Malware + Spyware/Grayware)": 0,
-    //             "File Quarantine (Virus / Malware)": 0,
-    //             "Restart Action Required (Virus / Malware)": 0,
-    //             "File Deleted (Virus / Malware)": 0,
+    //             "File Cleaned (Virus/Malware + Spyware/Grayware)": 10,
+    //             "File Quarantine (Virus / Malware)": 30,
+    //             "Restart Action Required (Virus / Malware)": 20,
+    //             "File Deleted (Virus / Malware)": 40,
     //             "chart_type": "horizontal_bar",
     //             "label": "No of Detections",
     //             "background_color": "rgb(255,130,0)"
     //           },
     //           "C & C Connections & Intrusion attempts Blocked": {
-    //             "Total C & C Connections Blocked": 0,
-    //             "Total Intrusion Attempts Blocked": 0,
+    //             "Total C & C Connections Blocked": 10,
+    //             "Total Intrusion Attempts Blocked": 20,
     //             "chart_type": "horizontal_bar",
     //             "label": "No of Blocked",
     //             "background_color": "rgb(255,130,0)"
@@ -298,9 +298,9 @@ router.post("/data/search", async (req, res) => {
     //       },
     //       "SLO Summary": {
     //         "SLO Summary": {
-    //           "Total No of Incidents Closed": 0,
-    //           "SLO Met": 0,
-    //           "SLO Not Met": 0
+    //           "Total No of Incidents Closed": 10,
+    //           "SLO Met": 20,
+    //           "SLO Not Met": 30
     //         },
     //         "chart_type": "horizontal_bar",
     //         "label": "No of Incidents",

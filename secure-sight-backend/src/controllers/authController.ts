@@ -10,10 +10,7 @@ class AuthController {
   }
 
   async login(params: UserProps) {
-    return new Promise(async (resolve) => {
-      const res = await sendUserDetail(params);
-      resolve(res);
-    });
+    return sendUserDetail(params);
   }
 
   async licenseKey(params: any) {

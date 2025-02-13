@@ -27,9 +27,9 @@ function matchCredential(params: any, user: any) {
             if (isMatch) {
                 jwt.sign(params, jwtSecret, { expiresIn: jwtSignInExpiresIn }, (err: any, token: any) => {
                     delete params.password
-                    params.fullname = user.full_name,
+                    params.username = user.username,
                         params.id = user._id
-                    let name = (params.role === "tenant_admin") ? `${user.companyName}` : `${user.full_name}`
+                    let name = (params.role === "tenant_admin") ? `${user.companyName}` : `${user.username}`
                     response = {
                         success: true,
                         status: 200,
@@ -54,21 +54,18 @@ function matchCredential(params: any, user: any) {
 
 export const sendUserDetail = async (params: any) => {
     let response;
-    return new Promise(async resolve => {
-        const dm = dynamicModelWithDBConnection(params.dbName, COLLECTIONS.USERS)
-        let user = await dm.findOne({ email: params.email }).lean()
-        if (user) {
-            resolve(await matchCredential(params, user))
-        } else {
-            response = {
-                success: false,
-                status: 422,
-                msg: AUTH.WARNING_2
-            }
-            resolve(response)
-            return
+    const dm = dynamicModelWithDBConnection(params.dbName, COLLECTIONS.USERS)
+    let user = await dm.findOne({ email: params.email }).lean()
+    if (user) {
+        return matchCredential(params, user)
+    } else {
+        response = {
+            success: false,
+            status: 422,
+            msg: AUTH.WARNING_2
         }
-    })
+        return response
+    }
 }
 
 export const sendRegisterInfo = async (params: any) => {
