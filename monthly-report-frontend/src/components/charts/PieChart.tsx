@@ -14,7 +14,7 @@ const PieChart = ({ data }: any) => {
             position: "right",
             labels: {
               boxWidth: 10,
-              boxPadding: 10,
+              padding: 10,
               font: {
                 size: 9,
               },
