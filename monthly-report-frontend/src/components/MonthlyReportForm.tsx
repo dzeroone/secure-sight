@@ -156,7 +156,7 @@ const steps = [
 ];
 const MonthlyReportForm = () => {
   const data = useAppSelector((state) => state.monthlyReport);
-  const [activeStep, setActiveStep] = useState(21);
+  const [activeStep, setActiveStep] = useState(0);
 
   const [pdfPath, setPdfPath] = useState("");
 
