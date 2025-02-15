@@ -1145,9 +1145,9 @@ export const monthlyReportInitialValue = {
             "type": "pie",
             "key": [
                 "Total (Workload + Apex)",
-                "Outdated version (Workload + Apex) as a Service",
                 "Latest version (Workload + Apex) as a Service",
-                ""
+                "Outdated version (Workload + Apex) as a Service",
+                "End-of-Life version (Workload + Apex) as a Service"
             ],
             "datasets": [
                 {
@@ -1171,10 +1171,10 @@ export const monthlyReportInitialValue = {
             "title": "C1WS / Server & Workload Protection / Security",
             "type": "horizontal_bar",
             "key": [
-                "Outdated Version",
-                "Latest version",
                 "All versions",
-                ""
+                "Latest version",
+                "Outdated Version",
+                "End-of-Life Version",
             ],
             "datasets": [
                 {
@@ -1194,10 +1194,10 @@ export const monthlyReportInitialValue = {
             "title": "Apex One as a Service / Std Endpoint Protection",
             "type": "horizontal_bar",
             "key": [
-                "Outdated Version",
-                "Latest version",
                 "All versions",
-                ""
+                "Latest version",
+                "Outdated Version",
+                "End-of-Life Version",
             ],
             "datasets": [
                 {

@@ -9,6 +9,8 @@ import schema from './schema/schema'
 import routes from './routes'
 import csvRoutes from './routes/csvRoutes'
 import scheduler from './helper/cron.helper'
+import { createElasticIndices } from './helper/elastic.helper'
+import { ELASTIC_INDICES } from './constant'
 
 dotenv.config()
 
@@ -52,6 +54,9 @@ mongoose.connection.once('open', () => {
 })
 
 scheduler.start()
+
+// create necessary elastic indices for saving monthly and weekly form data from report generation tool
+createElasticIndices()
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'prod') {

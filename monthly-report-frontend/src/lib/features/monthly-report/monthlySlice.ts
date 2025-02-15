@@ -7,7 +7,9 @@ export const monthlyReportSlice = createSlice({
     name: "monthlyReport",
     initialState: monthlyReportInitialValue,
     reducers: {
-
+        resetMonthlyReportState(_, action: PayloadAction<typeof monthlyReportInitialValue>) {
+            return action.payload
+        },
         updateFromElasticData(state, action: PayloadAction<any>) {
             const data = action.payload;
             const reducers = monthlyReportSlice.caseReducers;
@@ -674,7 +676,7 @@ export const monthlyReportSlice = createSlice({
                         chart: "agent_version_chart",
                         datasetIndex: 0,
                         index: 1,
-                        value: eData['Older Version (Endpoint + Server)'] + eData['End-of-Life version (Endpoint + Server)']
+                        value: eData['Latest Version (Endpoint + Server)']
                     }
                 })
                 reducers.updateAVSChartData(state, {
@@ -683,18 +685,28 @@ export const monthlyReportSlice = createSlice({
                         chart: "agent_version_chart",
                         datasetIndex: 0,
                         index: 2,
-                        value: eData['Latest Version (Endpoint + Server)']
+                        value: eData['Older Version (Endpoint + Server)']
+                    }
+                })
+                reducers.updateAVSChartData(state, {
+                    type: '',
+                    payload: {
+                        chart: "agent_version_chart",
+                        datasetIndex: 0,
+                        index: 3,
+                        value: eData['End-of-Life version (Endpoint + Server)']
                     }
                 })
 
                 const wData = data['Component Versions']['WorkLoad Protection']
+
                 reducers.updateAVSChartData(state, {
                     type: '',
                     payload: {
                         chart: "server_workload_protection_chart",
                         datasetIndex: 0,
                         index: 0,
-                        value: wData['Older'] + wData['End of Life']
+                        value: wData['Older'] + wData['Latest'] + wData['End of Life']
                     }
                 })
                 reducers.updateAVSChartData(state, {
@@ -712,7 +724,17 @@ export const monthlyReportSlice = createSlice({
                         chart: "server_workload_protection_chart",
                         datasetIndex: 0,
                         index: 2,
-                        value: wData['Older'] + wData['Latest'] + wData['End of Life']
+                        value: wData['Older']
+                    }
+                })
+
+                reducers.updateAVSChartData(state, {
+                    type: '',
+                    payload: {
+                        chart: "server_workload_protection_chart",
+                        datasetIndex: 0,
+                        index: 3,
+                        value: wData['End of Life']
                     }
                 })
 
@@ -723,7 +745,7 @@ export const monthlyReportSlice = createSlice({
                         chart: "standard_endpoint_protection_chart",
                         datasetIndex: 0,
                         index: 0,
-                        value: sData['Older'] + sData['End of Life']
+                        value: sData['Older'] + sData['Latest'] + sData['End of Life']
                     }
                 })
                 reducers.updateAVSChartData(state, {
@@ -741,9 +763,19 @@ export const monthlyReportSlice = createSlice({
                         chart: "standard_endpoint_protection_chart",
                         datasetIndex: 0,
                         index: 2,
-                        value: sData['Older'] + sData['Latest'] + sData['End of Life']
+                        value: sData['Older']
                     }
                 })
+                reducers.updateAVSChartData(state, {
+                    type: '',
+                    payload: {
+                        chart: "standard_endpoint_protection_chart",
+                        datasetIndex: 0,
+                        index: 3,
+                        value: sData['End of Life']
+                    }
+                })
+
             }
             // -
         },
@@ -1633,6 +1665,7 @@ export const monthlyReportSlice = createSlice({
 
 
 export const {
+    resetMonthlyReportState,
     updateFromElasticData,
     firstPage,
     // table of content

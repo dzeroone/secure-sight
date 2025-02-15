@@ -2,11 +2,11 @@ export const COLLECTIONS = {
     USERS: "users",
     TENANT: "tenant",
     CONNECTOR: "connector",
-    DASHBOARD:"dashboard",
-    REPORT:"report",
-    USERCONNECTOR:"userconnector",
+    DASHBOARD: "dashboard",
+    REPORT: "report",
+    USERCONNECTOR: "userconnector",
     SCHEDULER: 'scheduler',
-    LICENSE:'license',
+    LICENSE: 'license',
     CONNECTOR_CONFIG: 'connectorconfig'
 }
 
@@ -23,4 +23,9 @@ export const OTHER = {
     ROLE3: "user",
     MASTER_ADMIN_DB: "secure-sight"
     // MASTER_ADMIN_DB: "orion"
+}
+
+export const ELASTIC_INDICES = {
+    MONTHLY_REPORT_FORM: 'monthly-report-form',
+    WEEKLY_REPORT_FORM: 'weekly-report-form',
 }

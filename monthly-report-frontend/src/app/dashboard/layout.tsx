@@ -14,6 +14,8 @@ import {
   Legend,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { ConfirmProvider } from "material-ui-confirm";
+import { SnackbarProvider } from 'notistack';
 
 export default function DashboardLayout({
   children,
@@ -37,7 +39,11 @@ export default function DashboardLayout({
   );
   return (
     <Provider store={storeRef.current}>
-      <Navbar>{children}</Navbar>
+      <ConfirmProvider>
+        <SnackbarProvider>
+          <Navbar>{children}</Navbar>
+        </SnackbarProvider>
+      </ConfirmProvider>
     </Provider>
   );
 }

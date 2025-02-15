@@ -6,9 +6,10 @@ import {
   Grid,
   MobileStepper,
   Paper,
+  Stack,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import FirstPageForm from "./monthly-report/forms/FirstPageForm";
 import TableOfContentsForm from "./monthly-report/forms/TableOfContentsForm";
 import SystemConfigReportForm from "./monthly-report/forms/SystemConfigReportForm";
@@ -31,7 +32,7 @@ import {
   createMonthlyReport,
   getMonthlyReportPdf,
 } from "@@/services/monthly-report";
-import { useAppSelector } from "@@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import EmailQuarantineSummaryForm from "./monthly-report/forms/EmailQuarantineSummaryForm";
 import TopVulnerabilitiesForm from "./monthly-report/forms/TopVulnerabilitiesForm";
 import TopRiskDeviceForm from "./monthly-report/forms/TopRiskDeviceForm";
@@ -42,6 +43,10 @@ import KFAApexOneForm from "./monthly-report/forms/KFAApexOneForm";
 import KFAWorkloadForm from "./monthly-report/forms/KFAWorkloadForm";
 import AgentVersionForm from "./monthly-report/forms/AgentVersionForm";
 import KFADeepSecurityForm from "./monthly-report/forms/KFADeepSecurityForm";
+import { LoadingButton } from "@mui/lab";
+import { redirect, RedirectType, useRouter, useSearchParams } from "next/navigation";
+import { enqueueSnackbar } from "notistack";
+import { setProcessing } from "@@/lib/features/monthly-report/monthlyPageStateSlice";
 const steps = [
   {
     label: "First Page",
@@ -156,6 +161,12 @@ const steps = [
 ];
 const MonthlyReportForm = () => {
   const data = useAppSelector((state) => state.monthlyReport);
+  const pageState = useAppSelector((state) => state.monthlyReportPageState);
+  const dispatch = useAppDispatch();
+  const router = useRouter()
+  const searchParams = useSearchParams();
+  const reportId = searchParams.get('id');
+
   const [activeStep, setActiveStep] = useState(0);
 
   const [pdfPath, setPdfPath] = useState("");
@@ -169,6 +180,39 @@ const MonthlyReportForm = () => {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
+  const saveMonthlyReport = async () => {
+    try {
+      dispatch(setProcessing(true))
+      let url = `${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/monthly-report-form`
+      let requestMethod = 'POST'
+      if(reportId) {
+        url = `${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/monthly-report-form/${reportId}`
+        requestMethod = 'PATCH'
+      }
+      const res = await fetch(url, {
+        method: requestMethod,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      if(res.ok) {
+        const responseData = await res.json()
+        enqueueSnackbar("Report has been saved", {
+          variant: "success"
+        })
+        router.replace(`/dashboard/monthly-report?id=${responseData._id}`)
+      }else{
+        const errorMessage = await res.text()
+        throw new Error(errorMessage)
+      }
+    }catch(e) {
+      console.log(e)
+    }finally {
+      dispatch(setProcessing(false))
+    }
+  }
 
   // save pdf
   const handleSave = async () => {
@@ -221,13 +265,24 @@ const MonthlyReportForm = () => {
           </Button>
         </Grid> */}
         <Grid item xs={12} sx={{ position: "sticky", top: 200 }}>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleDownloadPdf}
-          >
-            Generate & Download PDF
-          </Button>
+          <Stack direction={{md: 'column', lg: 'row'}} justifyContent='space-between' gap={2}>
+            <LoadingButton
+              variant="contained"
+              color="success"
+              loading={pageState.processing}
+              onClick={handleDownloadPdf}
+            >
+              Generate & Download PDF
+            </LoadingButton>
+            <LoadingButton
+              variant="contained"
+              color="info"
+              loading={pageState.processing}
+              onClick={saveMonthlyReport}
+            >
+              Save
+            </LoadingButton>
+          </Stack>
         </Grid>
         {pdfPath && (
           <Grid container item xs={12} justifyContent="flex-end">

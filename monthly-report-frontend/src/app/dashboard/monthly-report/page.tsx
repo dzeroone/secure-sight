@@ -27,7 +27,8 @@ import TopRiskUsers from "@@/components/monthly-report/TopRiskUsers";
 import TopVulnerabilitiesDetected from "@@/components/monthly-report/TopVulnerabilitiesDetected";
 import VulnerabilityAssessmentReport from "@@/components/monthly-report/VulnerabilityAssessmentReport";
 import WorkbenchIncidentsSummary from "@@/components/monthly-report/WorkbenchIncidentsSummary";
-import { addDSTopIncident, updateDSChartData, updateDSField, updateDSTopIncidentField, updateFromElasticData } from "@@/lib/features/monthly-report/monthlySlice";
+import { setProcessing } from "@@/lib/features/monthly-report/monthlyPageStateSlice";
+import { addDSTopIncident, resetMonthlyReportState, updateDSChartData, updateDSField, updateDSTopIncidentField, updateFromElasticData } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import { Box, Grid } from "@mui/material";
 import { useSearchParams } from "next/navigation";
@@ -39,35 +40,62 @@ const MonthlyReportPage = () => {
 
   const searchParams = useSearchParams();
   const elasticIndex = searchParams.get('index');
+  const reportId = searchParams.get('id');
 
   const getElasticData = useCallback(async () => {
     try {
-      let payload = {
-        index: elasticIndex,
-        column: []
-      }
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/data/search`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })
-      if(res.ok) {
-        const responseData = await res.json()
-        if(Array.isArray(responseData) && responseData.length > 0) {
-          const data = responseData[0]._source
+      if(reportId) {
+        dispatch(setProcessing(true))
 
-          dispatch(updateFromElasticData(data))
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/monthly-report-form/${reportId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        if(res.ok) {
+          const responseData = await res.json()
+          console.log(responseData)
+          // if(Array.isArray(responseData) && responseData.length > 0) {
+          //   const data = responseData[0]._source
+
+          dispatch(resetMonthlyReportState(responseData._source))
+          // }
+        }else{
+          const errorMessage = await res.text()
+          throw new Error(errorMessage)
         }
-      }else{
-        const errorMessage = await res.text()
-        throw new Error(errorMessage)
+      }else if(elasticIndex) {
+        dispatch(setProcessing(true))
+        let payload = {
+          index: elasticIndex,
+          column: []
+        }
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/data/search`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        })
+        if(res.ok) {
+          const responseData = await res.json()
+          if(Array.isArray(responseData) && responseData.length > 0) {
+            const data = responseData[0]._source
+
+            dispatch(updateFromElasticData(data))
+          }
+        }else{
+          const errorMessage = await res.text()
+          throw new Error(errorMessage)
+        }
       }
     }catch(e) {
       console.log(e)
+    }finally{
+      dispatch(setProcessing(false))
     }
-  }, [elasticIndex, dispatch])
+  }, [elasticIndex, reportId, dispatch])
 
   useEffect(() => {
     getElasticData()

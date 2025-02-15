@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import monthlyReportReducer from "@@/lib/features/monthly-report/monthlySlice";
+import monthlyPageStateReducer from "@@/lib/features/monthly-report/monthlyPageStateSlice";
 export const makeStore = () => {
     return configureStore({
         reducer: {
-            monthlyReport: monthlyReportReducer
+            monthlyReport: monthlyReportReducer,
+            monthlyReportPageState: monthlyPageStateReducer
         },
     })
 }
