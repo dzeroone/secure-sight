@@ -128,7 +128,7 @@ const NotificationDropdown = (props) => {
                       <h6 className="mb-1">{notification.title}</h6>
                       <div className="font-size-12">
                         <p className="mb-1 text-break">
-                          ${notification.message}
+                          {notification.message}
                         </p>
                         <p className="mb-0">
                           <i className="mdi mdi-clock-outline"></i> {formatDate(notification.updatedAt)}
