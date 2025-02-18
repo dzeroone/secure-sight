@@ -1,11 +1,12 @@
 import fs from 'fs'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { COLLECTIONS } from '../constant'
+import { COLLECTIONS, OTHER } from '../constant'
 import child_process from 'child_process'
 import mongoose from 'mongoose'
 const path = require('path')
 import decompress from 'decompress'
 import Pulse from '@pulsecron/pulse'
+import notificationModel from '../models/notificationModel'
 
 export enum SCHEDULE_JOB_NAME {
 	RUN_PYTHON_COMMAND = 'run_python_command'
@@ -20,10 +21,47 @@ const scheduler = new Pulse({
 });
 
 scheduler.define(SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, async (job, done) => {
-	const { command } = job.attrs.data
-	child_process.exec(command, {}, (err, stdout, stderr) => {
+	const { command, connectorId } = job.attrs.data
+	const connectorModel = dynamicModelWithDBConnection(
+		OTHER.MASTER_ADMIN_DB,
+		COLLECTIONS.CONNECTOR,
+	)
+
+	const connectorData = await connectorModel.findOne({ _id: connectorId }).lean()
+	if (!connectorData) {
+		done(new Error("Connector data not found!"))
+		return
+	}
+
+	const title = connectorData.display_name.replaceAll("_", " ")
+
+	await notificationModel.findOneAndUpdate({
+		relId: job.attrs._id
+	}, {
+		$set: {
+			title,
+			message: 'Job is running',
+			status: 0,
+			updatedAt: new Date()
+		}
+	}, {
+		upsert: true
+	})
+	child_process.exec(command, {}, async (err, stdout, stderr) => {
 		console.log(err, stdout, stderr)
 		console.log('job running completed')
+		await notificationModel.findOneAndUpdate({
+			relId: job.attrs._id
+		}, {
+			$set: {
+				title,
+				message: stderr ?? 'Job running completed',
+				status: stderr ? -1 : 1,
+				updatedAt: new Date()
+			}
+		}, {
+			upsert: true
+		})
 		done(err as any, stdout)
 	})
 })
@@ -39,6 +77,53 @@ export interface SchedulingSchema {
 	months?: number
 	dayOfWeek?: number
 	isSpecificDateAndTime?: boolean | undefined
+}
+
+export const invokeConnector = async (connectorId: string, connectorParams: Record<string, any>) => {
+	try {
+		const presentWorkingDir: any = process.env.PWD
+		const serverPath = path.resolve(
+			presentWorkingDir,
+			`../secure-sight-scheduler/server`,
+			// `../orion-scheduler/server`,
+		)
+
+		const connectorConfigModel = dynamicModelWithDBConnection(
+			OTHER.MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR_CONFIG,
+		)
+		const config_data = await connectorConfigModel
+			.findOne({ connectorId: new mongoose.Types.ObjectId(connectorId) })
+			.lean()
+		let { connectorBasePath, config, connectorFileNameWithExtension }: any =
+			config_data
+		let argsList: any[] = []
+
+		Object.keys(config).forEach((keyOfSecretData) => {
+			const { type, position, isPathArg } = config[keyOfSecretData]
+			argsList[position] = isPathArg == 'true'
+				? `${serverPath}/${connectorBasePath}/${connectorParams[keyOfSecretData]}`
+				: `--${keyOfSecretData} ${connectorParams[keyOfSecretData]}`
+		})
+
+		let argsOfConnector = argsList.join(' ').trim()
+		let zipFilePath = path.join(serverPath, connectorBasePath + `.zip`)
+
+		let command = `python3 ${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension} ${argsOfConnector} > ${serverPath}/${connectorBasePath}.log`
+		try {
+			await fs.promises.access(`${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension}`, fs.constants.F_OK)
+		} catch (e) {
+			try {
+				await decompress(zipFilePath, path.join(serverPath, connectorBasePath))
+			} catch (e) {
+				throw e
+			}
+		}
+		const job = await scheduler.now(SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, { connectorId, command })
+		console.log('invoked job', job)
+	} catch (e) {
+		throw e
+	}
 }
 
 export const connectorTestScheduler = async (response: any, data: any) => {

@@ -1,7 +1,7 @@
 import { ConnectorProps } from '../types/types'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
 import { OTHER, COLLECTIONS } from '../constant'
-import { connectorTestScheduler, stopTestConnectorScheduler } from '../helper/cron.helper'
+import { connectorTestScheduler, invokeConnector, stopTestConnectorScheduler } from '../helper/cron.helper'
 import crypto from 'crypto'
 import path from 'path'
 import fs from 'fs'
@@ -61,14 +61,8 @@ class ConnectorController {
 	}
 
 	async connectorList(params: any) {
-		return new Promise(async resolve => {
-			// const page = parseInt(params.info.page)
-			// const limit = parseInt(params.info.limit)
-			// const startIndex = (page - 1) * limit;
-			// .skip(startIndex).limit(limit)
-			let dm = dynamicModelWithDBConnection(params.info.dbName, COLLECTIONS.CONNECTOR)
-			resolve(await dm.find().lean())
-		})
+		let dm = dynamicModelWithDBConnection(params.info.dbName, COLLECTIONS.CONNECTOR)
+		return dm.find().lean()
 	}
 
 	async activateConnector(params: any) {
@@ -364,6 +358,28 @@ class ConnectorController {
 		})
 	}
 
+	async invokeConnector(connectorId: string) {
+		const connectorConfigModel = dynamicModelWithDBConnection(
+			OTHER.MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR_CONFIG,
+		)
+		const connectorModel = dynamicModelWithDBConnection(
+			OTHER.MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR,
+		)
+
+		const connectorData = await connectorModel.findOne({
+			_id: connectorId
+		}).lean()
+
+		if (!connectorData) throw new Error('Connector info not found')
+
+		const config = connectorData.scheduleInfo.config
+
+		return invokeConnector(connectorId, config)
+
+	}
+
 	async connectorScheduleTest(params: any) {
 		return new Promise(async (resolve) => {
 			let response
@@ -381,10 +397,15 @@ class ConnectorController {
 			}
 
 			const { dbName, connectorId, isScheduled } = info
-			const dbConnection = dynamicModelWithDBConnection(
+			const connectorConfigModel = dynamicModelWithDBConnection(
 				dbName,
 				COLLECTIONS.CONNECTOR_CONFIG,
 			)
+			const connectorModel = dynamicModelWithDBConnection(
+				dbName,
+				COLLECTIONS.CONNECTOR,
+			)
+
 			if (isScheduled) {
 				if (!data) {
 					response = {
@@ -415,7 +436,7 @@ class ConnectorController {
 						return
 					}
 				})
-				const connectorData = await dbConnection
+				const connectorData = await connectorConfigModel
 					.findOne({
 						connectorId: new mongoose.Types.ObjectId(connectorId),
 					})
@@ -440,11 +461,6 @@ class ConnectorController {
 					let responseData = { ...info, ...data }
 					let dataScheduler = [{ ...data.config }]
 
-					const connectorModel = dynamicModelWithDBConnection(
-						dbName,
-						COLLECTIONS.CONNECTOR,
-					)
-
 					await stopTestConnectorScheduler(responseData.connectorId)
 
 					await connectorTestScheduler(responseData, dataScheduler)
@@ -453,21 +469,12 @@ class ConnectorController {
 						_id: connectorId
 					}, {
 						$set: {
-							scheduleInfo: data
+							isConnectorScheduled: true,
+							scheduleInfo: data,
+							updated_at: new Date()
 						}
 					})
 
-					await dbConnection.findOneAndUpdate(
-						{
-							connectorId: new mongoose.Types.ObjectId(connectorId),
-						},
-						{
-							$set: {
-								isConnectorScheduled: true,
-								updatedAt: new Date(),
-							},
-						},
-					)
 					response = {
 						success: true,
 						status: 200,
@@ -477,17 +484,15 @@ class ConnectorController {
 					return
 				}
 			} else {
-				await dbConnection.findOneAndUpdate(
-					{
-						connectorId: new mongoose.Types.ObjectId(connectorId),
-					},
-					{
-						$set: {
-							isConnectorScheduled: false,
-							updatedAt: new Date(),
-						},
-					},
-				)
+				await connectorModel.findOneAndUpdate({
+					_id: connectorId
+				}, {
+					$set: {
+						isConnectorScheduled: false,
+						updated_at: new Date()
+					}
+				})
+
 				let isStopped = await stopTestConnectorScheduler(connectorId)
 				response = isStopped
 					? {

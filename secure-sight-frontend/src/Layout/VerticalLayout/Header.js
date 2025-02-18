@@ -212,6 +212,8 @@ const Header = (props) => {
                 </div>
               </div>
 
+              <NotificationDropdown />
+
               <ProfileMenu />
 
               <div

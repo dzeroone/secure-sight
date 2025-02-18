@@ -50,12 +50,22 @@ router.post('/connectorListForUser', async (req: Request, res: Response) => {
 })
 
 router.post('/schedule', async (req: Request, res: Response) => {
-	let data = await connectorController.connectorScheduleTest(req.body)
-	res.send(data)
+    let data = await connectorController.connectorScheduleTest(req.body)
+    res.send(data)
 })
 
-router.post('/add-connector-config',upload.single('file'),async (req: Request, res: Response) => {
-		let data = await connectorController.connectorSchedulingDataInsert(req.body)
-		res.send(data)
-	})
+router.post('/add-connector-config', upload.single('file'), async (req: Request, res: Response) => {
+    let data = await connectorController.connectorSchedulingDataInsert(req.body)
+    res.send(data)
+})
+
+router.post('/:id', async (req, res) => {
+    try {
+        const response = await connectorController.invokeConnector(req.params.id)
+        res.json(response)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
 export default router;

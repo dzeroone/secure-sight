@@ -47,6 +47,7 @@ const ApiEndPoints = {
   ConnectorInsert: createEndpoint("/connector/insert-multi-connector"),
   UploadConnector: createEndpoint("/upload-connector?"),
   MurgeReort: createEndpoint("/report/merge-report"),
+  Connector: createEndpoint("/connector"),
   ConnectorConfig: createEndpoint("/connector/add-connector-config"),
   ConnectorScheduler: createEndpoint("/connector/schedule"),
   ConnectorLog: createEndpoint("/connector/connector-log"),
@@ -69,7 +70,7 @@ const ApiEndPoints = {
   SmartScanDetail: createEndpoint("/elastic/smart-scan-detail"),
   RegistriesList: createEndpoint("/elastic/smart-check-registries-list"),
   ChangeLanguage: createEndpoint("/connector/change-language"),
-  
+  Notifications: createEndpoint("/notifications"),
   // New CSV Upload endpoint
   // FileGet: "/api/file-get",
   UploadDocument: "/api/document/upload-document",

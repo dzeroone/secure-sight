@@ -96,9 +96,9 @@ const ConnectorListTwo = () => {
 			},
 		};
 		// if (response.success) {
-		setConfig(false);
+		setConfig(connectorConfigurationDetail.isConnectorScheduled);
 		setConnectorName(jsonData.data.connectorBasePath);
-		if(connectorConfigurationDetail.scheduleInfo) {
+		if (connectorConfigurationDetail.scheduleInfo) {
 			const scheduleInfo = connectorConfigurationDetail.scheduleInfo
 			setSchedulerData({
 				connectorId: item,
@@ -120,7 +120,7 @@ const ConnectorListTwo = () => {
 					[c]: scheduleInfo.config[c]
 				}
 			}, {}))
-		}else{
+		} else {
 			setConfigData(objectkey(jsonData.data.config).reduce((p, c) => {
 				return {
 					...p,
@@ -142,7 +142,7 @@ const ConnectorListTwo = () => {
 		let payload = {
 			info: {
 				dbName: userData.dbName,
-				connectorId: selectedConnector.key, // Use the selected connector's ID
+				connectorId: selectedConnector._id, // Use the selected connector's ID
 				isScheduled: JSON.parse(isSchedule),
 			},
 
@@ -191,6 +191,21 @@ const ConnectorListTwo = () => {
 		setOpenLoader(false);
 	};
 
+	const runConnector = async () => {
+		try {
+			setOpenLoader(true)
+			const respons = await ApiServices(
+				"post",
+				null,
+				`${ApiEndPoints.Connector}/${selectedConnector._id}`
+			);
+		} catch (e) {
+			console.log(e)
+		} finally {
+			setOpenLoader(false)
+		}
+	}
+
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		configData[name] = value;
@@ -205,7 +220,7 @@ const ConnectorListTwo = () => {
 	const handleSchedule = (record) => {
 		// debugger
 		setSelectedConnector(record);
-		ConnectorConfigDetail(record.key); // Fetch the configuration data for the selected connector
+		ConnectorConfigDetail(record._id); // Fetch the configuration data for the selected connector
 		setScheduleModalVisible(true);
 	};
 	const onSelectChange = (selectedRowKeys) => {
@@ -223,12 +238,7 @@ const ConnectorListTwo = () => {
 		{
 			title: "Connector Name",
 			dataIndex: "connectorName",
-			key: "connectorName",
-			render: (text, record) => (
-				<Link to={"/connector-log/" + record.connectorName} state={{ display_name: record.connectorName }}>
-					{formatCapilize(allReplace(record.connectorName, { _: " ", "-": " " }))}
-				</Link>
-			),
+			key: "connectorName"
 		},
 		{
 			title: "Category",
@@ -248,34 +258,12 @@ const ConnectorListTwo = () => {
 		{
 			title: "Status",
 			dataIndex: "status",
-			key: "status",
-			render: (text, record) => (
-				<>
-					{record?.isConnectorScheduled && record?.isConnectorScheduled === true
-						? "Running"
-						: record?.isConnectorScheduled === false
-							? "Stopped"
-							: "Pending"}
-				</>
-			),
+			key: "status"
 		},
 		{
 			title: "Actions",
 			dataIndex: "actions",
 			key: "actions",
-			render: (text, record) => (
-				<>
-					<button onClick={() => handleSchedule(record)} type="button" className="btn noti-icon m-0 p-0">
-						<i className="mdi mdi-calendar"></i>
-					</button>
-					{/* <button onClick={() => ConnectorConfigDetail({ id: record._id, connectorData: record })} type="button" className="btn  noti-icon  m-0 p-0">
-                        <i className="mdi mdi-timer"></i>
-                    </button>
-                    <button onClick={() => DeleteAlert(record._id)} type="button" className="btn  noti-icon  m-0 p-0">
-                        <i className="mdi mdi-delete"></i>
-                    </button> */}
-				</>
-			),
 		},
 	];
 
@@ -293,27 +281,39 @@ const ConnectorListTwo = () => {
 					.toLowerCase()
 					.includes(searchedVal.toString().toLowerCase())
 		)
-		.map((item, index) => ({
-			key: item._id,
-			index: index + 1,
-			connectorName: formatCapilize(allReplace(item.display_name, { _: " ", "-": " " })),
-			category: item.category,
-			created_at: item.created_at,
-			logFile: (
-				<Link to={"/connector-log/" + item.display_name} state={{ display_name: item.display_name }}>
-					{formatCapilize(allReplace(item.display_name, { _: " ", "-": " " }))}
-				</Link>
-			),
-			status: (
-				<>
-					{item?.isConnectorScheduled && item?.isConnectorScheduled === true
-						? "Running"
-						: item?.isConnectorScheduled === false
-							? "Stopped"
-							: "Pending"}
-				</>
-			),
-		}));
+		.map((item, index) => {
+			console.log(item)
+			return {
+				key: item._id,
+				index: index + 1,
+				connectorName: (
+					<Link to={"/connector-log/" + item.display_name} state={{ display_name: item.display_name }}>
+						{formatCapilize(allReplace(item.display_name, { _: " ", "-": " " }))}
+					</Link>
+				),
+				category: item.category,
+				created_at: item.created_at,
+				logFile: (
+					<Link to={"/connector-log/" + item.display_name} state={{ display_name: item.display_name }}>
+						{formatCapilize(allReplace(item.display_name, { _: " ", "-": " " }))}
+					</Link>
+				),
+				status: (
+					<>
+						{item?.isConnectorScheduled && item?.isConnectorScheduled === true
+							? "Scheduled"
+							: item?.isConnectorScheduled === false
+								? "Stopped"
+								: "Pending"}
+					</>
+				),
+				actions: (
+					<button onClick={() => handleSchedule(item)} type="button" className="btn noti-icon m-0 p-0">
+						<i className="mdi mdi-calendar"></i>
+					</button>
+				)
+			}
+		});
 
 
 
@@ -408,7 +408,7 @@ const ConnectorListTwo = () => {
 
 									<SelectOption data={shedulerRepeat} value={schedulerData.repeat} name="repeat" handelChange={handelChange} />
 
-									{ schedulerData.repeat ? 
+									{schedulerData.repeat ?
 										<>
 											{schedulerData.repeat === 'monthly' && (
 												<SelectOption data={monthData} value={schedulerData.monthDay} name="monthDay" handelChange={handelChange} />
@@ -423,7 +423,7 @@ const ConnectorListTwo = () => {
 											)}
 
 											<SelectOption data={minuteData} value={schedulerData.minute} name="minute" handelChange={handelChange} />
-										</> : null }
+										</> : null}
 								</Row>
 							</form>
 							{objectkey(configData).length > 0 && (
@@ -451,7 +451,7 @@ const ConnectorListTwo = () => {
 												</Row>
 												<Row gutter={[16, 16]}>
 													<Col md={6}>
-														<div>
+														<div className="d-flex flex-row gap-2">
 															<button
 																disabled={config}
 																onClick={() => {
@@ -459,7 +459,16 @@ const ConnectorListTwo = () => {
 																}}
 																className="btn btn-primary w-md"
 															>
-																Run Connector
+																Schedule Connector
+															</button>
+															<button
+																disabled={!config}
+																onClick={() => {
+																	runConnector();
+																}}
+																className="btn btn-info w-md"
+															>
+																Invoke connector
 															</button>
 														</div>
 													</Col>
@@ -472,7 +481,7 @@ const ConnectorListTwo = () => {
 																}}
 																className="btn btn-danger w-md"
 															>
-																Stop Connector
+																Stop Schedule
 															</button>
 														</div>
 													</Col>
