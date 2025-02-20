@@ -1,7 +1,7 @@
 'use client'
 
-import { DeleteOutline } from "@mui/icons-material";
-import { Box, Divider, IconButton, LinearProgress, List, ListItem, ListItemButton, ListItemText, Pagination, Typography } from "@mui/material";
+import { DeleteOutline, Search } from "@mui/icons-material";
+import { Box, Divider, IconButton, InputAdornment, LinearProgress, List, ListItem, ListItemButton, ListItemText, Pagination, Paper, Stack, TextField, Typography } from "@mui/material";
 import { formatRelative } from 'date-fns/fp';
 import { useConfirm } from "material-ui-confirm";
 import Link from "next/link";
@@ -17,11 +17,13 @@ export default function Page() {
   })
   const [page, setPage] = useState(1);
   const [processing, setProcessing] = useState(false)
+  const [searchText, setSearchText] = useState('')
+  const [invokeSearch, setInvokeSearch] = useState(0)
 
   const getReports = useCallback(async () => {
     try {
       setProcessing(true)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/monthly-report-form?page=${page}`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/monthly-report-form?page=${page}&search=${searchText}`)
       if(res.ok) {
         const data = await res.json()
         setReport({
@@ -34,7 +36,7 @@ export default function Page() {
     }finally{
       setProcessing(false)
     }
-  }, [page])
+  }, [page, invokeSearch])
 
   const handleReportDeletion = async(report: any) => {
     try {
@@ -69,6 +71,12 @@ export default function Page() {
     }
   }
 
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    setPage(1)
+    setInvokeSearch(Math.random())
+  }
+
   const relativeFromToday = useMemo(() => {
     return formatRelative(new Date())
   }, [])
@@ -82,9 +90,23 @@ export default function Page() {
   }, [getReports])
 
   return (
-    <Box padding={2}>
-      <Typography variant="h4" component='h1'>List of saved monthly reports</Typography>
-      <Divider />
+    <Paper sx={{p: 2}}>
+      <Stack direction='row' justifyContent='space-between'>
+        <Typography variant="h5" component='h1'>List of saved monthly reports</Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            placeholder="Search here..."
+            size="small"
+            InputProps={{
+              endAdornment: <InputAdornment position="end">
+                <IconButton edge="end" type="submit"><Search /></IconButton>
+              </InputAdornment>
+            }}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </form>
+      </Stack>
+      <Divider sx={{my:1}} />
       { processing ? (
         <LinearProgress />
       ) : null }
@@ -102,8 +124,13 @@ export default function Page() {
             >
               <ListItemButton component={Link} href={`/dashboard/monthly-report?id=${report._id}`}>
                 <ListItemText
-                  primary={`Title: ${report._source.monthly_report.doc_title}`}
-                  secondary={`Date: ${formatSavedDate(report._source.savedAt)}`}
+                  primary={<div>
+                    <Typography variant="h6">{report._source.monthly_report.doc_title}</Typography>
+                    <div>Client: {report._source.monthly_report.client_name}</div>
+                    <div>Customer: {report._source.monthly_report.customer_name}</div>
+                    <div>Date: {report._source.monthly_report.date}</div>
+                  </div>}
+                  secondary={`Saved at: ${formatSavedDate(report._source.savedAt)}`}
                 />
               </ListItemButton>
             </ListItem>
@@ -113,6 +140,6 @@ export default function Page() {
       <Pagination count={Math.floor((report.count/20) + 1)} page={page} onChange={(_, v) => {
         setPage(v)
       }} />
-    </Box>
+    </Paper>
   )
 }

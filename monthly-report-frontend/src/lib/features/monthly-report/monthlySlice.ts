@@ -7,170 +7,188 @@ export const monthlyReportSlice = createSlice({
     name: "monthlyReport",
     initialState: monthlyReportInitialValue,
     reducers: {
-        resetMonthlyReportState(_, action: PayloadAction<typeof monthlyReportInitialValue>) {
-            return action.payload
+        resetMonthlyReportState(_, action: PayloadAction<typeof monthlyReportInitialValue | null>) {
+            return action.payload || monthlyReportInitialValue
         },
         updateFromElasticData(state, action: PayloadAction<any>) {
             const data = action.payload;
             const reducers = monthlyReportSlice.caseReducers;
             // detailed summary
-            reducers.updateDSField(state, {
-                type: '',
-                payload: {
-                    field: 'no_of_incidents',
-                    value: data['Detailed Summary']['Total No of Incidents']['Total Incidents']
-                }
-            })
-            reducers.updateDSField(state, {
-                type: '',
-                payload: {
-                    field: 'date',
-                    value: data['Detailed Summary']['Total No of Incidents']['Month & Year']
-                }
-            })
-            reducers.updateDSField(state, {
-                type: '',
-                payload: {
-                    field: 'highly_exploitable',
-                    value: data['Detailed Summary']['No of Highly Exploitable Unique CVEs']
-                }
-            })
-            reducers.updateDSField(state, {
-                type: '',
-                payload: {
-                    field: 'incidents_closed',
-                    value: data['Detailed Summary']['No of Incidents Closed without acknowledgement']
-                }
-            })
-            reducers.updateDSChartData(state, {
-                type: '',
-                payload: {
-                    index: 0,
-                    value: data['Detailed Summary']['Risk Index']['Score']
-                }
-            });
+            if (data['Detailed Summary']?.['Total No of Incidents']?.['Total Incidents'])
+                reducers.updateDSField(state, {
+                    type: '',
+                    payload: {
+                        field: 'no_of_incidents',
+                        value: data['Detailed Summary']['Total No of Incidents']['Total Incidents']
+                    }
+                })
 
-            const incidents = data['Detailed Summary']['Top incidents']
-            for (let i = state.detailed_summary.top_incidents.length; i < incidents.length - 1; i++) {
-                reducers.addDSTopIncident(state);
-            }
-            for (let i = 0; i < incidents.length - 1; i++) {
-                reducers.updateDSTopIncidentField(state, {
+            if (data['Detailed Summary']?.['Total No of Incidents']?.['Month & Year'])
+                reducers.updateDSField(state, {
                     type: '',
                     payload: {
-                        index: i,
-                        field: 'incident_name',
-                        value: incidents[i]['Incident Names with no of Occurrence']
+                        field: 'date',
+                        value: data['Detailed Summary']['Total No of Incidents']['Month & Year']
                     }
-                });
-                reducers.updateDSTopIncidentField(state, {
+                })
+
+            if (data['Detailed Summary']?.['No of Highly Exploitable Unique CVEs'])
+                reducers.updateDSField(state, {
                     type: '',
                     payload: {
-                        index: i,
-                        field: 'priority_impact',
-                        value: incidents[i]['Priority - Impact']
+                        field: 'highly_exploitable',
+                        value: data['Detailed Summary']['No of Highly Exploitable Unique CVEs']
                     }
-                });
-                reducers.updateDSTopIncidentField(state, {
+                })
+
+            if (data['Detailed Summary']?.['No of Incidents Closed without acknowledgement'])
+                reducers.updateDSField(state, {
                     type: '',
                     payload: {
-                        index: i,
-                        field: 'data_source',
-                        value: incidents[i]['Data Source']
+                        field: 'incidents_closed',
+                        value: data['Detailed Summary']['No of Incidents Closed without acknowledgement']
+                    }
+                })
+            if (data['Detailed Summary']?.['Risk Index']?.['Score'])
+                reducers.updateDSChartData(state, {
+                    type: '',
+                    payload: {
+                        index: 0,
+                        value: data['Detailed Summary']['Risk Index']['Score']
                     }
                 });
+
+            if (data['Detailed Summary']?.['Top incidents']) {
+                const incidents = data['Detailed Summary']['Top incidents']
+                for (let i = state.detailed_summary.top_incidents.length; i < incidents.length - 1; i++) {
+                    reducers.addDSTopIncident(state);
+                }
+                for (let i = 0; i < incidents.length - 1; i++) {
+                    reducers.updateDSTopIncidentField(state, {
+                        type: '',
+                        payload: {
+                            index: i,
+                            field: 'incident_name',
+                            value: incidents[i]['Incident Names with no of Occurrence']
+                        }
+                    });
+                    reducers.updateDSTopIncidentField(state, {
+                        type: '',
+                        payload: {
+                            index: i,
+                            field: 'priority_impact',
+                            value: incidents[i]['Priority - Impact']
+                        }
+                    });
+                    reducers.updateDSTopIncidentField(state, {
+                        type: '',
+                        payload: {
+                            index: i,
+                            field: 'data_source',
+                            value: incidents[i]['Data Source']
+                        }
+                    });
+                }
             }
             // -
             // Risk matrix
-            Object.entries(data['Risk Matrics']['Last Three Month Risk Score']).forEach(([month, score], index) => {
-                reducers.updateLastRiskScoreChart(state, {
-                    type: '',
-                    payload: {
-                        index,
-                        field: 'month',
-                        value: month
-                    }
+            if (data['Risk Matrics']?.['Last Three Month Risk Score']) {
+                Object.entries(data['Risk Matrics']['Last Three Month Risk Score']).forEach(([month, score], index) => {
+                    reducers.updateLastRiskScoreChart(state, {
+                        type: '',
+                        payload: {
+                            index,
+                            field: 'month',
+                            value: month
+                        }
+                    })
+                    reducers.updateLastRiskScoreChart(state, {
+                        type: '',
+                        payload: {
+                            index,
+                            field: 'data',
+                            value: [Number(score) || 0]
+                        }
+                    })
                 })
-                reducers.updateLastRiskScoreChart(state, {
-                    type: '',
-                    payload: {
-                        index,
-                        field: 'data',
-                        value: [Number(score) || 0]
-                    }
-                })
-            })
+            }
             // -
             // Overall Incidents Summary
-            Object.entries(data['Overall Incidents Summary']['Status Summary']).forEach(([incident, score]) => {
-                const index = state.overall_incident_summary.incidents_chart.key.indexOf(incident)
-                const newDatasets = [...state.overall_incident_summary.incidents_chart.datasets];
-                newDatasets[0] = {
-                    ...newDatasets[0],
-                    data: newDatasets[0].data.map((d, i) => (i === index ? score as number : d)),
-                };
-                reducers.updateOISChart(state, {
-                    type: '',
-                    payload: newDatasets
-                });
-            })
+            if (data['Overall Incidents Summary']?.['Status Summary']) {
+                Object.entries(data['Overall Incidents Summary']['Status Summary']).forEach(([incident, score]) => {
+                    const index = state.overall_incident_summary.incidents_chart.key.indexOf(incident)
+                    const newDatasets = [...state.overall_incident_summary.incidents_chart.datasets];
+                    newDatasets[0] = {
+                        ...newDatasets[0],
+                        data: newDatasets[0].data.map((d, i) => (i === index ? score as number : d)),
+                    };
+                    reducers.updateOISChart(state, {
+                        type: '',
+                        payload: newDatasets
+                    });
+                })
+            }
 
-            Object.entries(data['Overall Incidents Summary']['Overall Incidents Summary']).forEach(([priority, pData]) => {
-                priority = priority.toLowerCase()
-                const priorityData: any = pData
-                reducers.updateOISField(state, {
-                    type: '',
-                    payload: { path: `${priority}.closed_with_resolution`, value: priorityData['Incidents Closed with Resolution'] }
+            if (data['Overall Incidents Summary']?.['Overall Incidents Summary']) {
+                Object.entries(data['Overall Incidents Summary']['Overall Incidents Summary']).forEach(([priority, pData]) => {
+                    priority = priority.toLowerCase()
+                    const priorityData: any = pData
+                    reducers.updateOISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.closed_with_resolution`, value: priorityData['Incidents Closed with Resolution'] }
+                    })
+                    reducers.updateOISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.closed_without_resolution`, value: priorityData['Incidents Closed without Acknowledgement'] }
+                    })
+                    reducers.updateOISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
+                    })
                 })
-                reducers.updateOISField(state, {
-                    type: '',
-                    payload: { path: `${priority}.closed_without_resolution`, value: priorityData['Incidents Closed without Acknowledgement'] }
-                })
-                reducers.updateOISField(state, {
-                    type: '',
-                    payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
-                })
-            })
+            }
             // -
             // Vision One Workbench Incidents Summary
-            Object.entries(data['V1 Workbench Incidents Summary']['V1 Workbench Incidents Summary']).forEach(([priority, pData]) => {
-                priority = priority.toLowerCase()
-                const priorityData: any = pData
-                reducers.updateWISField(state, {
-                    type: '',
-                    payload: { path: `${priority}.closed_with_resolution`, value: priorityData['Incidents Closed with Resolution'] }
+            if (data['V1 Workbench Incidents Summary']?.['V1 Workbench Incidents Summary'])
+                Object.entries(data['V1 Workbench Incidents Summary']['V1 Workbench Incidents Summary']).forEach(([priority, pData]) => {
+                    priority = priority.toLowerCase()
+                    const priorityData: any = pData
+                    reducers.updateWISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.closed_with_resolution`, value: priorityData['Incidents Closed with Resolution'] }
+                    })
+                    reducers.updateWISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.closed_without_resolution`, value: priorityData['Incidents Closed without Acknowledgement'] }
+                    })
+                    reducers.updateWISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.pending_with_customer.pending_incidents`, value: priorityData['Pending Incidents from Customer'] }
+                    })
+                    reducers.updateWISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
+                    })
                 })
-                reducers.updateWISField(state, {
-                    type: '',
-                    payload: { path: `${priority}.closed_without_resolution`, value: priorityData['Incidents Closed without Acknowledgement'] }
-                })
-                reducers.updateWISField(state, {
-                    type: '',
-                    payload: { path: `${priority}.pending_with_customer.pending_incidents`, value: priorityData['Pending Incidents from Customer'] }
-                })
-                reducers.updateWISField(state, {
-                    type: '',
-                    payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
-                })
-            })
             // -
             // Third Party / SIEM Incidents Summary
-            Object.entries(data['SIEM Incidents Summary']['SIEM Incidents Summary']).forEach(([priority, pData]) => {
-                priority = priority.toLowerCase()
-                const priorityData: any = pData
-                reducers.updateSIEMField(state, {
-                    type: '',
-                    payload: { path: `${priority}.closed_with_resolution`, value: priorityData['Incidents Closed with Resolution'] }
+            if (data['SIEM Incidents Summary']?.['SIEM Incidents Summary'])
+                Object.entries(data['SIEM Incidents Summary']['SIEM Incidents Summary']).forEach(([priority, pData]) => {
+                    priority = priority.toLowerCase()
+                    const priorityData: any = pData
+                    reducers.updateSIEMField(state, {
+                        type: '',
+                        payload: { path: `${priority}.closed_with_resolution`, value: priorityData['Incidents Closed with Resolution'] }
+                    })
+                    reducers.updateSIEMField(state, {
+                        type: '',
+                        payload: { path: `${priority}.closed_without_resolution`, value: priorityData['Incidents Closed without Acknowledgement'] }
+                    })
+                    reducers.updateSIEMField(state, {
+                        type: '',
+                        payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
+                    })
                 })
-                reducers.updateSIEMField(state, {
-                    type: '',
-                    payload: { path: `${priority}.closed_without_resolution`, value: priorityData['Incidents Closed without Acknowledgement'] }
-                })
-                reducers.updateSIEMField(state, {
-                    type: '',
-                    payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
-                })
-            })
             // -
             // High Incidents Summary
             // @TODO
@@ -182,141 +200,149 @@ export const monthlyReportSlice = createSlice({
             // -
 
             // SLO Summary
-            const indexMapping = new Map([
-                ["Total No of Incidents Closed", "Total Closed Incidents"],
-                ["SLO Met", "SLO Met"],
-                ["SLO Not Met", "SLO not Met"],
-            ])
-            Object.entries(data['SLO Summary']['SLO Summary']).forEach(([key, score]) => {
-                const sIndex = indexMapping.get(key)
-                if (!sIndex) return
-                const index = state.slo_summary.slo_chart.key.indexOf(sIndex)
-                reducers.updateSLOChartData(state, {
-                    type: '',
-                    payload: {
-                        index,
-                        value: Number(score) || 0
-                    }
+            if (data['SLO Summary']?.['SLO Summary']) {
+                const indexMapping = new Map([
+                    ["Total No of Incidents Closed", "Total Closed Incidents"],
+                    ["SLO Met", "SLO Met"],
+                    ["SLO Not Met", "SLO not Met"],
+                ])
+                Object.entries(data['SLO Summary']['SLO Summary']).forEach(([key, score]) => {
+                    const sIndex = indexMapping.get(key)
+                    if (!sIndex) return
+                    const index = state.slo_summary.slo_chart.key.indexOf(sIndex)
+                    reducers.updateSLOChartData(state, {
+                        type: '',
+                        payload: {
+                            index,
+                            value: Number(score) || 0
+                        }
+                    })
                 })
-            })
+            }
             // -
 
             // Detection Summary from Apex One
             // For Top Endpoints Actions, data format is not understood
             {
-                let virusData = data['Detection Summary from A1']['Detection Summary form Apex One']['Virus/Malware & Spyware/Grayware']
-                let blockedData = data['Detection Summary from A1']['Detection Summary form Apex One']['C & C Connections & Intrusion attempts Blocked']
-                reducers.updateDSAOChart(state, {
-                    type: '',
-                    payload: {
-                        chart: 'detection_chart',
-                        index: 0,
-                        value: virusData['File Cleaned (Virus/Malware + Spyware/Grayware)']
-                    }
-                })
-                reducers.updateDSAOChart(state, {
-                    type: '',
-                    payload: {
-                        chart: 'detection_chart',
-                        index: 1,
-                        value: virusData['File Quarantine (Virus / Malware)']
-                    }
-                })
-                reducers.updateDSAOChart(state, {
-                    type: '',
-                    payload: {
-                        chart: 'detection_chart',
-                        index: 2,
-                        value: virusData['Restart Action Required (Virus / Malware)']
-                    }
-                })
-                reducers.updateDSAOChart(state, {
-                    type: '',
-                    payload: {
-                        chart: 'detection_chart',
-                        index: 3,
-                        value: virusData['File Deleted (Virus / Malware)']
-                    }
-                })
+                const virusData = data['Detection Summary from A1']?.['Detection Summary form Apex One']?.['Virus/Malware & Spyware/Grayware']
+                if (virusData) {
+                    reducers.updateDSAOChart(state, {
+                        type: '',
+                        payload: {
+                            chart: 'detection_chart',
+                            index: 0,
+                            value: virusData['File Cleaned (Virus/Malware + Spyware/Grayware)']
+                        }
+                    })
+                    reducers.updateDSAOChart(state, {
+                        type: '',
+                        payload: {
+                            chart: 'detection_chart',
+                            index: 1,
+                            value: virusData['File Quarantine (Virus / Malware)']
+                        }
+                    })
+                    reducers.updateDSAOChart(state, {
+                        type: '',
+                        payload: {
+                            chart: 'detection_chart',
+                            index: 2,
+                            value: virusData['Restart Action Required (Virus / Malware)']
+                        }
+                    })
+                    reducers.updateDSAOChart(state, {
+                        type: '',
+                        payload: {
+                            chart: 'detection_chart',
+                            index: 3,
+                            value: virusData['File Deleted (Virus / Malware)']
+                        }
+                    })
+                }
 
-                reducers.updateDSAOChart(state, {
-                    type: '',
-                    payload: {
-                        chart: 'attempts_blocked_chart',
-                        index: 0,
-                        value: blockedData['Total C & C Connections Blocked']
-                    }
-                })
-                reducers.updateDSAOChart(state, {
-                    type: '',
-                    payload: {
-                        chart: 'attempts_blocked_chart',
-                        index: 1,
-                        value: blockedData['Total Intrusion Attempts Blocked']
-                    }
-                })
+                const blockedData = data['Detection Summary from A1']?.['Detection Summary form Apex One']?.['C & C Connections & Intrusion attempts Blocked']
+                if (blockedData) {
+                    reducers.updateDSAOChart(state, {
+                        type: '',
+                        payload: {
+                            chart: 'attempts_blocked_chart',
+                            index: 0,
+                            value: blockedData['Total C & C Connections Blocked']
+                        }
+                    })
+                    reducers.updateDSAOChart(state, {
+                        type: '',
+                        payload: {
+                            chart: 'attempts_blocked_chart',
+                            index: 1,
+                            value: blockedData['Total Intrusion Attempts Blocked']
+                        }
+                    })
+                }
 
-                let top3 = data['Detection Summary from A1']['Top 03 Endpoints']
-                for (let i = state.detection_summary_apex_one.tables.table1.length; i < top3['File Cleaned/Spyware'].length; i++) {
-                    reducers.addDSAOTableEntry(state, {
-                        type: '',
-                        payload: 'table1'
-                    })
-                }
-                for (let i = state.detection_summary_apex_one.tables.table2.length; i < top3['C & C Connection Blocked'].length; i++) {
-                    reducers.addDSAOTableEntry(state, {
-                        type: '',
-                        payload: 'table2'
-                    })
-                }
-                for (let i = 0; i < top3['File Cleaned/Spyware'].length; i++) {
-                    reducers.updateDSAOTableEntry(state, {
-                        type: '',
-                        payload: {
-                            table: 'table1',
-                            index: i,
-                            fieldPath: 'file_cleaned',
-                            value: top3['File Cleaned/Malware'][i]
-                        }
-                    })
-                    reducers.updateDSAOTableEntry(state, {
-                        type: '',
-                        payload: {
-                            table: 'table1',
-                            index: i,
-                            fieldPath: 'file_quarantined',
-                            value: top3['File Qurantined(Malware)'][i]
-                        }
-                    })
-                    reducers.updateDSAOTableEntry(state, {
-                        type: '',
-                        payload: {
-                            table: 'table1',
-                            index: i,
-                            fieldPath: 'file_deleted',
-                            value: top3['File Deleted'][i]
-                        }
-                    })
-                }
-                for (let i = 0; i < top3['C & C Connection Blocked'].length; i++) {
-                    reducers.updateDSAOTableEntry(state, {
-                        type: '',
-                        payload: {
-                            table: 'table2',
-                            index: i,
-                            fieldPath: 'connection_endpoint.endpoint',
-                            value: top3['C & C Connection Blocked'][i]
-                        }
-                    })
-                    reducers.updateDSAOTableEntry(state, {
-                        type: '',
-                        payload: {
-                            table: 'table2',
-                            index: i,
-                            fieldPath: 'attempts_blocked.endpoint',
-                            value: top3['Intrusion Attempts Blocked'][i]
-                        }
-                    })
+                const top3 = data['Detection Summary from A1']?.['Top 03 Endpoints']
+                if (top3) {
+                    for (let i = state.detection_summary_apex_one.tables.table1.length; i < top3['File Cleaned/Spyware'].length; i++) {
+                        reducers.addDSAOTableEntry(state, {
+                            type: '',
+                            payload: 'table1'
+                        })
+                    }
+                    for (let i = state.detection_summary_apex_one.tables.table2.length; i < top3['C & C Connection Blocked'].length; i++) {
+                        reducers.addDSAOTableEntry(state, {
+                            type: '',
+                            payload: 'table2'
+                        })
+                    }
+                    for (let i = 0; i < top3['File Cleaned/Spyware'].length; i++) {
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table1',
+                                index: i,
+                                fieldPath: 'file_cleaned',
+                                value: top3['File Cleaned/Malware'][i]
+                            }
+                        })
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table1',
+                                index: i,
+                                fieldPath: 'file_quarantined',
+                                value: top3['File Qurantined(Malware)'][i]
+                            }
+                        })
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table1',
+                                index: i,
+                                fieldPath: 'file_deleted',
+                                value: top3['File Deleted'][i]
+                            }
+                        })
+                    }
+                    for (let i = 0; i < top3['C & C Connection Blocked'].length; i++) {
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table2',
+                                index: i,
+                                fieldPath: 'connection_endpoint.endpoint',
+                                value: top3['C & C Connection Blocked'][i]
+                            }
+                        })
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table2',
+                                index: i,
+                                fieldPath: 'attempts_blocked.endpoint',
+                                value: top3['Intrusion Attempts Blocked'][i]
+                            }
+                        })
+                    }
                 }
             }
             // -
@@ -333,55 +359,60 @@ export const monthlyReportSlice = createSlice({
                     ['Suspicious Object', 'suspicious_objects'],
                     ['Blocked Object', 'blocked_objects']
                 ])
-                const emailStatus = data['Email Summary']['Email_Status']['Email Status']
-                Object.entries(emailStatus).forEach(([key, value]) => {
-                    const stateKey = dataMap.get(key)
-                    if (!stateKey) return;
-                    let index = state.email_quarantine_summary_cas.status_chart.key.indexOf(stateKey)
-                    reducers.updateEQSChartData(state, {
+                const emailStatus = data['Email Summary']?.['Email_Status']?.['Email Status']
+                if (emailStatus) {
+                    Object.entries(emailStatus).forEach(([key, value]) => {
+                        const stateKey = dataMap.get(key)
+                        if (!stateKey) return;
+                        let index = state.email_quarantine_summary_cas.status_chart.key.indexOf(stateKey)
+                        reducers.updateEQSChartData(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                value: emailStatus[key]
+                            }
+                        })
+                    })
+                }
+
+                const top3SenderAndReceipts = data['Email Summary']?.['Top 03 Sender and Receipts']
+                if (top3SenderAndReceipts) {
+                    reducers.updateEQSSenderReceipts(state, {
                         type: '',
                         payload: {
-                            index,
-                            value: emailStatus[key]
+                            field: 'sender',
+                            value: top3SenderAndReceipts['Top 3 Senders'].join('\n'),
                         }
                     })
-                })
-
-                const top3SenderAndReceipts = data['Email Summary']['Top 03 Sender and Receipts']
-                reducers.updateEQSSenderReceipts(state, {
-                    type: '',
-                    payload: {
-                        field: 'sender',
-                        value: top3SenderAndReceipts['Top 3 Senders'].join('\n'),
-                    }
-                })
-                reducers.updateEQSSenderReceipts(state, {
-                    type: '',
-                    payload: {
-                        field: 'receipt',
-                        value: top3SenderAndReceipts['Top 3 Receipts'].join('\n'),
-                    }
-                })
-
-                const threatData = data['Email Summary']['Threat Type']
-
-                Object.entries(threatData).forEach(([key, value]) => {
-                    const stateKey = dataMap.get(key)
-                    if (!stateKey) return;
-                    reducers.updateEQSThreatType(state, {
+                    reducers.updateEQSSenderReceipts(state, {
                         type: '',
                         payload: {
-                            field: stateKey as keyof EmailThreatType,
-                            value: Number(value) || 0
+                            field: 'receipt',
+                            value: top3SenderAndReceipts['Top 3 Receipts'].join('\n'),
                         }
                     })
-                })
+                }
+
+                const threatData = data['Email Summary']?.['Threat Type']
+                if (threatData) {
+                    Object.entries(threatData).forEach(([key, value]) => {
+                        const stateKey = dataMap.get(key)
+                        if (!stateKey) return;
+                        reducers.updateEQSThreatType(state, {
+                            type: '',
+                            payload: {
+                                field: stateKey as keyof EmailThreatType,
+                                value: Number(value) || 0
+                            }
+                        })
+                    })
+                }
             }
             // -
 
             // Vulnerability Assessment Report
             {
-                const vulnerabilityData = data['Vulnerability Assessment Report']['Internal Assets']
+                const vulnerabilityData = data['Vulnerability Assessment Report']?.['Internal Assets']
                 const dataMap = new Map([
                     ['Vulnerable Endpoint Percentage', 'internal_assets.vulnerable_endpoint'],
                     ['Highly-Exploitable CVE Density', 'internal_assets.highly_exploitable_cve'],
@@ -393,134 +424,146 @@ export const monthlyReportSlice = createSlice({
                     // ['', 'internet_facing_assets.vulnerable_host'],
                     // ['', 'internet_facing_assets.cve_density']
                 ])
-                Object.entries(vulnerabilityData).forEach(([key, score]) => {
-                    const stateKey = dataMap.get(key)
-                    if (!stateKey) return
+                if (vulnerabilityData) {
+                    Object.entries(vulnerabilityData).forEach(([key, score]) => {
+                        const stateKey = dataMap.get(key)
+                        if (!stateKey) return
 
-                    const updatedData = updateNestedField(
-                        state.vulnerability_assessment_report,
-                        stateKey,
-                        Number(score) || 0
-                    );
-                    reducers.vulnerabilityAssessmentReport(state, {
-                        type: '',
-                        payload: updatedData
-                    });
-                })
+                        const updatedData = updateNestedField(
+                            state.vulnerability_assessment_report,
+                            stateKey,
+                            Number(score) || 0
+                        );
+                        reducers.vulnerabilityAssessmentReport(state, {
+                            type: '',
+                            payload: updatedData
+                        });
+                    })
+                }
             }
             // -
 
             // System Configuration Report
             {
-                const configReportData = data['System Configuration Report']['System Configuration Report']
+                const configReportData = data['System Configuration Report']?.['System Configuration Report']
                 const dataMap = new Map([
                     ['Accounts with Weak Authentication', 'accounts_with_weak_auth'],
                     ['Accounts that Increase Attack Surface Risk', 'account_attack_surface_risk'],
                     ['Accounts with Excessive Privilege', 'accounts_with_excessive_privilege'],
                     ['Hosts with Insecure Connection Issues', 'legacy_auth_logon_activity']
                 ])
-                Object.entries(configReportData).forEach(([key, score]) => {
-                    const stateKey = dataMap.get(key)
-                    if (!stateKey) return
+                if (configReportData) {
+                    Object.entries(configReportData).forEach(([key, score]) => {
+                        const stateKey = dataMap.get(key)
+                        if (!stateKey) return
 
-                    const updatedData = updateNestedField(
-                        state.system_configuration_report,
-                        stateKey,
-                        Number(score) || 0
-                    );
-                    reducers.systemConfigurationReport(state, {
-                        type: '',
-                        payload: updatedData
-                    });
-                })
+                        const updatedData = updateNestedField(
+                            state.system_configuration_report,
+                            stateKey,
+                            Number(score) || 0
+                        );
+                        reducers.systemConfigurationReport(state, {
+                            type: '',
+                            payload: updatedData
+                        });
+                    })
+                }
             }
             // -
 
             // Top Vulnerabilities Detected
             {
-                const topVData = data['Top Vulnerability Detected']['Top Vulnerabilities Detected']
-                for (let i = state.top_vulnerabilities_detected.impact_chart.key.length; i < topVData.length; i++) {
-                    reducers.addTVDChartBar(state);
-                }
+                const topVData = data['Top Vulnerability Detected']?.['Top Vulnerabilities Detected']
+                if (topVData) {
+                    for (let i = state.top_vulnerabilities_detected.impact_chart.key.length; i < topVData.length; i++) {
+                        reducers.addTVDChartBar(state);
+                    }
 
-                topVData.forEach((vData: any, index: number) => {
-                    reducers.updateTVDChartKey(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            value: vData['CVE']
-                        }
+                    topVData.forEach((vData: any, index: number) => {
+                        reducers.updateTVDChartKey(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                value: vData['CVE']
+                            }
+                        })
+                        reducers.updateTVDChartData(state, {
+                            type: '',
+                            payload: {
+                                datasetIndex: 0,
+                                index,
+                                value: Number(vData['CVE impact score']) || 0
+                            }
+                        })
                     })
-                    reducers.updateTVDChartData(state, {
-                        type: '',
-                        payload: {
-                            datasetIndex: 0,
-                            index,
-                            value: Number(vData['CVE impact score']) || 0
-                        }
-                    })
-                })
+                }
             }
             // -
 
             // Top Risk Device
             {
-                const topVData = data['Top Risk Device']['Top Risk Device']
-                for (let i = state.top_risk_device.risk_score_chart.key.length; i < topVData.length; i++) {
-                    reducers.addTRDChartBar(state);
-                }
+                const topVData = data['Top Risk Device']?.['Top Risk Device']
+                if (topVData) {
+                    for (let i = state.top_risk_device.risk_score_chart.key.length; i < topVData.length; i++) {
+                        reducers.addTRDChartBar(state);
+                    }
 
-                topVData.forEach((vData: any, index: number) => {
-                    reducers.updateTRDChartKey(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            value: vData['Device Name']
-                        }
+                    topVData.forEach((vData: any, index: number) => {
+                        reducers.updateTRDChartKey(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                value: vData['Device Name']
+                            }
+                        })
+                        reducers.updateTRDChartData(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                value: Number(vData['Risk Score']) || 0
+                            }
+                        })
                     })
-                    reducers.updateTRDChartData(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            value: Number(vData['Risk Score']) || 0
-                        }
-                    })
-                })
+                }
             }
             // -
 
             // Top Risk Users Chart
             {
-                const topVData = data['Top Risk Users']['Top Risk Users']
-                for (let i = state.top_risk_users.risk_score_chart.key.length; i < topVData.length; i++) {
-                    reducers.addTRUChartBar(state);
-                }
+                const topVData = data['Top Risk Users']?.['Top Risk Users']
+                if (topVData) {
+                    for (let i = state.top_risk_users.risk_score_chart.key.length; i < topVData.length; i++) {
+                        reducers.addTRUChartBar(state);
+                    }
 
-                topVData.forEach((vData: any, index: number) => {
-                    reducers.updateTRUChartKey(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            value: vData['Device Name']
-                        }
+                    topVData.forEach((vData: any, index: number) => {
+                        reducers.updateTRUChartKey(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                value: vData['Device Name']
+                            }
+                        })
+                        reducers.updateTRUChartData(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                value: Number(vData['Risk Score']) || 0
+                            }
+                        })
                     })
-                    reducers.updateTRUChartData(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            value: Number(vData['Risk Score']) || 0
-                        }
-                    })
-                })
+                }
             }
             // -
 
             // Account Compromise Events
             // @TODO no data format found in the elastic, so data format is unknown
             {
-                const topVData = data['Account Compromise Events']['Account Compromise Events']
-                for (let i = state.account_compromise_events.risk_event_table.length; i < topVData.length; i++) {
-                    reducers.addACERiskEvent(state);
+                const topVData = data['Account Compromise Events']?.['Account Compromise Events']
+                if (topVData) {
+                    for (let i = state.account_compromise_events.risk_event_table.length; i < topVData.length; i++) {
+                        reducers.addACERiskEvent(state);
+                    }
                 }
 
                 // @TODO
@@ -530,126 +573,134 @@ export const monthlyReportSlice = createSlice({
             // Product Assessment Report
             // @TODO Third Party Products Summary is empty in elastic so data format is unknown
             {
-                const topVData = data['Product Assessment Report']['TM Products Summary']
-                for (let i = state.product_assessment_report.tm_products_summary.length; i < topVData.length; i++) {
-                    reducers.addPARTMProduct(state);
+                const topVData = data['Product Assessment Report']?.['TM Products Summary']
+                if (topVData) {
+                    for (let i = state.product_assessment_report.tm_products_summary.length; i < topVData.length; i++) {
+                        reducers.addPARTMProduct(state);
+                    }
+
+                    topVData.forEach((vData: any, index: number) => {
+                        reducers.updatePARTMProduct(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                field: 'tm_product',
+                                value: vData['TM Product']
+                            }
+                        })
+                        reducers.updatePARTMProduct(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                field: 'connection_status',
+                                value: vData['Connection Status']
+                            }
+                        })
+                    })
                 }
 
-                topVData.forEach((vData: any, index: number) => {
-                    reducers.updatePARTMProduct(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            field: 'tm_product',
-                            value: vData['TM Product']
-                        }
-                    })
-                    reducers.updatePARTMProduct(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            field: 'connection_status',
-                            value: vData['Connection Status']
-                        }
-                    })
-                })
-
-                const thirdPartyData = data['Product Assessment Report']['Third Party Products Summary']
+                // const thirdPartyData = data['Product Assessment Report']['Third Party Products Summary']
                 // @TODO
             }
             // -
 
             // Endpoint Feature Compliance
             {
-                const configReportData = data['Endpoint Feature Compliance']['Endpoint Feature Compliance']
+                const configReportData = data['Endpoint Feature Compliance']?.['Endpoint Feature Compliance']
                 const dataMap = new Map([
                     ['XDR Endpoint Sensor Not Enabled', 'XDR Endpoint Sensor Not Enabled'],
                     ['Vulnerability Protection not Enabled', 'Vulnerability Protection not Enabled'],
                     ['XDR Endpoint Sensor, Vulnerability Protection Enabled', 'XDR Endpoint Sensor, Vulnerability Protection Enabled'],
                 ])
-                Object.entries(configReportData).forEach(([key, score]) => {
-                    const stateKey = dataMap.get(key)
-                    if (!stateKey) return
+                if (configReportData) {
+                    Object.entries(configReportData).forEach(([key, score]) => {
+                        const stateKey = dataMap.get(key)
+                        if (!stateKey) return
 
-                    const index = state.endpoint_feature_compliance.compliance_chart.key.indexOf(stateKey);
-                    reducers.updateEPFChartData(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            value: Number(score) || 0
-                        }
-                    });
-                })
+                        const index = state.endpoint_feature_compliance.compliance_chart.key.indexOf(stateKey);
+                        reducers.updateEPFChartData(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                value: Number(score) || 0
+                            }
+                        });
+                    })
+                }
             }
             // -
 
             // Key Feature Adoption Rate of Apex one as Service / Std Endpoint Protection
             {
-                const eData = data['Key Feature Adoption Rate of A1']['Key Feature Adoption Rate of A1']
-                for (let i = state.key_feature_adoption_apex_one.apex_one_chart.key.length; i < eData.length; i++) {
-                    reducers.addKFAAPEXChartBar(state);
-                }
+                const eData = data['Key Feature Adoption Rate of A1']?.['Key Feature Adoption Rate of A1']
+                if (eData) {
+                    for (let i = state.key_feature_adoption_apex_one.apex_one_chart.key.length; i < eData.length; i++) {
+                        reducers.addKFAAPEXChartBar(state);
+                    }
 
-                eData.forEach((vData: any, index: number) => {
-                    reducers.updateKFAAPEXChartKey(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            value: vData['Feature Name']
-                        }
+                    eData.forEach((vData: any, index: number) => {
+                        reducers.updateKFAAPEXChartKey(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                value: vData['Feature Name']
+                            }
+                        })
+                        reducers.updateKFAAPEXChartData(state, {
+                            type: '',
+                            payload: {
+                                datasetIndex: 0,
+                                index,
+                                value: Number(vData['Total']) || 0
+                            }
+                        })
+                        reducers.updateKFAAPEXChartData(state, {
+                            type: '',
+                            payload: {
+                                datasetIndex: 1,
+                                index,
+                                value: Number(vData['Count']) || 0
+                            }
+                        })
                     })
-                    reducers.updateKFAAPEXChartData(state, {
-                        type: '',
-                        payload: {
-                            datasetIndex: 0,
-                            index,
-                            value: Number(vData['Total']) || 0
-                        }
-                    })
-                    reducers.updateKFAAPEXChartData(state, {
-                        type: '',
-                        payload: {
-                            datasetIndex: 1,
-                            index,
-                            value: Number(vData['Count']) || 0
-                        }
-                    })
-                })
+                }
             }
             // -
 
             // Key Feature Adoption Rate of Server & Workload Security / Protection
             {
-                const eData = data['Key Feature Adoption Rate of C1']['Key Feature Adoption Rate of C1']
-                for (let i = state.key_feature_adoption_server_workload.workload_security_chart.key.length; i < eData.length; i++) {
-                    reducers.addBar(state);
-                }
+                const eData = data['Key Feature Adoption Rate of C1']?.['Key Feature Adoption Rate of C1']
+                if (eData) {
+                    for (let i = state.key_feature_adoption_server_workload.workload_security_chart.key.length; i < eData.length; i++) {
+                        reducers.addBar(state);
+                    }
 
-                eData.forEach((vData: any, index: number) => {
-                    reducers.updateKFAWLSChartKey(state, {
-                        type: '',
-                        payload: {
-                            index,
-                            value: vData['Feature Name']
-                        }
+                    eData.forEach((vData: any, index: number) => {
+                        reducers.updateKFAWLSChartKey(state, {
+                            type: '',
+                            payload: {
+                                index,
+                                value: vData['Feature Name']
+                            }
+                        })
+                        reducers.updateKFAWLSChartData(state, {
+                            type: '',
+                            payload: {
+                                datasetIndex: 0,
+                                index,
+                                value: Number(vData['Total']) || 0
+                            }
+                        })
+                        reducers.updateKFAWLSChartData(state, {
+                            type: '',
+                            payload: {
+                                datasetIndex: 1,
+                                index,
+                                value: Number(vData['Count']) || 0
+                            }
+                        })
                     })
-                    reducers.updateKFAWLSChartData(state, {
-                        type: '',
-                        payload: {
-                            datasetIndex: 0,
-                            index,
-                            value: Number(vData['Total']) || 0
-                        }
-                    })
-                    reducers.updateKFAWLSChartData(state, {
-                        type: '',
-                        payload: {
-                            datasetIndex: 1,
-                            index,
-                            value: Number(vData['Count']) || 0
-                        }
-                    })
-                })
+                }
             }
             // -
 
@@ -660,121 +711,126 @@ export const monthlyReportSlice = createSlice({
             // Agent Versions Summary
             // @TODO i am showing outdated = older version + end-of-life version
             {
-                const eData = data['Agent Version Summary']['All Agents Version Summary']
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "agent_version_chart",
-                        datasetIndex: 0,
-                        index: 0,
-                        value: eData['Total (Endpoint + Server)']
-                    }
-                })
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "agent_version_chart",
-                        datasetIndex: 0,
-                        index: 1,
-                        value: eData['Latest Version (Endpoint + Server)']
-                    }
-                })
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "agent_version_chart",
-                        datasetIndex: 0,
-                        index: 2,
-                        value: eData['Older Version (Endpoint + Server)']
-                    }
-                })
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "agent_version_chart",
-                        datasetIndex: 0,
-                        index: 3,
-                        value: eData['End-of-Life version (Endpoint + Server)']
-                    }
-                })
+                const eData = data['Agent Version Summary']?.['All Agents Version Summary']
+                if (eData) {
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "agent_version_chart",
+                            datasetIndex: 0,
+                            index: 0,
+                            value: eData['Total (Endpoint + Server)']
+                        }
+                    })
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "agent_version_chart",
+                            datasetIndex: 0,
+                            index: 1,
+                            value: eData['Latest Version (Endpoint + Server)']
+                        }
+                    })
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "agent_version_chart",
+                            datasetIndex: 0,
+                            index: 2,
+                            value: eData['Older Version (Endpoint + Server)']
+                        }
+                    })
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "agent_version_chart",
+                            datasetIndex: 0,
+                            index: 3,
+                            value: eData['End-of-Life version (Endpoint + Server)']
+                        }
+                    })
+                }
 
-                const wData = data['Component Versions']['WorkLoad Protection']
+                const wData = data['Component Versions']?.['WorkLoad Protection']
+                if (wData) {
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "server_workload_protection_chart",
+                            datasetIndex: 0,
+                            index: 0,
+                            value: wData['Older'] + wData['Latest'] + wData['End of Life']
+                        }
+                    })
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "server_workload_protection_chart",
+                            datasetIndex: 0,
+                            index: 1,
+                            value: wData['Latest']
+                        }
+                    })
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "server_workload_protection_chart",
+                            datasetIndex: 0,
+                            index: 2,
+                            value: wData['Older']
+                        }
+                    })
 
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "server_workload_protection_chart",
-                        datasetIndex: 0,
-                        index: 0,
-                        value: wData['Older'] + wData['Latest'] + wData['End of Life']
-                    }
-                })
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "server_workload_protection_chart",
-                        datasetIndex: 0,
-                        index: 1,
-                        value: wData['Latest']
-                    }
-                })
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "server_workload_protection_chart",
-                        datasetIndex: 0,
-                        index: 2,
-                        value: wData['Older']
-                    }
-                })
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "server_workload_protection_chart",
+                            datasetIndex: 0,
+                            index: 3,
+                            value: wData['End of Life']
+                        }
+                    })
+                }
 
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "server_workload_protection_chart",
-                        datasetIndex: 0,
-                        index: 3,
-                        value: wData['End of Life']
-                    }
-                })
-
-                const sData = data['Component Versions']['Standard Endpoint Protection']
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "standard_endpoint_protection_chart",
-                        datasetIndex: 0,
-                        index: 0,
-                        value: sData['Older'] + sData['Latest'] + sData['End of Life']
-                    }
-                })
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "standard_endpoint_protection_chart",
-                        datasetIndex: 0,
-                        index: 1,
-                        value: sData['Latest']
-                    }
-                })
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "standard_endpoint_protection_chart",
-                        datasetIndex: 0,
-                        index: 2,
-                        value: sData['Older']
-                    }
-                })
-                reducers.updateAVSChartData(state, {
-                    type: '',
-                    payload: {
-                        chart: "standard_endpoint_protection_chart",
-                        datasetIndex: 0,
-                        index: 3,
-                        value: sData['End of Life']
-                    }
-                })
+                const sData = data['Component Versions']?.['Standard Endpoint Protection']
+                if (sData) {
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "standard_endpoint_protection_chart",
+                            datasetIndex: 0,
+                            index: 0,
+                            value: sData['Older'] + sData['Latest'] + sData['End of Life']
+                        }
+                    })
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "standard_endpoint_protection_chart",
+                            datasetIndex: 0,
+                            index: 1,
+                            value: sData['Latest']
+                        }
+                    })
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "standard_endpoint_protection_chart",
+                            datasetIndex: 0,
+                            index: 2,
+                            value: sData['Older']
+                        }
+                    })
+                    reducers.updateAVSChartData(state, {
+                        type: '',
+                        payload: {
+                            chart: "standard_endpoint_protection_chart",
+                            datasetIndex: 0,
+                            index: 3,
+                            value: sData['End of Life']
+                        }
+                    })
+                }
 
             }
             // -

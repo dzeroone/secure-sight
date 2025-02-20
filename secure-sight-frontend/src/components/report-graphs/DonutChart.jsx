@@ -1,6 +1,6 @@
 import ReactApexChart from "react-apexcharts"
 
-export default function DonutChart({ data, labels }) {
+export default function DonutChart({ data, labels, colors }) {
   const config = {
     series: data,
     options: {
@@ -8,6 +8,7 @@ export default function DonutChart({ data, labels }) {
       chart: {
         type: 'donut',
       },
+      colors: colors,
       dataLabels: {
         enabled: true,
         formatter: function (value, { seriesIndex, dataPointIndex, w }) {

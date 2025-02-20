@@ -65,7 +65,7 @@ const ApiServices = async (
 	if (token) {
 		config.headers.Authorization = token;
 	}
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		axiosInstance(config)
 			.then(async (res) => {
 				let response = res.data
@@ -94,11 +94,11 @@ const ApiServices = async (
 				}
 				if (error.code === 'ECONNABORTED') {
 					// Utility.showToast('Request timeout. Please check your internet connection')
-					resolve({ status: 400 })
+					reject(error)
 					return
 				}
 				// Utility.showToast('Something went wrong, Please try again later.')
-				resolve({ status: 400 })
+				reject(error)
 			})
 	})
 }

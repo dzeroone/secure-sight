@@ -835,11 +835,12 @@ router.get('/monthly-report-form', async (req, res) => {
       data: {
         from: (page - 1) * 20,
         size: 20,
-        // query: {
-        //   match: {
-        //     "monthly_report.doc_title": "nai",
-        //   },
-        // },
+        query: req.query.search ? {
+          multi_match: {
+            query: req.query.search,
+            fields: ["monthly_report.doc_title", "monthly_report.client_name", "monthly_report.customer_name", "monthly_report.date"],
+          },
+        } : undefined,
         _source: ["savedAt", "monthly_report"],
         sort: [
           { "savedAt": { "order": "desc", "format": "strict_date_optional_time_nanos" } }

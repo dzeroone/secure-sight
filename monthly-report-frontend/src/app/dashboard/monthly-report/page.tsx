@@ -55,7 +55,6 @@ const MonthlyReportPage = () => {
         })
         if(res.ok) {
           const responseData = await res.json()
-          console.log(responseData)
           // if(Array.isArray(responseData) && responseData.length > 0) {
           //   const data = responseData[0]._source
 
@@ -89,6 +88,8 @@ const MonthlyReportPage = () => {
           const errorMessage = await res.text()
           throw new Error(errorMessage)
         }
+      }else{
+        dispatch(resetMonthlyReportState(null))
       }
     }catch(e) {
       console.log(e)

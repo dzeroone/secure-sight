@@ -119,7 +119,7 @@ const ConnectorList = () => {
               <CardTitle>
                 <div>
                   <Breadcrumbsub
-                    title={<span>Connector List { openLoader ? <Spinner color="dark" size="sm" /> : null }</span>}
+                    title={<span>Connector List {openLoader ? <Spinner color="dark" size="sm" /> : null}</span>}
                     breadcrumbItem={
                       <div className="input-group">
                         <button
@@ -206,34 +206,34 @@ const ConnectorList = () => {
                           </td>
                           <td>
                             {item?.isConnectorScheduled &&
-                              item?.isConnectorScheduled == true
-                              ? "Running"
-                              : item?.isConnectorScheduled == false
-                                ? "Stoped"
+                              item?.isConnectorScheduled === true
+                              ? "Scheduled"
+                              : item?.isConnectorScheduled === false
+                                ? "Stopped"
                                 : "Pending"}
                           </td>
                           <td>
-                              <button
-                                onClick={() => {
-                                  ConnectorConfigDetail({
-                                    id: item._id,
-                                    connectorData: item,
-                                  });
-                                }}
-                                type="button"
-                                className="btn  noti-icon  m-0 p-0    "
-                              >
-                                <i className="mdi mdi-timer"></i>
-                              </button>
-                              <button
-                                onClick={() => {
-                                  DeleteAlert(item._id);
-                                }}
-                                type="button"
-                                className="btn  noti-icon  m-0 p-0"
-                              >
-                                <i className="mdi mdi-delete"></i>
-                              </button>
+                            <button
+                              onClick={() => {
+                                ConnectorConfigDetail({
+                                  id: item._id,
+                                  connectorData: item,
+                                });
+                              }}
+                              type="button"
+                              className="btn  noti-icon  m-0 p-0    "
+                            >
+                              <i className="mdi mdi-timer"></i>
+                            </button>
+                            <button
+                              onClick={() => {
+                                DeleteAlert(item._id);
+                              }}
+                              type="button"
+                              className="btn  noti-icon  m-0 p-0"
+                            >
+                              <i className="mdi mdi-delete"></i>
+                            </button>
                           </td>
                         </tr>
                       ))}

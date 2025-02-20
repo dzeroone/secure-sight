@@ -21,6 +21,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { DASHBOARD, MONTHLY_REPORT, WEEKLY_REPORT } from "@@/constants/routes";
 import BrandLogo from "@@/assets/images/logo.png";
+import { LibraryBooks } from "@mui/icons-material";
 
 const drawerWidth: number = 240;
 
@@ -160,7 +161,7 @@ const Navbar = ({
           <Link href={`${MONTHLY_REPORT}/saved`}>
             <ListItemButton>
               <ListItemIcon>
-                <DashboardIcon />
+                <LibraryBooks />
               </ListItemIcon>
               <ListItemText primary="Saved Monthly Report" />
             </ListItemButton>
