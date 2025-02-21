@@ -1,12 +1,93 @@
 'use client'
 
 import { DeleteOutline, Search } from "@mui/icons-material";
-import { Box, Divider, IconButton, InputAdornment, LinearProgress, List, ListItem, ListItemButton, ListItemText, Pagination, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Box, Divider, IconButton, InputAdornment, LinearProgress, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField, Typography, useTheme } from "@mui/material";
 import { formatRelative } from 'date-fns/fp';
 import { useConfirm } from "material-ui-confirm";
-import Link from "next/link";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import LastPageIcon from '@mui/icons-material/LastPage';
+
+interface TablePaginationActionsProps {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    newPage: number,
+  ) => void;
+}
+
+function TablePaginationActions(props: TablePaginationActionsProps) {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
+
+  const handleFirstPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Stack direction={'row'} sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      </IconButton>
+      <Pagination
+        count={Math.ceil(count/rowsPerPage)}
+        page={page + 1 }
+        hideNextButton={true}
+        hidePrevButton={true}
+        onChange={(e:any,  p) => {
+          onPageChange(e, p - 1)
+        }}
+        sx={{
+          display: 'inline-flex'
+        }}
+      />
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Stack>
+  );
+}
 
 export default function Page() {
   const confirm = useConfirm();
@@ -15,7 +96,7 @@ export default function Page() {
     count: 0,
     data: []
   })
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [processing, setProcessing] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [invokeSearch, setInvokeSearch] = useState(0)
@@ -23,7 +104,7 @@ export default function Page() {
   const getReports = useCallback(async () => {
     try {
       setProcessing(true)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/monthly-report-form?page=${page}&search=${searchText}`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/monthly-report-form?page=${page + 1}&search=${searchText}`)
       if(res.ok) {
         const data = await res.json()
         setReport({
@@ -110,36 +191,51 @@ export default function Page() {
       { processing ? (
         <LinearProgress />
       ) : null }
-      <List>
-        {report.data.map(report => {
-          return (
-            <ListItem
-              secondaryAction={
-                <IconButton edge="end" onClick={() => handleReportDeletion(report)}>
-                  <DeleteOutline />
-                </IconButton>
-              }
-              disablePadding
-              key={report._id}
-            >
-              <ListItemButton component={Link} href={`/dashboard/monthly-report?id=${report._id}`}>
-                <ListItemText
-                  primary={<div>
-                    <Typography variant="h6">{report._source.monthly_report.doc_title}</Typography>
-                    <div>Client: {report._source.monthly_report.client_name}</div>
-                    <div>Customer: {report._source.monthly_report.customer_name}</div>
-                    <div>Date: {report._source.monthly_report.date}</div>
-                  </div>}
-                  secondary={`Saved at: ${formatSavedDate(report._source.savedAt)}`}
-                />
-              </ListItemButton>
-            </ListItem>
-          )
-        })}
-      </List>
-      <Pagination count={Math.floor((report.count/20) + 1)} page={page} onChange={(_, v) => {
-        setPage(v)
-      }} />
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Client</TableCell>
+              <TableCell>Month</TableCell>
+              <TableCell>Saved at</TableCell>
+              <TableCell>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {report.data.map(report => {
+              return (
+                <TableRow
+                  key={report._id}
+                >
+                  <TableCell>{report._source.monthly_report.client_name}</TableCell>
+                  <TableCell>{report._source.monthly_report.date}</TableCell>
+                  <TableCell>{formatSavedDate(report._source.savedAt)}</TableCell>
+                  <TableCell>
+                    <IconButton edge="end" onClick={() => handleReportDeletion(report)}>
+                      <DeleteOutline />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                colSpan={4}
+                rowsPerPageOptions={[20]}
+                page={page}
+                rowsPerPage={20}
+                count={report.count}
+                onPageChange={(_, v) => {
+                  setPage(v)
+                }}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
     </Paper>
   )
 }

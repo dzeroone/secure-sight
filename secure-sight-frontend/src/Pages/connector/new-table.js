@@ -444,7 +444,7 @@ const ConnectorListTwo = () => {
 																		placeholder="Enter Your First Name"
 																		onChange={handleInputChange}
 																	/>
-																	<label htmlFor="floatingFirstnameInput">{i} </label>
+																	<label htmlFor="floatingFirstnameInput" className="text-capitalize">{i}</label>
 																</div>
 															</Col>
 														))}
@@ -468,7 +468,7 @@ const ConnectorListTwo = () => {
 																}}
 																className="btn btn-info w-md"
 															>
-																Invoke connector
+																RUN Manually
 															</button>
 														</div>
 													</Col>
