@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// abstracts
+@import "./abstracts/mixin.scss";
+
+// base
+@import "./base/typography.scss";
+
+// helper
+@import "./helper.scss";
+
+// components
+@import "./components/buttons.scss";
+@import "./components/formFields.scss";
+@import "./components/navbar.scss";
+
+// pages
+@import "./pages/page.scss";
+@import "./pages/first-page.scss";
+@import "./pages/table-of-content.scss";
+@import "./pages/executive-summary.scss";
+@import "./pages/threat-intel-summary.scss";
+@import "./pages/pending-incidents-summary.scss";
+@import "./pages/slo-summary.scss";
+@import "./pages/endpoint-inventory.scss";
+@import "./pages/key-feature-apex.scss";
+@import "./pages/key-feature-workload.scss";

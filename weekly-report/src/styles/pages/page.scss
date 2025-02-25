@@ -1,0 +1,30 @@
+.main-container {
+  @apply bg-yellow-400 h-screen overflow-hidden flex items-center justify-center;
+  .login-form-container {
+    @apply bg-white lg:w-5/12 md:w-6/12 w-10/12 shadow-2xl;
+    max-width: 500px;
+    .brand-icon {
+      @apply bg-gray-800 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full p-4 md:p-8;
+    }
+  }
+}
+
+.print-action {
+  @apply w-full flex flex-row flex-nowrap justify-end items-center gap-6 my-8 px-4;
+}
+// A4 paper size ::: 794 x 1123
+.print-section {
+  @apply mx-auto;
+  // width: calc(794px - 1in);
+  width: 794px;
+  .executive-summary,
+  .threat-intel-summary,
+  .pending-incidents-summary,
+  .slo-summary,
+  .endpoint-inventory,
+  .key-feature-apex,
+  .key-feature-workload {
+    @apply mx-auto;
+    width: calc(794px - 1in);
+  }
+}

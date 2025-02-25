@@ -1,51 +1,64 @@
-import { addDays, getDate, getDay, isAfter, isBefore } from "date-fns";
-import { useCallback, useState } from "react";
-import ReactDatePicker from "react-datepicker";
-import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import { useFormik } from "formik";
+import { useState } from "react";
+import FormWeekReport from "../../components/FormWeekReport";
+import { getWeeklyReportPayload } from "../../helpers/form_helper";
+import ModalLoading from "../../components/modal-loading";
+import ApiServices from "../../Network_call/apiservices";
+import ApiEndPoints from "../../Network_call/ApiEndPoints";
+import WeeklyReportGraphs from "../../components/WeeklyReportGraphs";
+
+const validate = values => {
+  const errors = {};
+
+  if (!values.selectedDate) {
+    errors.selectedDate = "Selected date cannot be empty"
+  }
+
+  if (!values.tenant) {
+    errors.tenant = "Tenant cannot be empty"
+  }
+
+  return errors
+}
 
 export default function WeeklyReport() {
 
-  const [selectedDate, setSelectedDate] = useState()
+  const [openLoader, setOpenLoader] = useState(false)
+  const [reportData, setReportData] = useState([])
 
-  const filterDate = useCallback((date) => {
-    const day = getDay(date);
-    return day == 1
-  }, [])
+  const formik = useFormik({
+    initialValues: {
+      selectedDate: null,
+      tenant: ''
+    },
+    validate,
+    async onSubmit(values) {
+      try {
+        setReportData([])
+        setOpenLoader(true);
+        const payload = getWeeklyReportPayload(values);
+        const data = await ApiServices('post', payload, ApiEndPoints.SearchData)
+        setReportData(data)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        setOpenLoader(false);
+      }
+    }
+  })
 
   return (
     <div className="page-content">
-      <Form>
-        <Row>
-          <Col xs="auto">
-            <FormGroup>
-              <Label>
-                Select week
-              </Label>
-              <div>
-                <ReactDatePicker
-                  selected={selectedDate}
-                  onChange={setSelectedDate}
-                  className="form-control"
-                  filterDate={filterDate}
-                  dayClassName={(date) =>
-                    selectedDate && isAfter(date, selectedDate) && isBefore(date, addDays(selectedDate, 7)) ? "bg-primary" : undefined
-                  }
-                  shouldCloseOnSelect={false}
-                />
-              </div>
-            </FormGroup>
-          </Col>
-          <Col>
-            <FormGroup>
-              <Label>
-                Tenant
-              </Label>
-              <Input />
-            </FormGroup>
-          </Col>
-        </Row>
-        <Button type="submit">REEE</Button>
-      </Form>
+      <FormWeekReport
+        formik={formik}
+      />
+      {reportData.length ? (
+        <WeeklyReportGraphs data={reportData[0]._source} />
+      ) : null}
+      <ModalLoading
+        isOpen={openLoader}
+        onClose={() => setOpenLoader(false)}
+      />
     </div>
   )
 }

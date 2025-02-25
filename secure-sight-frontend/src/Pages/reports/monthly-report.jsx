@@ -24,7 +24,6 @@ const validate = values => {
 
 export default function MonthlyReport() {
   const [openLoader, setOpenLoader] = useState(false)
-  const [reportData, setReportData] = useState([])
 
   const formik = useFormik({
     initialValues: {
@@ -34,7 +33,6 @@ export default function MonthlyReport() {
     validate,
     async onSubmit(values) {
       try {
-        setReportData([])
         setOpenLoader(true);
         const month = format(values.selectedDate, 'MMMM').toLowerCase()
         const year = getYear(values.selectedDate)
@@ -95,9 +93,6 @@ export default function MonthlyReport() {
         </Row>
         <Button type="submit">Find</Button>
       </Form>
-      {reportData.length ? (
-        <MonthlyReportGraphs data={reportData[0]._source} />
-      ) : null}
       <ModalLoading
         isOpen={openLoader}
         onClose={() => setOpenLoader(false)}

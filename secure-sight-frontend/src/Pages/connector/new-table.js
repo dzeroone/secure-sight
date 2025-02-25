@@ -468,7 +468,7 @@ const ConnectorListTwo = () => {
 																}}
 																className="btn btn-info w-md"
 															>
-																RUN Manually
+																Run Manually
 															</button>
 														</div>
 													</Col>

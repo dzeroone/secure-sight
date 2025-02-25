@@ -1,0 +1,37 @@
+.first-page__bg {
+  @apply absolute bottom-0 left-0 bg-no-repeat bg-bottom;
+}
+
+.first-page {
+  @apply w-full bg-left-bottom bg-no-repeat p-24 break-before-page relative;
+  background-size: 400px;
+  // max-height: calc(1123px - 1.5in);
+  height: 1123px;
+  .brand-logo {
+    @apply object-contain;
+    max-width: 200px;
+    max-height: 40px;
+  }
+  .page-title {
+    @apply pt-64;
+    h4 {
+      @apply leading-none mb-2;
+      font-size: 27px;
+    }
+    h2 {
+      @apply leading-none font-medium;
+      font-size: 70px;
+    }
+  }
+  .client-detail {
+    @apply w-full flex flex-col items-end mt-auto pt-56 pb-16;
+    h3 {
+      @apply leading-none font-semibold text-right;
+      font-size: 30px;
+    }
+    p {
+      @apply text-right;
+      font-size: 18px;
+    }
+  }
+}

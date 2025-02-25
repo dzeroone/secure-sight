@@ -1,0 +1,14 @@
+.executive-summary {
+  @apply w-full break-before-page;
+  color: #696969;
+}
+
+.single-bar-chart {
+  @apply h-4 relative mx-auto;
+  width: 250px;
+  background-color: #696969;
+  .bar-progress {
+    @apply absolute top-0 left-0 bottom-0;
+    background-color: #ff8200;
+  }
+}

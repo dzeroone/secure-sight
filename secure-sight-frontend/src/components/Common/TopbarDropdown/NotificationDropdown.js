@@ -38,10 +38,6 @@ const NotificationDropdown = (props) => {
     }
   }, [])
 
-  const cachedNow = useMemo(() => {
-    return new Date()
-  }, [])
-
   const maxNotificationDate = useMemo(() => {
     let max = ""
     notifications.forEach(n => {
@@ -62,7 +58,7 @@ const NotificationDropdown = (props) => {
   }, [maxNotificationDate])
 
   const formatDate = (date) => {
-    return formatRelative(date, cachedNow)
+    return formatRelative(date, new Date())
   }
 
   useEffect(() => {
@@ -96,20 +92,12 @@ const NotificationDropdown = (props) => {
 
         <DropdownMenu className="dropdown-menu-lg dropdown-menu-end p-0">
           <div className="p-3">
-            <Row className="align-items-center">
-              <Col>
-                <h6 className="m-0">{props.t("Notifications")} </h6>
-              </Col>
-              <div className="col-auto">
-                {/* <Link to="/#" className="small">
-                  {" "}
-                  View All
-                </Link> */}
-                {openLoader ?
-                  <Spinner size='sm' />
-                  : null}
-              </div>
-            </Row>
+            <div className="position-relative">
+              <h6 className="m-0">{props.t("Notifications")} </h6>
+              {openLoader ?
+                <Spinner size='sm' className="position-absolute top-0 end-0" />
+                : null}
+            </div>
           </div>
 
           <SimpleBar style={{ height: "230px" }}>

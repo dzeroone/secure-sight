@@ -670,6 +670,10 @@ router.post("/data/search", async (req, res) => {
     //       }
     //     }
     //   }
+    //   // {
+    //   //   "_index": "pfm_27_january_report",
+    //   //   _source: { "TABLE_OF_CONTENTS": { "date": { "TABLE_OF_CONTENTS": [{ "title": "Executive Summary", "page_no": 1 }, { "title": "Threat Intel Summary", "page_no": 3 }, { "title": "Indicators of Compromise (IOC) Match Summary", "page_no": 3 }, { "title": "Incident Summary by Severity", "page_no": 4 }, { "title": "Incident Summary by Status", "page_no": 4 }, { "title": "Incidents Summary by Priority", "page_no": 5 }, { "title": "Top 10 Incidents Summary by Category", "page_no": 5 }, { "title": "Pending Incident Summary", "page_no": 6 }, { "title": "SLO Summary", "page_no": 7 }, { "title": "Endpoint Inventory", "page_no": 8 }, { "title": "Connected Products and License Information", "page_no": 8 }, { "title": "Key feature adoption rate of Apex One", "page_no": 9 }, { "title": "Key feature adoption rate of Cloud One Workload Security", "page_no": 10 }], "blank": 1 } }, "SLO_SUMMARY": { "date": { "SLO_SUMMARY": { "graph": { "Key": ["Total Closed Incidents", "SLO Met", "SLO Not Met"], "data": [18, 16, 2], "label": "Case volume", "backgroundColor": "#ff8200", "chart_type": "vertical_bar" }, "SLO_Details": [{ "Priority": 1, "Description": "Incidents that have a severe impact on customer operations. This event is a concern, such as attack formations or potential breaches.", "Response_Time": "" }, { "Priority": 2, "Description": "Incidents that have a significant impact, or the potential to have a severe impact, on operations.", "Response_Time": "" }, { "Priority": 3, "Description": "Incidents that have a minimal impact with the potential for escalation if not contained, causing significant impact on operations.", "Response_Time": "" }, { "Priority": 4, "Description": "Incidents that do not have a direct impact on customer operations but violate the customer security baseline.", "Response_Time": "" }] }, "blank": 0 } }, "PENDING_INCIDENTS_SUMMARY": { "date": { "PENDING_INCIDENTS_SUMMARY": { "T_P_Incidents": "1", "P_I_F_Customer": "", "P_Incidents_from_SOC": "1", "Pie_chart": { "data": ["1", "", "1"], "backgroundColor": ["#ff8200", "#ffa950", "#ffd9b2"], "label": ["Total Pending Incidents", "Pending Incidents from Customer", "Pending Incidents from SOC Team"], "chart_type": "doughnut" }, "R_S_N_P_I_S": { "key": "notes", "data": [] } }, "blank": 0 } }, "Key_feature_adoption_rate_of_Cw": { "date": { "Key_feature_adoption_rate_of_Cw": { "graph": { "Key": ["-", "Anti-malware Scans", "Web Reputation", "Behavior Monitoring", "Predictive Machine Learning", "Smart Feedback", "Firewall", "Suspicious Connection Service"], "data": [{ "label": "Total", "data": ["0", "0", "0", "0", "0", "0", ""], "backgroundColor": "#ff8200" }, { "label": "Count", "data": ["0", "0", "0", "0", "0", "0", ""], "backgroundColor": "#696969" }], "chart_type": "horizontal_bar" }, "R_S_N_key_cl": { "key": "summary", "data": [] } }, "blank": 0, "title": "Cw" } }, "ENDPOINT_INVENTORY": { "date": { "ENDPOINT_INVENTORY": { "Bar_graph": { "Key": ["XDR feature enabled", "XDR feature not enabled", "Action Required"], "data": ["", "", "2"], "label": "Info", "backgroundColor": "#ff8200", "chart_type": "vertical_bar" }, "R_S_N_E_V": { "key": "recommendation", "data": [] }, "CP_and_LI": { "License_Information": [{ "Status": "", "Product": "TM Cloud One" }, { "Status": "", "Product": "TM Vision One" }, { "Status": "", "Product": "TM Deep Security" }], "Products_Connected": [{ "Status": "Not Connected", "Product": "TM Cloud One" }, { "Status": "Connected", "Product": "TM Vision One" }, { "Status": "", "Product": "TM Deep Security" }] } }, "blank": 0 } }, "THREAT_INTEL_SUMMARY": { "date": { "THREAT_INTEL_SUMMARY": { "Indicators_of_Compromise_IOC": { "Key": ["IP", "URL", "Hash", "Domain", "Email"], "data": [{ "label": "IOC Sweeped", "data": [], "backgroundColor": "#e67700" }, { "label": "IOC Matched", "data": [], "backgroundColor": "#696969" }], "chart_type": "vertical_bar" }, "R_S_N_Ioc": { "key": "notes", "data": [] }, "Matched_IOCs_Detailed_Summary": [], "Incident_Summary_by_Severity": { "data": [0, 0, 2, 17], "label": ["Critical", "High", "Medium", "Low"], "backgroundColor": ["#ff8200", "#ffa950", "#ffd9b2", "#ffc0cb"], "chart_type": "doughnut" }, "R_S_N_ISBS": { "key": "notes", "data": [] }, "Incident_Summary_by_status": { "data": [18, 0], "label": ["Closed Incidents", "Pending Incidents"], "backgroundColor": ["#ff8200", "#ffa950"], "chart_type": "doughnut" }, "R_S_N_ISB_Status": { "key": "summary", "data": [] }, "Incidents_Summary_by_Priority": { "Key": ["P1", "P2", "P3", "P4"], "data": [{ "label": "Closed", "data": [0, 0, 1, 17], "backgroundColor": "#ffcd9a" }, { "label": "Pending from SOC", "data": [0, 0, 0, 0], "backgroundColor": "#ffc0cb" }, { "label": "Pending from Customer", "data": [], "backgroundColor": "#ffa07a" }], "chart_type": "vertical_bar" }, "R_S_N_ISBP": { "key": "recommendation", "data": [] }, "T10IS_by_Category": { "Key": ["Suspicious Multiple Failed Logons via Windows Event", "[Heuristic Attribute] Possible Remote Services Behavior", "Windows Logon Failed Attempt from Private IP", "Network Sniffing", "Possible Disabling of Antivirus Software"], "data": [{ "label": "Closed", "data": [7, 5, 4, 1, 1], "backgroundColor": "#ffd9b2" }, { "label": "Pending from SOC", "data": [0, 0, 0, 0, 0], "backgroundColor": "#ffa950" }, { "label": "Pending from Customer", "data": [], "backgroundColor": "#ffa950" }], "chart_type": "horizontal_bar" }, "R_S_N_T10IS": { "key": "notes", "data": [] } }, "blank": 0 } }, "WEEKLY_REPORT": { "client_name": "PFM", "start_date": "2025-01-20T00:00:00", "end_date": "2025-01-27T00:00:00", "blank": 0 }, "EXECUTIVE_SUMMARY": { "date": { "EXECUTIVE_SUMMARY": { "total_incidents": { "total_incidents": "19", "start_date": "2025-01-20", "end_date": "2025-01-27" }, "risk_index": { "chart": { "data": [49, 51], "backgroundColor": ["rgb(255, 130, 0)", "rgb(105, 105, 105)"], "label": [], "chart_type": "doughnut" } }, "highly_exploitable": 1521, "Incident_Closed": 18, "Highest_incidient": 7, "Highest_incidient_date": "2025-01-20", "top_incident": { "no_incidents": 5, "table": [{ "incident_name": "Multiple Failed Logons via Windows Event - 7", "source": "SAE" }, { "incident_name": "[Heuristic Attribute] Possible Remote Services Behavior - 5", "source": "SAE" }, { "incident_name": "Windows Logon Failed Attempt from Private IP - 4", "source": "SAE" }, { "incident_name": "Attempt of Disabling Antivirus Software - 1", "source": "SAE" }, { "incident_name": "Network Sniffing - 1", "source": "SAE" }] }, "agent_life_cycle": { "apex_chart": { "title": "apex_one", "data": [], "backgroundColor": ["rgb(255, 130, 0)", "rgb(105, 105, 105)", "rgb(90, 90, 0)"], "label": ["Latest Version", "Older Version", "End of Life"], "chart_type": "pie" }, "workload_chart": { "title": "workload_security", "data": [], "backgroundColor": ["rgb(255, 130, 0)", "rgb(105, 105, 105)", "rgb(90, 90, 0)"], "label": ["Latest Version", "Older Version", "End of Life"], "chart_type": "pie" }, "R_S_N": { "key": "summary", "data": [] } }, "top_endpoint": { "no_endpoint": 0, "top_incident_table": [], "action": "" }, "endpoint_protection": { "data": [12, 12], "label": [], "key": "Agents Deployed" }, "endpoint_sensor": { "data": [9, 9], "label": [], "key": "Sensors Enabled" }, "R_S_N": { "key": "summary", "data": [] } }, "blank": 0 } }, "Key_feature_adoption_rate_of_Ap": { "date": { "Key_feature_adoption_rate_of_Ap": { "graph": { "Key": ["-", "Anti-malware Scans", "Web Reputation", "Behavior Monitoring", "Predictive Machine Learning", "Smart Feedback", "Firewall", "Suspicious Connection Service"], "data": [{ "label": "Total", "data": ["12", "10", "8", "10", "10", "8", "12"], "backgroundColor": "#ff8200" }, { "label": "Count", "data": ["11", "9", "7", "9", "9", "0", "12"], "backgroundColor": "#696969" }], "chart_type": "horizontal_bar" }, "R_S_N_key_ap": { "key": "summary", "data": [] } }, "blank": 0, "title": "ap" } } }
+    //   // }
     // ])
     const test = req.body.test;
     let response = null
@@ -910,6 +914,91 @@ router.delete('/monthly-report-form/:id', async (req, res) => {
     res.status(404).json(e);
   }
 })
+
+// weekly report
+router.get('/weekly-report-form', async (req, res) => {
+  const page = Number(req.query.page) || 1
+  try {
+    const result = await axios.get(`${esUrl}/${ELASTIC_INDICES.WEEKLY_REPORT_FORM}/_search`, {
+      data: {
+        from: (page - 1) * 20,
+        size: 20,
+        query: req.query.search ? {
+          multi_match: {
+            query: req.query.search,
+            fields: ["formData.client.clientName", "WEEKLY_REPORT.start_date", "WEEKLY_REPORT.end_date"],
+          },
+        } : undefined,
+        _source: ["savedAt", "formData.client.clientName", "reportData.WEEKLY_REPORT.start_date", "reportData.WEEKLY_REPORT.end_date"],
+        sort: [
+          { "savedAt": { "order": "desc", "format": "strict_date_optional_time_nanos" } }
+        ]
+      }
+    });
+    res.json({
+      count: result.data.hits.total.value,
+      data: result.data.hits.hits
+    });
+
+  } catch (e: any) {
+    // console.log(e.response.data, e.response.data.error)
+    res.status(400).json(e);
+  }
+})
+
+router.post('/weekly-report-form', async (req, res) => {
+  try {
+    const result = await axios.post(`${esUrl}/${ELASTIC_INDICES.WEEKLY_REPORT_FORM}/_doc`, {
+      savedAt: new Date().toISOString(),
+      ...req.body
+    });
+    res.json(result.data);
+
+  } catch (e: any) {
+    console.log(e.response)
+    res.status(400).json(e);
+  }
+})
+
+router.get('/weekly-report-form/:id', async (req, res) => {
+  try {
+    const result = await axios.get(`${esUrl}/${ELASTIC_INDICES.WEEKLY_REPORT_FORM}/_doc/${req.params.id}`, {
+      params: {
+        _source_excludes: 'savedAt'
+      }
+    });
+    res.json(result.data);
+  } catch (e: any) {
+    console.log(e.response.data)
+    res.status(404).json(e);
+  }
+})
+
+router.patch('/weekly-report-form/:id', async (req, res) => {
+  try {
+    const result = await axios.post(`${esUrl}/${ELASTIC_INDICES.WEEKLY_REPORT_FORM}/_update/${req.params.id}`, {
+      "doc": {
+        savedAt: new Date().toISOString(),
+        ...req.body
+      }
+    });
+    res.json(result.data);
+
+  } catch (e) {
+    res.status(400).json(e);
+  }
+})
+
+router.delete('/weekly-report-form/:id', async (req, res) => {
+  try {
+    const result = await axios.delete(`${esUrl}/${ELASTIC_INDICES.WEEKLY_REPORT_FORM}/_doc/${req.params.id}`);
+    res.json(result.data);
+  } catch (e: any) {
+    console.log(e.response.data)
+    res.status(404).json(e);
+  }
+})
+// - end weekly report
 
 export default router;
 

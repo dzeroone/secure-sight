@@ -1,0 +1,15 @@
+nav {
+  @apply flex items-center justify-between flex-wrap bg-teal-600 p-6;
+  .brand {
+    @apply flex items-center flex-shrink-0 text-white mr-6;
+    span {
+      @apply font-semibold text-xl tracking-tight;
+    }
+  }
+  .hamburger-menu {
+    @apply block lg:hidden;
+    button {
+      @apply flex items-center px-3 py-2 border rounded text-teal-50 border-teal-200 hover:text-white hover:border-white;
+    }
+  }
+}

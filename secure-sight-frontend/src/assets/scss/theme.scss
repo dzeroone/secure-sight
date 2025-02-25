@@ -361,3 +361,9 @@ body {
     }
   }
 }
+
+.report-container {
+  &> div {
+    padding: 1rem 0;
+  }
+}

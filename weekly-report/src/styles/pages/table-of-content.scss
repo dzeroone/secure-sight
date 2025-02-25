@@ -1,0 +1,10 @@
+.table-of-content {
+  @apply w-full bg-right-bottom bg-no-repeat break-before-page;
+  background-size: 400px;
+  height: 1123px;
+  // height: calc(1123px - 1.5in);
+  .page-header {
+    @apply px-12 py-8;
+    background-color: #696969;
+  }
+}
