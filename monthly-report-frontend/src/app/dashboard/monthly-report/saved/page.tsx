@@ -1,6 +1,6 @@
 "use client";
 
-import { DeleteOutline, Search } from "@mui/icons-material";
+import { Archive, DeleteOutline, Edit, Search } from "@mui/icons-material";
 import {
   Box,
   Divider,
@@ -30,6 +30,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import Link from "next/link";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -261,12 +262,21 @@ export default function Page() {
                     {formatSavedDate(report._source.savedAt)}
                   </TableCell>
                   <TableCell>
-                    <IconButton
-                      edge="end"
-                      onClick={() => handleReportDeletion(report)}
-                    >
-                      <DeleteOutline />
-                    </IconButton>
+                    <Stack direction="row" gap={2}>
+                      <IconButton
+                        LinkComponent={Link}
+                        edge="end"
+                        href={`/dashboard/monthly-report?id=${report._id}`}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        // onClick={() => handleReportDeletion(report)}
+                      >
+                        <Archive />
+                      </IconButton>
+                    </Stack>
                   </TableCell>
                 </TableRow>
               );

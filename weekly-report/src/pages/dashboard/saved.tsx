@@ -3,8 +3,9 @@ import Navbar from "../../components/Navbar";
 import { useCallback, useEffect, useState } from "react";
 import { confirm } from "../../utils/confirm";
 import { enqueueSnackbar } from "notistack";
-import { MdDelete, MdSearch } from "react-icons/md";
+import { MdArchive, MdDelete, MdEdit, MdSearch } from "react-icons/md";
 import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
 
 export default function SavedReportsPage() {
   const [report, setReport] = useState<{ count: number; data: any[] }>({
@@ -176,13 +177,21 @@ export default function SavedReportsPage() {
                         </p>
                       </td>
                       <td className="p-4">
-                        <button
-                          className="flex items-center rounded-md bg-gradient-to-tr from-slate-800 to-slate-700 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                          type="button"
-                          onClick={() => handleReportDeletion(report)}
-                        >
-                          <MdDelete />
-                        </button>
+                        <div className="flex flex-row gap-2">
+                          <Link
+                            className="flex items-center rounded-md bg-gradient-to-tr from-slate-800 to-slate-700 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                            to={`/dashboard?id=${report._id}`}
+                          >
+                            <MdEdit />
+                          </Link>
+                          <button
+                            className="flex items-center rounded-md bg-gradient-to-tr from-slate-800 to-slate-700 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                            type="button"
+                            // onClick={() => handleReportDeletion(report)}
+                          >
+                            <MdArchive />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
