@@ -1,14 +1,19 @@
 import { format, getYear, subDays } from "date-fns"
 
 export const getWeeklyReportPayload = (values) => {
-  const month = format(values.selectedDate, 'MMMM').toLowerCase()
-  const start_day = subDays(values.selectedDate, 7).getDate()
-  const end_day = subDays(values.selectedDate, 1).getDate()
+  const start_date = subDays(values.selectedDate, 7)
+  const start_day = start_date.getDate()
+  const start_month = format(start_date, 'MMM').toLowerCase()
+
+  const end_date = subDays(values.selectedDate, 1)
+  const end_day = end_date.getDate()
+  const end_month = format(end_date, 'MMM').toLowerCase()
+
   const year = getYear(values.selectedDate)
   const tenant = values.tenant.toLowerCase()
 
   let payload = {
-    index: `${month}_${start_day}_to_${end_day}_${year}_${tenant}_report`
+    index: `${start_month}_${start_day}_to_${end_month}_${end_day}_${year}_${tenant}_report`
   }
   return payload
 }
