@@ -16,7 +16,8 @@ class UploadConnectorController {
         const buffer = Buffer.from(data, 'base64')
 
         // save file to the name of connector base path
-        const tmpFilename = crypto.createHash('md5').update(email + display_name).digest('hex') + path.extname(name)
+        const connectorBasePath = crypto.createHash('md5').update(email + display_name).digest('hex')
+        const tmpFilename = connectorBasePath + path.extname(name)
         const filePath = `${localDirPath}/${tmpFilename}`
 
         if (!fs.existsSync(localDirPath)) {
@@ -28,12 +29,50 @@ class UploadConnectorController {
         fs.appendFileSync(filePath, buffer)
         if (lastChunk) {
             if ((parseInt(totalChunks) - 1) === parseInt(currentChunkIndex)) {
-                const dm = dynamicModelWithDBConnection(dbName, COLLECTIONS.CONNECTOR)
+                const connectorConfigModel = dynamicModelWithDBConnection(
+                    dbName,
+                    COLLECTIONS.CONNECTOR_CONFIG,
+                )
+                const connectorModel = dynamicModelWithDBConnection(
+                    dbName,
+                    COLLECTIONS.CONNECTOR,
+                )
                 // const query = { email, name: nameWithoutExtension, display_name, category }
                 const query = { email, name: nameWithoutExtension, display_name }
-                const obj = await dm.findOne(query)
+                const obj = await connectorModel.findOne(query)
                 if (obj) {
-                    await dm.findOneAndUpdate(query, { $set: { filePath, updated_at: new Date() } })
+                    await connectorModel.findOneAndUpdate(query, { $set: { filePath, updated_at: new Date() } })
+
+                    // update connector config data
+                    const isConnectorConfigExist = await connectorConfigModel
+                        .findOne({
+                            connectorId: obj._id,
+                        })
+                        .lean()
+
+                    const configData = {
+                        connectorId: obj._id,
+                        config: obj.config.properties,
+                        connectorBasePath,
+                        connectorFileNameWithExtension: 'inventry.py',
+                        updatedAt: new Date()
+                    }
+                    if (isConnectorConfigExist) {
+                        await connectorConfigModel.findOneAndUpdate(
+                            {
+                                connectorId: obj._id,
+                            },
+                            {
+                                $set: configData,
+                            },
+                        )
+                    } else {
+                        const cConfig = new connectorConfigModel({
+                            ...configData,
+                            createdAt: new Date()
+                        })
+                        await cConfig.save()
+                    }
                 }
             }
             return { msg: 'processing', tmpFilename }

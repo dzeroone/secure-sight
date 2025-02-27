@@ -55,7 +55,7 @@ scheduler.define(SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, async (job, done) => {
 		}, {
 			$set: {
 				title,
-				message: stderr ?? 'Job running completed',
+				message: stderr ? stderr : 'Job running completed',
 				status: stderr ? -1 : 1,
 				updatedAt: new Date()
 			}
@@ -163,7 +163,7 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 		let schedulingString: string = ''
 
 		if (repeat.toLowerCase() == 'hourly') {
-			schedulingString = `0 * * * *`
+			schedulingString = `${minute} * * * *`
 		} else if (repeat.toLowerCase() == 'daily') {
 			schedulingString = `${minute} ${hour} * * *`
 		} else if (repeat.toLowerCase() == 'weekly') {

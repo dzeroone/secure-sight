@@ -289,11 +289,11 @@ class ConnectorController {
 					return
 				}
 
-				const dbConnection = await dynamicModelWithDBConnection(
+				const dbConnection = dynamicModelWithDBConnection(
 					dbName,
 					COLLECTIONS.CONNECTOR_CONFIG,
 				)
-				const connectorModel = await dynamicModelWithDBConnection(
+				const connectorModel = dynamicModelWithDBConnection(
 					dbName,
 					COLLECTIONS.CONNECTOR,
 				)

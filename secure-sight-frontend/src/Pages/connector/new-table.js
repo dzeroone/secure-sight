@@ -1,9 +1,7 @@
 import { CloseOutlined } from "@mui/icons-material";
-import { Backdrop, CircularProgress } from "@mui/material";
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Card, CardBody, CardTitle, Col, Row } from "reactstrap";
+import { Button, Card, CardBody, CardTitle, Col, Input, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table } from "reactstrap";
 
 // Import Breadcrumb
 import { Link } from "react-router-dom";
@@ -16,10 +14,7 @@ import {
 	uperCase,
 } from "../ulit/commonFunction";
 
-// Add the following import for Ant Design Table
-import { Modal, Select, Table } from "antd";
-import "./antd-table.scss";
-// import "../../css/antd/antd.css"
+import ModalLoading from "../../components/modal-loading";
 
 const ConnectorListTwo = () => {
 	// document.title = "Connector List | Trend Micro Unity";
@@ -37,11 +32,11 @@ const ConnectorListTwo = () => {
 	const [configData, setConfigData] = useState({});
 	const [schedulerData, setSchedulerData] = useState({
 		connectorId: "",
-		repeat: "",
-		minute: "",
-		hour: "",
-		weekDay: "",
-		monthDay: "",
+		repeat: "monthly",
+		minute: "0",
+		hour: "0",
+		weekDay: "0",
+		monthDay: "1",
 	});
 
 	const [userData, setUserData] = useState({
@@ -268,7 +263,7 @@ const ConnectorListTwo = () => {
 	];
 
 
-	const data = connectorList
+	const data = useMemo(() => connectorList
 		.filter(
 			(x) =>
 				!searchedVal.length ||
@@ -282,7 +277,6 @@ const ConnectorListTwo = () => {
 					.includes(searchedVal.toString().toLowerCase())
 		)
 		.map((item, index) => {
-			console.log(item)
 			return {
 				key: item._id,
 				index: index + 1,
@@ -313,7 +307,8 @@ const ConnectorListTwo = () => {
 					</button>
 				)
 			}
-		});
+		})
+		, [connectorList])
 
 
 
@@ -348,228 +343,143 @@ const ConnectorListTwo = () => {
 							{connectorList.length > 0 ? (
 								<Table
 									className="dark-table-container"
-									dataSource={data}
-									columns={columns}
-									rowSelection={{
-										type: "radio",
-										selectedRowKeys,
-										onChange: onSelectChange,
-									}}
-								/>
+								>
+									<thead>
+										<tr>
+											{columns.map(c => {
+												return (
+													<th key={c.key}>{c.title}</th>
+												)
+											})}
+										</tr>
+									</thead>
+									<tbody>
+										{data.map(d => {
+											return (
+												<tr key={d.key}>
+													{
+														columns.map(c => {
+															return (
+																<td key={c.key}>{d[c.dataIndex]}</td>
+															)
+														})
+													}
+												</tr>
+											)
+										})}
+									</tbody>
+								</Table>
 							) : (
 								<p>No data available</p>
 							)}
 						</CardBody>
 						<Modal
-							title="Schedule Connector"
-							open={scheduleModalVisible}
-							onCancel={() => setScheduleModalVisible(false)}
-							// onOk={handleOk}
-							onOk={() => {
-								// Perform the schedule operation, you can access the selectedConnector here
-								setScheduleModalVisible(false);
-							}}
-							width={800}
+							isOpen={scheduleModalVisible}
+							toggle={() => setScheduleModalVisible(false)}
+							size="lg"
 						>
-							<form>
-								<Row gutter={[16, 16]}>
-									{/* <Col md={6}>
-                                        <div className="form-floating mb-3">
-                                            <select
-                                                className="form-select"
-                                                id="floatingSelectGrid"
-                                                aria-label="Floating label select example"
-                                                onChange={(e) => {
-                                                    handelChange({
-                                                        event: e.target.value,
-                                                        name: "connectorId",
-                                                    });
-                                                    ConnectorConfigDetail(e.target.value);
-                                                }}
-                                            >
-                                                <option value="">Select Connector</option>
-                                                {connectorList &&
-                                                    connectorList.map((item, index) => (
-                                                        <option value={item._id}>
-                                                            {formatCapilize(
-                                                                allReplace(item.display_name, {
-                                                                    _: " ",
-                                                                    "-": " ",
-                                                                })
-                                                            )}
-                                                        </option>
-                                                    ))}
-                                            </select>
-                                            <label htmlFor="floatingSelectGrid">
-                                                Select Connector
-                                            </label>
-                                        </div>
-                                    </Col> */}
+							<ModalHeader>Schedule Connector</ModalHeader>
+							<ModalBody>
+								<form>
+									<Row gutter={[16, 16]}>
 
-									<SelectOption data={shedulerRepeat} value={schedulerData.repeat} name="repeat" handelChange={handelChange} />
+										<SelectOption data={shedulerRepeat} value={schedulerData.repeat} name="repeat" handelChange={handelChange} />
 
-									{schedulerData.repeat ?
-										<>
-											{schedulerData.repeat === 'monthly' && (
-												<SelectOption data={monthData} value={schedulerData.monthDay} name="monthDay" handelChange={handelChange} />
-											)}
+										{schedulerData.repeat ?
+											<>
+												{schedulerData.repeat === 'monthly' && (
+													<SelectOption data={monthData} value={schedulerData.monthDay} name="monthDay" handelChange={handelChange} />
+												)}
 
-											{schedulerData.repeat === 'weekly' && (
-												<SelectOption data={weekData} value={schedulerData.weekDay} name="weekDay" handelChange={handelChange} />
-											)}
+												{schedulerData.repeat === 'weekly' && (
+													<SelectOption data={weekData} value={schedulerData.weekDay} name="weekDay" handelChange={handelChange} />
+												)}
 
-											{schedulerData.repeat !== 'minute' && (
-												<SelectOption data={hourData} value={schedulerData.hour} name="hour" handelChange={handelChange} />
-											)}
+												{schedulerData.repeat !== 'minute' && schedulerData.repeat !== 'hourly' && (
+													<SelectOption data={hourData} value={schedulerData.hour} name="hour" handelChange={handelChange} />
+												)}
 
-											<SelectOption data={minuteData} value={schedulerData.minute} name="minute" handelChange={handelChange} />
-										</> : null}
-								</Row>
-							</form>
-							{objectkey(configData).length > 0 && (
-								<Row gutter={[16, 16]}>
-									<Col xl={12}>
-										<Card>
-											<CardBody>
-												<Row gutter={[16, 16]}>
-													{configData &&
-														objectkey(configData).map((i, u) => (
-															<Col md={6} key={i}>
-																<div className="form-floating mb-3 fullwidth">
-																	<input
-																		defaultValue={configData[i]}
-																		name={i}
-																		className="form-control"
-																		id="floatingFirstnameInput"
-																		placeholder="Enter Your First Name"
-																		onChange={handleInputChange}
-																	/>
-																	<label htmlFor="floatingFirstnameInput" className="text-capitalize">{i}</label>
-																</div>
-															</Col>
-														))}
-												</Row>
-												<Row gutter={[16, 16]}>
-													<Col md={6}>
-														<div className="d-flex flex-row gap-2">
-															<button
-																disabled={config}
-																onClick={() => {
-																	RunScheduler(true);
-																}}
-																className="btn btn-primary w-md"
-															>
-																Schedule Connector
-															</button>
-															<button
-																disabled={!config}
-																onClick={() => {
-																	runConnector();
-																}}
-																className="btn btn-info w-md"
-															>
-																Run Manually
-															</button>
-														</div>
-													</Col>
-													<Col md={6}>
-														<div>
-															<button
-																disabled={!config}
-																onClick={() => {
-																	RunScheduler(false);
-																}}
-																className="btn btn-danger w-md"
-															>
-																Stop Schedule
-															</button>
-														</div>
-													</Col>
-												</Row>
-											</CardBody>
-										</Card>
-									</Col>
-								</Row>
-							)}
-
-							{/* <DatePicker.RangePicker
-                                showTime
-                                value={[
-                                    selectedConnectorSchedulerData.start_time,
-                                    selectedConnectorSchedulerData.end_time,
-                                ]}
-                                onChange={(date, dateString) =>
-                                    setSelectedConnectorSchedulerData((prevData) => ({
-                                        ...prevData,
-                                        start_time: date[0],
-                                        end_time: date[1],
-                                    }))
-                                }
-                            /> */}
-
-							{/* <Select defaultValue="daily"
-                                style={{ width: 120, marginTop: "20px" }}
-                                onChange={(value) =>
-                                    setSelectedConnectorSchedulerData((prevData) => ({
-                                        ...prevData,
-                                        repeat: value,
-                                    }))
-                                }>
-                                <Select.Option value="minute">Minute</Select.Option>
-                                <Select.Option value="hourly">Hourly</Select.Option>
-                                <Select.Option value="daily">Daily</Select.Option>
-                                <Select.Option value="weekly">Weekly</Select.Option>
-                                <Select.Option value="monthly">Monthly</Select.Option>
-                                <Select.Option value="quarterly">Quarterly</Select.Option>
-                                <Select.Option value="yearly">Yearly</Select.Option>
-                            </Select> */}
-							{/* <Row style={{ margin: "35px" }}>
-                                <Col md={6}>
-                                    <div>
-                                        <OverlayTrigger
-                                            placement="top"
-                                            overlay={<Tooltip>{!config && objectkey(configData).length === 0 ? tooltipMessage : ''}</Tooltip>}
-                                        >
-                                            <button
-                                                disabled={!configData || objectkey(configData).length === 0}
-                                                onClick={() => {
-                                                    RunScheduler(true);
-                                                }}
-                                                className="btn btn-primary w-md"
-                                                title={!config && objectkey(configData).length === 0 ? 'Config data is not added' : ''}
-                                            >
-                                                Run Connector
-                                            </button>
-                                        </OverlayTrigger>
-                                    </div>
-                                </Col>
-                                <Col md={6}>
-                                    <div>
-                                        <OverlayTrigger
-                                            placement="top"
-                                            overlay={<Tooltip>{!config && objectkey(configData).length === 0 ? tooltipMessage : ''}</Tooltip>}
-                                        >
-                                            <button
-                                                disabled={!config || objectkey(configData).length === 0}
-                                                onClick={() => {
-                                                    RunScheduler(false);
-                                                }}
-                                                className="btn btn-danger w-md"
-                                                title={!config && objectkey(configData).length === 0 ? 'Config data is not added' : ''}
-                                            >
-                                                Stop Connector
-                                            </button>
-                                        </OverlayTrigger>
-                                    </div>
-                                </Col>
-                            </Row> */}
+												<SelectOption data={minuteData} value={schedulerData.minute} name="minute" handelChange={handelChange} />
+											</> : null}
+									</Row>
+								</form>
+								{objectkey(configData).length > 0 && (
+									<Row gutter={[16, 16]}>
+										<Col xl={12}>
+											<Card>
+												<CardBody>
+													<Row gutter={[16, 16]}>
+														{configData &&
+															objectkey(configData).map((i, u) => (
+																<Col md={6} key={i}>
+																	<div className="form-floating mb-3 fullwidth">
+																		<input
+																			defaultValue={configData[i]}
+																			name={i}
+																			className="form-control"
+																			id="floatingFirstnameInput"
+																			placeholder="Enter Your First Name"
+																			onChange={handleInputChange}
+																		/>
+																		<label htmlFor="floatingFirstnameInput" className="text-capitalize">{i}</label>
+																	</div>
+																</Col>
+															))}
+													</Row>
+													<Row gutter={[16, 16]}>
+														<Col md={6}>
+															<div className="d-flex flex-row gap-2">
+																<button
+																	disabled={config}
+																	onClick={() => {
+																		RunScheduler(true);
+																	}}
+																	className="btn btn-primary w-md"
+																>
+																	Schedule Connector
+																</button>
+																<button
+																	disabled={!config}
+																	onClick={() => {
+																		runConnector();
+																	}}
+																	className="btn btn-info w-md"
+																>
+																	Run Manually
+																</button>
+															</div>
+														</Col>
+														<Col md={6}>
+															<div>
+																<button
+																	disabled={!config}
+																	onClick={() => {
+																		RunScheduler(false);
+																	}}
+																	className="btn btn-danger w-md"
+																>
+																	Stop Schedule
+																</button>
+															</div>
+														</Col>
+													</Row>
+												</CardBody>
+											</Card>
+										</Col>
+									</Row>
+								)}
+							</ModalBody>
+							<ModalFooter>
+								<Button color="primary" onClick={() => setScheduleModalVisible(false)}>Ok</Button>
+							</ModalFooter>
 						</Modal>
 					</Card>
 				</Col>
 			</Row>
-			<Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openLoader} onClick={() => setOpenLoader(false)}>
-				<CircularProgress color="inherit" />
-			</Backdrop>
+			<ModalLoading
+				isOpen={openLoader}
+				onClose={() => setOpenLoader(false)}
+			/>
 		</Fragment>
 	);
 };
@@ -580,28 +490,32 @@ const SelectOption = ({ data, name, value, handelChange }) => {
 	return (
 		<Col md={6}>
 			<div className="form-floating mb-3">
-				<Select
-					className="form-select"
+				<Input
+					className="form-select text-capitalize"
+					type="select"
 					style={{ width: '100%' }}
 					placeholder={`Select ${formatCapilize(name)}`}
 					value={value}
-					onChange={(value) => {
+					onChange={(event) => {
 						handelChange({
-							event: value,
+							event: event.target.value,
 							name: name,
 						});
 					}}
 				>
 					{data.map((item, index) => (
-						<Select.Option key={item.value || item} value={item.value || item}>
+						<option
+							className="text-capitalize"
+							key={item.value || item} value={item.value || item}
+						>
 							{name === 'connector'
 								? formatCapilize(allReplace(item.display_name, { _: ' ', '-': ' ' }))
 								: name === 'weekDay'
 									? formatCapilize(item.name)
 									: item}
-						</Select.Option>
+						</option>
 					))}
-				</Select>
+				</Input>
 				<label htmlFor="floatingSelectGrid">Select {name}</label>
 			</div>
 		</Col>
@@ -610,7 +524,7 @@ const SelectOption = ({ data, name, value, handelChange }) => {
 
 const shedulerRepeat = ["monthly", "weekly", "daily", "hourly", "minute"];
 const minuteData = [];
-for (let i = 1; i <= 59; i++) {
+for (let i = 0; i <= 59; i++) {
 	minuteData.push(i);
 }
 const monthData = [];
@@ -618,8 +532,8 @@ for (let i = 1; i <= 31; i++) {
 	monthData.push(i);
 }
 const weekData = [
-	{ value: "0", name: "sunday" },
-	{ value: "1", name: "monday" },
+	{ value: "0", name: "Sunday" },
+	{ value: "1", name: "Monday" },
 	{ value: "2", name: "Tuesday" },
 	{ value: "3", name: "Wednesday" },
 	{ value: "4", name: "Thursday" },
@@ -631,6 +545,6 @@ const weekData = [
 // }
 
 const hourData = [];
-for (let i = 1; i <= 23; i++) {
+for (let i = 0; i <= 23; i++) {
 	hourData.push(i);
 }

@@ -15,7 +15,7 @@ import ConnectorListTwo from "./new-table";
 
 const ConnectorSchedule = () => {
 	// document.title = "scheduler | trend micro unity";
-	document.title ="scheduler | Secure Sight";
+	document.title = "scheduler | Secure Sight";
 	const [openLoader, setOpenLoader] = useState(false);
 	const [connectorList, setConnectorList] = useState([]);
 	const [connectorName, setConnectorName] = useState("");
@@ -175,143 +175,8 @@ const ConnectorSchedule = () => {
 		<Fragment>
 			<div className="page-content">
 				<Breadcrumbs title="Schedule" breadcrumbItem="Connector" />
-				{/* <Row>
-					<Col xl={12}>
-						<Card>
-							<CardBody>
-								<form action="javascript:void(0)">
-									<Row>
-										<Col md={6}>
-											<div className="form-floating mb-3">
-												<select
-													className="form-select"
-													id="floatingSelectGrid"
-													aria-label="Floating label select example"
-													onChange={(e) => {
-														handelChange({
-															event: e.target.value,
-															name: "connectorId",
-														});
-														ConnectorConfigDetail(e.target.value);
-													}}
-												>
-													<option value="">Select Connector</option>
-													{connectorList &&
-														connectorList.map((item, index) => (
-															<option value={item._id}>
-																{formatCapilize(
-																	allReplace(item.display_name, {
-																		_: " ",
-																		"-": " ",
-																	})
-																)}
-															</option>
-														))}
-												</select>
-												<label htmlFor="floatingSelectGrid">
-													Select Connector
-												</label>
-											</div>
-										</Col>
-
-										<SelectOption
-											data={shedulerRepeat}
-											name="repeat"
-											handelChange={handelChange}
-										/>
-
-										{schedulerData.repeat === "monthly" ? (
-											<SelectOption
-												data={monthData}
-												name="monthDay"
-												handelChange={handelChange}
-											/>
-										) : null}
-										{schedulerData.repeat === "weekly" && (
-											<SelectOption
-												data={weekData}
-												name="weekDay"
-												handelChange={handelChange}
-											/>
-										)}
-										{schedulerData.repeat !== "minute" && (
-											<SelectOption
-												data={hourData}
-												name="hour"
-												handelChange={handelChange}
-											/>
-										)}
-
-										<SelectOption
-											data={minuteData}
-											name="minute"
-											handelChange={handelChange}
-										/>
-									</Row>
-								</form>
-							</CardBody>
-						</Card>
-					</Col>
-				</Row>
-				{objectkey(configData).length > 0 && (
-					<Row>
-						<Col xl={12}>
-							<Card>
-								<CardBody>
-									<Row>
-										{configData &&
-											objectkey(configData).map((i, u) => (
-												<Col md={6}>
-													<div className="form-floating mb-3 fullwidth">
-														<input
-															defaultValue={configData[i].value}
-															name={i}
-															className="form-control"
-															id="floatingFirstnameInput"
-															placeholder="Enter Your First Name"
-															onChange={handleInputChange}
-														/>
-														<label htmlFor="floatingFirstnameInput">{i} </label>
-													</div>
-												</Col>
-											))}
-									</Row>
-									<Row>
-										<Col md={6}>
-											<div>
-												<button
-													disabled={config}
-													onClick={() => {
-														RunScheduler(true);
-													}}
-													className="btn btn-primary w-md"
-												>
-													Run Connector
-												</button>
-											</div>
-										</Col>
-										<Col md={6}>
-											<div>
-												<button
-													disabled={!config}
-													onClick={() => {
-														RunScheduler(false);
-													}}
-													className="btn btn-danger w-md"
-												>
-													Stop Connector
-												</button>
-											</div>
-										</Col>
-									</Row>
-								</CardBody>
-							</Card>
-						</Col>
-					</Row>
-				)} */}
 				<Row>
 					<Col className="col-12 col-md-12">
-						{/* <ConnectorList /> */}
 						<ConnectorListTwo />
 					</Col>
 				</Row>

@@ -28,6 +28,7 @@ export default function FormWeekReport({ formik }) {
                   formik.values.selectedDate && isAfter(date, subDays(formik.values.selectedDate, 8)) && isBefore(date, formik.values.selectedDate) ? "bg-primary" : undefined
                 }
                 shouldCloseOnSelect={false}
+                autoComplete="off"
               />
             </div>
             {formik.errors.selectedDate ? <FormFeedback>{formik.errors.selectedDate}</FormFeedback> : null}
