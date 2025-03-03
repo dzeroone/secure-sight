@@ -1,4 +1,3 @@
-import path from 'path'
 import mongoose from 'mongoose'
 import { graphqlHTTP } from 'express-graphql'
 import passport from 'passport'
@@ -8,97 +7,68 @@ import dotenv from 'dotenv'
 import schema from './schema/schema'
 import routes from './routes'
 import csvRoutes from './routes/csvRoutes'
-import scheduler from './helper/cron.helper'
 import { createElasticIndices } from './helper/elastic.helper'
 
 dotenv.config()
 
+const build = async () => {
 
-//saas
-const app: Application = express()
+    //saas
+    const app: Application = express()
 
-// Middleware
-app.use(cors())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json({ limit: '50mb' }))
-app.use(express.raw({ type: 'application/octet-stream', limit: '100mb' }))
+    // Middleware
+    app.use(cors())
+    app.use(express.urlencoded({ extended: true }))
+    app.use(express.json({ limit: '50mb' }))
+    app.use(express.raw({ type: 'application/octet-stream', limit: '100mb' }))
 
-// Passport Config
-app.use(passport.initialize())
-require('./utils/passport')(passport)
+    // Passport Config
+    app.use(passport.initialize())
+    require('./utils/passport')(passport)
 
-// CORS setup
-app.use(function (req: Request, res: Response, next: NextFunction) {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-    next()
-})
-
-// Routes
-app.use('/api', routes)
-app.use('/api', csvRoutes)  // Add this line to include CSV routes
-
-// GraphQL
-app.use('/graphql', graphqlHTTP({
-    schema,
-    graphiql: true
-}))
-
-// MongoDB Connection
-const CONNECTION_STRING: string = `${process.env.mongo_base_url}/${process.env.mongo_db}` || ""
-mongoose.connect(CONNECTION_STRING)
-mongoose.connection.once('open', () => {
-    console.log(`Connection to database has been established successfully ${CONNECTION_STRING}`)
-})
-
-scheduler.start()
-
-// create necessary elastic indices for saving monthly and weekly form data from report generation tool
-createElasticIndices()
-
-// Serve static files in production
-if (process.env.NODE_ENV === 'prod') {
-    app.use(express.static(path.resolve(__dirname, "../../client/build")))
-    app.get('/*', function (_req: Request, res: Response) {
-        res.sendFile(path.resolve(__dirname, "../../client/build/index.html"))
+    // CORS setup
+    app.use(function (req: Request, res: Response, next: NextFunction) {
+        res.setHeader('Access-Control-Allow-Origin', '*')
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+        next()
     })
-}
 
-const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
-    if (res.headersSent) {
-        return next(err)
+    // Routes
+    app.use('/api', routes)
+    app.use('/api', csvRoutes)  // Add this line to include CSV routes
+
+    // GraphQL
+    app.use('/graphql', graphqlHTTP({
+        schema,
+        graphiql: true
+    }))
+
+    // MongoDB Connection
+    const CONNECTION_STRING: string = `${process.env.mongo_base_url}/${process.env.mongo_db}` || ""
+    console.log('CONNECTION_STRING', CONNECTION_STRING)
+    mongoose.connect(CONNECTION_STRING)
+    mongoose.connection.once('open', () => {
+        console.log(`Connection to database has been established successfully ${CONNECTION_STRING}`)
+    })
+
+    // create necessary elastic indices for saving monthly and weekly form data from report generation tool
+    createElasticIndices()
+
+    const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
+        if (res.headersSent) {
+            return next(err)
+        }
+        res.status(500)
+        res.send({ error: err })
     }
-    res.status(500)
-    res.send({ error: err })
+
+    app.use(errorHandler)
+
+    return app
 }
 
-app.use(errorHandler)
-
-const PORT = process.env.PORT || 5001
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
-
-/**
- * Gracefully stop job scheduler
- */
-async function graceful() {
-    await scheduler.stop();
-    process.exit(0);
-}
-
-process.on('SIGTERM', graceful);
-process.on('SIGINT', graceful);
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    graceful();
-});
-
-process.on('uncaughtException', (error) => {
-    console.error('Uncaught Exception thrown', error);
-    graceful();
-});
-
-export default app
+export default build
 
 
 

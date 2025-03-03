@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=development tsc && node dist/app.js",
-    "dev": "cross-env NODE_ENV=dev nodemon --watch './**/*.ts' -L --exec 'ts-node' src/app.ts",
-    "prod": "cross-env NODE_ENV=prod node dist/app.js",
+    "start": "cross-env NODE_ENV=development tsc && node dist/server.js",
+    "dev": "cross-env NODE_ENV=dev nodemon --watch './**/*.ts' -L --exec 'ts-node' src/server.ts",
+    "prod": "cross-env NODE_ENV=prod node dist/server.js",
     "build": "tsc -p ."
   },
   "keywords": [],

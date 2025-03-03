@@ -39,6 +39,11 @@ class UserController {
       $set: data
     })
   }
+
+  async removeAll() {
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    await userModel.deleteMany({})
+  }
 }
 
 export default new UserController()
