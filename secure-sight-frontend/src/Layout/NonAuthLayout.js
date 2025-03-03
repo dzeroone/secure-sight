@@ -5,8 +5,9 @@ import { useProfile } from '../Hooks/UserHooks';
 import { Navigate } from 'react-router-dom';
 
 const NonAuthLayout = (props) => {
-  const {userProfile} = useProfile();
-  if(userProfile) {
+  const { userProfile } = useProfile();
+  console.log('PPPP', userProfile)
+  if (userProfile) {
     return (
       <Navigate to={{ pathname: "/dashboard", state: { from: props.location } }} />
     );

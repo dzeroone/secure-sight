@@ -3,7 +3,7 @@ const path = require('path')
 import mongoose from 'mongoose'
 import { TenantProps } from '../types/types'
 import UserSchema from '../models/client/user'
-import { OTHER, COLLECTIONS } from '../constant/index'
+import { ROLES, COLLECTIONS } from '../constant/index'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
 
 export const updateDbName = (params: TenantProps) => {
@@ -25,7 +25,7 @@ export const createUpdateClientDb = async (obj: TenantProps) => {
         fullName: "",
         email: `tenant@${obj.domain}`,
         password: process.env.default_tenant_email_password,
-        role: OTHER.ROLE2
+        role: ROLES.ROLE2
     }
     const query = { tenantCode: doc.tenantCode, email: doc.email, role: doc.role }
     const user = await userModel.findOne(query)
@@ -55,21 +55,21 @@ export const shareDefaultConnectors = async (obj: {
         const master = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.CONNECTOR)
         let arr = await master.find({ role: info.role, email: info.email, dbName: info.dbName, type: "default" }, { _id: 0 }).lean()
 
-//const localDirPath: string = path.resolve(process.env.PWD, `../../connector_storage/${obj.dbName}/tenant@${obj.domain}`)
+        //const localDirPath: string = path.resolve(process.env.PWD, `../../connector_storage/${obj.dbName}/tenant@${obj.domain}`)
         const tenant_connector = arr.map((val: any, index: number) => ({
             ...val,
-            role: OTHER.ROLE2,
+            role: ROLES.ROLE2,
             email: `tenant@${obj.domain}`,
             dbName: obj.dbName,
-     //       tenantFilePath: localDirPath
+            //       tenantFilePath: localDirPath
         }))
         const tenant = dynamicModelWithDBConnection(obj.dbName, COLLECTIONS.CONNECTOR)
         for (let index in tenant_connector) {
             const obj2 = tenant_connector[index]
-            const query = { email: obj2.email, display_name: obj2.display_name, role: OTHER.ROLE2, dbName: obj2.dbName }
+            const query = { email: obj2.email, display_name: obj2.display_name, role: ROLES.ROLE2, dbName: obj2.dbName }
             const res = await tenant.findOne(query)
             if (!res) {
-                const doc = new tenant(obj2)        
+                const doc = new tenant(obj2)
                 await doc.save()
             } else {
                 tenant.findOneAndUpdate(query, { $set: obj2 })

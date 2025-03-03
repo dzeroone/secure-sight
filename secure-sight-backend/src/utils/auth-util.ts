@@ -3,53 +3,57 @@ import { NextFunction, Request, Response } from 'express'
 import { UserProps } from '../types/types'
 import jwt from 'jsonwebtoken'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { AUTH, COLLECTIONS, OTHER } from '../constant/index'
+import { AUTH, COLLECTIONS, MASTER_ADMIN_DB, ROLES } from '../constant/index'
+import passport from 'passport'
+
+declare global {
+    namespace Express {
+        interface User {
+            email: string
+            fullname: string
+            username: string
+            role: string
+        }
+    }
+}
 
 export const setDbName = async (req: Request<UserProps>, _res: Response, next: NextFunction) => {
-    if ([OTHER.ROLE2, OTHER.ROLE3].includes(req.body.role)) {
-        const dm = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.TENANT)
+    if ([ROLES.ROLE2, ROLES.ROLE3].includes(req.body.role)) {
+        const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.TENANT)
         const user = await dm.findOne({ tenantCode: req.body.tenantCode }).lean()
         req.body.dbName = user?.dbName
         req.body.companyName = user?.companyName
     } else {
-        req.body.dbName = OTHER.MASTER_ADMIN_DB
+        req.body.dbName = MASTER_ADMIN_DB
     }
     next()
 }
 
-function matchCredential(params: any, user: any) {
-    let response;
+async function matchCredential(params: any, user: any) {
     let jwtSecret: any = process.env.jwtSecret
     let jwtSignInExpiresIn = process.env.jwtSignInExpiresIn
-    return new Promise(resolve => {
-        bcryptjs.compare(params.password, user.password).then(isMatch => {
-            isMatch = true;
-            if (isMatch) {
-                jwt.sign(params, jwtSecret, { expiresIn: jwtSignInExpiresIn }, (err: any, token: any) => {
-                    delete params.password
-                    params.username = user.username,
-                        params.id = user._id
-                    let name = (params.role === "tenant_admin") ? `${user.companyName}` : `${user.username}`
-                    response = {
-                        success: true,
-                        status: 200,
-                        data: { token, ...params },
-                        msg: name + ` successfully login`
-                    }
-                    resolve(response)
-                    return
-                })
-            } else {
-                response = {
-                    success: false,
-                    status: 422,
-                    msg: AUTH.WARNING_1
-                }
-                resolve(response)
-                return
-            }
-        })
-    })
+    const isMatch = await bcryptjs.compare(params.password, user.password)
+    if (isMatch) {
+        delete params.password;
+        const token = jwt.sign(params, jwtSecret, { expiresIn: jwtSignInExpiresIn })
+        params.username = user.username;
+        params.role = user.role;
+        params.id = user._id;
+
+        let name = (params.role === "tenant_admin") ? `${user.companyName}` : `${user.username}`
+        return {
+            success: true,
+            status: 200,
+            data: { token, ...params },
+            msg: name + ` successfully login`
+        }
+    } else {
+        return {
+            success: false,
+            status: 422,
+            msg: AUTH.WARNING_1
+        }
+    }
 }
 
 export const sendUserDetail = async (params: any) => {
@@ -69,16 +73,55 @@ export const sendUserDetail = async (params: any) => {
 }
 
 export const sendRegisterInfo = async (params: any) => {
-    const dm = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.USERS)
-    let user = await dm.findOne({ email: params.email })
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    let user = await userModel.findOne({ email: params.email })
     if (user) {
         throw new Error(AUTH.USER_EXIST)
     } else {
+        const userCount = await userModel.countDocuments()
+        if (userCount > 0) {
+            params.role = ''
+        } else {
+            params.role = 'admin'
+        }
         const salt = await bcryptjs.genSalt(10)
         const hashedPassword = await bcryptjs.hash(params.password, salt)
         params.password = hashedPassword
-        const doc = new dm(params)
+        const doc = new userModel(params)
         await doc.save()
-        return dm.findOne({ email: params.email }, { password: 0 })
+        return userModel.findOne({ email: params.email }, { password: 0 })
     }
+}
+
+export const hasRole = (role: string) => async (req: Request, _res: Response, next: NextFunction) => {
+    if (!req.user?.role) {
+        next(new Error("Unauthorized"))
+        return
+    }
+    if (req.user?.role !== role) {
+        next(new Error("Unauthorized"))
+        return
+    }
+    next()
+}
+
+export const auth = (req: Request, res: Response, next: NextFunction) => {
+    let responseObj = {
+        statusCode: 0,
+        errorMsg: "",
+        data: {}
+    }
+    passport.authenticate('jwt', (err: any, user: any, info: any) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            responseObj.data = info.message
+            responseObj.statusCode = 401
+            responseObj.errorMsg = "user is not authenticated!!!!"
+            return res.status(responseObj.statusCode).json(responseObj)
+        }
+        req.user = user;
+        next();
+    })(req, res, next);
 }

@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import withRouter from "../../components/Common/withRouter";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { loginUser  } from "../../store/actions";
+import { loginUser } from "../../store/actions";
 import "react-toastify/dist/ReactToastify.css";
 import PointDropBG from "../../components/point-drop-bg";
 
@@ -31,11 +31,11 @@ const Login = (props) => {
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
+      email: Yup.string().email("Please Enter Your Email").required("Please Enter Your Email"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: (values) => {
-      dispatch(loginUser (values, props.router.navigate));
+      dispatch(loginUser(values, props.router.navigate));
     },
   });
 

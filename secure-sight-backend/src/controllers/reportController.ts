@@ -1,5 +1,5 @@
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { OTHER, COLLECTIONS } from '../constant'
+import { ROLES, COLLECTIONS, MASTER_ADMIN_DB } from '../constant'
 import { jsonFlattenObject } from '../helper/reports.helper'
 import { Parser } from 'json2csv'
 import mongoose from 'mongoose'
@@ -36,7 +36,7 @@ class reportController {
     }
 
     async getReportById(id: string) {
-        const reportModel = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.REPORT);
+        const reportModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.REPORT);
         return reportModel.findOne({ _id: id }).lean()
     }
 

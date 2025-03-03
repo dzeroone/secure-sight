@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { OTHER, COLLECTIONS } from '../constant'
+import { ROLES, COLLECTIONS } from '../constant'
 
 const mainDb = process.env.mongo_db || ''
 

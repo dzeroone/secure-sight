@@ -2,9 +2,9 @@ import bcryptjs from 'bcryptjs'
 import { UserProps } from '../../types/types'
 import { dynamicModelWithDBConnection } from '../../models/dynamicModel'
 // import { createUpdateClientDb, updateDbName } from '../../utils/tenantUtil'
-import { COLLECTIONS, OTHER } from '../../constant'
+import { COLLECTIONS, ROLES } from '../../constant'
 
-class UserController {
+class TenantAdminController {
 
     async generatePassword(query: any) {
         return new Promise(resolve => {
@@ -25,7 +25,7 @@ class UserController {
             let query = { ...params.query, tenantCode: params.info.tenantCode, dbName: params.info.dbName }, info = params.info
             let dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.USERS)
             const password = await this.generatePassword(query)
-            query = { ...query, password, role: OTHER.ROLE3, updated_at: new Date() }
+            query = { ...query, password, role: ROLES.ROLE3, updated_at: new Date() }
             if (query.check === "add") {
                 const user = await dm.findOne({ email: query.email })
                 if (!user) {
@@ -57,9 +57,9 @@ class UserController {
     async deleteUser(params: any) {
         return new Promise(resolve => {
             let dm = dynamicModelWithDBConnection(params.dbName, COLLECTIONS.USERS)
-            let user = dm.findOne({ tenantCode: params.tenantCode , email:params.email}).lean()
+            let user = dm.findOne({ tenantCode: params.tenantCode, email: params.email }).lean()
             if (user) {
-                resolve(user.deleteOne({role:"user"}))
+                resolve(user.deleteOne({ role: "user" }))
             } else {
                 resolve({ msg: "User not present" })
             }
@@ -67,4 +67,4 @@ class UserController {
     }
 }
 
-export default new UserController()
+export default new TenantAdminController()

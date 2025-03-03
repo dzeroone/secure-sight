@@ -10,7 +10,6 @@ import routes from './routes'
 import csvRoutes from './routes/csvRoutes'
 import scheduler from './helper/cron.helper'
 import { createElasticIndices } from './helper/elastic.helper'
-import { ELASTIC_INDICES } from './constant'
 
 dotenv.config()
 

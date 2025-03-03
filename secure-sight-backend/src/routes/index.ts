@@ -10,6 +10,7 @@ import dashboard from './dashboard'
 import report from './report'
 import mailScheduler from './mail-scheduler'
 import notificationRouter from './notification'
+import userRouter from './user/index'
 
 
 
@@ -23,5 +24,6 @@ router.use('/dashboard', dashboard)
 router.use('/report', report)
 router.use('/schedule', mailScheduler)
 router.use('/notifications', notificationRouter)
+router.use('/users', userRouter)
 
 export default router

@@ -1,7 +1,7 @@
 import { TenantProps, TenantInfoProps } from '../../types/types'
 import { dynamicModelWithDBConnection } from '../../models/dynamicModel'
 import { createUpdateClientDb, updateDbName, shareDefaultConnectors } from '../../utils/tenantUtil'
-import { COLLECTIONS, OTHER } from '../../constant'
+import { COLLECTIONS, MASTER_ADMIN_DB, ROLES } from '../../constant'
 import mongoose from "mongoose";
 
 class TenantController {
@@ -39,7 +39,7 @@ class TenantController {
             //     const limit = parseInt(params.info.limit)
             //     const startIndex = (page - 1) * limit;
             //     skip(startIndex).limit(limit).
-            let dm = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.TENANT)
+            let dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.TENANT)
             resolve(dm.find().lean())
         })
     }
@@ -47,7 +47,7 @@ class TenantController {
     async deleteTenant(params: any) {
         return new Promise(async (resolve, reject) => {
             let response;
-            const dm = dynamicModelWithDBConnection(OTHER.MASTER_ADMIN_DB, COLLECTIONS.TENANT)
+            const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.TENANT)
             const user = await dm.findOneAndDelete({ $and: [{ tenantCode: params.tenantCode }, { dbName: params.dbName }] }).lean()
             if (user) {
                 const url = `${process.env.mongo_base_url}/${params.dbName}`

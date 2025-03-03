@@ -9,8 +9,12 @@ import withRouter from "../../components/Common/withRouter";
 import { Link } from "react-router-dom";
 //i18n
 import { withTranslation } from "react-i18next";
+import { useProfile } from "../../Hooks/UserHooks";
 const Sidebar = (props) => {
 	const ref = useRef();
+
+	const { userProfile } = useProfile();
+
 	const activateParentDropdown = useCallback(item => {
 		item.classList.add("active");
 		const parent = item.parentElement;
@@ -44,6 +48,7 @@ const Sidebar = (props) => {
 		scrollElement(item);
 		return false;
 	}, []);
+
 	const removeActivation = items => {
 		for (var i = 0; i < items.length; ++i) {
 			var item = items[i];
@@ -112,6 +117,7 @@ const Sidebar = (props) => {
 	useEffect(() => {
 		activeMenu();
 	}, [activeMenu]);
+
 	function scrollElement(item) {
 		if (item) {
 			const currentPosition = item.offsetTop;
@@ -120,184 +126,189 @@ const Sidebar = (props) => {
 			}
 		}
 	}
+
+	function applyRoleFilter(navItems) {
+		if (!userProfile) return []
+		return navItems.filter(item => {
+			if (!Array.isArray(item.roles)) return true
+			return item.roles.indexOf(userProfile.role) > -1
+		})
+	}
+
 	return (
 		<React.Fragment>
-		  <div
-			className="vertical-menu"
-			style={{
-			  height: '100vh',
-			  overflowY: 'auto',
-			  background: '#0E0F1B',
-			  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-			}}
-		  >
-			<SimpleBar
-			  className="h-100"
-			  ref={ref}
-			  style={{ maxHeight: '100vh' }}
+			<div
+				className="vertical-menu"
+				style={{
+					height: '100vh',
+					overflowY: 'auto',
+					background: '#0E0F1B',
+					boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+				}}
 			>
-			  <div
-				id="sidebar-menu"
-				style={{ padding: '1rem' }}
-			  >
-				<ul className="metismenu list-unstyled" id="side-menu-item">
-				  {(sidebarData || []).map((item, key) => (
-					<React.Fragment key={key}>
-					  {item.isMainMenu ? (
-						<li
-						  className="menu-title"
-						  style={{
-							color: '#ffffff',
-							fontSize: '0.75rem',
-							textTransform: 'uppercase',
-							fontWeight: '600',
-							letterSpacing: '0.05em',
-							padding: '0.75rem',
-							marginTop: '1rem',
-							marginBottom: '0.5rem'
-						  }}
-						>
-						  {props.t(item.label)}
-						</li>
-					  ) : (
-						<li
-						  key={key}
-						  style={{ marginBottom: '0.25rem' }}
-						>
-						  <Link
-							to={item.url ? item.url : "/#"}
-							className={`sidebar-link ${
-							  ((item.issubMenubadge || item.isHasArrow)
-								? " "
-								: "has-arrow")}`}
-							style={{
-							  display: 'flex',
-							  alignItems: 'center',
-							  padding: '0.5rem 0.75rem',
-							  color: '#ffffff',
-							  borderRadius: '0.5rem',
-							  transition: 'all 0.15s ease',
-							  textDecoration: 'none',
-							  fontWeight: '500'
-							}}
-							onMouseEnter={(e) => {
-							  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-							  e.currentTarget.style.color = '#ffffff';
-							}}
-							onMouseLeave={(e) => {
-							  e.currentTarget.style.backgroundColor = '';
-							  e.currentTarget.style.color = '#ffffff';
-							}}
-						  >
-							<i
-							  className={`${item.icon}`}
-							  style={{
-								marginRight: "12px",
-								color: '#ffffff',
-								fontSize: '1.125rem'
-							  }}
-							></i>
-							<span style={{ flex: 1 }}>{props.t(item.label)}</span>
-							{item.issubMenubadge && (
-							  <span
-								className={item.bgcolor || ''}
-								style={{
-								  marginLeft: 'auto',
-								  fontSize: '0.75rem',
-								  padding: '0.25rem 0.5rem',
-								  borderRadius: '9999px',
-								  backgroundColor: !item.bgcolor ? 'rgba(255, 255, 255, 0.2)' : '',
-								  color: '#ffffff'
-								}}
-							  >
-								{item.badgeValue}
-							  </span>
-							)}
-						  </Link>
-						  {item.subItem && (
-							<ul
-							  className="sub-menu"
-							  style={{
-								paddingLeft: '2rem',
-								marginTop: '0.25rem',
-								listStyle: 'none'
-							  }}
-							>
-							  {item.subItem.map((subItem, key) => (
-								<li key={key}>
-								  <Link
-									to={subItem.link}
-									style={{
-									  display: 'block',
-									  padding: '0.5rem 0.75rem',
-									  fontSize: '0.875rem',
-									  color: '#ffffff',
-									  borderRadius: '0.5rem',
-									  textDecoration: 'none',
-									  transition: 'all 0.15s ease'
-									}}
-									onMouseEnter={(e) => {
-									  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-									  e.currentTarget.style.color = '#ffffff';
-									}}
-									onMouseLeave={(e) => {
-									  e.currentTarget.style.backgroundColor = '';
-									  e.currentTarget.style.color = '#ffffff';
-									}}
-								  >
-									{props.t(subItem.sublabel)}
-								  </Link>
-								  {subItem.subMenu && (
-									<ul
-									  className="sub-menu"
-									  style={{
-										paddingLeft: '1rem',
-										marginTop: '0.25rem',
-										listStyle: 'none'
-									  }}
-									>
-									  {subItem.subMenu.map((menuItem, key) => (
-										<li key={key}>
-										  <Link
-											to="#"
+				<SimpleBar
+					className="h-100"
+					ref={ref}
+					style={{ maxHeight: '100vh' }}
+				>
+					<div
+						id="sidebar-menu"
+						style={{ padding: '1rem' }}
+					>
+						<ul className="metismenu list-unstyled" id="side-menu-item">
+							{applyRoleFilter(sidebarData).map((item, key) => (
+								<React.Fragment key={key}>
+									{item.isMainMenu ? (
+										<li
+											className="menu-title"
 											style={{
-											  display: 'block',
-											  padding: '0.5rem 0.75rem',
-											  fontSize: '0.875rem',
-											  color: '#ffffff',
-											  borderRadius: '0.5rem',
-											  textDecoration: 'none',
-											  transition: 'all 0.15s ease'
+												color: '#ffffff',
+												fontSize: '0.75rem',
+												textTransform: 'uppercase',
+												fontWeight: '600',
+												letterSpacing: '0.05em',
 											}}
-											onMouseEnter={(e) => {
-											  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-											  e.currentTarget.style.color = '#ffffff';
-											}}
-											onMouseLeave={(e) => {
-											  e.currentTarget.style.backgroundColor = '';
-											  e.currentTarget.style.color = '#ffffff';
-											}}
-										  >
-											{props.t(menuItem.title)}
-										  </Link>
+										>
+											{props.t(item.label)}
 										</li>
-									  ))}
-									</ul>
-								  )}
-								</li>
-							  ))}
-							</ul>
-						  )}
-						</li>
-					  )}
-					</React.Fragment>
-				  ))}
-				</ul>
-			  </div>
-			</SimpleBar>
-		  </div>
+									) : (
+										<li
+											key={key}
+											style={{ marginBottom: '0.25rem' }}
+										>
+											<Link
+												to={item.url ? item.url : "/#"}
+												className={`sidebar-link ${((item.issubMenubadge || item.isHasArrow)
+													? " "
+													: "has-arrow")}`}
+												style={{
+													display: 'flex',
+													alignItems: 'center',
+													padding: '0.5rem 0.75rem',
+													color: '#ffffff',
+													borderRadius: '0.5rem',
+													transition: 'all 0.15s ease',
+													textDecoration: 'none',
+													fontWeight: '500'
+												}}
+												onMouseEnter={(e) => {
+													e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+													e.currentTarget.style.color = '#ffffff';
+												}}
+												onMouseLeave={(e) => {
+													e.currentTarget.style.backgroundColor = '';
+													e.currentTarget.style.color = '#ffffff';
+												}}
+											>
+												<i
+													className={`${item.icon}`}
+													style={{
+														marginRight: "12px",
+														color: '#ffffff',
+														fontSize: '1.125rem'
+													}}
+												></i>
+												<span style={{ flex: 1 }}>{props.t(item.label)}</span>
+												{item.issubMenubadge && (
+													<span
+														className={item.bgcolor || ''}
+														style={{
+															marginLeft: 'auto',
+															fontSize: '0.75rem',
+															padding: '0.25rem 0.5rem',
+															borderRadius: '9999px',
+															backgroundColor: !item.bgcolor ? 'rgba(255, 255, 255, 0.2)' : '',
+															color: '#ffffff'
+														}}
+													>
+														{item.badgeValue}
+													</span>
+												)}
+											</Link>
+											{item.subItem && (
+												<ul
+													className="sub-menu"
+													style={{
+														paddingLeft: '2rem',
+														marginTop: '0.25rem',
+														listStyle: 'none'
+													}}
+												>
+													{applyRoleFilter(item.subItem).map((subItem, key) => (
+														<li key={key}>
+															<Link
+																to={subItem.link}
+																style={{
+																	display: 'block',
+																	padding: '0.5rem 0.75rem',
+																	fontSize: '0.875rem',
+																	color: '#ffffff',
+																	borderRadius: '0.5rem',
+																	textDecoration: 'none',
+																	transition: 'all 0.15s ease'
+																}}
+																onMouseEnter={(e) => {
+																	e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+																	e.currentTarget.style.color = '#ffffff';
+																}}
+																onMouseLeave={(e) => {
+																	e.currentTarget.style.backgroundColor = '';
+																	e.currentTarget.style.color = '#ffffff';
+																}}
+															>
+																{props.t(subItem.sublabel)}
+															</Link>
+															{subItem.subMenu && (
+																<ul
+																	className="sub-menu"
+																	style={{
+																		paddingLeft: '1rem',
+																		marginTop: '0.25rem',
+																		listStyle: 'none'
+																	}}
+																>
+																	{applyRoleFilter(subItem.subMenu).map((menuItem, key) => (
+																		<li key={key}>
+																			<Link
+																				to="#"
+																				style={{
+																					display: 'block',
+																					padding: '0.5rem 0.75rem',
+																					fontSize: '0.875rem',
+																					color: '#ffffff',
+																					borderRadius: '0.5rem',
+																					textDecoration: 'none',
+																					transition: 'all 0.15s ease'
+																				}}
+																				onMouseEnter={(e) => {
+																					e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+																					e.currentTarget.style.color = '#ffffff';
+																				}}
+																				onMouseLeave={(e) => {
+																					e.currentTarget.style.backgroundColor = '';
+																					e.currentTarget.style.color = '#ffffff';
+																				}}
+																			>
+																				{props.t(menuItem.title)}
+																			</Link>
+																		</li>
+																	))}
+																</ul>
+															)}
+														</li>
+													))}
+												</ul>
+											)}
+										</li>
+									)}
+								</React.Fragment>
+							))}
+						</ul>
+					</div>
+				</SimpleBar>
+			</div>
 		</React.Fragment>
-	  );
+	);
 };
 Sidebar.propTypes = {
 	location: PropTypes.object,

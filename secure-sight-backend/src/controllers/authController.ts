@@ -1,6 +1,6 @@
 import { UserProps } from '../types/types';
 import { sendRegisterInfo, sendUserDetail } from '../utils/auth-util';
-import { OTHER, COLLECTIONS } from '../constant';
+import { ROLES, COLLECTIONS } from '../constant';
 import { dynamicModelWithDBConnection } from '../models/dynamicModel';
 import { sendEmail } from '../helper/email.helper';
 

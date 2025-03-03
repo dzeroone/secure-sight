@@ -1,5 +1,5 @@
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { OTHER, COLLECTIONS } from '../constant'
+import { ROLES, COLLECTIONS } from '../constant'
 
 class dashboardController {
     async createDashboard(params: any) {
@@ -63,7 +63,7 @@ class dashboardController {
             const { info, data } = params
             const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.DASHBOARD);
             const getEntry = await dm.findOne({ _id: info.dashboard_id }).lean();
-            const query = { dashboard_id: info.dashboard_id, user_id: info.user_id, type: info.type, title: info.title, column:info.column, data: data.data };
+            const query = { dashboard_id: info.dashboard_id, user_id: info.user_id, type: info.type, title: info.title, column: info.column, data: data.data };
             if (getEntry) {
                 const doc = new dm({ ...query, created_at: new Date() })
                 await doc.save();

@@ -1,6 +1,6 @@
 import { ConnectorProps } from '../types/types'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { OTHER, COLLECTIONS } from '../constant'
+import { ROLES, COLLECTIONS, MASTER_ADMIN_DB } from '../constant'
 import { connectorTestScheduler, invokeConnector, stopTestConnectorScheduler } from '../helper/cron.helper'
 import crypto from 'crypto'
 import path from 'path'
@@ -80,7 +80,7 @@ class ConnectorController {
 				params.data.map(async (p: any) => {
 					const dm = dynamicModelWithDBConnection(p.dbName, COLLECTIONS.CONNECTOR);
 					const getEntry = await dm.findOne({ connectorId: info._id }).lean();
-					const query = { connectorId: info._id, name: info.name, role: OTHER.ROLE2, display_name: info.display_name, category: info.category, config: info.config, actions: info.actions, filePath: info.filePath, email: `tenant@${p.domain}`, dbName: p.dbName, tenantCode: p.tenantCode }
+					const query = { connectorId: info._id, name: info.name, role: ROLES.ROLE2, display_name: info.display_name, category: info.category, config: info.config, actions: info.actions, filePath: info.filePath, email: `tenant@${p.domain}`, dbName: p.dbName, tenantCode: p.tenantCode }
 					if (!getEntry) {
 						const doc = new dm({ ...query, created_at: new Date() })
 						await doc.save();
@@ -182,7 +182,7 @@ class ConnectorController {
 					const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.USERCONNECTOR);
 					const getEntry = await dm.findOne({ $and: [{ user_id: p._id }, { connectorId: info.connectorId }] }).lean();
 					if (!getEntry) {
-						const query = { user_id: p._id, ...info, role: OTHER.ROLE3 }
+						const query = { user_id: p._id, ...info, role: ROLES.ROLE3 }
 						const doc = new dm({ ...query, created_at: new Date() })
 						await doc.save();
 						response = { success: true, status: 200, msg: "Connector assign to user successfully.", error: false }
@@ -360,11 +360,11 @@ class ConnectorController {
 
 	async invokeConnector(connectorId: string) {
 		const connectorConfigModel = dynamicModelWithDBConnection(
-			OTHER.MASTER_ADMIN_DB,
+			MASTER_ADMIN_DB,
 			COLLECTIONS.CONNECTOR_CONFIG,
 		)
 		const connectorModel = dynamicModelWithDBConnection(
-			OTHER.MASTER_ADMIN_DB,
+			MASTER_ADMIN_DB,
 			COLLECTIONS.CONNECTOR,
 		)
 

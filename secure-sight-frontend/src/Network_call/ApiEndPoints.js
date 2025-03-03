@@ -9,6 +9,7 @@ const createEndpoint = (path) => `${APPConfig.API_URL}${path}`;
 const ApiEndPoints = {
   Login: createEndpoint("/auth/login"),
   Register: createEndpoint('/auth/register'),
+  Users: createEndpoint('/users'),
   TenantAddUpdate: createEndpoint("/master/add-update-tenant"),
   MasterList: createEndpoint("/master/list"),
   ConectoreList: createEndpoint("/connector/connector-list"),

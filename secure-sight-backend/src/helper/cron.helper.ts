@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { COLLECTIONS, OTHER } from '../constant'
+import { COLLECTIONS, MASTER_ADMIN_DB, ROLES } from '../constant'
 import child_process from 'child_process'
 import mongoose from 'mongoose'
 const path = require('path')
@@ -23,7 +23,7 @@ const scheduler = new Pulse({
 scheduler.define(SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, async (job, done) => {
 	const { command, connectorId } = job.attrs.data
 	const connectorModel = dynamicModelWithDBConnection(
-		OTHER.MASTER_ADMIN_DB,
+		MASTER_ADMIN_DB,
 		COLLECTIONS.CONNECTOR,
 	)
 
@@ -89,7 +89,7 @@ export const invokeConnector = async (connectorId: string, connectorParams: Reco
 		)
 
 		const connectorConfigModel = dynamicModelWithDBConnection(
-			OTHER.MASTER_ADMIN_DB,
+			MASTER_ADMIN_DB,
 			COLLECTIONS.CONNECTOR_CONFIG,
 		)
 		const config_data = await connectorConfigModel

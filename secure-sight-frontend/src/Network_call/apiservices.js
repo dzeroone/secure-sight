@@ -1,13 +1,17 @@
 import Axios from 'axios';
+import { history } from '../Routes/routes';
 
 const axiosInstance = Axios.create();
 
 axiosInstance.interceptors.request.use(
 	(config) => {
-		let token = window.sessionStorage.getItem("@userToken");
-		config.headers = { 'Access-Control-Allow-Origin': '*' };
-		if (token) {
-			config.headers.Authorization = token;
+		config.headers = {};
+		let userInfo = localStorage.getItem("authUser");
+		if (userInfo) {
+			userInfo = JSON.parse(userInfo)
+			if (userInfo.token) {
+				config.headers.Authorization = `Bearer ${userInfo.token}`;
+			}
 		}
 		return config;
 	},
@@ -23,7 +27,6 @@ axiosInstance.interceptors.response.use(
 		return config
 	},
 	(error) => {
-		console.log('response error =>', error.response || error)
 		return Promise.reject(error)
 	},
 )
@@ -37,7 +40,7 @@ const ApiServices = async (
 	method = 'post',
 	body,
 	url = '',
-	headers = { 'Access-Control-Allow-Origin': '*' },
+	headers = {},
 	formData = false,
 	redirectRoute = "",
 	isShowMessage = false
@@ -61,10 +64,7 @@ const ApiServices = async (
 	if (headers) {
 		config.headers = headers
 	}
-	let token = window.sessionStorage.getItem("@userToken");
-	if (token) {
-		config.headers.Authorization = token;
-	}
+
 	return new Promise((resolve, reject) => {
 		axiosInstance(config)
 			.then(async (res) => {
@@ -73,7 +73,11 @@ const ApiServices = async (
 			})
 			.catch(async (error) => {
 				if (error.response) {
-
+					if (error.response.status === 401) {
+						localStorage.removeItem('authUser')
+						history.replace('/login')
+						return;
+					}
 					if (error.response.status === 409) {
 						alert(error.response.data.message);
 					}
