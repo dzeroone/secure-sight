@@ -37,33 +37,93 @@ import UserIndexPage from "../Pages/users";
 import NewUserPage from "../Pages/users/new";
 import { createBrowserHistory } from "history";
 import EditUserPage from "../Pages/users/edit";
+import CustomerIndexPage from "../Pages/customers";
+import NewCustomerPage from "../Pages/customers/new";
+import EditCustomerPage from "../Pages/customers/edit";
 
 export const history = createBrowserHistory({ window });
 
 const authProtectedRoutes = [
   // Dashboard
   { path: "/logout", component: <Logout /> },
-  { path: "/dashboard/create-dashboard", component: <CreateDashboard /> },
-  { path: "/dashboard/monthly-report", component: <DashboardMonthlyReport /> },
-  { path: "/dashboard/weekly-report", component: <DashboardWeeklyReport /> },
-  { path: "/dashboard", component: <Dashboard /> },
-  { path: "/users", component: <UserIndexPage /> },
-  { path: "/users/new", component: <NewUserPage /> },
-  { path: "/users/:id", component: <EditUserPage /> },
+  {
+    roles: ['admin'],
+    path: "/dashboard/create-dashboard", component: <CreateDashboard />
+  },
+  {
+    roles: ['admin'],
+    path: "/dashboard/monthly-report", component: <DashboardMonthlyReport />
+  },
+  {
+    roles: ['admin'],
+    path: "/dashboard/weekly-report", component: <DashboardWeeklyReport />
+  },
+  {
+    roles: ['admin'],
+    path: "/dashboard", component: <Dashboard />
+  },
+  {
+    roles: ['admin'],
+    path: "/users", component: <UserIndexPage />
+  },
+  {
+    roles: ['admin'],
+    path: "/users/new", component: <NewUserPage />
+  },
+  {
+    roles: ['admin'],
+    path: "/users/:id", component: <EditUserPage />
+  },
+  {
+    roles: ['admin'],
+    path: "/customers", component: <CustomerIndexPage />
+  },
+  {
+    roles: ['admin'],
+    path: "/customers/new", component: <NewCustomerPage />
+  },
+  {
+    roles: ['admin'],
+    path: "/customers/:id", component: <EditCustomerPage />
+  },
 
   // Report
-  { path: "/reports/monthly-report", component: <MonthlyReport /> },
-  { path: "/reports/weekly-report", component: <WeeklyReport /> },
+  {
+    roles: ['admin', 'l1', 'l2', 'l3'],
+    path: "/reports/monthly-report", component: <MonthlyReport />
+  },
+  {
+    roles: ['admin', 'l1', 'l2', 'l3'],
+    path: "/reports/weekly-report", component: <WeeklyReport />
+  },
 
   // CSV
-  { path: "/csv-list", component: <CSVDataList /> },
-  { path: "/csv-list/:id", component: <CSVFileView /> }, // Added route for viewing a specific CSV file
+  {
+    roles: ['admin'],
+    path: "/csv-list", component: <CSVDataList />
+  },
+  {
+    roles: ['admin'],
+    path: "/csv-list/:id", component: <CSVFileView />
+  }, // Added route for viewing a specific CSV file
 
   // Connector
-  { path: "/connector-list", component: <ConnectorList /> },
-  { path: "/connector-log/:id", component: <ConnectorLogFile /> },
-  { path: "/connector-schedule", component: <ConnectorSchedule /> },
-  { path: "/connector-upload", component: <ConnectorUploader /> },
+  {
+    roles: ['admin'],
+    path: "/connector-list", component: <ConnectorList />
+  },
+  {
+    roles: ['admin'],
+    path: "/connector-log/:id", component: <ConnectorLogFile />
+  },
+  {
+    roles: ['admin'],
+    path: "/connector-schedule", component: <ConnectorSchedule />
+  },
+  {
+    roles: ['admin'],
+    path: "/connector-upload", component: <ConnectorUploader />
+  },
 
   // Profile
   { path: "/userprofile", component: <UserProfile /> },

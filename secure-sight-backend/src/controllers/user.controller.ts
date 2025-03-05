@@ -1,5 +1,5 @@
 import { genSalt, hash } from "bcryptjs";
-import { COLLECTIONS, MASTER_ADMIN_DB } from "../constant"
+import { COLLECTIONS, MASTER_ADMIN_DB, ROLES } from "../constant"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { Document } from "mongoose";
 
@@ -29,11 +29,16 @@ class UserController {
     return userModel.findById(id, { password: 0 })
   }
 
-  async updateUser(user: Document, data: any) {
+  async updateUser(user: any, data: any) {
     if (data.password) {
       const salt = await genSalt(10)
       const hashedPassword = await hash(data.password, salt)
       data.password = hashedPassword
+    } else {
+      delete data.password
+    }
+    if (user.role == ROLES.ADMIN) {
+      delete data.role
     }
     return user.updateOne({
       $set: data

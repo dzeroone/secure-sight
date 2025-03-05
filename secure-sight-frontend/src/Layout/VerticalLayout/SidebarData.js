@@ -41,6 +41,20 @@ const SidebarData = [
 		],
 	},
 	{
+		roles: ['admin'],
+		label: "Customers",
+		icon: "ri-user-2-line",
+		url: "/customers",
+		bgcolor: "bg-primary",
+		subItem: [
+			{
+				roles: ['admin'],
+				sublabel: "List of customers",
+				link: "/customers",
+			},
+		],
+	},
+	{
 		label: "Report",
 		isMainMenu: true,
 		roles: ['admin', 'l3', 'l2', 'l1']

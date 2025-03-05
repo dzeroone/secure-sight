@@ -1,12 +1,11 @@
+import { format, getYear } from "date-fns";
 import { useFormik } from "formik";
-import { useCallback, useState } from "react";
-import ReactDatePicker from "react-datepicker";
-import { Button, Col, Form, FormFeedback, FormGroup, Input, Label, Row } from "reactstrap";
-import ApiServices from "../../Network_call/apiservices";
-import ApiEndPoints from "../../Network_call/ApiEndPoints";
-import { format, getMonth, getYear } from "date-fns";
+import { useCallback, useEffect, useState } from "react";
+import FormMonthReport from "../../components/FormMonthReport";
 import ModalLoading from "../../components/modal-loading";
 import MonthlyReportGraphs from "../../components/MonthlyReportGraphs";
+import ApiEndPoints from "../../Network_call/ApiEndPoints";
+import ApiServices from "../../Network_call/apiservices";
 
 const validate = values => {
   const errors = {};
@@ -23,8 +22,9 @@ const validate = values => {
 }
 
 export default function MonthlyReport() {
-  const [openLoader, setOpenLoader] = useState(false)
+  const [busy, setBusy] = useState(false)
   const [reportData, setReportData] = useState([])
+  const [customers, setCustomers] = useState([])
 
   const formik = useFormik({
     initialValues: {
@@ -35,7 +35,7 @@ export default function MonthlyReport() {
     async onSubmit(values) {
       try {
         setReportData([])
-        setOpenLoader(true);
+        setBusy(true);
         const month = format(values.selectedDate, 'MMMM').toLowerCase()
         const year = getYear(values.selectedDate)
         const tenant = values.tenant.toLowerCase()
@@ -49,56 +49,44 @@ export default function MonthlyReport() {
       } catch (e) {
         console.log(e)
       } finally {
-        setOpenLoader(false);
+        setBusy(false);
       }
     }
   })
 
+  const loadCustomers = useCallback(async () => {
+    try {
+      setBusy(true)
+      const data = await ApiServices(
+        'get',
+        null,
+        ApiEndPoints.Customers
+      )
+      setCustomers(data)
+    }catch(e){
+      console.error(e)
+      alert(e.message)
+    }finally{
+      setBusy(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadCustomers()
+  }, [loadCustomers])
+
   return (
     <div className="page-content">
-      <Form onSubmit={formik.handleSubmit} className="mb-4">
-        <Row>
-          <Col xs="auto">
-            <FormGroup>
-              <Label>
-                Select month
-              </Label>
-              <div className={!!formik.errors.selectedDate ? 'is-invalid' : ''}>
-                <ReactDatePicker
-                  className={`form-control ${!!formik.errors.selectedDate ? 'is-invalid' : ''}`}
-                  name="selectedDate"
-                  selected={formik.values.selectedDate}
-                  onChange={(date) => formik.setFieldValue('selectedDate', date)}
-                  showMonthYearPicker
-                  showFullMonthYearPicker
-                />
-              </div>
-              {formik.errors.selectedDate ? <FormFeedback>{formik.errors.selectedDate}</FormFeedback> : null}
-            </FormGroup>
-          </Col>
-          <Col>
-            <FormGroup>
-              <Label>
-                Tenant
-              </Label>
-              <Input
-                name="tenant"
-                value={formik.values.tenant}
-                onChange={formik.handleChange}
-                invalid={!!formik.errors.tenant}
-              />
-              {formik.errors.tenant ? <FormFeedback>{formik.errors.tenant}</FormFeedback> : null}
-            </FormGroup>
-          </Col>
-        </Row>
-        <Button type="submit">Find</Button>
-      </Form>
+      <FormMonthReport
+        formik={formik}
+        customers={customers}
+      />
       {reportData.length ? (
         <MonthlyReportGraphs data={reportData[0]._source} />
       ) : null}
       <ModalLoading
-        isOpen={openLoader}
-        onClose={() => setOpenLoader(false)}
+        isOpen={busy}
+        onClose={() => setBusy(false)}
       />
     </div>
   )

@@ -14,8 +14,8 @@ router.post('/insert-multi-connector', async (req: Request, res: Response) => {
     res.send(data)
 })
 
-router.post('/connector-list', async (req: Request, res: Response) => {
-    let data = await connectorController.connectorList(req.body)
+router.get('/connector-list', async (req: Request, res: Response) => {
+    let data = await connectorController.connectorList()
     res.send(data)
 })
 

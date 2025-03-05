@@ -116,7 +116,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
             return next(err);
         }
         if (!user) {
-            responseObj.data = info.message
+            responseObj.data = info?.message
             responseObj.statusCode = 401
             responseObj.errorMsg = "user is not authenticated!!!!"
             return res.status(responseObj.statusCode).json(responseObj)

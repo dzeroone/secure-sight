@@ -42,21 +42,17 @@ const ConnectorSchedule = () => {
 			dbName: userInfo.dbName,
 			user_id: userInfo._id,
 		}));
-		connectorData(userInfo.dbName);
+		connectorData();
 	}, []);
 
 	// ############################################ connector list  ########################################
 
-	const connectorData = async (item) => {
+	const connectorData = async () => {
 		setOpenLoader(true);
-		const payload = {
-			headers: { "Access-Control-Allow-Origin": "*" },
-			info: { dbName: item },
-		};
 		const response = await ApiServices(
-			"post",
-			payload,
-			ApiEndPoints.ConectoreList
+			"get",
+			null,
+			ApiEndPoints.ConnectorList
 		);
 		setConnectorList(response);
 		setOpenLoader(false);

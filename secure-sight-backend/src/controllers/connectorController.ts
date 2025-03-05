@@ -60,8 +60,8 @@ class ConnectorController {
 		return { msg: "successfully created", error: false }
 	}
 
-	async connectorList(params: any) {
-		let dm = dynamicModelWithDBConnection(params.info.dbName, COLLECTIONS.CONNECTOR)
+	async connectorList() {
+		let dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR)
 		return dm.find().lean()
 	}
 

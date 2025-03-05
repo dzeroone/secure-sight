@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FormWeekReport from "../../components/FormWeekReport";
 import { getWeeklyReportPayload } from "../../helpers/form_helper";
 import ModalLoading from "../../components/modal-loading";
@@ -25,6 +25,7 @@ export default function WeeklyReport() {
 
   const [openLoader, setOpenLoader] = useState(false)
   const [reportData, setReportData] = useState([])
+  const [customers, setCustomers] = useState([])
 
   const formik = useFormik({
     initialValues: {
@@ -47,10 +48,32 @@ export default function WeeklyReport() {
     }
   })
 
+  const loadCustomers = useCallback(async () => {
+    try {
+      setOpenLoader(true)
+      const data = await ApiServices(
+        'get',
+        null,
+        ApiEndPoints.Customers
+      )
+      setCustomers(data)
+    }catch(e){
+      console.error(e)
+      alert(e.message)
+    }finally{
+      setOpenLoader(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadCustomers()
+  }, [loadCustomers])
+
   return (
     <div className="page-content">
       <FormWeekReport
         formik={formik}
+        customers={customers}
       />
       {reportData.length ? (
         <WeeklyReportGraphs data={reportData[0]._source} />

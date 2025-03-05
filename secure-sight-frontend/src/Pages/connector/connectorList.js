@@ -42,13 +42,10 @@ const ConnectorList = () => {
   //   ######################################## connector list  ##########################################
   const connectorData = async (dbName) => {
     setOpenLoader(true);
-    const payload = {
-      info: { dbName },
-    };
     const response = await ApiServices(
-      "post",
-      payload,
-      ApiEndPoints.ConectoreList
+      "get",
+      null,
+      ApiEndPoints.ConnectorList
     );
     setConnectorListData(response);
     setOpenLoader(false);

@@ -53,19 +53,16 @@ const ConnectorListTwo = () => {
 			dbName: userInfo.dbName,
 			user_id: userInfo._id,
 		}));
-		connectorData(userInfo.dbName);
+		connectorData();
 	}, []);
 
 	//   ######################################## connector list  ##########################################
-	const connectorData = async (item) => {
+	const connectorData = async () => {
 		setOpenLoader(true);
-		const payload = {
-			info: { dbName: item },
-		};
 		const response = await ApiServices(
-			"post",
-			payload,
-			ApiEndPoints.ConectoreList
+			"get",
+			null,
+			ApiEndPoints.ConnectorList
 		);
 		setConnectorList(response);
 		setOpenLoader(false);
@@ -181,7 +178,7 @@ const ConnectorListTwo = () => {
 		//         )
 		//         : null;
 		toast(respons.msg, { autoClose: 2000 });
-		connectorData(userData.dbName)
+		connectorData()
 		setScheduleModalVisible(false);
 		setOpenLoader(false);
 	};

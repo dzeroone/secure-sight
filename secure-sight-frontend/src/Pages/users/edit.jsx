@@ -3,15 +3,19 @@ import * as Yup from 'yup';
 import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import { toast } from "react-toastify";
-import { Button, Form, FormFeedback, Input, Label } from "reactstrap";
+import { Button, Card, CardBody, Form, FormFeedback, Input, Label } from "reactstrap";
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import ModalLoading from "../../components/modal-loading";
 
 export default function EditUserPage(props) {
+  document.title = "Edit User | Secure Sight";
 
   const params = useParams()
   const navigate = useNavigate()
   const id = params.id
+
+  const [busy, setBusy] = useState(false)
 
   const formik = useFormik({
     initialValues: {
@@ -27,6 +31,7 @@ export default function EditUserPage(props) {
       role: Yup.string().required("Please select a role"),
     }),
     onSubmit: async (values, {resetForm}) => {
+      setBusy(true)
       try {
         const response = await ApiServices(
           'patch',
@@ -61,6 +66,8 @@ export default function EditUserPage(props) {
           // Something happened in setting up the request that triggered an Error
           console.log('Error', e.message);
         }
+      }finally{
+        setBusy(false)
       }
     },
   });
@@ -91,108 +98,116 @@ export default function EditUserPage(props) {
   return (
     <div className="page-content">
       <h1>Edit user</h1>
-      <Form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-2">
-        <div>
-          <Label className="form-label">Full name</Label>
-          <Input
-            type="text"
-            name="fullname"
-            value={formik.values.fullname}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            invalid={
-              formik.touched.fullname &&
-              formik.errors.fullname
-                ? true
-                : false
-            }
-          />
-          {formik.touched.fullname &&
-          formik.errors.fullname ? (
-            <FormFeedback type="invalid">
-              {formik.errors.fullname}
-            </FormFeedback>
-          ) : null}
-        </div>
-        <div>
-          <Label className="form-label">Username</Label>
-          <Input
-            type="text"
-            name="username"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            invalid={
-              formik.touched.username &&
-              formik.errors.username
-                ? true
-                : false
-            }
-          />
-          {formik.touched.username &&
-          formik.errors.username ? (
-            <FormFeedback type="invalid">
-              {formik.errors.username}
-            </FormFeedback>
-          ) : null}
-        </div>
-        <div>
-          <Label className="form-label">Password</Label>
-          <Input
-            type="password"
-            name="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            invalid={
-              formik.touched.password &&
-              formik.errors.password
-                ? true
-                : false
-            }
-          />
-          {formik.touched.password &&
-          formik.errors.password ? (
-            <FormFeedback type="invalid">
-              {formik.errors.password}
-            </FormFeedback>
-          ) : null}
-        </div>
-        <div>
-          <Label className="form-label">Role</Label>
-          <Input
-            type="select"
-            name="role"
-            disabled={formik.values.role === 'admin'}
-            value={formik.values.role}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            invalid={
-              formik.touched.role &&
-              formik.errors.role
-                ? true
-                : false
-            }
-          >
-            <option value='' disabled>None</option>
-            <option value='l1'>Level 1</option>
-            <option value='l2'>Level 2</option>
-            <option value='l3'>Level 3</option>
-            {formik.values.role === 'admin' ? (
-              <option value='admin'>Admin</option>
-            ) : null}
-          </Input>
-          {formik.touched.role &&
-          formik.errors.role ? (
-            <FormFeedback type="invalid">
-              {formik.errors.role}
-            </FormFeedback>
-          ) : null}
-        </div>
-        <div>
-          <Button type="submit" color="primary">Save</Button>
-        </div>
-      </Form>
+      <Card>
+        <CardBody>
+          <Form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-2">
+            <div>
+              <Label className="form-label">Full name</Label>
+              <Input
+                type="text"
+                name="fullname"
+                value={formik.values.fullname}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={
+                  formik.touched.fullname &&
+                  formik.errors.fullname
+                    ? true
+                    : false
+                }
+              />
+              {formik.touched.fullname &&
+              formik.errors.fullname ? (
+                <FormFeedback type="invalid">
+                  {formik.errors.fullname}
+                </FormFeedback>
+              ) : null}
+            </div>
+            <div>
+              <Label className="form-label">Username</Label>
+              <Input
+                type="text"
+                name="username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={
+                  formik.touched.username &&
+                  formik.errors.username
+                    ? true
+                    : false
+                }
+              />
+              {formik.touched.username &&
+              formik.errors.username ? (
+                <FormFeedback type="invalid">
+                  {formik.errors.username}
+                </FormFeedback>
+              ) : null}
+            </div>
+            <div>
+              <Label className="form-label">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={
+                  formik.touched.password &&
+                  formik.errors.password
+                    ? true
+                    : false
+                }
+              />
+              {formik.touched.password &&
+              formik.errors.password ? (
+                <FormFeedback type="invalid">
+                  {formik.errors.password}
+                </FormFeedback>
+              ) : null}
+            </div>
+            <div>
+              <Label className="form-label">Role</Label>
+              <Input
+                type="select"
+                name="role"
+                disabled={formik.values.role === 'admin'}
+                value={formik.values.role}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={
+                  formik.touched.role &&
+                  formik.errors.role
+                    ? true
+                    : false
+                }
+              >
+                <option value='' disabled>None</option>
+                <option value='l1'>Level 1</option>
+                <option value='l2'>Level 2</option>
+                <option value='l3'>Level 3</option>
+                {formik.values.role === 'admin' ? (
+                  <option value='admin'>Admin</option>
+                ) : null}
+              </Input>
+              {formik.touched.role &&
+              formik.errors.role ? (
+                <FormFeedback type="invalid">
+                  {formik.errors.role}
+                </FormFeedback>
+              ) : null}
+            </div>
+            <div>
+              <Button type="submit" color="primary">Save</Button>
+            </div>
+          </Form>
+        </CardBody>
+      </Card>
+      <ModalLoading
+        isOpen={busy}
+        onClose={() => setBusy(false)}
+      />
     </div>
   )
 }
