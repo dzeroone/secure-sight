@@ -7,6 +7,7 @@ const APPConfig = {
 const createEndpoint = (path) => `${APPConfig.API_URL}${path}`;
 
 const ApiEndPoints = {
+  Assignments: createEndpoint("/assignments"),
   Login: createEndpoint("/auth/login"),
   Register: createEndpoint('/auth/register'),
   Users: createEndpoint('/users'),

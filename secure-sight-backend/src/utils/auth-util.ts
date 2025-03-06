@@ -93,12 +93,13 @@ export const sendRegisterInfo = async (params: any) => {
     }
 }
 
-export const hasRole = (role: string) => async (req: Request, _res: Response, next: NextFunction) => {
+export const hasRole = (role: string | string[]) => async (req: Request, _res: Response, next: NextFunction) => {
     if (!req.user?.role) {
         next(new Error("Unauthorized"))
         return
     }
-    if (req.user?.role !== role) {
+    const chRoles = Array.isArray(role) ? role : [role]
+    if (chRoles.indexOf(req.user.role) < 0) {
         next(new Error("Unauthorized"))
         return
     }

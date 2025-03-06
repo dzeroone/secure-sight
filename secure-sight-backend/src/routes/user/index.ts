@@ -35,6 +35,22 @@ router.get('/',
   }
 )
 
+router.get('/search',
+  auth,
+  hasRole("admin"),
+  async (req: Request, res: Response) => {
+    try {
+      let data = await userController.search(req.query.search as string)
+      res.send(data)
+    } catch (e: any) {
+      res.status(400).send({
+        success: false,
+        message: e.message
+      })
+    }
+  }
+)
+
 router.get('/:id',
   auth,
   hasRole("admin"),

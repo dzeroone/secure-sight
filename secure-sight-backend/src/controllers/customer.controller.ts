@@ -13,7 +13,19 @@ class CustomerController {
 
   async listCustomers() {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
-    return CustomerModel.find()
+    return CustomerModel.find().lean()
+  }
+
+  async getAllCodes() {
+    const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+    return CustomerModel.find({}, { tCode: 1 }).lean()
+  }
+
+  async getCodesByIds(cIds: string[]) {
+    const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+    return CustomerModel.find({
+      _id: { $in: cIds }
+    }, { tCode: 1 }).lean()
   }
 
   async getCustomerById(id: string) {

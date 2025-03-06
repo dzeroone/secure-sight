@@ -12,6 +12,7 @@ import mailScheduler from './mail-scheduler'
 import notificationRouter from './notification'
 import userRouter from './user/index'
 import customerRouter from './customers/index'
+import assignmentRouter from './assignments'
 
 
 
@@ -27,5 +28,6 @@ router.use('/schedule', mailScheduler)
 router.use('/notifications', notificationRouter)
 router.use('/users', userRouter)
 router.use('/customers', customerRouter)
+router.use('/assignments', assignmentRouter)
 
 export default router

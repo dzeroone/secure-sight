@@ -12,6 +12,16 @@ import { createElasticIndices } from './helper/elastic.helper'
 
 dotenv.config()
 
+declare global {
+    namespace Express {
+        interface User {
+            _id: string
+            fullname: string,
+            role: string
+        }
+    }
+}
+
 const build = async () => {
 
     //saas

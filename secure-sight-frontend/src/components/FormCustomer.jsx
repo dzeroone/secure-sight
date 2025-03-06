@@ -1,8 +1,8 @@
 import { Formik } from "formik"
 import { Button, Card, CardBody, Col, Container, Form, Row } from "reactstrap"
 import { DateField, InputField } from "./form-fields"
-import * as yup from 'yup'
-import { useEffect } from "react"
+
+import yup from "../helpers/yup.extras"
 
 const validationSchema = yup.object({
   name: yup.string().required("Please enter customer name"),
@@ -37,10 +37,10 @@ const validationSchema = yup.object({
     }),
     ds: yup.object({
       baseUrl: yup.mixed().oneOfSchemas([
-        yup.string().url('Deep Security base url is required').required('Deep Security base url is required'),
-        yup.string().ipv4('Deep Security base ip is required').required('Deep Security base ip is required')
+        yup.string().url('Deep Security base url is required'),
+        yup.string().ipv4('Deep Security base ip is required')
       ]),
-      apiKey: yup.string().required('Deep Security API key is required'),
+      apiKey: yup.string(),
     }),
   }),
   connectors: yup.array().of(yup.string()).min(1, "Minimum one connector should be selected")

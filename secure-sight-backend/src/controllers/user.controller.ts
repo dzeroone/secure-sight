@@ -19,6 +19,26 @@ class UserController {
     return true
   }
 
+  async search(query: string) {
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    return UserModel.find({
+      role: {
+        $ne: 'admin'
+      },
+      $or: [
+        {
+          email: new RegExp(query, "si")
+        },
+        {
+          fullname: new RegExp(query, "si")
+        }
+      ]
+    }, {
+      fullname: 1,
+      role: 1
+    }).limit(20).sort({ fullname: 1 })
+  }
+
   async listUsers() {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
     return userModel.find()

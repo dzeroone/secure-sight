@@ -24,7 +24,6 @@ const validate = values => {
 export default function MonthlyReport() {
   const [busy, setBusy] = useState(false)
   const [reportData, setReportData] = useState([])
-  const [customers, setCustomers] = useState([])
 
   const formik = useFormik({
     initialValues: {
@@ -54,32 +53,11 @@ export default function MonthlyReport() {
     }
   })
 
-  const loadCustomers = useCallback(async () => {
-    try {
-      setBusy(true)
-      const data = await ApiServices(
-        'get',
-        null,
-        ApiEndPoints.Customers
-      )
-      setCustomers(data)
-    }catch(e){
-      console.error(e)
-      alert(e.message)
-    }finally{
-      setBusy(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    loadCustomers()
-  }, [loadCustomers])
 
   return (
     <div className="page-content">
       <FormMonthReport
         formik={formik}
-        customers={customers}
       />
       {reportData.length ? (
         <MonthlyReportGraphs data={reportData[0]._source} />

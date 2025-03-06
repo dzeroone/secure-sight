@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserHistory } from "history";
+import './helpers/yup.extras';
 
 import { Provider } from "react-redux";
 import { Router } from "react-router";

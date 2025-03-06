@@ -1,7 +1,5 @@
 import * as yup from 'yup'
 
-type ALU = Parameters<typeof yup.addMethod>
-
 const oneOfSchemas: Parameters<typeof yup.addMethod> = [
   yup.MixedSchema,
   'oneOfSchemas',
@@ -33,3 +31,4 @@ declare module 'yup' {
   }
 }
 
+export default yup

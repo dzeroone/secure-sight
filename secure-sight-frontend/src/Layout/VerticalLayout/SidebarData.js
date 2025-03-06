@@ -55,6 +55,25 @@ const SidebarData = [
 		],
 	},
 	{
+		roles: ['admin'],
+		label: "Assign",
+		icon: "ri-send-plane-2-line",
+		url: "/assign/monthly-report",
+		bgcolor: "bg-primary",
+		subItem: [
+			{
+				roles: ['admin'],
+				sublabel: "Monthly report",
+				link: "/assign/monthly-report",
+			},
+			{
+				roles: ['admin'],
+				sublabel: "Weekly report",
+				link: "/assign/weekly-report",
+			},
+		],
+	},
+	{
 		label: "Report",
 		isMainMenu: true,
 		roles: ['admin', 'l3', 'l2', 'l1']

@@ -1,3 +1,5 @@
+import { format, getYear } from "date-fns"
+
 export const jsonFlattenObject = function (data: any) {
 	var result: any = {}
 	function recurse(cur: any, prop: any) {
@@ -18,4 +20,12 @@ export const jsonFlattenObject = function (data: any) {
 	}
 	recurse(data, '')
 	return result
+}
+
+export const getMontlyReportIndex = (date: string, tenantCode: string) => {
+	const month = format(date, 'MMMM').toLowerCase()
+	const year = getYear(date)
+	const tenant = tenantCode.toLowerCase()
+
+	return `${month}_${year}_${tenant}_report`
 }

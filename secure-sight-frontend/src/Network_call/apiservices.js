@@ -73,10 +73,22 @@ const ApiServices = async (
 			})
 			.catch(async (error) => {
 				if (error.response) {
+					if (error.response.status === 400) {
+						reject(error)
+						return
+					}
 					if (error.response.status === 401) {
 						localStorage.removeItem('authUser')
 						history.replace('/login')
 						return;
+					}
+					if (error.response.status === 403) {
+						reject(error)
+						return
+					}
+					if (error.response.status === 404) {
+						reject(error)
+						return
 					}
 					if (error.response.status === 409) {
 						alert(error.response.data.message);

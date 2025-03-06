@@ -22,10 +22,15 @@ import Error500 from "../Pages/Utility/Error500-Page";
 import Maintenance from "../Pages/Utility/Maintenance-Page";
 
 // Import Map Pages
+import { createBrowserHistory } from "history";
 import ConnectorUploader from "../Pages/connector/Connector uploader/connectorUpload";
 import ConnectorList from "../Pages/connector/connectorList";
 import ConnectorLogFile from "../Pages/connector/connectorLogFile";
 import ConnectorSchedule from "../Pages/connector/connectorSchedul";
+import CustomerIndexPage from "../Pages/customers";
+import EditCustomerPage from "../Pages/customers/edit";
+import NewCustomerPage from "../Pages/customers/new";
+import AssignMonthlyReportPage from "../Pages/Dashboard/assign/montly-report";
 import CreateDashboard from "../Pages/Dashboard/createdashboard";
 import DashboardMonthlyReport from "../Pages/Dashboard/monthly-report";
 import DashboardWeeklyReport from "../Pages/Dashboard/weekly-report";
@@ -34,12 +39,8 @@ import CSVDataList from "../Pages/reports/csvData/importedDataList";
 import MonthlyReport from "../Pages/reports/monthly-report";
 import WeeklyReport from "../Pages/reports/weekly-report";
 import UserIndexPage from "../Pages/users";
-import NewUserPage from "../Pages/users/new";
-import { createBrowserHistory } from "history";
 import EditUserPage from "../Pages/users/edit";
-import CustomerIndexPage from "../Pages/customers";
-import NewCustomerPage from "../Pages/customers/new";
-import EditCustomerPage from "../Pages/customers/edit";
+import NewUserPage from "../Pages/users/new";
 
 export const history = createBrowserHistory({ window });
 
@@ -59,7 +60,7 @@ const authProtectedRoutes = [
     path: "/dashboard/weekly-report", component: <DashboardWeeklyReport />
   },
   {
-    roles: ['admin'],
+    roles: ['admin', 'l3', 'l2', 'l1'],
     path: "/dashboard", component: <Dashboard />
   },
   {
@@ -85,6 +86,10 @@ const authProtectedRoutes = [
   {
     roles: ['admin'],
     path: "/customers/:id", component: <EditCustomerPage />
+  },
+  {
+    roles: ['admin'],
+    path: "/assign/monthly-report", component: <AssignMonthlyReportPage />
   },
 
   // Report
