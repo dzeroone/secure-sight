@@ -60,7 +60,6 @@ const authProtectedRoutes = [
     path: "/dashboard/weekly-report", component: <DashboardWeeklyReport />
   },
   {
-    roles: ['admin', 'l3', 'l2', 'l1'],
     path: "/dashboard", component: <Dashboard />
   },
   {
