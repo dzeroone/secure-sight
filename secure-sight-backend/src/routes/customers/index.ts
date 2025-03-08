@@ -5,6 +5,7 @@ import customerController from '../../controllers/customer.controller';
 import { customerCreateValidationSchema } from '../../validators/customer-create.validator';
 import { ROLES } from '../../constant';
 import assignmentController from '../../controllers/assignment.controller';
+import customerConnectorConfigController from '../../controllers/customer-connector-config.controller';
 
 router.post('/',
   auth,
@@ -12,8 +13,16 @@ router.post('/',
   async (req: Request, res: Response) => {
     try {
       const vData = await customerCreateValidationSchema.validate(req.body)
-      let data = await customerController.addCustomer(vData)
-      res.send(data)
+      await customerController.addCustomer(vData)
+      await customerConnectorConfigController.updateConnectorConfig({
+        tCode: vData.tCode,
+        connectorIds: vData.connectors,
+        configData: vData.apiConfig
+      })
+
+      res.send({
+        success: true
+      })
     } catch (e: any) {
       res.status(400).send({
         success: false,
@@ -91,7 +100,16 @@ router.patch('/:id',
         const err: any = new Error("Info not found!")
         err.status = 404
       }
-      await customerController.updateCustomer(user!, req.body)
+      const vData = await customerCreateValidationSchema.validate(req.body)
+
+      await customerController.updateCustomer(user!, vData)
+
+      await customerConnectorConfigController.updateConnectorConfig({
+        tCode: vData.tCode,
+        connectorIds: vData.connectors,
+        configData: vData.apiConfig
+      })
+
       res.send({
         success: true
       })

@@ -1,6 +1,6 @@
-import { Formik } from "formik"
-import { Button, Card, CardBody, Col, Container, Form, Row } from "reactstrap"
-import { DateField, InputField } from "./form-fields"
+import { FieldArray, Formik } from "formik"
+import { Button, Card, CardBody, Col, Container, Form, FormFeedback, Label, Row } from "reactstrap"
+import { CheckboxArrayField, CheckboxField, DateField, InputField } from "./form-fields"
 
 import yup from "../helpers/yup.extras"
 
@@ -32,8 +32,8 @@ const validationSchema = yup.object({
       apiKey: yup.string().required('Cloud App Security API key is required'),
     }),
     caw: yup.object({
-      baseUrl: yup.string().url().required('Cloud App Workload base url is required'),
-      apiKey: yup.string().required('Cloud App Workload API key is required'),
+      baseUrl: yup.string().url().required('Cloud One Workload Security base url is required'),
+      apiKey: yup.string().required('Cloud One Workload Security API key is required'),
     }),
     ds: yup.object({
       baseUrl: yup.mixed().oneOfSchemas([
@@ -197,7 +197,7 @@ export function FormCustomer({
                   </Col>
                   <Col sm={12}>
                     <fieldset className="border border-secondary rounded p-2">
-                      <legend>Cloud App Workload</legend>
+                      <legend>Cloud One Workload Security</legend>
                       <Row className="g-2">
                         <Col sm={6}>
                           <InputField
@@ -234,18 +234,26 @@ export function FormCustomer({
                     </fieldset>
                   </Col>
                   <Col sm={12}>
-                    <InputField
-                      type="select"
-                      name="connectors"
-                      label="Connectors"
-                      multiple={true}
-                      fieldClassName='text-capitalize'
-                    >
-                      <option value='' disabled>None</option>
-                      {connectors.map(c => {
-                        return <option value={c._id} key={c._id} className="text-capitalize">{c.name.replaceAll('_', ' ')}</option>
-                      })}
-                    </InputField>
+                    <Label>Connectors</Label>
+                    <FieldArray name="connectors">
+                      {(arrayHelpers) => (
+                        <div>
+                        {connectors.map((c, i) => {
+                          return <CheckboxArrayField
+                            name="connectors"
+                            index={`connectors[${i}]`}
+                            label={c.name.replaceAll('_', ' ')}
+                            arrayHelpers={arrayHelpers}
+                            value={c._id}
+                            className="text-capitalize"
+                            inputClassName="me-1"
+                            key={c._id}
+                          />
+                        })}
+                        </div>
+                      )}
+                    </FieldArray>
+                    { typeof formik.errors['connectors'] == 'string' ? <FormFeedback type="invalid" className="d-block">{formik.errors['connectors']}</FormFeedback> : null}
                   </Col>
                   <Col sm={12}>
                     <Button type="submit" color="primary">Save</Button>

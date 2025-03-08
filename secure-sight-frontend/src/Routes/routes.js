@@ -87,7 +87,7 @@ const authProtectedRoutes = [
     path: "/customers/:id", component: <EditCustomerPage />
   },
   {
-    roles: ['admin'],
+    roles: ['admin', 'l3', 'l2'],
     path: "/assign/monthly-report", component: <AssignMonthlyReportPage />
   },
 

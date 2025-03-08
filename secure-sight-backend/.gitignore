@@ -2,3 +2,4 @@
 /dist
 
 .env
+customer_connector_config

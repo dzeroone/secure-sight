@@ -25,6 +25,7 @@ import ApiEndPoints from "../../../Network_call/ApiEndPoints";
 import ApiServices from "../../../Network_call/apiservices";
 import ConnectorList from "../connectorList";
 import ModalLoading from "../../../components/modal-loading";
+import { ArchiveIcon } from "lucide-react";
 
 
 
@@ -87,9 +88,16 @@ const ConnectorUploader = () => {
 			try {
 				const fileContent = await JSZip.loadAsync(file)
 				let text = '';
-				for(let filePath in fileContent.files) {
-					if (filePath.split("/").includes("integration.json"))
-						text = await fileContent.files[filePath].async("text");
+				// console.log(fileContent.files)
+				// system needs the integration.json file in the root directory, for here we are filtering only root dir files
+				const onlyRootFiles = fileContent.filter((rPath, file) => {
+					if (file.name.includes('/')) return false
+					if (file.name.lastIndexOf('.') < 0) return false
+					return true
+				})
+				for (let file of onlyRootFiles) {
+					if (file.name.includes("integration.json"))
+						text = await file.async("text");
 				}
 				const ctorData = JSON.parse(text);
 				setConnectorData([ctorData]);
@@ -136,8 +144,8 @@ const ConnectorUploader = () => {
 	}
 
 	const startUploadingConnector = useCallback(async () => {
-		if(state.uploadFiles) {
-			if(state.currentFileIndex !== null) {
+		if (state.uploadFiles) {
+			if (state.currentFileIndex !== null) {
 				const payload = {
 					info: { email: userData.email, dbName: userData.dbName },
 					data: [state.multiConnectorInfo[state.currentFileIndex]],
@@ -171,7 +179,7 @@ const ConnectorUploader = () => {
 			return;
 		}
 		const isLastFile = state.lastUploadedFileIndex === state.files.length - 1;
-		if(isLastFile) {
+		if (isLastFile) {
 			setSelectedFiles([]);
 			setConnectorData([]);
 			refreshConnectorList();
@@ -184,7 +192,7 @@ const ConnectorUploader = () => {
 	}, [state.lastUploadedFileIndex]);
 
 	useEffect(() => {
-		if(selectedLanguage === ''){
+		if (selectedLanguage === '') {
 			return;
 		}
 		// Uncomment the below "setSelectedLanguage"  inorder to send an APi call to set the laguage in the back-end
@@ -334,21 +342,21 @@ const ConnectorUploader = () => {
 														<div className="p-2">
 															<Row className="align-items-center">
 																<Col className="col-auto">
-																	<img
+																	<ArchiveIcon />
+																	{/* <img
 																		data-dz-thumbnail=""
 																		height="80"
-																		className="avatar-sm rounded bg-light"
+																		className="avatar-sm rounded bg-dark"
 																		alt={f.name}
 																		src={f.preview}
-																	/>
+																	/> */}
 																</Col>
 																<Col>
-																	<Link
-																		to="#"
+																	<div
 																		className="text-muted font-weight-bold"
 																	>
 																		{f.name}
-																	</Link>
+																	</div>
 																	<p className="mb-0">
 																		<strong>{f.formattedSize}</strong>
 																	</p>
@@ -396,12 +404,12 @@ const ConnectorUploader = () => {
 				</Container>
 			</div>
 			<ModalLoading
-        isOpen={openLoader}
+				isOpen={openLoader}
 				persistent={true}
-        onClose={() => {
-          setOpenLoader(false)
-        }}
-      />
+				onClose={() => {
+					setOpenLoader(false)
+				}}
+			/>
 		</Fragment >
 	);
 };

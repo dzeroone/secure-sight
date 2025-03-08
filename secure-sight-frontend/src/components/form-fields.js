@@ -1,6 +1,6 @@
-import { ErrorMessage, Field, getIn } from "formik"
+import { ErrorMessage, Field, getIn, setIn } from "formik"
 import ReactDatePicker from "react-datepicker"
-import { FormFeedback, FormText, Input, Label } from "reactstrap"
+import { FormFeedback, FormGroup, FormText, Input, Label } from "reactstrap"
 
 export const InputField = ({
   type = 'text',
@@ -15,7 +15,7 @@ export const InputField = ({
 }) => {
   return (
     <div className={className}>
-      {label ? <Label className="form-label">{label}</Label> : null}
+      {label ? <Label>{label}</Label> : null}
       <Field name={name}>
         {
           ({ field, form }) => (
@@ -49,7 +49,7 @@ export const DateField = ({
   className,
 }) => (
   <div className={className}>
-    {label ? <Label className="form-label">{label}</Label> : null}
+    {label ? <Label>{label}</Label> : null}
     <Field name={name}>
       {
         ({ field, form }) => {
@@ -70,3 +70,57 @@ export const DateField = ({
     {hint ? <FormText>{hint}</FormText> : null}
   </div>
 )
+
+export const CheckboxArrayField = ({
+  name,
+  index,
+  value,
+  arrayHelpers,
+  label,
+  hint,
+  className,
+  inputClassName
+}) => {
+  const handleClick = (e, value, formik) => {
+    const { checked } = e.target;
+    if (checked) {
+      arrayHelpers.remove(formik.values[name].indexOf(value))
+    } else {
+      arrayHelpers.push(value)
+    }
+  };
+
+  return (
+    <div className={className}>
+      <Field name={`${name}[${index}]`} type="checkbox">
+        {
+          ({ field, form }) => {
+            return (
+              <FormGroup check>
+                <Input
+                  type="checkbox"
+                  id={field.name}
+                  name={field.name}
+                  title={label}
+                  value={value}
+                  checked={form.values?.[name]?.includes(value)}
+                  onChange={() => { }}
+                  onClick={(e) => handleClick(e, value, form)}
+                  invalid={
+                    getIn(form.errors, field.name) && getIn(form.touched, field.name)
+                  }
+                  className={inputClassName}
+                />
+                <Label for={field.name} check>{label}</Label>
+              </FormGroup>
+            )
+          }
+        }
+      </Field>
+      <ErrorMessage name={`${name}[${index}]`}>
+        {msg => <FormFeedback type="invalid">{msg}</FormFeedback>}
+      </ErrorMessage>
+      {hint ? <FormText>{hint}</FormText> : null}
+    </div>
+  )
+}

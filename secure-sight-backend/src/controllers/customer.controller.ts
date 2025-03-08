@@ -7,8 +7,7 @@ class CustomerController {
   async addCustomer(data: any) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
     const customer = new CustomerModel(data)
-    await customer.save()
-    return true
+    return customer.save()
   }
 
   async listCustomers() {

@@ -210,7 +210,7 @@ const ConnectorList = () => {
                                 : "Pending"}
                           </td>
                           <td>
-                            <button
+                            {/* <button
                               onClick={() => {
                                 ConnectorConfigDetail({
                                   id: item._id,
@@ -221,7 +221,7 @@ const ConnectorList = () => {
                               className="btn  noti-icon  m-0 p-0    "
                             >
                               <i className="mdi mdi-timer"></i>
-                            </button>
+                            </button> */}
                             <button
                               onClick={() => {
                                 DeleteAlert(item._id);

@@ -1,3 +1,5 @@
+import path from "path"
+
 export const COLLECTIONS = {
     USERS: "users",
     CUSTOMERS: "customers",
@@ -33,4 +35,11 @@ export const MASTER_ADMIN_DB = "secure-sight"
 export const ELASTIC_INDICES = {
     MONTHLY_REPORT_FORM: 'monthly-report-form',
     WEEKLY_REPORT_FORM: 'weekly-report-form',
+}
+
+export const DIRS = {
+    CONNECTOR_UPLOAD_DIR: path.resolve(
+        process.cwd(),
+        `../secure-sight-scheduler/server`,
+    )
 }

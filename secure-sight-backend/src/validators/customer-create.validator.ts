@@ -39,5 +39,7 @@ export const customerCreateValidationSchema = yup.object({
       apiKey: yup.string(),
     }),
   }),
-  connectors: yup.array().of(yup.string()).min(1, "Minimum one connector should be selected")
+  connectors: yup.array().of(yup.string().required()).min(1, "Minimum one connector should be selected").required()
 })
+
+export type CustomerCreateValidationValues = yup.InferType<typeof customerCreateValidationSchema>

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { COLLECTIONS, MASTER_ADMIN_DB, ROLES } from '../constant'
+import { COLLECTIONS, DIRS, MASTER_ADMIN_DB, ROLES } from '../constant'
 import child_process from 'child_process'
 import mongoose from 'mongoose'
 const path = require('path')
@@ -81,12 +81,7 @@ export interface SchedulingSchema {
 
 export const invokeConnector = async (connectorId: string, connectorParams: Record<string, any>) => {
 	try {
-		const presentWorkingDir: any = process.env.PWD
-		const serverPath = path.resolve(
-			presentWorkingDir,
-			`../secure-sight-scheduler/server`,
-			// `../orion-scheduler/server`,
-		)
+		const serverPath = DIRS.CONNECTOR_UPLOAD_DIR
 
 		const connectorConfigModel = dynamicModelWithDBConnection(
 			MASTER_ADMIN_DB,
@@ -127,12 +122,7 @@ export const invokeConnector = async (connectorId: string, connectorParams: Reco
 }
 
 export const connectorTestScheduler = async (response: any, data: any) => {
-	const presentWorkingDir: any = process.env.PWD
-	const serverPath = path.resolve(
-		presentWorkingDir,
-		`../secure-sight-scheduler/server`,
-		// `../orion-scheduler/server`,
-	)
+	const serverPath = DIRS.CONNECTOR_UPLOAD_DIR
 
 	console.log('connector scheduler start!!')
 

@@ -54,9 +54,12 @@ export default function EditCustomerPage(props) {
     }
   }, [])
 
-  const handleSubmit = useCallback(async (values, {resetForm}) => {
+  const handleSubmit = useCallback(async (values) => {
     try {
       setBusy(true)
+      const connectorIds = connectors.map(c => c._id)
+      values.connectors = values.connectors.filter(c => connectorIds.includes(c))
+
       const response = await ApiServices(
         'patch',
         values,
@@ -71,7 +74,6 @@ export default function EditCustomerPage(props) {
       toast('Data saved.', {
         autoClose: 2000
       })
-      resetForm()
       // Handle success (optional)
     } catch (e) {
       if (e.response) {
@@ -93,7 +95,18 @@ export default function EditCustomerPage(props) {
     }finally{
       setBusy(false)
     }
-  }, [])
+  }, [connectors])
+
+  // fixing any unwanted value for connectors in saved customer config
+  useEffect(() => {
+    if(Array.isArray(connectors) && connectors.length && defaultValues) {
+      setDefaultValues(s => {
+        const connectorIds = connectors.map(c => c._id)
+        s.connectors = s.connectors.filter(c => connectorIds.includes(c))
+        return {...s}
+      })
+    }
+  }, [connectors])
 
   useEffect(() => {
     getCustomer()
