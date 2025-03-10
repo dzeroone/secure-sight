@@ -15,6 +15,7 @@ router.post('/',
       const vData = await customerCreateValidationSchema.validate(req.body)
       await customerController.addCustomer(vData)
       await customerConnectorConfigController.updateConnectorConfig({
+        previousConnectors: [],
         tCode: vData.tCode,
         connectorIds: vData.connectors,
         configData: vData.apiConfig
@@ -99,12 +100,16 @@ router.patch('/:id',
       if (!user) {
         const err: any = new Error("Info not found!")
         err.status = 404
+        throw err
       }
       const vData = await customerCreateValidationSchema.validate(req.body)
 
-      await customerController.updateCustomer(user!, vData)
+      const previousConnectors = user.connectors;
+
+      await customerController.updateCustomer(user, vData)
 
       await customerConnectorConfigController.updateConnectorConfig({
+        previousConnectors,
         tCode: vData.tCode,
         connectorIds: vData.connectors,
         configData: vData.apiConfig
