@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express'
 const router = express.Router();
 import { auth, hasRole } from '../../utils/auth-util';
 import userController from '../../controllers/user.controller';
+import { ROLES } from '../../constant';
+import meRouter from './me'
 
 router.post('/',
   auth,
@@ -37,10 +39,10 @@ router.get('/',
 
 router.get('/search',
   auth,
-  hasRole("admin"),
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
   async (req: Request, res: Response) => {
     try {
-      let data = await userController.search(req.query.search as string)
+      let data = await userController.search(req.query.search as string, req.user!)
       res.send(data)
     } catch (e: any) {
       res.status(400).send({
@@ -90,6 +92,6 @@ router.patch('/:id',
   }
 )
 
-router.patch(':/id',)
+router.use('/me', meRouter)
 
 export default router;

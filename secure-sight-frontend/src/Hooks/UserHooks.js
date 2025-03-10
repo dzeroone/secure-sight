@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getLoggedinUser } from "../helpers/api_helper";
 
-const useProfile = () => {
+export const useProfile = () => {
   const userProfileSession = getLoggedinUser();
   const [loading] = useState(userProfileSession ? false : true);
   const [userProfile] = useState(
@@ -10,5 +10,3 @@ const useProfile = () => {
 
   return { userProfile, loading };
 };
-
-export { useProfile };

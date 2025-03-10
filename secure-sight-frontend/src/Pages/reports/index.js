@@ -8,7 +8,7 @@ import EditModals, {
   EditHeaderModals,
   ReorderColumnsModels,
 } from "../../components/Common/editModel";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
 import CreateSubReport from "./createSubReport";
@@ -53,7 +53,7 @@ const Report = () => {
         `${ApiEndPoints.Report}/${param.id}`
       );
       setReportInfo(response)
-    }catch(e) {
+    } catch (e) {
       console.log(e)
     }
   }, [])
@@ -70,7 +70,7 @@ const Report = () => {
   }, []);
 
   useEffect(() => {
-    if(userData) {
+    if (userData) {
       GetReportList(param.id);
       loadReportInfo();
     }
@@ -282,7 +282,7 @@ const Report = () => {
             userData={userData}
             report_id={data._id}
           />
-        </div>)) }{" "}
+        </div>))}{" "}
 
       </div>
       <ModalLoading

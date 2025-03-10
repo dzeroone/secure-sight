@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Col, Row } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
 import {

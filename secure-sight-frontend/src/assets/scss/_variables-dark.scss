@@ -1,8 +1,139 @@
-// Variables
+// Custom Font
+$font-family-secondary: "Work Sans", sans-serif;
 
+// Variables
 //
-// custom-variables
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+// Color system
+
+$blue: #0bb197;
+$indigo: #564ab1;
+$purple: #5664d2;
+$pink: #e83e8c;
+$red: #ff3d60;
+$orange: #f1734f;
+$yellow: #fcb92c;
+$green: #0ac074;
+$teal: #050505;
+$cyan: #4aa3ff;
+$pitch-black: #10121a;
+
+// scss-docs-start colors-map
+$colors: (
+  "blue": $blue,
+  "indigo": $indigo,
+  "purple": $purple,
+  "pink": $pink,
+  "red": $red,
+  "orange": $orange,
+  "yellow": $yellow,
+  "green": $green,
+  "teal": $teal,
+  "cyan": $cyan,
+  "white": $white,
+  "gray": $gray-600,
+  "gray-dark": $gray-800,
+  "pitch-black": $pitch-black
+);
+// scss-docs-end colors-map
+
+// scss-docs-start theme-color-variables
+$primary: $blue;
+$secondary: $gray-600;
+$success: $green;
+$info: $cyan;
+$warning: $yellow;
+$danger: $red;
+$light: $gray-300;
+$dark: $gray-800;
+// scss-docs-end theme-color-variables
+
+// scss-docs-start theme-colors-rgb
+$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+// scss-docs-end theme-colors-rgb
+
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio: 1.7;
+
+// Customize the light and dark text colors for use in our color contrast function.
+$color-contrast-dark: $black;
+$color-contrast-light: $white;
+
+// Options
 //
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-caret: false;
+$enable-rounded: true;
+$enable-shadows: false;
+$enable-gradients: false;
+$enable-transitions: true;
+$enable-reduced-motion: true;
+$enable-smooth-scroll: true;
+$enable-grid-classes: true;
+$enable-cssgrid: false;
+$enable-button-pointers: true;
+$enable-rfs: true;
+$enable-validation-icons: true;
+$enable-negative-margins: true;
+$enable-deprecation-messages: true;
+$enable-important-utilities: true;
+
+// Prefix for :root CSS variables
+
+$variable-prefix: bs-;
+
+// Gradient
+//
+// The gradient which is added to components if `$enable-gradients` is `true`
+// This gradient is also added to elements with `.bg-gradient`
+// scss-docs-start variable-gradient
+$gradient: linear-gradient(180deg, rgba($white, 0.15), rgba($white, 0));
+// scss-docs-end variable-gradient
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+// scss-docs-start spacer-variables-maps
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: ($spacer * 0.25,
+  ),
+  2: ($spacer * 0.5,
+  ),
+  3: $spacer,
+  4: ($spacer * 1.5,
+  ),
+  5: ($spacer * 3,
+  ),
+);
+
+$negative-spacers: if($enable-negative-margins, negativify-map($spacers), null);
+// scss-docs-end spacer-variables-maps
+
+// Position
+//
+// Define the edge positioning anchors of the position utilities.
+
+// scss-docs-start position-map
+$position-values: (
+  0: 0,
+  50: 50%,
+  100: 100%,
+);
+// scss-docs-end position-map
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-text-align: null;
 
 // Vertical Sidebar - Default Light
 $sidebar-bg: #ffffff;
@@ -71,148 +202,6 @@ $font-weight-semibold: 600;
 // table
 $table-head-bg: rgba($gray-600, 0.05);
 $table-dark-border-color: tint-color($gray-800, 7.5%);
-
-// Custom Font
-$font-family-secondary: "Work Sans", sans-serif;
-
-// Variables
-//
-// Variables should follow the `$component-state-property-size` formula for
-// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
-
-// Color system
-
-$blue: #0bb197;
-$indigo: #564ab1;
-$purple: #5664d2;
-$pink: #e83e8c;
-$red: #ff3d60;
-$orange: #f1734f;
-$yellow: #fcb92c;
-$green: #0ac074;
-$teal: #050505;
-$cyan: #4aa3ff;
-
-// scss-docs-start colors-map
-$colors: (
-  "blue": $blue,
-  "indigo": $indigo,
-  "purple": $purple,
-  "pink": $pink,
-  "red": $red,
-  "orange": $orange,
-  "yellow": $yellow,
-  "green": $green,
-  "teal": $teal,
-  "cyan": $cyan,
-  "white": $white,
-  "gray": $gray-600,
-  "gray-dark": $gray-800,
-);
-// scss-docs-end colors-map
-
-// scss-docs-start theme-color-variables
-$primary: $blue;
-$secondary: $gray-600;
-$success: $green;
-$info: $cyan;
-$warning: $yellow;
-$danger: $red;
-$light: $gray-300;
-$dark: $gray-800;
-// scss-docs-end theme-color-variables
-
-// scss-docs-start theme-colors-rgb
-$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
-// scss-docs-end theme-colors-rgb
-
-// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
-// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
-$min-contrast-ratio: 1.7;
-
-// Customize the light and dark text colors for use in our color contrast function.
-$color-contrast-dark: $black;
-$color-contrast-light: $white;
-
-// Options
-//
-// Quickly modify global styling by enabling or disabling optional features.
-
-$enable-caret: false;
-$enable-rounded: true;
-$enable-shadows: false;
-$enable-gradients: false;
-$enable-transitions: true;
-$enable-reduced-motion: true;
-$enable-smooth-scroll: true;
-$enable-grid-classes: true;
-$enable-cssgrid: false;
-$enable-button-pointers: true;
-$enable-rfs: true;
-$enable-validation-icons: true;
-$enable-negative-margins: true;
-$enable-deprecation-messages: true;
-$enable-important-utilities: true;
-
-// Prefix for :root CSS variables
-
-$variable-prefix: bs-;
-
-// Gradient
-//
-// The gradient which is added to components if `$enable-gradients` is `true`
-// This gradient is also added to elements with `.bg-gradient`
-// scss-docs-start variable-gradient
-$gradient: linear-gradient(180deg, rgba($white, 0.15), rgba($white, 0));
-// scss-docs-end variable-gradient
-// Spacing
-//
-// Control the default styling of most Bootstrap elements by modifying these
-// variables. Mostly focused on spacing.
-// You can add more entries to the $spacers map, should you need more variation.
-
-// scss-docs-start spacer-variables-maps
-$spacer: 1rem;
-$spacers: (
-  0: 0,
-  1: (
-    $spacer * 0.25,
-  ),
-  2: (
-    $spacer * 0.5,
-  ),
-  3: $spacer,
-  4: (
-    $spacer * 1.5,
-  ),
-  5: (
-    $spacer * 3,
-  ),
-);
-
-$negative-spacers: if($enable-negative-margins, negativify-map($spacers), null);
-// scss-docs-end spacer-variables-maps
-
-// Position
-//
-// Define the edge positioning anchors of the position utilities.
-
-// scss-docs-start position-map
-$position-values: (
-  0: 0,
-  50: 50%,
-  100: 100%,
-);
-// scss-docs-end position-map
-
-// Body
-//
-// Settings for the `<body>` element.
-
-// $body-bg: #1d222e;
-$body-bg: $black;
-// $body-color: $gray-900;
-$body-text-align: null;
 
 // Links
 //
@@ -602,8 +591,7 @@ $card-cap-bg: $gray-300;
 $card-cap-color: null;
 $card-height: null;
 $card-color: null;
-$card-bg: #10121a;
-// $card-bg: #1e1e1e;
+$card-bg: $pitch-black;
 
 $card-title-desc: $gray-400;
 

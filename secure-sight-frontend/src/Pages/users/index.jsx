@@ -5,7 +5,7 @@ import { Button, Input, Table, UncontrolledTooltip } from "reactstrap";
 import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import { getRoleTitle } from "../../helpers/utils";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 
 export default function UserIndexPage() {
   document.title = "Users | Secure Sight";

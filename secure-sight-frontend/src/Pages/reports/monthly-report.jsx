@@ -1,66 +1,29 @@
-import { format, getYear } from "date-fns";
-import { useFormik } from "formik";
-import { useCallback, useEffect, useState } from "react";
-import FormMonthReport from "../../components/FormMonthReport";
-import ModalLoading from "../../components/modal-loading";
-import ApiEndPoints from "../../Network_call/ApiEndPoints";
-import ApiServices from "../../Network_call/apiservices";
+import AssignedMonthlyReportList from "../../components/AssignedMontlyReportList";
+import MonthlyReportSearch from "../../components/MonthlyReportSearch";
+import { ROLES } from '../../data/roles';
+import { useProfile } from '../../Hooks/UserHooks';
+import Error401 from "../Utility/Error401-Page";
+import BreadcrumbWithTitle from '../../components/Common/BreadcrumbWithTitle';
 
-const validate = values => {
-  const errors = {};
+const priorityRoles = [ROLES.ADMIN, ROLES.LEVEL3]
+const nonPriorityRoles = [ROLES.LEVEL2, ROLES.LEVEL1]
 
-  if (!values.selectedDate) {
-    errors.selectedDate = "Selected date cannot be empty"
-  }
-
-  if (!values.tenant) {
-    errors.tenant = "Tenant cannot be empty"
-  }
-
-  return errors
-}
+const linkStack = [
+  { title: 'Dashbaord', route: '/dashboard' },
+  { title: 'Monthly reports', route: '/reports/monthly-report' }
+]
 
 export default function MonthlyReport() {
-  const [busy, setBusy] = useState(false)
-
-  const formik = useFormik({
-    initialValues: {
-      selectedDate: null,
-      tenant: ''
-    },
-    validate,
-    async onSubmit(values) {
-      try {
-        setBusy(true);
-        const month = format(values.selectedDate, 'MMMM').toLowerCase()
-        const year = getYear(values.selectedDate)
-        const tenant = values.tenant.toLowerCase()
-
-        let payload = {
-          index: `${month}_${year}_${tenant}_report`,
-          column: []
-        }
-        // console.log(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}?index=${payload.index}`)
-        window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}?index=${payload.index}`, "_blank")
-        // const data = await ApiServices('post', payload, ApiEndPoints.SearchData)
-        // setReportData(data)
-      } catch (e) {
-        console.log(e)
-      } finally {
-        setBusy(false);
-      }
-    }
-  })
+  const { userProfile } = useProfile()
 
   return (
     <div className="page-content">
-      <FormMonthReport
-        formik={formik}
-      />
-      <ModalLoading
-        isOpen={busy}
-        onClose={() => setBusy(false)}
-      />
+      <BreadcrumbWithTitle title="Monthly reports" linkStack={linkStack} />
+      { priorityRoles.includes(userProfile.role) ? (
+        <MonthlyReportSearch />
+      ) : nonPriorityRoles.includes(userProfile.role) ? (
+        <AssignedMonthlyReportList />
+      ) : <Error401 /> }
     </div>
   )
 }

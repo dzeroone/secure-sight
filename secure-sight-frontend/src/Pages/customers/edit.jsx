@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
 import { FormCustomer } from "../../components/FormCustomer";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 
 export default function EditCustomerPage(props) {
   document.title = "Customer Edit | Secure Sight";

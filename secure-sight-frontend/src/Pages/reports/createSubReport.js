@@ -21,7 +21,7 @@ import {
   hidencolumn
 } from '../ulit/commonFunction';
 import ExportCSV from '../ulit/exportCSV';
-import ModalLoading from '../../components/modal-loading';
+import ModalLoading from '../../components/ModalLoading';
 
 const CreateSubReport = ({ reportId, GetReportData }) => {
   const [btnprimary1, setBtnprimary1] = useState(false);

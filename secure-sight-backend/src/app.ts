@@ -69,8 +69,8 @@ const build = async () => {
         if (res.headersSent) {
             return next(err)
         }
-        res.status(500)
-        res.send({ error: err })
+        res.status(err.status || 500)
+        res.send({ error: err?.message || err })
     }
 
     app.use(errorHandler)

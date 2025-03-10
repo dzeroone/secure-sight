@@ -14,7 +14,7 @@ import {
 	uperCase,
 } from "../ulit/commonFunction";
 
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 
 const ConnectorListTwo = () => {
 	// document.title = "Connector List | Trend Micro Unity";

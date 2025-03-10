@@ -13,7 +13,7 @@ import {
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import ApiEndPoints from '../../Network_call/ApiEndPoints';
 import ApiServices from '../../Network_call/apiservices';
-import ModalLoading from '../../components/modal-loading';
+import ModalLoading from '../../components/ModalLoading';
 
 const CreateReport = () => {
   document.title = 'Create Report | Secure Sight';
@@ -45,7 +45,7 @@ const CreateReport = () => {
     };
 
     const response = await ApiServices('post', payload, ApiEndPoints.CreateReport);
-    if(response.success) {
+    if (response.success) {
       setReportName('')
     }
     toast(response.msg, { autoClose: 10000 });
@@ -120,7 +120,7 @@ const CreateReport = () => {
       />
 
       <style>
-          {`
+        {`
             .dark-dashboard {
               background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
               min-height: 100vh;
@@ -362,7 +362,7 @@ const CreateReport = () => {
               animation: glow 4s infinite;
             }
           `}
-        </style>
+      </style>
     </Fragment>
   );
 };

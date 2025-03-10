@@ -5,7 +5,7 @@ import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, Form, FormFeedback, Input, Label } from "reactstrap";
 import { useState } from "react";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 
 export default function NewUserPage(props) {
   document.title = "New User | Secure Sight";

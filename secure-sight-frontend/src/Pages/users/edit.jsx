@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { Button, Card, CardBody, Form, FormFeedback, Input, Label } from "reactstrap";
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 
 export default function EditUserPage(props) {
   document.title = "Edit User | Secure Sight";

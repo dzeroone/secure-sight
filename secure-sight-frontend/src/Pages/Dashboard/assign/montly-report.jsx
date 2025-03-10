@@ -1,13 +1,19 @@
+import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
-import { Badge, Button, Card, CardBody, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, Table, UncontrolledDropdown } from "reactstrap";
-import ApiServices from "../../../Network_call/apiservices";
+import { Badge, Col, Container, FormGroup, Label, Table } from "reactstrap";
 import ApiEndPoints from "../../../Network_call/ApiEndPoints";
-import ModalLoading from "../../../components/modal-loading";
-import { getRoleTitle } from "../../../helpers/utils";
+import ApiServices from "../../../Network_call/apiservices";
+import BreadcrumbWithTitle from "../../../components/Common/BreadcrumbWithTitle";
 import DropdownReportAssignment from "../../../components/DropdownReportAssignment";
+import ModalLoading from "../../../components/ModalLoading";
 import { getMonthlyReportIndex } from "../../../helpers/form_helper";
-import { format } from "date-fns";
+import { getRoleTitle } from "../../../helpers/utils";
+
+const linkStack = [
+  {title: 'Dashboard', route: '/dashboard'},
+  {title: 'Assign monthly reports', route: '/assign/monthly-report'}
+]
 
 export default function AssignMonthlyReportPage() {
   const [date, setDate] = useState(null)
@@ -63,20 +69,23 @@ export default function AssignMonthlyReportPage() {
 
   return (
     <div className="page-content">
-      <FormGroup row className="p-2 bg-dark">
-        <Label sm={2}>Select a month</Label>
-        <Col sm={4}>
-          <ReactDatePicker
-            className={`form-control`}
-            name="selectedDate"
-            selected={date}
-            onChange={(date) => setDate(date)}
-            showMonthYearPicker
-            showFullMonthYearPicker
-            autoComplete="off"
-          />
-        </Col>
-      </FormGroup>
+      <BreadcrumbWithTitle title="Assign monthly reports" linkStack={linkStack} />
+      <Container fluid>
+        <FormGroup row className="p-2" style={{background: 'var(--bs-pitch-black)'}}>
+          <Label sm={2}>Select a month</Label>
+          <Col sm={4}>
+            <ReactDatePicker
+              className={`form-control`}
+              name="selectedDate"
+              selected={date}
+              onChange={(date) => setDate(date)}
+              showMonthYearPicker
+              showFullMonthYearPicker
+              autoComplete="off"
+            />
+          </Col>
+        </FormGroup>
+      </Container>
       <Table>
         <thead>
           <tr>

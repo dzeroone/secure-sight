@@ -19,11 +19,17 @@ class UserController {
     return true
   }
 
-  async search(query: string) {
+  async search(query: string, user: Express.User) {
     const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    const skippedRoles = [ROLES.ADMIN]
+    if (user.role == ROLES.LEVEL3) {
+      skippedRoles.push(ROLES.LEVEL3)
+    } else if (user.role == ROLES.LEVEL2) {
+      skippedRoles.push(ROLES.LEVEL3, ROLES.LEVEL2)
+    }
     return UserModel.find({
       role: {
-        $ne: 'admin'
+        $nin: skippedRoles
       },
       $or: [
         {

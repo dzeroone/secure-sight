@@ -24,9 +24,15 @@ router.delete('/:id',
 
 router.get('/monthly',
   auth,
-  hasRole(ROLES.ADMIN),
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
   async (req, res) => {
     if (!req.query.date) return res.send([])
+
+    if (ROLES.LEVEL2 == req.user?.role) {
+      const data = await assignmentController.getMonthlyAssignmentsForDateForUser(req.query.date as string, req.user!._id)
+      res.send(data)
+      return
+    }
     const data = await assignmentController.getMonthlyAssignmentsForDate(req.query.date as string, req.user!._id)
     res.send(data)
   }

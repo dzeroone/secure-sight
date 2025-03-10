@@ -15,23 +15,58 @@ class AssignmentController {
   }
   async getMonthlyAssignmentsForDate(date: string, assignedBy: string) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
-    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
     const customers = await CustomerModel.find({}, { name: 1, tCode: 1 }).lean()
     for (let customer of customers) {
-      const assignments: any[] = await assignmentModel.find({
-        rType: 'monthly',
-        index: getMontlyReportIndex(date, customer.tCode),
-        aBy: assignedBy,
-        cId: customer._id,
-      }).lean()
-      for (let assignment of assignments) {
-        assignment.reporter = await UserModel.findOne({
-          _id: assignment.reporterId
-        }, { fullname: 1, role: 1 })
-      }
-      customer.assignments = assignments
+      await this._populateAssignmentsForCustomerForDate(customer, date, assignedBy)
     }
     return customers
+  }
+
+  async getMonthlyAssignmentsForDateForUser(date: string, userId: string) {
+    const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+
+    const assignments: any[] = await assignmentModel.find({
+      rType: 'monthly',
+      date,
+      reporterId: userId
+    }).lean()
+    const customerIds = assignments.map(a => a.cId)
+    const customers = await CustomerModel.find({
+      _id: {
+        $in: customerIds
+      }
+    }, {
+      name: 1,
+      tCode: 1
+    }).lean()
+
+    for (let customer of customers) {
+      await this._populateAssignmentsForCustomerForDate(customer, date, userId)
+    }
+    return customers
+  }
+
+  async getMonthlyAssignmentsForUser(user: Express.User) {
+    const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+
+    const assignments: any[] = await assignmentModel.find({
+      rType: 'monthly',
+      reporterId: user._id
+    }).sort({ cAt: -1 }).lean()
+    const customerIds = assignments.map(a => a.cId)
+    const customers = await CustomerModel.find({
+      _id: {
+        $in: customerIds
+      }
+    }, {
+      name: 1,
+      tCode: 1
+    }).lean()
+
+    return assignments.map(assignment => {
+      assignment.customer = customers.find(c => c._id.toString() == assignment.cId)
+      return assignment
+    })
   }
 
   async assignMonthlyReport(data: ReportAssignmentValidationValues, assignedBy: string) {
@@ -66,6 +101,22 @@ class AssignmentController {
     }, {
       cId: 1
     }).lean()
+  }
+
+  private async _populateAssignmentsForCustomerForDate(customer: any, date: string, assignedBy: string) {
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    const assignments: any[] = await assignmentModel.find({
+      rType: 'monthly',
+      index: getMontlyReportIndex(date, customer.tCode),
+      aBy: assignedBy,
+      cId: customer._id,
+    }).lean()
+    for (let assignment of assignments) {
+      assignment.reporter = await UserModel.findOne({
+        _id: assignment.reporterId
+      }, { fullname: 1, role: 1 })
+    }
+    customer.assignments = assignments
   }
 }
 

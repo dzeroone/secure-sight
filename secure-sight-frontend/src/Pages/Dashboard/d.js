@@ -30,7 +30,7 @@ import {
   hidencolumn,
 } from "../ulit/commonFunction";
 import ExportCSV from "../ulit/exportCSV";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 
 const CreateChart = ({ dashboardId, updateFun }) => {
   const [reportList, setReportList] = useState([]);
@@ -194,79 +194,32 @@ const CreateChart = ({ dashboardId, updateFun }) => {
 
   return (
 
-      <div className="dark-dashboard">
-        <div className="gradient-overlay" />
-        <Loader load={loader} />
-        <Row>
-          <Col xl={12}>
-            <Card className="dashboard-card">
-              <CardBody>
-                <Row>
-                  <Col sm={4}>
-                    <div className="mt-4 mt-lg-0">
-                      <div className="form-check form-switch form-switch-md mb-3">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          id="customSwitchsizemd"
-                          onChange={() => setSwitchCSVData(!switchCSVData)}
-                        />
-                        <label className="form-check-label dark-label" htmlFor="customSwitchsizemd">
-                          Get CSV Data
-                        </label>
-                      </div>
+    <div className="dark-dashboard">
+      <div className="gradient-overlay" />
+      <Loader load={loader} />
+      <Row>
+        <Col xl={12}>
+          <Card className="dashboard-card">
+            <CardBody>
+              <Row>
+                <Col sm={4}>
+                  <div className="mt-4 mt-lg-0">
+                    <div className="form-check form-switch form-switch-md mb-3">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="customSwitchsizemd"
+                        onChange={() => setSwitchCSVData(!switchCSVData)}
+                      />
+                      <label className="form-check-label dark-label" htmlFor="customSwitchsizemd">
+                        Get CSV Data
+                      </label>
                     </div>
-                  </Col>
-                </Row>
-                <form onSubmit={getTableData}>
-                  {!switchCSVData && (
-                    <Row>
-                      <Col md={6}>
-                        <div className="form-floating mb-3">
-                          <select
-                            className="form-select dark-input"
-                            id="floatingSelectGrid"
-                            aria-label="Floating label select example"
-                            onChange={HandleReportChange}
-                          >
-                            <option value="">Select Report</option>
-                            {reportList?.map((item, index) => (
-                              <option key={item._id} value={item._id}>
-                                {index + 1 + '  '}
-                                {item.reportName}
-                              </option>
-                            ))}
-                          </select>
-                          <label htmlFor="floatingSelectGrid" className="dark-label">
-                            Select Report
-                          </label>
-                        </div>
-                      </Col>
-                      <Col md={6}>
-                        <div className="form-floating mb-3">
-                          <select
-                            className="form-select dark-input"
-                            id="floatingSelectGrid"
-                            aria-label="Floating label select example"
-                            onChange={(e) => setTableId(e.target.value)}
-                          >
-                            <option value="">Select Table</option>
-                            {reportData?.map((i) => (
-                              <option key={i._id} value={i._id}>{i.title}</option>
-                            ))}
-                          </select>
-                          <label htmlFor="floatingSelectGrid" className="dark-label">Select Table</label>
-                        </div>
-                      </Col>
-                      <Col md={6}>
-                        <button type="submit" className="dark-button">
-                          Submit
-                        </button>
-                      </Col>
-                    </Row>
-                  )}
-                </form>
-                {switchCSVData && (
+                  </div>
+                </Col>
+              </Row>
+              <form onSubmit={getTableData}>
+                {!switchCSVData && (
                   <Row>
                     <Col md={6}>
                       <div className="form-floating mb-3">
@@ -274,181 +227,228 @@ const CreateChart = ({ dashboardId, updateFun }) => {
                           className="form-select dark-input"
                           id="floatingSelectGrid"
                           aria-label="Floating label select example"
-                          onChange={getCSVData}
+                          onChange={HandleReportChange}
+                        >
+                          <option value="">Select Report</option>
+                          {reportList?.map((item, index) => (
+                            <option key={item._id} value={item._id}>
+                              {index + 1 + '  '}
+                              {item.reportName}
+                            </option>
+                          ))}
+                        </select>
+                        <label htmlFor="floatingSelectGrid" className="dark-label">
+                          Select Report
+                        </label>
+                      </div>
+                    </Col>
+                    <Col md={6}>
+                      <div className="form-floating mb-3">
+                        <select
+                          className="form-select dark-input"
+                          id="floatingSelectGrid"
+                          aria-label="Floating label select example"
+                          onChange={(e) => setTableId(e.target.value)}
                         >
                           <option value="">Select Table</option>
-                          {CSVDataList?.map((i) => (
-                            <option
-                              key={i._id}
-                              value={i._id}
-                              data-additional-data={i.document_name}
-                            >
-                              {i.document_name}
-                            </option>
+                          {reportData?.map((i) => (
+                            <option key={i._id} value={i._id}>{i.title}</option>
                           ))}
                         </select>
                         <label htmlFor="floatingSelectGrid" className="dark-label">Select Table</label>
                       </div>
                     </Col>
+                    <Col md={6}>
+                      <button type="submit" className="dark-button">
+                        Submit
+                      </button>
+                    </Col>
                   </Row>
                 )}
+              </form>
+              {switchCSVData && (
+                <Row>
+                  <Col md={6}>
+                    <div className="form-floating mb-3">
+                      <select
+                        className="form-select dark-input"
+                        id="floatingSelectGrid"
+                        aria-label="Floating label select example"
+                        onChange={getCSVData}
+                      >
+                        <option value="">Select Table</option>
+                        {CSVDataList?.map((i) => (
+                          <option
+                            key={i._id}
+                            value={i._id}
+                            data-additional-data={i.document_name}
+                          >
+                            {i.document_name}
+                          </option>
+                        ))}
+                      </select>
+                      <label htmlFor="floatingSelectGrid" className="dark-label">Select Table</label>
+                    </div>
+                  </Col>
+                </Row>
+              )}
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+
+      {tableData.length > 0 && keys.length > 0 && (
+        <Row>
+          <Col xl={12}>
+            <Card className="dashboard-card">
+              <CardBody>
+                <form onSubmit={createChart}>
+                  <Row>
+                    <Col md={6}>
+                      <Card className="dashboard-card">
+                        <CardBody>
+                          <h4 className="main-title">
+                            Select Columns
+                          </h4>
+                          <p className="header-description">Select Columns for Create the new chart</p>
+                          <ul
+                            className="message-list mb-0 maxh-3"
+                            style={{
+                              maxHeight: '500px',
+                              overflow: 'scroll',
+                              scrollbarWidth: '0 !important',
+                            }}
+                          >
+                            {keys?.map((i) => (
+                              <li key={i}>
+                                <span className="col-mail-1">
+                                  <span className="checkbox-wrapper-mail">
+                                    <input
+                                      type="checkbox"
+                                      id={i}
+                                      checked={checkbox.find((e) => e === i)}
+                                      value={i}
+                                      onChange={handleCheckboxChange}
+                                    />
+                                    <label
+                                      htmlFor={i}
+                                      className="toggle"
+                                    ></label>
+                                  </span>
+                                </span>
+                                <option value={i}>{i}</option>
+                              </li>
+                            ))}
+                          </ul>
+                        </CardBody>
+                      </Card>
+                    </Col>
+                    <Col md={6}>
+                      <div className="form-floating mb-3">
+                        <select
+                          className="form-select dark-input"
+                          id="floatingSelectGrid"
+                          aria-label="Select Chart Type"
+                          value={chartTitle.chartType}
+                          onChange={(e) => {
+                            setChartTitle((prev) => ({
+                              ...prev,
+                              chartType: e.target.value,
+                            }));
+                          }}
+                        >
+                          {chartList?.map((i) => (
+                            <option key={i} value={i}>{i}</option>
+                          ))}
+                        </select>
+                        <label htmlFor="floatingSelectGrid" className="dark-label">
+                          Select Chart Type
+                        </label>
+                      </div>
+
+                      <div className="form-floating mb-3">
+                        <input
+                          type="text"
+                          className="dark-input"
+                          id="floatingFirstnameInput"
+                          placeholder="Enter Chart Title"
+                          value={chartTitle.charttitle}
+                          onChange={(e) => {
+                            setChartTitle((prev) => ({
+                              ...prev,
+                              charttitle: e.target.value,
+                            }));
+                          }}
+                        />
+                        <label htmlFor="floatingFirstnameInput" className="dark-label">
+                          Enter Chart Title
+                        </label>
+                      </div>
+                      <button type="submit" className="dark-button">
+                        Submit
+                      </button>
+                    </Col>
+                  </Row>
+                </form>
               </CardBody>
             </Card>
           </Col>
         </Row>
+      )}
 
-        {tableData.length > 0 && keys.length > 0 && (
-          <Row>
-            <Col xl={12}>
-              <Card className="dashboard-card">
-                <CardBody>
-                  <form onSubmit={createChart}>
-                    <Row>
-                      <Col md={6}>
-                        <Card className="dashboard-card">
-                          <CardBody>
-                            <h4 className="main-title">
-                              Select Columns
-                            </h4>
-                            <p className="header-description">Select Columns for Create the new chart</p>
-                            <ul
-                              className="message-list mb-0 maxh-3"
-                              style={{
-                                maxHeight: '500px',
-                                overflow: 'scroll',
-                                scrollbarWidth: '0 !important',
-                              }}
-                            >
-                              {keys?.map((i) => (
-                                <li key={i}>
-                                  <span className="col-mail-1">
-                                    <span className="checkbox-wrapper-mail">
-                                      <input
-                                        type="checkbox"
-                                        id={i}
-                                        checked={checkbox.find((e) => e === i)}
-                                        value={i}
-                                        onChange={handleCheckboxChange}
-                                      />
-                                      <label
-                                        htmlFor={i}
-                                        className="toggle"
-                                      ></label>
-                                    </span>
-                                  </span>
-                                  <option value={i}>{i}</option>
-                                </li>
-                              ))}
-                            </ul>
-                          </CardBody>
-                        </Card>
-                      </Col>
-                      <Col md={6}>
-                        <div className="form-floating mb-3">
-                          <select
-                            className="form-select dark-input"
-                            id="floatingSelectGrid"
-                            aria-label="Select Chart Type"
-                            value={chartTitle.chartType}
-                            onChange={(e) => {
-                              setChartTitle((prev) => ({
-                                ...prev,
-                                chartType: e.target.value,
-                              }));
-                            }}
-                          >
-                            {chartList?.map((i) => (
-                              <option key={i} value={i}>{i}</option>
-                            ))}
-                          </select>
-                          <label htmlFor="floatingSelectGrid" className="dark-label">
-                            Select Chart Type
-                          </label>
-                        </div>
-
-                        <div className="form-floating mb-3">
-                          <input
-                            type="text"
-                            className="dark-input"
-                            id="floatingFirstnameInput"
-                            placeholder="Enter Chart Title"
-                            value={chartTitle.charttitle}
-                            onChange={(e) => {
-                              setChartTitle((prev) => ({
-                                ...prev,
-                                charttitle: e.target.value,
-                              }));
-                            }}
-                          />
-                          <label htmlFor="floatingFirstnameInput" className="dark-label">
-                            Enter Chart Title
-                          </label>
-                        </div>
-                        <button type="submit" className="dark-button">
-                          Submit
-                        </button>
-                      </Col>
-                    </Row>
-                  </form>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        )}
-
-        {tableData.length > 0 && (
-          <Row>
-            <Col xl={12}>
-              <Card className="dashboard-card">
-                <CardBody>
-                  <Breadcrumbsub
-                    title={reportTitle}
-                    breadcrumbItem={
-                      <Dropdown
-                        isOpen={btnprimary1}
-                        toggle={() => setBtnprimary1(!btnprimary1)}
-                      >
-                        <DropdownToggle tag="button" className="dark-button">
-                          <Download />
-                        </DropdownToggle>
-                        <DropdownMenu>
-                          <ExportCSV data={tableData} title={reportTitle} />
-                          <DropdownItem
-                            onClick={() => setIsMaximized(!isMaximized)}
-                          >
-                            {isMaximized ? 'Minimize' : 'Maximize'}
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    }
+      {tableData.length > 0 && (
+        <Row>
+          <Col xl={12}>
+            <Card className="dashboard-card">
+              <CardBody>
+                <Breadcrumbsub
+                  title={reportTitle}
+                  breadcrumbItem={
+                    <Dropdown
+                      isOpen={btnprimary1}
+                      toggle={() => setBtnprimary1(!btnprimary1)}
+                    >
+                      <DropdownToggle tag="button" className="dark-button">
+                        <Download />
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <ExportCSV data={tableData} title={reportTitle} />
+                        <DropdownItem
+                          onClick={() => setIsMaximized(!isMaximized)}
+                        >
+                          {isMaximized ? 'Minimize' : 'Maximize'}
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  }
+                />
+                <div
+                  style={{
+                    transition: 'all 0.3s ease',
+                    height: isMaximized ? 'calc(100vh - 200px)' : '400px',
+                    overflow: 'auto',
+                  }}
+                >
+                  <MaterialTable
+                    data={tableData}
+                    columns={columns}
+                    hidecolumn={hidecolumn}
                   />
-                  <div
-                    style={{
-                      transition: 'all 0.3s ease',
-                      height: isMaximized ? 'calc(100vh - 200px)' : '400px',
-                      overflow: 'auto',
-                    }}
-                  >
-                    <MaterialTable
-                      data={tableData}
-                      columns={columns}
-                      hidecolumn={hidecolumn}
-                    />
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        )}
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      )}
 
-        <ModalLoading
-          isOpen={openLoader}
-          onClose={() => {
-            setOpenLoader(false)
-          }}
-        />
+      <ModalLoading
+        isOpen={openLoader}
+        onClose={() => {
+          setOpenLoader(false)
+        }}
+      />
 
-        <style>{`
+      <style>{`
           .dark-dashboard {
             background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
             min-height: 100vh;
@@ -549,9 +549,9 @@ const CreateChart = ({ dashboardId, updateFun }) => {
             }
           }
         `}</style>
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
 
 export default CreateChart;

@@ -90,6 +90,10 @@ const ApiServices = async (
 						reject(error)
 						return
 					}
+					if (error.response.status === 500) {
+						reject(error)
+						return
+					}
 					if (error.response.status === 409) {
 						alert(error.response.data.message);
 					}

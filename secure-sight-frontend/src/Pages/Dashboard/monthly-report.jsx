@@ -2,7 +2,7 @@ import { format, getYear } from "date-fns";
 import { useFormik } from "formik";
 import { useCallback, useEffect, useState } from "react";
 import FormMonthReport from "../../components/FormMonthReport";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 import MonthlyReportGraphs from "../../components/MonthlyReportGraphs";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";

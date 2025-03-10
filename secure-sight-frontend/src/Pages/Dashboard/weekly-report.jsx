@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { useCallback, useEffect, useState } from "react";
 import FormWeekReport from "../../components/FormWeekReport";
 import { getWeeklyReportIndex } from "../../helpers/form_helper";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import WeeklyReportGraphs from "../../components/WeeklyReportGraphs";

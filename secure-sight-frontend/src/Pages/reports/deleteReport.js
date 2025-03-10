@@ -13,7 +13,7 @@ import EditModals from "../../components/Common/editModel";
 import { Link } from "react-router-dom";
 import { CloseOutlined } from "@mui/icons-material";
 import DeleteModal from "../../components/Common/DeleteModal";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 
 const DeleteReport = () => {
   document.title = "Report | Secure Sight";
@@ -52,12 +52,12 @@ const DeleteReport = () => {
         payload,
         ApiEndPoints.GetReportList
       );
-      if(response.success) {
+      if (response.success) {
         setReportList(response.data);
       }
-    }catch(e) {
+    } catch (e) {
       toast(e.message, { autoClose: 5000 })
-    }finally{
+    } finally {
       setOpenLoader(false)
     }
   }

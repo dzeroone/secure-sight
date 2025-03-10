@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, Input, Table, UncontrolledTooltip } from "reactstrap";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
-import ModalLoading from "../../components/modal-loading";
+import ModalLoading from "../../components/ModalLoading";
 import { format } from "date-fns";
 
 export default function CustomerIndexPage() {

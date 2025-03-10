@@ -1,9 +1,9 @@
+import { ROLES } from '../../data/roles'
 
 const SidebarData = [
 	{
 		label: "Dashboard",
-		isMainMenu: true,
-		roles: ['admin']
+		isMainMenu: true
 	},
 	{
 		roles: ['admin'],
@@ -55,19 +55,19 @@ const SidebarData = [
 		],
 	},
 	{
-		roles: ['admin'],
+		roles: ['l3', 'l2'],
 		label: "Assign",
 		icon: "ri-send-plane-2-line",
 		url: "/assign/monthly-report",
 		bgcolor: "bg-primary",
 		subItem: [
 			{
-				roles: ['admin'],
+				roles: ['l3', 'l2'],
 				sublabel: "Monthly report",
 				link: "/assign/monthly-report",
 			},
 			{
-				roles: ['admin'],
+				roles: ['l3', 'l2'],
 				sublabel: "Weekly report",
 				link: "/assign/weekly-report",
 			},
@@ -76,20 +76,20 @@ const SidebarData = [
 	{
 		label: "Report",
 		isMainMenu: true,
-		roles: ['admin', 'l3', 'l2', 'l1']
+		roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1]
 	},
 	{
-		roles: ['admin', 'l3', 'l2', 'l1'],
+		roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1],
 		label: "Reports",
 		icon: "ri-table-2",
 		subItem: [
 			{
-				roles: ['admin', 'l3', 'l2', 'l1'],
+				roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1],
 				sublabel: "Monthly report",
 				link: "/reports/monthly-report",
 			},
 			{
-				roles: ['admin', 'l3', 'l2', 'l1'],
+				roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1],
 				sublabel: "Weekly report",
 				link: "/reports/weekly-report",
 			}

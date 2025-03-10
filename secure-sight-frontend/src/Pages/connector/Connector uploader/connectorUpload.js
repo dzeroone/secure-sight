@@ -24,7 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ApiEndPoints from "../../../Network_call/ApiEndPoints";
 import ApiServices from "../../../Network_call/apiservices";
 import ConnectorList from "../connectorList";
-import ModalLoading from "../../../components/modal-loading";
+import ModalLoading from "../../../components/ModalLoading";
 import { ArchiveIcon } from "lucide-react";
 
 
