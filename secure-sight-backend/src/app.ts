@@ -63,7 +63,7 @@ const build = async () => {
     })
 
     // create necessary elastic indices for saving monthly and weekly form data from report generation tool
-    createElasticIndices()
+    // createElasticIndices()
 
     const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
         if (res.headersSent) {

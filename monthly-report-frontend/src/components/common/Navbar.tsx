@@ -2,6 +2,7 @@
 "use client";
 import {
   Box,
+  Button,
   Divider,
   IconButton,
   List,
@@ -22,6 +23,7 @@ import Link from "next/link";
 import { DASHBOARD, MONTHLY_REPORT, WEEKLY_REPORT } from "@@/constants/routes";
 import BrandLogo from "@@/assets/images/logo.png";
 import { LibraryBooks } from "@mui/icons-material";
+import { useAuth } from "@@/providers/AuthProvider";
 
 const drawerWidth: number = 240;
 
@@ -81,6 +83,8 @@ const Navbar = ({
   const toggleDrawer = () => {
     setOpen(!open);
   };
+  const { currentUser, signout } = useAuth();
+
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar position="absolute" open={open}>
@@ -110,6 +114,11 @@ const Navbar = ({
           >
             Eventus Report Generation
           </Typography>
+          {currentUser ? (
+            <Button color="inherit" onClick={() => signout()}>
+              Signout
+            </Button>
+          ) : null}
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

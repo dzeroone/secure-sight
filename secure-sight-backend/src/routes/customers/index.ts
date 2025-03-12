@@ -54,7 +54,7 @@ router.get('/codes',
   hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1]),
   async (req: Request, res: Response) => {
     try {
-      if (req.user?.role == ROLES.ADMIN) {
+      if (req.user?.role == ROLES.ADMIN || req.user?.role == ROLES.LEVEL3) {
         const data = await customerController.getAllCodes()
         res.send(data)
       } else {

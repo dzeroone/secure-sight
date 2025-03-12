@@ -1,14 +1,15 @@
-import CssBaseline from '@mui/material/CssBaseline';
+import CssBaseline from "@mui/material/CssBaseline";
 import type { Metadata } from "next";
 import { ToastContainer } from "react-toastify";
 
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
 import "@@/styles/style.scss";
 import "react-toastify/dist/ReactToastify.css";
+import Providers from "@@/providers";
 
 export const metadata: Metadata = {
   title: "Eventus Report Generation",
@@ -24,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <CssBaseline />
-        {children}
+        <Providers>{children}</Providers>
         <ToastContainer
           position="top-right"
           autoClose={2000}

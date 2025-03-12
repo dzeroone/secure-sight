@@ -1,13 +1,15 @@
 import moment from "moment";
-import Navbar from "../../components/Navbar";
-import { useCallback, useEffect, useState } from "react";
-import { confirm } from "../../utils/confirm";
 import { enqueueSnackbar } from "notistack";
-import { MdArchive, MdDelete, MdEdit, MdSearch } from "react-icons/md";
+import { useCallback, useEffect, useState } from "react";
+import { MdArchive, MdEdit, MdSearch } from "react-icons/md";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
+import Navbar from "../../components/Navbar";
+import { confirm } from "../../utils/confirm";
+import { withAuth } from "../../hocs/withAuth";
+import axiosApi from "../../config/axios";
 
-export default function SavedReportsPage() {
+function SavedReportsPage() {
   const [report, setReport] = useState<{ count: number; data: any[] }>({
     count: 0,
     data: [],
@@ -20,18 +22,14 @@ export default function SavedReportsPage() {
   const getReports = useCallback(async () => {
     try {
       setProcessing(true);
-      const res = await fetch(
-        `${
-          process.env.REACT_APP_SECURE_SITE_API_BASE
-        }/elastic/weekly-report-form?page=${page + 1}&search=${searchText}`
+      const res = await axiosApi(
+        `/weekly-reports?page=${page + 1}&search=${searchText}`
       );
-      if (res.ok) {
-        const data = await res.json();
-        setReport({
-          count: data.count,
-          data: data.data,
-        });
-      }
+      const data = res.data;
+      setReport({
+        count: data.count,
+        data: data.data,
+      });
     } catch (e) {
       console.log(e);
     } finally {
@@ -152,28 +150,26 @@ export default function SavedReportsPage() {
                     <tr className="hover:bg-slate-50" key={report._id}>
                       <td className="p-4">
                         <p className="text-sm font-bold">
-                          {report._source.formData.client.clientName}
+                          {report.data.formData.client.clientName}
                         </p>
                       </td>
                       <td className="p-4">
                         <p className="text-sm">
                           {moment(
-                            report?._source.reportData.WEEKLY_REPORT.start_date
+                            report?.data.reportData.WEEKLY_REPORT.start_date
                           ).format("Do MMMM YYYY")}
                         </p>
                       </td>
                       <td className="p-4">
                         <p className="text-sm">
                           {moment(
-                            report?._source.reportData.WEEKLY_REPORT.end_date
+                            report?.data.reportData.WEEKLY_REPORT.end_date
                           ).format("Do MMMM YYYY")}
                         </p>
                       </td>
                       <td className="p-4">
                         <p className="text-sm">
-                          {moment(report?._source.savedAt).format(
-                            "Do MMMM YYYY"
-                          )}
+                          {moment(report?.cAt).format("Do MMMM YYYY")}
                         </p>
                       </td>
                       <td className="p-4">
@@ -224,3 +220,5 @@ export default function SavedReportsPage() {
     </div>
   );
 }
+
+export default withAuth(SavedReportsPage);

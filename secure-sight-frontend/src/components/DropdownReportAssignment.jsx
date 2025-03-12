@@ -12,7 +12,8 @@ export default function DropdownReportAssignment({
   index,
   assignments,
   onAssigned,
-  onUnAssigned
+  onUnAssigned,
+  reportType = 'monthly' // monthly | weekly
 }) {
   const [search, setSearch] = useState('')
   const [users, setUsers] = useState([])
@@ -66,7 +67,7 @@ export default function DropdownReportAssignment({
           customerId,
           reporterId: user._id
         },
-        `${ApiEndPoints.Assignments}/monthly/assign`
+        `${ApiEndPoints.Assignments}/${reportType}/assign`
       )
       onAssigned(customerId, {
         _id: data._id,

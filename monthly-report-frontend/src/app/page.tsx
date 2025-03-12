@@ -1,4 +1,7 @@
 "use client";
+import Logo from "@@/assets/images/eventus-logo.png";
+import { useAuth } from "@@/providers/AuthProvider";
+import { doLogin } from "@@/services/auth";
 import {
   Avatar,
   Box,
@@ -8,32 +11,26 @@ import {
   FormControlLabel,
   TextField,
 } from "@mui/material";
-import Logo from "@@/assets/images/eventus-logo.png";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { doLogin } from "@@/services/auth";
-import Cookies from "universal-cookie";
-import axiosApi from "@@/config/axios";
 
 export default function Home() {
   const router = useRouter();
-  const cookies = new Cookies();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const { setAuth } = useAuth();
+  const query = useSearchParams();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email || !password) return toast.error("Please fill all the fields");
     try {
-      const result = await doLogin(email, password);
-      cookies.set("_token", result.data.token, { path: "/" });
-      cookies.set("_refresh_token", result.data.refreshToken, { path: "/" });
-      cookies.set("_name", result.data.firstName, { path: "/" });
-      axiosApi.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${result.authToken}`;
-      router.push("/dashboard");
+      const res = await doLogin(email, password);
+      const data = res.data.data;
+
+      const redirectUrl = query.get("redirect_url") || "/dashboard";
+      setAuth(data, redirectUrl);
     } catch (error: any) {
       toast.error(error.message);
       throw error;

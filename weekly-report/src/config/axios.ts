@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE || ''
+const BASE_URL = process.env.REACT_APP_SECURE_SITE_API_BASE || ''
 
 const axiosApi = axios.create({
     baseURL: BASE_URL

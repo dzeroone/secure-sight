@@ -78,4 +78,60 @@ router.post('/monthly/assign',
   }
 )
 
+router.get('/weekly',
+  auth,
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
+  async (req, res) => {
+    if (!req.query.date) return res.send([])
+
+    if (ROLES.LEVEL2 == req.user?.role) {
+      const data = await assignmentController.getWeeklyAssignmentsForDateForUser(req.query.date as string, req.user!._id)
+      res.send(data)
+      return
+    }
+    const data = await assignmentController.getWeeklyAssignmentsForDate(req.query.date as string, req.user!._id)
+    res.send(data)
+  }
+)
+
+router.post('/weekly/assign',
+  auth,
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
+  async (req, res) => {
+    try {
+      const body = await reportAssignmentValidationSchema.validate(req.body)
+      if (req.user?.role == ROLES.ADMIN) {
+        const reporter = await userController.getUserById(body.reporterId)
+        if (!reporter) throw new Error("Reporter not found")
+
+        if (reporter.role == ROLES.ADMIN) {
+          throw new Error("You don't have permission to assign to this user")
+        }
+
+        const data = await assignmentController.assignWeeklyReport(body, req.user!._id)
+        res.send(data)
+        return
+      } else if (req.user?.role == ROLES.LEVEL3 || req.user?.role == ROLES.LEVEL2) {
+        const reporter = await userController.getUserById(body.reporterId)
+        if (!reporter) throw new Error("Reporter not found")
+
+        if (req.user.role == ROLES.LEVEL3 && [ROLES.LEVEL2, ROLES.LEVEL1].indexOf(reporter.role) < 0) {
+          throw new Error("You don't have permission to assign to this user")
+        } else if (req.user.role == ROLES.LEVEL2 && reporter.role != ROLES.LEVEL1) {
+          throw new Error("You don't have permission to assign to this user")
+        }
+
+        const data = await assignmentController.assignWeeklyReport(body, req.user!._id)
+        res.send(data)
+        return
+      }
+      throw new Error("Haven't assigned the report")
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
 export default router

@@ -20,3 +20,10 @@ export function updateNestedField(obj: any, path: string, value: any): any {
 
     return newObj;
 }
+
+export const getErrorMessage = (error: any) => {
+    if (error?.response?.data?.message) {
+        return error.response.data.message
+    }
+    return error.message
+}

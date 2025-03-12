@@ -13,6 +13,8 @@ import notificationRouter from './notification'
 import userRouter from './user/index'
 import customerRouter from './customers/index'
 import assignmentRouter from './assignments'
+import monthlyReportRouter from './monthly-report'
+import weeklyReportRouter from './weekly-report'
 
 
 
@@ -24,6 +26,8 @@ router.use('/upload-connector', uploadConnector)
 router.use('/elastic', elastic)
 router.use('/dashboard', dashboard)
 router.use('/report', report)
+router.use('/monthly-reports', monthlyReportRouter)
+router.use('/weekly-reports', weeklyReportRouter)
 router.use('/schedule', mailScheduler)
 router.use('/notifications', notificationRouter)
 router.use('/users', userRouter)

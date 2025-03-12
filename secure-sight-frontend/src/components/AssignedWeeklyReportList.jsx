@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useState } from "react"
-import ModalLoading from "./ModalLoading"
-import ApiServices from '../Network_call/apiservices'
-import ApiEndPoints from "../Network_call/ApiEndPoints"
-import { Button, Table } from "reactstrap"
-import { EyeIcon } from "lucide-react"
 import { format } from "date-fns"
-import { formatMonthlyReportSession } from "../helpers/form_helper"
+import { EyeIcon } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
+import { Button, Table } from "reactstrap"
+import { formatWeeklyReportSession } from "../helpers/form_helper"
+import ApiEndPoints from "../Network_call/ApiEndPoints"
+import ApiServices from '../Network_call/apiservices'
+import ModalLoading from "./ModalLoading"
 
-export default function AssignedMonthlyReportList() {
+export default function AssignedWeeklyReportList() {
   const [busy, setBusy] = useState(false)
   const [assignments, setAssignments] = useState([])
   
@@ -17,7 +17,7 @@ export default function AssignedMonthlyReportList() {
       const res= await ApiServices(
         'get',
         null,
-        `${ApiEndPoints.Users}/me/monthly-assignments`
+        `${ApiEndPoints.Users}/me/weekly-assignments`
       )
       setAssignments(res)
     }catch(e) {
@@ -28,7 +28,7 @@ export default function AssignedMonthlyReportList() {
   }, [])
 
   const viewReport = (assignment) => {
-    window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}?index=${assignment.index}`, "_blank")
+    window.open(`${process.env.REACT_APP_WEEKLY_REPORT_BASE}?index=${assignment.index}`, "_blank")
   }
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function AssignedMonthlyReportList() {
             return (
               <tr key={assignment._id}>
                 <th>{assignment.customer.name}</th>
-                <td>{formatMonthlyReportSession(assignment.date)}</td>
+                <td>{formatWeeklyReportSession(assignment.date)}</td>
                 <td>{format(assignment.cAt, 'PP')}</td>
                 <td>
                   <Button size="sm" onClick={() => viewReport(assignment)}>

@@ -5,6 +5,12 @@ import ModalLoading from "../../components/ModalLoading";
 import { getWeeklyReportIndex } from "../../helpers/form_helper";
 import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
+import { ROLES } from "../../data/roles";
+import { useProfile } from "../../Hooks/UserHooks";
+import WeeklyReportSearch from "../../components/WeeklyReportSearch";
+import Error401 from "../Utility/Error401-Page";
+import AssignedWeeklyReportList from "../../components/AssignedWeeklyReportList";
 
 const validate = values => {
   const errors = {};
@@ -20,36 +26,25 @@ const validate = values => {
   return errors
 }
 
-export default function WeeklyReport() {
-  const [openLoader, setOpenLoader] = useState(false)
+const priorityRoles = [ROLES.ADMIN, ROLES.LEVEL3]
+const nonPriorityRoles = [ROLES.LEVEL2, ROLES.LEVEL1]
 
-  const formik = useFormik({
-    initialValues: {
-      selectedDate: null,
-      tenant: ''
-    },
-    validate,
-    async onSubmit(values) {
-      try {
-        setOpenLoader(true);
-        window.open(`${process.env.REACT_APP_WEEKLY_REPORT_BASE}?index=${getWeeklyReportIndex(values.selectedDate, values.tenant)}`, "_blank")
-      } catch (e) {
-        console.log(e)
-      } finally {
-        setOpenLoader(false);
-      }
-    }
-  })
+const linkStack = [
+  { title: 'Dashbaord', route: '/dashboard' },
+  { title: 'Weekly reports', route: '/reports/weekly-report' }
+]
+
+export default function WeeklyReport() {
+  const { userProfile } = useProfile()
 
   return (
     <div className="page-content">
-      <FormWeekReport
-        formik={formik}
-      />
-      <ModalLoading
-        isOpen={openLoader}
-        onClose={() => setOpenLoader(false)}
-      />
+      <BreadcrumbWithTitle title="Weekly reports" linkStack={linkStack} />
+      { priorityRoles.includes(userProfile.role) ? (
+        <WeeklyReportSearch />
+      ) : nonPriorityRoles.includes(userProfile.role) ? (
+        <AssignedWeeklyReportList />
+      ) : <Error401 /> }
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { enqueueSnackbar } from "notistack";
+import { enqueueSnackbar, useSnackbar } from "notistack";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { GrFormPrevious } from "react-icons/gr";
 import {
@@ -8,7 +8,7 @@ import {
   MdUpload,
 } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
@@ -34,7 +34,10 @@ import PendingIncidentsSummary from "../../components/pdf-components/PendingInci
 import SloSummary from "../../components/pdf-components/SloSummary";
 import TableOfContents from "../../components/pdf-components/TableOfContents";
 import ThreatIntelSummary from "../../components/pdf-components/ThreatIntelSummary";
+import { withAuth } from "../../hocs/withAuth";
 import store, { RootState } from "../../store/store";
+import axiosApi from "../../config/axios";
+import { getErrorMessage } from "../../utils/helpers";
 
 const Dashboard = () => {
   const [reportData, setReportData] = useState<any>(null);
@@ -44,6 +47,7 @@ const Dashboard = () => {
   const [isPreparingPdf, setIsPreparingPdf] = useState<boolean>(false);
 
   const router = useNavigate();
+  const location = useLocation();
 
   const [searchParams] = useSearchParams();
   const elasticIndex = searchParams.get("index");
@@ -90,56 +94,34 @@ const Dashboard = () => {
       if (reportId) {
         setLoading(true);
 
-        const res = await fetch(
-          `${process.env.REACT_APP_SECURE_SITE_API_BASE}/elastic/weekly-report-form/${reportId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (res.ok) {
-          const responseData = await res.json();
-          // if(Array.isArray(responseData) && responseData.length > 0) {
-          //   const data = responseData[0]._source
-
-          dispatch({
-            type: "RESTORE",
-            payload: responseData._source.formData,
-          });
-          setReportData(responseData._source.reportData);
-          // }
-        } else {
-          const errorMessage = await res.text();
-          throw new Error(errorMessage);
-        }
+        const res = await axiosApi({
+          url: `/weekly-reports/${reportId}`,
+          method: "GET",
+          responseType: "json",
+        });
+        const responseData = res.data;
+        dispatch({
+          type: "RESTORE",
+          payload: responseData.data.formData,
+        });
+        setReportData(responseData.data.reportData);
       } else if (elasticIndex) {
         setLoading(true);
         let payload = {
           index: elasticIndex,
           column: [],
         };
-        const res = await fetch(
-          `${process.env.REACT_APP_SECURE_SITE_API_BASE}/elastic/data/search`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-          }
-        );
-        if (res.ok) {
-          const responseData = await res.json();
-          if (Array.isArray(responseData) && responseData.length > 0) {
-            const data = responseData[0]._source;
+        const res = await axiosApi({
+          url: `/elastic/data/search`,
+          method: "POST",
+          responseType: "json",
+          data: payload,
+        });
+        const responseData = res.data;
+        if (Array.isArray(responseData) && responseData.length > 0) {
+          const data = responseData[0]._source;
 
-            setReportData(data);
-          }
-        } else {
-          const errorMessage = await res.text();
-          throw new Error(errorMessage);
+          setReportData(data);
         }
       } else {
         dispatch({
@@ -147,7 +129,14 @@ const Dashboard = () => {
         });
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      const msg = getErrorMessage(e);
+      enqueueSnackbar(msg, {
+        variant: "error",
+      });
+      router(location.pathname, {
+        replace: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -185,34 +174,34 @@ const Dashboard = () => {
   const saveReport = async () => {
     try {
       setLoading(true);
-      let url = `${process.env.REACT_APP_SECURE_SITE_API_BASE}/elastic/weekly-report-form`;
+      let url = `/weekly-reports`;
       let requestMethod = "POST";
       if (reportId) {
-        url = `${process.env.REACT_APP_SECURE_SITE_API_BASE}/elastic/weekly-report-form/${reportId}`;
+        url = `/weekly-reports/${reportId}`;
         requestMethod = "PATCH";
       }
-      const res = await fetch(url, {
-        method: requestMethod,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          formData: store.getState(),
-          reportData,
-        }),
-      });
-      if (res.ok) {
-        const responseData = await res.json();
-        enqueueSnackbar("Report has been saved", {
-          variant: "success",
-        });
-        router(`/dashboard?id=${responseData._id}`, {
-          replace: true,
-        });
-      } else {
-        const errorMessage = await res.text();
-        throw new Error(errorMessage);
+
+      const toSubmit: any = {
+        formData: store.getState(),
+        reportData,
+      };
+      if (elasticIndex) {
+        toSubmit.index = elasticIndex;
       }
+
+      const res = await axiosApi({
+        url,
+        method: requestMethod,
+        responseType: "json",
+        data: toSubmit,
+      });
+      const responseData = res.data;
+      enqueueSnackbar("Report has been saved", {
+        variant: "success",
+      });
+      router(`/dashboard?id=${responseData._id}`, {
+        replace: true,
+      });
     } catch (e) {
       console.log(e);
     } finally {
@@ -531,4 +520,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

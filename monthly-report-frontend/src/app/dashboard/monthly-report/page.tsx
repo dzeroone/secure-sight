@@ -27,11 +27,17 @@ import TopRiskUsers from "@@/components/monthly-report/TopRiskUsers";
 import TopVulnerabilitiesDetected from "@@/components/monthly-report/TopVulnerabilitiesDetected";
 import VulnerabilityAssessmentReport from "@@/components/monthly-report/VulnerabilityAssessmentReport";
 import WorkbenchIncidentsSummary from "@@/components/monthly-report/WorkbenchIncidentsSummary";
+import axiosApi from "@@/config/axios";
+import { getErrorMessage } from "@@/helper/helper";
 import { setProcessing } from "@@/lib/features/monthly-report/monthlyPageStateSlice";
-import { addDSTopIncident, resetMonthlyReportState, updateDSChartData, updateDSField, updateDSTopIncidentField, updateFromElasticData } from "@@/lib/features/monthly-report/monthlySlice";
+import {
+  resetMonthlyReportState,
+  updateFromElasticData,
+} from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import { Box, Grid } from "@mui/material";
-import { useSearchParams } from "next/navigation";
+import { useConfirm } from "material-ui-confirm";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
 const MonthlyReportPage = () => {
@@ -39,68 +45,60 @@ const MonthlyReportPage = () => {
   const dispatch = useAppDispatch();
 
   const searchParams = useSearchParams();
-  const elasticIndex = searchParams.get('index');
-  const reportId = searchParams.get('id');
+  const elasticIndex = searchParams.get("index");
+  const reportId = searchParams.get("id");
+
+  const confirm = useConfirm();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const getElasticData = useCallback(async () => {
     try {
-      if(reportId) {
-        dispatch(setProcessing(true))
+      if (reportId) {
+        dispatch(setProcessing(true));
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/monthly-report-form/${reportId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        if(res.ok) {
-          const responseData = await res.json()
-          // if(Array.isArray(responseData) && responseData.length > 0) {
-          //   const data = responseData[0]._source
-
-          dispatch(resetMonthlyReportState(responseData._source))
-          // }
-        }else{
-          const errorMessage = await res.text()
-          throw new Error(errorMessage)
-        }
-      }else if(elasticIndex) {
-        dispatch(setProcessing(true))
+        const res = await axiosApi.get(`/monthly-reports/${reportId}`, {
+          responseType: "json",
+        });
+        const responseData = res.data;
+        dispatch(resetMonthlyReportState(responseData.data));
+      } else if (elasticIndex) {
+        dispatch(setProcessing(true));
         let payload = {
           index: elasticIndex,
-          column: []
-        }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/data/search`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        })
-        if(res.ok) {
-          const responseData = await res.json()
-          if(Array.isArray(responseData) && responseData.length > 0) {
-            const data = responseData[0]._source
+          column: [],
+        };
+        const res = await axiosApi.post(`/elastic/data/search`, payload, {
+          responseType: "json",
+        });
 
-            dispatch(updateFromElasticData(data))
-          }
-        }else{
-          const errorMessage = await res.text()
-          throw new Error(errorMessage)
+        const responseData = res.data;
+        if (Array.isArray(responseData) && responseData.length > 0) {
+          const data = responseData[0]._source;
+
+          dispatch(updateFromElasticData(data));
         }
-      }else{
-        dispatch(resetMonthlyReportState(null))
+      } else {
+        dispatch(resetMonthlyReportState(null));
       }
-    }catch(e) {
-      console.log(e)
-    }finally{
-      dispatch(setProcessing(false))
+    } catch (e: any) {
+      const msg = getErrorMessage(e);
+      confirm({
+        title: "Error",
+        description: msg,
+      }).then((_) => {
+        router.replace(pathname);
+      });
+      // const errorMessage = await res.text();
+      // throw new Error(errorMessage);
+    } finally {
+      dispatch(setProcessing(false));
     }
-  }, [elasticIndex, reportId, dispatch])
+  }, [elasticIndex, reportId, dispatch]);
 
   useEffect(() => {
-    getElasticData()
-  }, [getElasticData])
+    getElasticData();
+  }, [getElasticData]);
 
   return (
     <Grid container xs={12} spacing={5}>

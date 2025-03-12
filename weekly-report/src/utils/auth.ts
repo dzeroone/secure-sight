@@ -1,4 +1,4 @@
-import axiosApi from "@@/config/axios";
+import axiosApi from "../config/axios";
 
 export const doLogin = async (email: string, password: string) => {
     try {

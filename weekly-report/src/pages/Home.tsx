@@ -1,18 +1,40 @@
-import { useNavigate } from "react-router-dom";
-import { DASHBOARD } from "../constants/routeConstants";
+import { useSnackbar } from "notistack";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useAuth } from "../providers/AuthProvider";
+import { doLogin } from "../utils/auth";
+import { getErrorMessage } from "../utils/helpers";
 
 const Home = () => {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("admin");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { enqueueSnackbar } = useSnackbar();
+  const { setAuth } = useAuth();
+  const [query] = useSearchParams();
+
   const handleLogin = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
-    if (username !== "admin" || password !== "admin") {
-      alert("Invalid Credentials");
+    if (!username || !password) {
+      enqueueSnackbar({
+        message: "Please fill all the fields",
+        variant: "error",
+      });
       return;
     }
-    navigate(DASHBOARD);
+    try {
+      const res = await doLogin(username, password);
+      const data = res.data.data;
+
+      const redirectUrl = query.get("redirect_url") || "/dashboard";
+      setAuth(data, redirectUrl);
+    } catch (error: any) {
+      const msg = getErrorMessage(error);
+      enqueueSnackbar({
+        message: msg,
+        variant: "error",
+      });
+    }
   };
   return (
     <div className="main-container">
@@ -33,7 +55,7 @@ const Home = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="Username"
+              placeholder="Email"
             />
           </div>
           <div className="input-group">

@@ -22,3 +22,14 @@ export const getMonthlyReportIndex = (date, tenantCode) => {
 
   return `${month}_${year}_${tenant}_report`
 }
+
+export const formatMonthlyReportSession = (date) => {
+  return format(date, 'PP')
+}
+
+export const formatWeeklyReportSession = (date) => {
+  const start_date = subDays(date, 7)
+  const end_date = subDays(date, 1)
+
+  return `${format(start_date, 'PP')} - ${format(end_date, 'PP')}`
+}

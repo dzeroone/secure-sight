@@ -13,4 +13,12 @@ router.get('/monthly-assignments',
   }
 )
 
+router.get('/weekly-assignments',
+  auth,
+  async (req, res) => {
+    const data = await assignmentController.getWeeklyAssignmentsForUser(req.user!)
+    res.send(data)
+  }
+)
+
 export default router

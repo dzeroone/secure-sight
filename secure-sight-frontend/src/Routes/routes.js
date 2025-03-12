@@ -41,6 +41,8 @@ import WeeklyReport from "../Pages/reports/weekly-report";
 import UserIndexPage from "../Pages/users";
 import EditUserPage from "../Pages/users/edit";
 import NewUserPage from "../Pages/users/new";
+import { ROLES } from "../data/roles";
+import AssignWeeklyReportPage from "../Pages/Dashboard/assign/weekly-report";
 
 export const history = createBrowserHistory({ window });
 
@@ -89,6 +91,10 @@ const authProtectedRoutes = [
   {
     roles: ['l3', 'l2'],
     path: "/assign/monthly-report", component: <AssignMonthlyReportPage />
+  },
+  {
+    roles: [ROLES.LEVEL3, ROLES.LEVEL2],
+    path: "/assign/weekly-report", component: <AssignWeeklyReportPage />
   },
 
   // Report

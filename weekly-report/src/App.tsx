@@ -11,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import Providers from "./providers";
 
 function App() {
   Chart.register(
@@ -25,7 +26,9 @@ function App() {
   );
   return (
     <BrowserRouter>
-      <Router />
+      <Providers>
+        <Router />
+      </Providers>
     </BrowserRouter>
   );
 }

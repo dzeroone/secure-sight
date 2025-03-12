@@ -31,6 +31,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import Link from "next/link";
+import axiosApi from "@@/config/axios";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -139,18 +140,17 @@ export default function Page() {
   const getReports = useCallback(async () => {
     try {
       setProcessing(true);
-      const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE
-        }/elastic/monthly-report-form?page=${page + 1}&search=${searchText}`
-      );
-      if (res.ok) {
-        const data = await res.json();
-        setReport({
-          count: data.count,
-          data: data.data,
-        });
-      }
+      const res = await axiosApi.get("/monthly-reports", {
+        params: {
+          page: page + 1,
+          search: searchText,
+        },
+        responseType: "json",
+      });
+      setReport({
+        count: res.data.count,
+        data: res.data.data,
+      });
     } catch (e) {
       console.log(e);
     } finally {
@@ -255,12 +255,10 @@ export default function Page() {
               return (
                 <TableRow key={report._id}>
                   <TableCell>
-                    {report._source.monthly_report.client_name}
+                    {report.data.monthly_report.client_name}
                   </TableCell>
-                  <TableCell>{report._source.monthly_report.date}</TableCell>
-                  <TableCell>
-                    {formatSavedDate(report._source.savedAt)}
-                  </TableCell>
+                  <TableCell>{report.data.monthly_report.date}</TableCell>
+                  <TableCell>{formatSavedDate(report.cAt)}</TableCell>
                   <TableCell>
                     <Stack direction="row" gap={2}>
                       <IconButton

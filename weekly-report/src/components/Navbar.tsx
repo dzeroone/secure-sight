@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { DASHBOARD_SAVED_REPORTS } from "../constants/routeConstants";
+import { useAuth } from "../providers/AuthProvider";
 
 const Navbar = () => {
+  const { currentUser, signout } = useAuth();
   return (
     <nav>
       <div className="brand">
@@ -33,12 +35,21 @@ const Navbar = () => {
           >
             Saved reports
           </Link>
+
           {/* <a
             href="#responsive-header"
             className="block mt-4 lg:inline-block lg:mt-0 text-teal-lighter hover:text-white"
           >
             Blog
           </a> */}
+        </div>
+        <div className="ml-auto">
+          <button
+            onClick={signout}
+            className="block mt-4 lg:inline-block lg:mt-0 py-1 px-2 border rounded-lg text-white transition-all hover:bg-white hover:text-green-800 mr-4"
+          >
+            Signout
+          </button>
         </div>
         {/* <div>
           <a
