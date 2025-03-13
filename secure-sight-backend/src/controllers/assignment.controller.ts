@@ -1,18 +1,29 @@
-import { COLLECTIONS, MASTER_ADMIN_DB } from "../constant"
+import { COLLECTIONS, MASTER_ADMIN_DB, REPORT_AUDIT_STATUS } from "../constant"
 import { getMontlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
-import assignmentModel from "../models/assignmentModel"
+import assignmentModel, { AssignmentDocumentType } from "../models/assignmentModel"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
+import { MonthlyReportDocumentType } from "../models/monthlyReportModel"
 import { ReportAssignmentValidationValues } from "../validators/report-assignment.validator"
 
 class AssignmentController {
   async getById(id: string) {
     return assignmentModel.findById(id)
   }
+
   async deleteById(id: string) {
     return assignmentModel.deleteOne({
       _id: id
     })
   }
+
+  async updateById(id: string, data: any) {
+    return assignmentModel.updateOne({
+      _id: id
+    }, {
+      $set: data
+    })
+  }
+
   async getMonthlyAssignmentsForDate(date: string, assignedBy: string) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
     const customers = await CustomerModel.find({}, { name: 1, tCode: 1 }).lean()
@@ -87,7 +98,8 @@ class AssignmentController {
       cId: data.customerId,
       aBy: assignedBy,
       reporterId: data.reporterId,
-      cAt: new Date()
+      cAt: new Date(),
+      uAt: new Date()
     })
 
     return assignment.save()
@@ -167,7 +179,8 @@ class AssignmentController {
       cId: data.customerId,
       aBy: assignedBy,
       reporterId: data.reporterId,
-      cAt: new Date()
+      cAt: new Date(),
+      uAt: new Date()
     })
 
     return assignment.save()
@@ -194,6 +207,82 @@ class AssignmentController {
       index,
       reporterId: userId
     }).lean()
+  }
+
+  async getAssignmentForReport(index: string, reporterId: string, reportType: 'monthly' | 'weekly') {
+    const assignment = await assignmentModel.findOne({
+      rType: reportType,
+      index,
+      reporterId
+    })
+    return assignment
+  }
+
+  async getAssigneesForReport(index: string, reportType: 'monthly' | 'weekly') {
+    const assignments = await assignmentModel.find({
+      rType: reportType,
+      index,
+    }, {
+      aBy: 1
+    })
+    return assignments.map(a => a.aBy)
+  }
+
+  async reportSubmitted(assignment: AssignmentDocumentType, reportId: string) {
+    return await assignment.updateOne({
+      $set: {
+        reportId,
+        status: REPORT_AUDIT_STATUS.SUBMITTED,
+        uAt: new Date()
+      },
+      $unset: {
+        auditStatus: ""
+      }
+    })
+  }
+
+  async getMonthlySubmissions(assignee: Express.User) {
+    const assignments = await assignmentModel.find({
+      rType: 'monthly',
+      aBy: assignee._id,
+      status: {
+        $exists: true
+      }
+    }).sort({
+      uAt: -1
+    }).lean() as any[]
+
+    const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+
+    for (let assignment of assignments) {
+      const customer = await CustomerModel.findOne({
+        _id: assignment.cId
+      }, {
+        name: 1
+      })
+      assignment.customer = customer
+
+      const reporter = await UserModel.findOne({
+        _id: assignment.reporterId
+      }, {
+        fullname: 1,
+        role: 1
+      })
+
+      const uAssignment = await this.getAssignmentForReport(assignment.index!, assignee._id, 'monthly')
+      assignment.isRoot = !uAssignment
+
+      assignment.reporter = reporter
+    }
+    return assignments
+  }
+
+  async getMonthlyAssignmentByReportIdForAssignee(reportId: string, assignedBy: string) {
+    return assignmentModel.findOne({
+      reportId,
+      aBy: assignedBy
+    })
   }
 
   private async _populateAssignmentsForCustomerForDate(customer: any, date: string, assignedBy: string, reportType: 'monthly' | 'weekly' = 'monthly') {

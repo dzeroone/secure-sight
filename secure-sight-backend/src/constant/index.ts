@@ -45,8 +45,13 @@ export const DIRS = {
 }
 
 export const REPORT_STATUS = {
-    AUDIT: -1,
     DRAFT: 0,
     SUBMIT: 1,
-    APPROVED: 2,
+}
+
+export const REPORT_AUDIT_STATUS = {
+    AUDIT: -1,
+    SUBMITTED: 0,
+    PENDING: 1,
+    APPROVED: 2
 }

@@ -1,7 +1,6 @@
-import { genSalt, hash } from "bcryptjs";
-import { COLLECTIONS, MASTER_ADMIN_DB } from "../constant"
-import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { Document } from "mongoose";
+import { COLLECTIONS, MASTER_ADMIN_DB } from "../constant";
+import { dynamicModelWithDBConnection } from "../models/dynamicModel";
 
 class CustomerController {
   async addCustomer(data: any) {
@@ -33,11 +32,6 @@ class CustomerController {
   }
 
   async updateCustomer(user: Document, data: any) {
-    if (data.password) {
-      const salt = await genSalt(10)
-      const hashedPassword = await hash(data.password, salt)
-      data.password = hashedPassword
-    }
     return user.updateOne({
       $set: data
     })

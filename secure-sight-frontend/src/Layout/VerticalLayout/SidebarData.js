@@ -74,6 +74,28 @@ const SidebarData = [
 		],
 	},
 	{
+		label: "Submissions",
+		isMainMenu: true,
+		roles: [ROLES.LEVEL3, ROLES.LEVEL2]
+	},
+	{
+		roles: [ROLES.LEVEL3, ROLES.LEVEL2],
+		label: "Submissions",
+		icon: "ri-table-2",
+		subItem: [
+			{
+				roles: [ROLES.LEVEL3, ROLES.LEVEL2],
+				sublabel: "Monthly report",
+				link: "/submissions/monthly-report",
+			},
+			{
+				roles: [ROLES.LEVEL3, ROLES.LEVEL2],
+				sublabel: "Weekly report",
+				link: "/submissions/weekly-report",
+			}
+		],
+	},
+	{
 		label: "Report",
 		isMainMenu: true,
 		roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1]

@@ -1,11 +1,20 @@
 "use client";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import {
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+  PictureAsPdf,
+} from "@mui/icons-material";
+import {
+  Alert,
   Box,
   Button,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
   MobileStepper,
   Paper,
+  Select,
   Stack,
   Typography,
 } from "@mui/material";
@@ -51,9 +60,13 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
-import { setProcessing } from "@@/lib/features/monthly-report/monthlyPageStateSlice";
+import {
+  setProcessing,
+  setStatus,
+} from "@@/lib/features/monthly-report/monthlyPageStateSlice";
 import axiosApi from "@@/config/axios";
 import { getErrorMessage } from "@@/helper/helper";
+import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "@@/constants";
 const steps = [
   {
     label: "First Page",
@@ -200,6 +213,7 @@ const MonthlyReportForm = () => {
       }
       const toSubmit: any = {
         report: data,
+        status: pageState.status,
       };
       if (elasticIndex) {
         toSubmit.index = elasticIndex;
@@ -215,7 +229,9 @@ const MonthlyReportForm = () => {
       enqueueSnackbar("Report has been saved", {
         variant: "success",
       });
-      router.replace(`/dashboard/monthly-report?id=${responseData._id}`);
+      if (elasticIndex)
+        router.replace(`/dashboard/monthly-report?id=${responseData._id}`);
+      else router.refresh();
     } catch (e) {
       console.error(e);
       const msg = getErrorMessage(e);
@@ -276,6 +292,16 @@ const MonthlyReportForm = () => {
           </Button>
         </Grid> */}
         <Grid item xs={12} sx={{ position: "sticky", top: 200 }}>
+          {pageState.auditStatus == REPORT_AUDIT_STATUS.AUDIT ? (
+            <Alert severity="warning" sx={{ mb: 1 }}>
+              Needs auditing
+            </Alert>
+          ) : null}
+          {pageState.auditStatus == REPORT_AUDIT_STATUS.APPROVED ? (
+            <Alert severity="success" sx={{ mb: 1 }}>
+              This report is accepted
+            </Alert>
+          ) : null}
           <Stack
             direction={{ md: "column", lg: "row" }}
             justifyContent="space-between"
@@ -287,11 +313,33 @@ const MonthlyReportForm = () => {
               loading={pageState.processing}
               onClick={handleDownloadPdf}
             >
-              Generate & Download PDF
+              <PictureAsPdf />
             </LoadingButton>
+            <FormControl fullWidth size="small">
+              <InputLabel id="status-select-label">Status</InputLabel>
+              <Select
+                labelId="status-select-label"
+                id="status-select"
+                label="Status"
+                value={pageState.status}
+                onChange={(e) => {
+                  dispatch(setStatus(e.target.value as number));
+                }}
+              >
+                <MenuItem value={0}>Draft</MenuItem>
+                <MenuItem value={1}>Submit for review</MenuItem>
+              </Select>
+            </FormControl>
             <LoadingButton
               variant="contained"
               color="info"
+              disabled={
+                REPORT_STATUS.SUBMIT == pageState.statusFromServer ||
+                [
+                  REPORT_AUDIT_STATUS.APPROVED,
+                  REPORT_AUDIT_STATUS.PENDING,
+                ].includes(pageState.auditStatus)
+              }
               loading={pageState.processing}
               onClick={saveMonthlyReport}
             >

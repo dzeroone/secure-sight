@@ -29,7 +29,12 @@ import VulnerabilityAssessmentReport from "@@/components/monthly-report/Vulnerab
 import WorkbenchIncidentsSummary from "@@/components/monthly-report/WorkbenchIncidentsSummary";
 import axiosApi from "@@/config/axios";
 import { getErrorMessage } from "@@/helper/helper";
-import { setProcessing } from "@@/lib/features/monthly-report/monthlyPageStateSlice";
+import {
+  setAuditStatus,
+  setProcessing,
+  setStatus,
+  setStatusFromServer,
+} from "@@/lib/features/monthly-report/monthlyPageStateSlice";
 import {
   resetMonthlyReportState,
   updateFromElasticData,
@@ -62,6 +67,9 @@ const MonthlyReportPage = () => {
         });
         const responseData = res.data;
         dispatch(resetMonthlyReportState(responseData.data));
+        dispatch(setStatusFromServer(responseData.status));
+        dispatch(setStatus(responseData.status));
+        dispatch(setAuditStatus(responseData.auditStatus));
       } else if (elasticIndex) {
         dispatch(setProcessing(true));
         let payload = {
@@ -80,6 +88,9 @@ const MonthlyReportPage = () => {
         }
       } else {
         dispatch(resetMonthlyReportState(null));
+        dispatch(setStatusFromServer(0));
+        dispatch(setStatus(0));
+        dispatch(setAuditStatus(-999));
       }
     } catch (e: any) {
       const msg = getErrorMessage(e);

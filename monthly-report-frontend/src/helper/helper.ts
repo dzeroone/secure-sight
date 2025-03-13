@@ -1,3 +1,5 @@
+import { REPORT_AUDIT_STATUS_LABEL, REPORT_STATUS_LABEL } from "@@/constants";
+
 export function updateNestedField(obj: any, path: string, value: any): any {
     const keys = path.split(".");
     let newObj = { ...obj }; // Start with a shallow copy of the input object
@@ -26,4 +28,12 @@ export const getErrorMessage = (error: any) => {
         return error.response.data.message
     }
     return error.message
+}
+
+export const getReportStatusTitle = (statusCode: number) => {
+    return REPORT_STATUS_LABEL['' + statusCode] || ""
+}
+
+export const getReportAuditStatusTitle = (statusCode: number) => {
+    return REPORT_AUDIT_STATUS_LABEL['' + statusCode] || ""
 }

@@ -40,8 +40,15 @@ class WeeklyReportController {
     return doc.updateOne({
       $set: {
         data: { formData: data.formData, reportData: data.reportData },
+        status: data.status,
         uAt: new Date()
       }
+    })
+  }
+
+  async getById(id: string) {
+    return weeklyReportModel.findOne({
+      _id: id
     })
   }
 

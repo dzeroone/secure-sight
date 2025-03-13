@@ -1,8 +1,16 @@
 "use client";
 
-import { Archive, DeleteOutline, Edit, Search } from "@mui/icons-material";
 import {
+  Archive,
+  DeleteOutline,
+  Edit,
+  Message,
+  Search,
+} from "@mui/icons-material";
+import {
+  Badge,
   Box,
+  Chip,
   Divider,
   IconButton,
   InputAdornment,
@@ -32,6 +40,10 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import Link from "next/link";
 import axiosApi from "@@/config/axios";
+import {
+  getReportAuditStatusTitle,
+  getReportStatusTitle,
+} from "@@/helper/helper";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -247,6 +259,7 @@ export default function Page() {
               <TableCell>Client</TableCell>
               <TableCell>Month</TableCell>
               <TableCell>Saved at</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -260,6 +273,16 @@ export default function Page() {
                   <TableCell>{report.data.monthly_report.date}</TableCell>
                   <TableCell>{formatSavedDate(report.cAt)}</TableCell>
                   <TableCell>
+                    {[
+                      getReportStatusTitle(report.status),
+                      getReportAuditStatusTitle(report.auditStatus),
+                    ]
+                      .filter((s) => s)
+                      .map((s) => {
+                        return <Chip key={s} label={s} sx={{ mr: 1 }} />;
+                      })}
+                  </TableCell>
+                  <TableCell>
                     <Stack direction="row" gap={2}>
                       <IconButton
                         LinkComponent={Link}
@@ -267,6 +290,15 @@ export default function Page() {
                         href={`/dashboard/monthly-report?id=${report._id}`}
                       >
                         <Edit />
+                      </IconButton>
+                      <IconButton
+                        LinkComponent={Link}
+                        edge="end"
+                        href={`/dashboard/monthly-report/saved/${report._id}`}
+                      >
+                        <Badge variant="dot" color="info">
+                          <Message />
+                        </Badge>
                       </IconButton>
                       <IconButton
                         edge="end"

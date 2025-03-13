@@ -185,6 +185,8 @@ const Navbar = ({
               ? theme.palette.grey[100]
               : theme.palette.grey[900],
           flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
           height: "100vh",
           overflow: "auto",
         }}

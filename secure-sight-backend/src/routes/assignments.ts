@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { auth, hasRole } from "../utils/auth-util";
 import assignmentController from "../controllers/assignment.controller";
-import { ROLES } from "../constant";
+import { REPORT_AUDIT_STATUS, REPORT_STATUS, ROLES } from "../constant";
 import { reportAssignmentValidationSchema } from "../validators/report-assignment.validator";
 import userController from "../controllers/user.controller";
+import monthlyReportController from "../controllers/monthly-report.controller";
 const router = Router();
 
 router.delete('/:id',
@@ -126,6 +127,106 @@ router.post('/weekly/assign',
         return
       }
       throw new Error("Haven't assigned the report")
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.get('/monthly-submissions',
+  auth,
+  async (req, res) => {
+    try {
+      const data = await assignmentController.getMonthlySubmissions(req.user!)
+      res.send(data)
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.post('/monthly-submissions/:id/reaudit',
+  auth,
+  async (req, res) => {
+    try {
+      const assignment = await assignmentController.getMonthlyAssignmentByReportIdForAssignee(req.params.id, req.user!._id)
+      if (!assignment) {
+        throw new Error("Assignment not found")
+      }
+      const report = await monthlyReportController.getById(req.params.id)
+      if (!report) {
+        throw new Error("Report not found")
+      }
+
+      await assignmentController.updateById(assignment._id.toString(), {
+        status: REPORT_AUDIT_STATUS.AUDIT
+      })
+
+      // if has leaf reporter who assigned this report to some other persion then
+      // don't flag report to DRAFT mode, because draft mode disables assignees to view the report
+      const lAssignment = await assignmentController.getMonthlyAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!)
+      if (lAssignment) {
+        await assignmentController.updateById(lAssignment._id.toString(), {
+          status: REPORT_AUDIT_STATUS.AUDIT
+        })
+      } else {
+        await monthlyReportController.updateById(report._id.toString(), {
+          status: REPORT_STATUS.DRAFT,
+          auditStatus: REPORT_AUDIT_STATUS.AUDIT
+        })
+      }
+      res.sendStatus(201)
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.post('/monthly-submissions/:id/approve',
+  auth,
+  async (req, res) => {
+    try {
+      const assignment = await assignmentController.getMonthlyAssignmentByReportIdForAssignee(req.params.id, req.user!._id)
+      if (!assignment) {
+        throw new Error("Assignment not found")
+      }
+      const report = await monthlyReportController.getById(req.params.id)
+      if (!report) {
+        throw new Error("Report not found")
+      }
+
+      // get upper assignment if exists
+      const uAssignment = await assignmentController.getAssignmentForReport(assignment.index!, req.user!._id, 'monthly')
+      if (uAssignment) {
+        await assignmentController.updateById(assignment._id.toString(), {
+          status: REPORT_AUDIT_STATUS.PENDING
+        })
+        await assignmentController.reportSubmitted(uAssignment, report._id.toString())
+      } else {
+        // most top level user approved the report, so approve all leaf reporter's reports
+        await assignmentController.updateById(assignment._id.toString(), {
+          status: REPORT_AUDIT_STATUS.APPROVED
+        })
+
+        let lAssignment = await assignmentController.getMonthlyAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!)
+        while (lAssignment) {
+          await assignmentController.updateById(lAssignment._id.toString(), {
+            status: REPORT_AUDIT_STATUS.APPROVED
+          })
+          lAssignment = await assignmentController.getMonthlyAssignmentByReportIdForAssignee(req.params.id, lAssignment.reporterId!)
+        }
+
+        await monthlyReportController.updateById(report._id.toString(), {
+          auditStatus: REPORT_AUDIT_STATUS.APPROVED
+        })
+      }
+      res.sendStatus(201)
     } catch (e: any) {
       res.status(400).send({
         message: e.message

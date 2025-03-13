@@ -1,4 +1,4 @@
-import { model, Schema, Types } from "mongoose"
+import { HydratedDocumentFromSchema, InferSchemaType, model, Schema, Types } from "mongoose"
 const ObjectId = Types.ObjectId
 
 const dbSchema = new Schema({
@@ -10,8 +10,11 @@ const dbSchema = new Schema({
     index: true
   },
   status: Number,
+  auditStatus: Number,
   cAt: Date,
   uAt: Date
 })
+
+export type MonthlyReportDocumentType = HydratedDocumentFromSchema<typeof dbSchema>
 
 export default model('monthlyReport', dbSchema)

@@ -1,5 +1,5 @@
 import { REPORT_STATUS } from "../constant"
-import monthlyReportModel from "../models/monthlyReportModel"
+import monthlyReportModel, { MonthlyReportDocumentType } from "../models/monthlyReportModel"
 import { MonthlyReportEditValidationValues, MonthlyReportValidationValues } from "../validators/monthly-report.validator"
 
 class MonthlyReportController {
@@ -39,12 +39,27 @@ class MonthlyReportController {
     return doc.save()
   }
 
-  async update(doc: any, data: MonthlyReportEditValidationValues) {
+  async update(doc: MonthlyReportDocumentType, data: MonthlyReportEditValidationValues) {
     return doc.updateOne({
       $set: {
         data: data.report,
+        status: data.status,
         uAt: new Date()
       }
+    })
+  }
+
+  async updateById(id: string, data: any) {
+    return monthlyReportModel.updateOne({
+      _id: id
+    }, {
+      $set: data
+    })
+  }
+
+  async getById(id: string) {
+    return monthlyReportModel.findOne({
+      _id: id
     })
   }
 
