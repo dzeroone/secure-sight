@@ -35,18 +35,22 @@ styleSheet.textContent = `
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: textclip 2s linear infinite;
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0;
 }
 
 .loading-bar {
   width: 100%;
   height: 4px;  /* Height of the loading bar */
-  background: linear-gradient(
+  background-iamge: linear-gradient(
     -225deg,
     #ffccff 0%,
     #b3a0ff 50%,
     #80d0ff 100%
   );
-  animation: loading 1.5s linear infinite;
+  background-size: 200%;
+  animation: loading 1.5s linear infinite alternate;
 }
 
 @keyframes loading {
@@ -129,21 +133,13 @@ const Header = (props) => {
           style={{
             background: '#0E0F1B',
             color: '#fff',
-            height: "8vh",
-            padding: '10px 20px',
           }}
         >
           <div className="d-flex align-items-center justify-content-between w-100">
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center gap-2">
               <ShieldIcon />
               <h2
                 className="secure-sight-title"
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: '30px',
-                  marginTop: "5vh",
-                  marginLeft: '10px' // Add space between shield and title
-                }}
               >
                 SECURE SIGHT
               </h2>
@@ -160,75 +156,8 @@ const Header = (props) => {
               >
                 <i className="ri-menu-2-line align-middle"></i>
               </button>
-
-              <form className="app-search d-none d-lg-block mx-3">
-                <div className="position-relative">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search..."
-                    style={{ backgroundColor: "#000000", color: "#fff" }}
-                  />
-                  <span className="ri-search-line"></span>
-                </div>
-              </form>
-
-              <div className="dropdown d-inline-block d-lg-none ms-2">
-                <button
-                  onClick={() => {
-                    setSearch(!search);
-                  }}
-                  type="button"
-                  className="btn header-item noti-icon"
-                  id="page-header-search-dropdown"
-                >
-                  <i className="ri-search-line" />
-                </button>
-                <div
-                  className={
-                    search
-                      ? "dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 show"
-                      : "dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-                  }
-                  aria-labelledby="page-header-search-dropdown"
-                >
-                  <form className="p-3">
-                    <div className="form-group m-0">
-                      <div className="input-group">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Search ..."
-                          aria-label="Recipient's username"
-                        />
-                        <div className="input-group-append">
-                          <button className="btn btn-primary" type="submit">
-                            <i className="ri-search-line" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-
               <NotificationDropdown />
-
               <ProfileMenu />
-
-              <div
-                className="dropdown d-inline-block"
-                onClick={() => {
-                  props.showRightSidebarAction(!props.showRightSidebar);
-                }}
-              >
-                <button
-                  type="button"
-                  className="btn header-item noti-icon right-bar-toggle waves-effect"
-                >
-                  <i className="mdi mdi-cog"></i>
-                </button>
-              </div>
             </div>
           </div>
         </div>

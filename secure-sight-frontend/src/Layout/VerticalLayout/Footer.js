@@ -10,7 +10,6 @@ const footerStyles = {
     marginTop: "auto"
   },
   container: {
-    maxWidth: "1200px",
     margin: "0 auto",
     padding: "0 20px",
     display: "flex",
@@ -56,34 +55,10 @@ const Footer = () => {
       <div style={footerStyles.container}>
         <div>
           <div style={footerStyles.logo}>
-            SecureSight
+            Secure Sight
           </div>
           <div style={footerStyles.copyright}>
-            © {new Date().getFullYear()} All rights reserved
-          </div>
-        </div>
-
-        <div style={footerStyles.linksContainer}>
-          <div style={footerStyles.section}>
-            <h5 style={footerStyles.sectionTitle}>
-              Company
-            </h5>
-            <div style={footerStyles.section}>
-              <a href="#" style={footerStyles.link}>About</a>
-              <a href="#" style={footerStyles.link}>Services</a>
-              <a href="#" style={footerStyles.link}>Contact</a>
-            </div>
-          </div>
-
-          <div style={footerStyles.section}>
-            <h5 style={footerStyles.sectionTitle}>
-              Support
-            </h5>
-            <div style={footerStyles.section}>
-              <a href="#" style={footerStyles.link}>Help Center</a>
-              <a href="#" style={footerStyles.link}>Documentation</a>
-              <a href="#" style={footerStyles.link}>Status</a>
-            </div>
+            &copy; {new Date().getFullYear()} All rights reserved
           </div>
         </div>
       </div>

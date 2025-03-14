@@ -140,20 +140,15 @@ const Sidebar = (props) => {
 			<div
 				className="vertical-menu"
 				style={{
-					height: '100vh',
-					overflowY: 'auto',
 					background: '#0E0F1B',
 					boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
 				}}
 			>
 				<SimpleBar
-					className="h-100"
 					ref={ref}
-					style={{ maxHeight: '100vh' }}
 				>
 					<div
 						id="sidebar-menu"
-						style={{ padding: '1rem' }}
 					>
 						<ul className="metismenu list-unstyled" id="side-menu-item">
 							{applyRoleFilter(sidebarData).map((item, key) => (
@@ -184,9 +179,9 @@ const Sidebar = (props) => {
 												style={{
 													display: 'flex',
 													alignItems: 'center',
+													justifyContent: 'center',
 													padding: '0.5rem 0.75rem',
 													color: '#ffffff',
-													borderRadius: '0.5rem',
 													transition: 'all 0.15s ease',
 													textDecoration: 'none',
 													fontWeight: '500'
@@ -203,7 +198,6 @@ const Sidebar = (props) => {
 												<i
 													className={`${item.icon}`}
 													style={{
-														marginRight: "12px",
 														color: '#ffffff',
 														fontSize: '1.125rem'
 													}}
@@ -226,14 +220,7 @@ const Sidebar = (props) => {
 												)}
 											</Link>
 											{item.subItem && (
-												<ul
-													className="sub-menu"
-													style={{
-														paddingLeft: '2rem',
-														marginTop: '0.25rem',
-														listStyle: 'none'
-													}}
-												>
+												<ul className="sub-menu">
 													{applyRoleFilter(item.subItem).map((subItem, key) => (
 														<li key={key}>
 															<Link
@@ -243,7 +230,6 @@ const Sidebar = (props) => {
 																	padding: '0.5rem 0.75rem',
 																	fontSize: '0.875rem',
 																	color: '#ffffff',
-																	borderRadius: '0.5rem',
 																	textDecoration: 'none',
 																	transition: 'all 0.15s ease'
 																}}
@@ -263,7 +249,6 @@ const Sidebar = (props) => {
 																	className="sub-menu"
 																	style={{
 																		paddingLeft: '1rem',
-																		marginTop: '0.25rem',
 																		listStyle: 'none'
 																	}}
 																>

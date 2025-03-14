@@ -19,7 +19,7 @@
     align-items: center;
     margin: 0 auto;
     height: $header-height;
-    padding: 0 calc(#{$grid-gutter-width} / 2) 0 0;
+    padding: 0 calc(#{$grid-gutter-width} / 2);
 
     .dropdown {
         .show.header-item {
