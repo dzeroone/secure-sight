@@ -38,9 +38,17 @@ import { withAuth } from "../../hocs/withAuth";
 import store, { RootState } from "../../store/store";
 import axiosApi from "../../config/axios";
 import { getErrorMessage } from "../../utils/helpers";
+import InputLabel from "../../components/InputLabel";
+import SelectInput from "../../components/SelectInput";
+import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "../../data/data";
 
 const Dashboard = () => {
   const [reportData, setReportData] = useState<any>(null);
+  const [reportState, setReportState] = useState({
+    serverStatus: 0,
+    status: 0,
+    auditStatus: -999,
+  });
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -95,7 +103,7 @@ const Dashboard = () => {
         setLoading(true);
 
         const res = await axiosApi({
-          url: `/weekly-reports/${reportId}`,
+          url: `/assignment-reports/weekly/${reportId}`,
           method: "GET",
           responseType: "json",
         });
@@ -105,6 +113,13 @@ const Dashboard = () => {
           payload: responseData.data.formData,
         });
         setReportData(responseData.data.reportData);
+        setReportState((s) => {
+          return {
+            ...s,
+            serverStatus: responseData.status,
+            status: responseData.status,
+          };
+        });
       } else if (elasticIndex) {
         setLoading(true);
         let payload = {
@@ -174,16 +189,17 @@ const Dashboard = () => {
   const saveReport = async () => {
     try {
       setLoading(true);
-      let url = `/weekly-reports`;
+      let url = `/assignment-reports/weekly`;
       let requestMethod = "POST";
       if (reportId) {
-        url = `/weekly-reports/${reportId}`;
+        url = `/assignment-reports/weekly/${reportId}`;
         requestMethod = "PATCH";
       }
 
       const toSubmit: any = {
         formData: store.getState(),
         reportData,
+        status: reportState.status,
       };
       if (elasticIndex) {
         toSubmit.index = elasticIndex;
@@ -199,9 +215,13 @@ const Dashboard = () => {
       enqueueSnackbar("Report has been saved", {
         variant: "success",
       });
-      router(`/dashboard?id=${responseData._id}`, {
-        replace: true,
-      });
+      if (elasticIndex) {
+        router(`/dashboard?id=${responseData._id}`, {
+          replace: true,
+        });
+      } else {
+        router(0);
+      }
     } catch (e) {
       console.log(e);
     } finally {
@@ -321,7 +341,14 @@ const Dashboard = () => {
       <div className="print-action">
         {reportData ? (
           <button
-            className="btn-primary rounded-md inline-flex items-center"
+            className="btn-primary rounded-md inline-flex items-center disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={
+              REPORT_STATUS.SUBMIT === reportState.serverStatus ||
+              [
+                REPORT_AUDIT_STATUS.APPROVED,
+                REPORT_AUDIT_STATUS.PENDING,
+              ].includes(reportState.auditStatus)
+            }
             onClick={saveReport}
           >
             <MdSave className="mr-2" /> Save report
@@ -370,6 +397,27 @@ const Dashboard = () => {
             <div className="sticky top-0 flex flex-col gap-4 max-h-screen overflow-auto max-w-[450px]">
               {!isPreparingPdf && (
                 <div className="ml-[50px]">
+                  <div>
+                    <InputLabel htmlFor="status-select-label">
+                      Status
+                    </InputLabel>
+                    <SelectInput
+                      id="status-select-label"
+                      value={reportState.status}
+                      onChange={(e) => {
+                        // dispatch(setStatus(e.target.value as number));
+                        setReportState((s) => {
+                          return {
+                            ...s,
+                            status: Number(e.target.value),
+                          };
+                        });
+                      }}
+                    >
+                      <option value={0}>Draft</option>
+                      <option value={1}>Submit for review</option>
+                    </SelectInput>
+                  </div>
                   <div className="flex justify-between my-4 sticky top-2 z-50 bg-white">
                     <button
                       onClick={handlePrev}

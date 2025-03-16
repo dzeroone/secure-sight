@@ -2,8 +2,10 @@ import { COLLECTIONS, MASTER_ADMIN_DB, REPORT_AUDIT_STATUS } from "../constant"
 import { getMontlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
 import assignmentModel, { AssignmentDocumentType } from "../models/assignmentModel"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
-import { MonthlyReportDocumentType } from "../models/monthlyReportModel"
 import { ReportAssignmentValidationValues } from "../validators/report-assignment.validator"
+import monthlyReportController from "./assignment-report.controller"
+
+export type ReportType = 'monthly' | 'weekly'
 
 class AssignmentController {
   async getById(id: string) {
@@ -209,7 +211,7 @@ class AssignmentController {
     }).lean()
   }
 
-  async getAssignmentForReport(index: string, reporterId: string, reportType: 'monthly' | 'weekly') {
+  async getAssignmentForReporter(index: string, reporterId: string, reportType: ReportType) {
     const assignment = await assignmentModel.findOne({
       rType: reportType,
       index,
@@ -218,7 +220,7 @@ class AssignmentController {
     return assignment
   }
 
-  async getAssigneesForReport(index: string, reportType: 'monthly' | 'weekly') {
+  async getAssigneesForReport(index: string, reportType: ReportType) {
     const assignments = await assignmentModel.find({
       rType: reportType,
       index,
@@ -241,9 +243,9 @@ class AssignmentController {
     })
   }
 
-  async getMonthlySubmissions(assignee: Express.User) {
+  async getSubmissions(assignee: Express.User, reportType: ReportType) {
     const assignments = await assignmentModel.find({
-      rType: 'monthly',
+      rType: reportType,
       aBy: assignee._id,
       status: {
         $exists: true
@@ -270,7 +272,7 @@ class AssignmentController {
         role: 1
       })
 
-      const uAssignment = await this.getAssignmentForReport(assignment.index!, assignee._id, 'monthly')
+      const uAssignment = await this.getAssignmentForReporter(assignment.index!, assignee._id, reportType)
       assignment.isRoot = !uAssignment
 
       assignment.reporter = reporter
@@ -278,9 +280,18 @@ class AssignmentController {
     return assignments
   }
 
-  async getMonthlyAssignmentByReportIdForAssignee(reportId: string, assignedBy: string) {
+  async getAssignmentByReportIdForAssignee(reportId: string, assignedBy: string, reportType: ReportType) {
     return assignmentModel.findOne({
+      rType: reportType,
       reportId,
+      aBy: assignedBy
+    })
+  }
+
+  async getAssignmentByIndexForAssignee(index: string, assignedBy: string, reportType: ReportType) {
+    return assignmentModel.findOne({
+      rType: reportType,
+      index,
       aBy: assignedBy
     })
   }

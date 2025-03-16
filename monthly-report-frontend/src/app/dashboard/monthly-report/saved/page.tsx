@@ -152,7 +152,7 @@ export default function Page() {
   const getReports = useCallback(async () => {
     try {
       setProcessing(true);
-      const res = await axiosApi.get("/monthly-reports", {
+      const res = await axiosApi.get("/assignment-reports/monthly", {
         params: {
           page: page + 1,
           search: searchText,
@@ -315,7 +315,7 @@ export default function Page() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                colSpan={4}
+                colSpan={5}
                 rowsPerPageOptions={[20]}
                 page={page}
                 rowsPerPage={20}

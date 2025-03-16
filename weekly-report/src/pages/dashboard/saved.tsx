@@ -8,6 +8,10 @@ import Navbar from "../../components/Navbar";
 import { confirm } from "../../utils/confirm";
 import { withAuth } from "../../hocs/withAuth";
 import axiosApi from "../../config/axios";
+import {
+  getReportAuditStatusTitle,
+  getReportStatusTitle,
+} from "../../utils/helpers";
 
 function SavedReportsPage() {
   const [report, setReport] = useState<{ count: number; data: any[] }>({
@@ -23,7 +27,7 @@ function SavedReportsPage() {
     try {
       setProcessing(true);
       const res = await axiosApi(
-        `/weekly-reports?page=${page + 1}&search=${searchText}`
+        `/assignment-reports/weekly?page=${page + 1}&search=${searchText}`
       );
       const data = res.data;
       setReport({
@@ -140,6 +144,9 @@ function SavedReportsPage() {
                     <p className="text-sm leading-none font-normal">Saved At</p>
                   </th>
                   <th className="p-4">
+                    <p className="text-sm leading-none font-normal">Status</p>
+                  </th>
+                  <th className="p-4">
                     <p></p>
                   </th>
                 </tr>
@@ -173,6 +180,22 @@ function SavedReportsPage() {
                         </p>
                       </td>
                       <td className="p-4">
+                        <p className="text-sm">
+                          {[
+                            getReportStatusTitle(report.status),
+                            getReportAuditStatusTitle(report.auditStatus),
+                          ]
+                            .filter((s) => s)
+                            .map((s) => {
+                              return (
+                                <span key={s} className="p-1 mr-1 bg-slate-400">
+                                  {s}
+                                </span>
+                              );
+                            })}
+                        </p>
+                      </td>
+                      <td className="p-4">
                         <div className="flex flex-row gap-2">
                           <Link
                             className="flex items-center rounded-md bg-gradient-to-tr from-slate-800 to-slate-700 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -195,7 +218,7 @@ function SavedReportsPage() {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan={5} className="p-4">
+                  <td colSpan={6} className="p-4">
                     <ReactPaginate
                       className="list-none flex gap-2 items-center"
                       pageLinkClassName="py-2 px-4 border rounded-lg"

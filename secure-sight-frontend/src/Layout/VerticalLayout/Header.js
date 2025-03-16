@@ -43,7 +43,7 @@ styleSheet.textContent = `
 .loading-bar {
   width: 100%;
   height: 4px;  /* Height of the loading bar */
-  background-iamge: linear-gradient(
+  background: linear-gradient(
     -225deg,
     #ffccff 0%,
     #b3a0ff 50%,

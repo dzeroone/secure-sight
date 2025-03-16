@@ -43,7 +43,10 @@ const Navbar = () => {
             Blog
           </a> */}
         </div>
-        <div className="ml-auto">
+        <div className="flex flex-row items-center gap-1 ml-auto">
+          {currentUser ? (
+            <span className="text-white">{currentUser?.email}</span>
+          ) : null}
           <button
             onClick={signout}
             className="block mt-4 lg:inline-block lg:mt-0 py-1 px-2 border rounded-lg text-white transition-all hover:bg-white hover:text-green-800 mr-4"

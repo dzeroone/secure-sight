@@ -15,6 +15,6 @@ const dbSchema = new Schema({
   uAt: Date
 })
 
-export type MonthlyReportDocumentType = HydratedDocumentFromSchema<typeof dbSchema>
+export type AssignmentReportDocumentType = HydratedDocumentFromSchema<typeof dbSchema>
 
-export default model('monthlyReport', dbSchema)
+export default model('assignmentReport', dbSchema)

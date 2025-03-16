@@ -1,0 +1,111 @@
+import { Router } from "express";
+import { auth } from "../utils/auth-util";
+import assignmentReportController from "../controllers/assignment-report.controller";
+import { monthlyReportEditValidationSchema, monthlyReportValidationSchema } from "../validators/monthly-report.validator";
+import { REPORT_STATUS } from "../constant";
+import assignmentController, { ReportType } from "../controllers/assignment.controller";
+import { weeklyReportValidationSchema } from "../validators/weekly-report.validator";
+
+const router = Router()
+
+router.get('/:reportType(monthly|weekly)',
+  auth,
+  async (req, res) => {
+    try {
+      const doc = await assignmentReportController.getPaginated(req.query, req.user!, req.params.reportType as ReportType);
+      res.send(doc)
+    } catch (e) {
+      res.status(400).send(e)
+    }
+  }
+)
+
+router.post('/:reportType(monthly|weekly)',
+  auth,
+  async (req, res) => {
+    try {
+      console.log(req.params)
+      const reportType = req.params.reportType as ReportType
+
+      const data = reportType == 'monthly' ? await monthlyReportValidationSchema.validate(req.body) : await weeklyReportValidationSchema.validate(req.body)
+
+      const doc = await assignmentReportController.save(data, req.user!, reportType);
+      if (req.body.status == REPORT_STATUS.SUBMIT) {
+        const assignment = await assignmentController.getAssignmentForReporter(doc.index!, req.user!._id, reportType)
+        if (!assignment) throw new Error("Assignment information not found")
+
+        await assignmentController.reportSubmitted(assignment, doc._id.toString())
+      }
+      res.send(doc)
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.get('/:reportType(monthly|weekly)/:id',
+  auth,
+  async (req, res) => {
+    try {
+      const reportType = req.params.reportType as ReportType
+
+      const doc = await assignmentReportController.getById(req.params.id);
+      if (!doc) throw new Error("Report not found!")
+
+      if (doc.reporterId != req.user?._id.toString()) {
+        if (doc.status == REPORT_STATUS.SUBMIT) {
+          const assignees = await assignmentController.getAssigneesForReport(doc.index!, reportType)
+          if (!assignees.includes(req.user?._id)) {
+            throw new Error("You are not appropriate reporter")
+          }
+        } else {
+          throw new Error("You are not appropriate reporter")
+        }
+      }
+
+      res.send(doc)
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.patch('/:reportType(monthly|weekly)/:id',
+  auth,
+  async (req, res) => {
+    try {
+      const reportType = req.params.reportType as ReportType
+
+      const doc = await assignmentReportController.getById(req.params.id);
+      if (!doc) throw new Error("Report not found!")
+      if (doc.reporterId != req.user?._id.toString()) {
+        throw new Error("You are not appropriate reporter")
+      }
+      if (doc.status == REPORT_STATUS.SUBMIT) {
+        throw new Error("This report is already submitted for review.")
+      }
+
+
+      const data = await monthlyReportEditValidationSchema.validate(req.body)
+      if (req.body.status == REPORT_STATUS.SUBMIT) {
+        const assignment = await assignmentController.getAssignmentForReporter(doc.index!, req.user!._id, reportType)
+        if (!assignment) throw new Error("Assignment information not found")
+
+        await assignmentController.reportSubmitted(assignment, doc._id.toString())
+      }
+      await assignmentReportController.update(doc, data, reportType)
+
+      res.send(doc)
+    } catch (e: any) {
+      res.status(400).json({
+        message: e.message
+      })
+    }
+  }
+)
+
+export default router

@@ -205,10 +205,10 @@ const MonthlyReportForm = () => {
   const saveMonthlyReport = async () => {
     try {
       dispatch(setProcessing(true));
-      let url = `/monthly-reports`;
+      let url = `/assignment-reports/monthly`;
       let requestMethod = "POST";
       if (reportId) {
-        url = `/monthly-reports/${reportId}`;
+        url = `/assignment-reports/monthly/${reportId}`;
         requestMethod = "PATCH";
       }
       const toSubmit: any = {

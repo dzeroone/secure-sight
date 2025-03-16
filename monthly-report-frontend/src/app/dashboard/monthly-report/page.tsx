@@ -62,9 +62,12 @@ const MonthlyReportPage = () => {
       if (reportId) {
         dispatch(setProcessing(true));
 
-        const res = await axiosApi.get(`/monthly-reports/${reportId}`, {
-          responseType: "json",
-        });
+        const res = await axiosApi.get(
+          `/assignment-reports/monthly/${reportId}`,
+          {
+            responseType: "json",
+          }
+        );
         const responseData = res.data;
         dispatch(resetMonthlyReportState(responseData.data));
         dispatch(setStatusFromServer(responseData.status));
