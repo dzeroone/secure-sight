@@ -82,8 +82,8 @@ export const CheckboxArrayField = ({
   inputClassName
 }) => {
   const handleClick = (e, value, formik) => {
-    const { checked } = e.target;
-    if (checked) {
+    const i = formik.values[name].indexOf(value)
+    if (i > -1) {
       arrayHelpers.remove(formik.values[name].indexOf(value))
     } else {
       arrayHelpers.push(value)

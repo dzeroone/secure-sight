@@ -45,6 +45,7 @@ import { ROLES } from "../data/roles";
 import AssignWeeklyReportPage from "../Pages/Dashboard/assign/weekly-report";
 import MonthlySubmissionsPage from "../Pages/submissions/monthly-submissions";
 import WeeklySubmissionsPage from "../Pages/submissions/weekly-submissions";
+import AssignmentMessagePage from "../Pages/assignments/[id]";
 
 export const history = createBrowserHistory({ window });
 
@@ -97,6 +98,10 @@ const authProtectedRoutes = [
   {
     roles: [ROLES.LEVEL3, ROLES.LEVEL2],
     path: "/assign/weekly-report", component: <AssignWeeklyReportPage />
+  },
+  {
+    roles: [ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1],
+    path: "/assignments/:id", component: <AssignmentMessagePage />
   },
 
   // submissions

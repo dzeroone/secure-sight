@@ -20,7 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PointDropBG from "../../components/point-drop-bg";
 
 const Login = (props) => {
-  document.title = "Login | Secure Sight";
+  document.title = "Login | Eventus";
 
   const dispatch = useDispatch();
 
@@ -67,7 +67,7 @@ const Login = (props) => {
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0. 6)",
                 }}
               >
-                Custom Reports for CloudOne/Deep Security <br /> All in One
+                Custom Reports for Eventus Security <br /> All in One
               </h2>
               <h2
                 style={{
@@ -79,8 +79,11 @@ const Login = (props) => {
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
                 }}
               >
-                Unlock insights with tailored reports for CloudOne and Deep Security. Streamline security and make informed decisions.
+                The Eventus Security SOC Automated Reporting Tool is an advanced solution designed to automate the generation, encryption, and distribution of security reports. It seamlessly integrates with SOAR (Security Orchestration, Automation, and Response) platforms and Trend Micro Vision One to pull critical security data, including alerts, incidents, and threat intelligence. The tool then aggregates, normalizes, and analyzes this data to generate comprehensive weekly and monthly reports that provide valuable insights into the security landscape.
               </h2>
+              <p className="text-start">
+                The Eventus Security SOC Automated Reporting Tool boosts security, compliance, and operational efficiency by automating reporting and incorporating strong encryption features. It helps SOC teams reduce manual work, allowing them to concentrate on more valuable tasks, making it an essential tool for handling large amounts of sensitive data.
+              </p>
               {/* <div className="text-center">
                 <img
                   src="https://png.pngtree.com/thumb_back/fw800/background/20230928/pngtree-dark-background-showcasing-3d-safety-security-logo-and-ample-copy-space-image_13513928.png"
@@ -113,7 +116,7 @@ const Login = (props) => {
                     textAlign: "left",
                   }}
                 >
-                  Welcome Back
+                  Welcome
                 </h1>
                 <p
                   className="mb-5"

@@ -241,7 +241,7 @@ export function FormCustomer({
                         {connectors.map((c, i) => {
                           return <CheckboxArrayField
                             name="connectors"
-                            index={`connectors[${i}]`}
+                            index={i}
                             label={c.name.replaceAll('_', ' ')}
                             arrayHelpers={arrayHelpers}
                             value={c._id}

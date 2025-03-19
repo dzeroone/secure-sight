@@ -1,9 +1,9 @@
 import { COLLECTIONS, MASTER_ADMIN_DB, REPORT_AUDIT_STATUS } from "../constant"
 import { getMontlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
+import assignmentMessageModel from "../models/assignmentMessageModel"
 import assignmentModel, { AssignmentDocumentType } from "../models/assignmentModel"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { ReportAssignmentValidationValues } from "../validators/report-assignment.validator"
-import monthlyReportController from "./assignment-report.controller"
 
 export type ReportType = 'monthly' | 'weekly'
 
@@ -24,6 +24,32 @@ class AssignmentController {
     }, {
       $set: data
     })
+  }
+
+  async getCustomerInfo(customerId: string) {
+    const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+    return CustomerModel.findOne({ _id: customerId }, { name: 1, tCode: 1 }).lean()
+  }
+
+  async getUserInfo(userId: string) {
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    return UserModel.findOne({
+      _id: userId
+    }, { fullname: 1, role: 1 }).lean()
+  }
+
+  async getMessages(assingmentId: string) {
+    return assignmentMessageModel.find({ aId: assingmentId }).sort({ cAt: 1 })
+  }
+
+  async saveMessage(assingmentId: string, senderId: string, message: string) {
+    const data = new assignmentMessageModel({
+      aId: assingmentId,
+      sId: senderId,
+      msg: message,
+      cAt: new Date()
+    })
+    return data.save()
   }
 
   async getMonthlyAssignmentsForDate(date: string, assignedBy: string) {
@@ -230,11 +256,12 @@ class AssignmentController {
     return assignments.map(a => a.aBy)
   }
 
-  async reportSubmitted(assignment: AssignmentDocumentType, reportId: string) {
+  async reportSubmitted(assignment: AssignmentDocumentType, reportId: string, submitterId: string) {
     return await assignment.updateOne({
       $set: {
         reportId,
         status: REPORT_AUDIT_STATUS.SUBMITTED,
+        sCBy: submitterId,
         uAt: new Date()
       },
       $unset: {
@@ -274,6 +301,19 @@ class AssignmentController {
 
       const uAssignment = await this.getAssignmentForReporter(assignment.index!, assignee._id, reportType)
       assignment.isRoot = !uAssignment
+
+      if (uAssignment) {
+        const assignee = await UserModel.findOne({
+          _id: uAssignment.aBy
+        }, {
+          fullname: 1,
+          role: 1
+        })
+        assignment.upperAssignment = {
+          _id: uAssignment._id,
+          assignedBy: assignee
+        }
+      }
 
       assignment.reporter = reporter
     }

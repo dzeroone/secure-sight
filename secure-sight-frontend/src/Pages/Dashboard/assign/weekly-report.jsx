@@ -1,14 +1,17 @@
 import { format, getDay, isAfter, isBefore, subDays } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
-import { Badge, Col, Container, FormGroup, Label, Table } from "reactstrap";
+import { Badge, Button, ButtonGroup, Col, Container, FormGroup, Label, Table } from "reactstrap";
 import ApiEndPoints from "../../../Network_call/ApiEndPoints";
 import ApiServices from "../../../Network_call/apiservices";
 import BreadcrumbWithTitle from "../../../components/Common/BreadcrumbWithTitle";
 import DropdownReportAssignment from "../../../components/DropdownReportAssignment";
 import ModalLoading from "../../../components/ModalLoading";
 import { getMonthlyReportIndex, getWeeklyReportIndex } from "../../../helpers/form_helper";
-import { getRoleTitle } from "../../../helpers/utils";
+import { getErrorMessage, getRoleTitle } from "../../../helpers/utils";
+import { CrossIcon, MessageSquareIcon, XIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import swal from "sweetalert";
 
 const linkStack = [
   {title: 'Dashboard', route: '/dashboard'},
@@ -20,6 +23,7 @@ export default function AssignWeeklyReportPage() {
   const [busy, setBusy] = useState(false)
 
   const [customers, setCustomers] = useState([])
+  const navigate = useNavigate()
 
   const getAssignments = useCallback(async () => {
     if(!date) return
@@ -68,6 +72,36 @@ export default function AssignWeeklyReportPage() {
     return day === 1
   }, [])
 
+  const removeAssignment = async (customer, assignment) => {
+    try {
+      const confirmed = await swal({
+        title: 'Are you sure?',
+        buttons: {
+          cancel: true,
+          confirm: true
+        }
+      }) 
+      if(!confirmed) return 
+      
+      setBusy(true)
+      await ApiServices(
+        'delete',
+        null,
+        `${ApiEndPoints.Assignments}/${assignment._id}`
+      )
+      onUnAssigned(customer._id, assignment._id)
+    }catch(e) {
+      const msg = getErrorMessage(e)
+      alert(msg)
+    }finally{
+      setBusy(false)
+    }
+  }
+
+  const gotoMessagingScreen = (assingment) => {
+    navigate(`/assignments/${assingment._id}`)
+  }
+
   useEffect(() => {
     getAssignments()
   }, [getAssignments])
@@ -113,10 +147,18 @@ export default function AssignWeeklyReportPage() {
                   <div className="d-flex flex-wrap gap-1">
                     {customer.assignments.map(assignment => {
                       return (
-                        <Badge tag='div' key={assignment._id}>
-                          <div>{assignment.reporter.fullname}</div>
-                          <div>{getRoleTitle(assignment.reporter.role)}</div>
-                        </Badge>
+                        <ButtonGroup size="sm" key={assignment._id}>
+                          <Button outline>
+                            {assignment.reporter.fullname} - 
+                            {getRoleTitle(assignment.reporter.role)}
+                          </Button>
+                          <Button onClick={() => removeAssignment(customer, assignment)} outline>
+                            <XIcon size='1em' />
+                          </Button>
+                          <Button onClick={() => gotoMessagingScreen(assignment)} outline>
+                            <MessageSquareIcon size='1em' />
+                          </Button>
+                        </ButtonGroup>
                       )
                     })}
                     <div className="d-inline-flex">

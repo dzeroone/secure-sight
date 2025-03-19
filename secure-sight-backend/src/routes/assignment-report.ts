@@ -4,7 +4,7 @@ import assignmentReportController from "../controllers/assignment-report.control
 import { monthlyReportEditValidationSchema, monthlyReportValidationSchema } from "../validators/monthly-report.validator";
 import { REPORT_STATUS } from "../constant";
 import assignmentController, { ReportType } from "../controllers/assignment.controller";
-import { weeklyReportValidationSchema } from "../validators/weekly-report.validator";
+import { weeklyReportEditValidationSchema, weeklyReportValidationSchema } from "../validators/weekly-report.validator";
 
 const router = Router()
 
@@ -24,7 +24,6 @@ router.post('/:reportType(monthly|weekly)',
   auth,
   async (req, res) => {
     try {
-      console.log(req.params)
       const reportType = req.params.reportType as ReportType
 
       const data = reportType == 'monthly' ? await monthlyReportValidationSchema.validate(req.body) : await weeklyReportValidationSchema.validate(req.body)
@@ -34,7 +33,7 @@ router.post('/:reportType(monthly|weekly)',
         const assignment = await assignmentController.getAssignmentForReporter(doc.index!, req.user!._id, reportType)
         if (!assignment) throw new Error("Assignment information not found")
 
-        await assignmentController.reportSubmitted(assignment, doc._id.toString())
+        await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id)
       }
       res.send(doc)
     } catch (e: any) {
@@ -89,13 +88,13 @@ router.patch('/:reportType(monthly|weekly)/:id',
         throw new Error("This report is already submitted for review.")
       }
 
+      const data = reportType == 'monthly' ? await monthlyReportEditValidationSchema.validate(req.body) : await weeklyReportEditValidationSchema.validate(req.body)
 
-      const data = await monthlyReportEditValidationSchema.validate(req.body)
       if (req.body.status == REPORT_STATUS.SUBMIT) {
         const assignment = await assignmentController.getAssignmentForReporter(doc.index!, req.user!._id, reportType)
         if (!assignment) throw new Error("Assignment information not found")
 
-        await assignmentController.reportSubmitted(assignment, doc._id.toString())
+        await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id)
       }
       await assignmentReportController.update(doc, data, reportType)
 

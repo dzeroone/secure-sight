@@ -155,16 +155,12 @@ const Sidebar = (props) => {
 								<React.Fragment key={key}>
 									{item.isMainMenu ? (
 										<li
-											className="menu-title"
 											style={{
-												color: '#ffffff',
-												fontSize: '0.75rem',
-												textTransform: 'uppercase',
-												fontWeight: '600',
-												letterSpacing: '0.05em',
+												height: '1px',
+												margin: '1px 0',
+												backgroundColor: 'rgba(255, 255, 255, 0.2)'
 											}}
 										>
-											{props.t(item.label)}
 										</li>
 									) : (
 										<li
@@ -173,6 +169,7 @@ const Sidebar = (props) => {
 										>
 											<Link
 												to={item.url ? item.url : "/#"}
+												title={item.label}
 												className={`sidebar-link ${((item.issubMenubadge || item.isHasArrow)
 													? " "
 													: "has-arrow")}`}

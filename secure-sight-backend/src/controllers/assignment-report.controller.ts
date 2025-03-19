@@ -46,7 +46,7 @@ class AssignmentReportController {
         break;
     }
     const count = await assignmentReportModel.countDocuments(filterQuery)
-    const data = await assignmentReportModel.find(filterQuery).limit(20).skip((pageNumber - 1) * 20).lean()
+    const data = await assignmentReportModel.find(filterQuery).sort({ cAt: -1 }).limit(20).skip((pageNumber - 1) * 20).lean()
     return { count, data }
   }
   async save(data: MonthlyReportValidationValues | WeeklyReportValidationValues, user: Express.User, reportType: ReportType) {
@@ -90,7 +90,7 @@ class AssignmentReportController {
       })
     } else {
       data = data as WeeklyReportEditValidationValues
-      doc.updateOne({
+      return doc.updateOne({
         $set: {
           data: { formData: data.formData, reportData: data.reportData },
           status: data.status,

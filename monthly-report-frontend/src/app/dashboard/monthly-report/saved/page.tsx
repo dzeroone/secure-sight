@@ -292,15 +292,6 @@ export default function Page() {
                         <Edit />
                       </IconButton>
                       <IconButton
-                        LinkComponent={Link}
-                        edge="end"
-                        href={`/dashboard/monthly-report/saved/${report._id}`}
-                      >
-                        <Badge variant="dot" color="info">
-                          <Message />
-                        </Badge>
-                      </IconButton>
-                      <IconButton
                         edge="end"
                         // onClick={() => handleReportDeletion(report)}
                       >

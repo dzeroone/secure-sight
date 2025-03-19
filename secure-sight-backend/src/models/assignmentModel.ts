@@ -23,8 +23,10 @@ const assignmentSchema = new Schema({
   reportId: {
     type: String
   },
-  comment: String,
+  aMLS: Date, // assignee message last seen
+  rMLS: Date, // reporter message last seen
   status: Number,
+  sCBy: String, // status changed by
   cAt: Date,
   uAt: Date
 })

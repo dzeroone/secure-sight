@@ -1,10 +1,10 @@
 import { ROLES } from '../../data/roles'
 
 const SidebarData = [
-	{
-		label: "Dashboard",
-		isMainMenu: true
-	},
+	// {
+	// 	label: "Dashboard",
+	// 	isMainMenu: true
+	// },
 	{
 		roles: ['admin'],
 		label: "Dashboard",
@@ -81,7 +81,7 @@ const SidebarData = [
 	{
 		roles: [ROLES.LEVEL3, ROLES.LEVEL2],
 		label: "Submissions",
-		icon: "ri-table-2",
+		icon: "ri-article-line",
 		subItem: [
 			{
 				roles: [ROLES.LEVEL3, ROLES.LEVEL2],
@@ -141,25 +141,6 @@ const SidebarData = [
 				link: "/connector-schedule"
 			},
 		],
-	},
-	{
-		label: "CSV Data",
-		isMainMenu: true,
-		roles: ['admin']
-	},
-	{
-		roles: ['admin'],
-		label: "CSV-Data",
-		icon: "ri-file-excel-2-fill",
-		url: "/csv",
-		bgcolor: "bg-primary",
-		subItem: [
-			{
-				roles: ['admin'],
-				sublabel: "CSV List",
-				link: "/csv-list"
-			},
-		],
-	},
+	}
 ];
 export default SidebarData;

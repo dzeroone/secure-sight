@@ -36,6 +36,66 @@ router.delete('/:id',
   }
 )
 
+router.get('/:id/messages',
+  auth,
+  async (req, res) => {
+    try {
+      const data = await assignmentController.getById(req.params.id)
+      if (!data) {
+        const err: any = new Error("Assignment not found")
+        err.status = 404
+        throw err
+      }
+      if (data.aBy != req.user?._id && data.reporterId != req.user?._id) {
+        const err: any = new Error("You are not authorized!")
+        throw err
+      }
+      const dataWithParticipentAndMessages = {
+        info: {
+          date: data.date,
+          rType: data.rType,
+          lastSeen: data.aBy == req.user?._id ? data.aMLS : data.rMLS,
+          customer: await assignmentController.getCustomerInfo(data.cId!),
+          assignee: await assignmentController.getUserInfo(data.aBy!),
+          reporter: await assignmentController.getUserInfo(data.reporterId!)
+        },
+        messages: await assignmentController.getMessages(req.params.id)
+      }
+      res.send(dataWithParticipentAndMessages)
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.post('/:id/messages',
+  auth,
+  async (req, res) => {
+    try {
+      const data = await assignmentController.getById(req.params.id)
+      if (!data) {
+        const err: any = new Error("Assignment not found")
+        err.status = 404
+        throw err
+      }
+      if (data.aBy != req.user?._id && data.reporterId != req.user?._id) {
+        const err: any = new Error("You are not authorized!")
+        throw err
+      }
+      const message = req.body.message.trim()
+      if (message)
+        await assignmentController.saveMessage(req.params.id, req.user!._id, message)
+      res.sendStatus(200)
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
 router.get('/monthly',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
@@ -176,7 +236,8 @@ router.post('/monthly-submissions/:id/reaudit',
       }
 
       await assignmentController.updateById(assignment._id.toString(), {
-        status: REPORT_AUDIT_STATUS.AUDIT
+        status: REPORT_AUDIT_STATUS.AUDIT,
+        sCBy: req.user!._id
       })
 
       // if has leaf reporter who assigned this report to some other persion then
@@ -184,7 +245,8 @@ router.post('/monthly-submissions/:id/reaudit',
       const lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!, 'monthly')
       if (lAssignment) {
         await assignmentController.updateById(lAssignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.AUDIT
+          status: REPORT_AUDIT_STATUS.AUDIT,
+          sCBy: req.user!._id
         })
       } else {
         await assignmentReportController.updateById(report._id.toString(), {
@@ -218,19 +280,22 @@ router.post('/monthly-submissions/:id/approve',
       const uAssignment = await assignmentController.getAssignmentForReporter(assignment.index!, req.user!._id, 'monthly')
       if (uAssignment) {
         await assignmentController.updateById(assignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.PENDING
+          status: REPORT_AUDIT_STATUS.PENDING,
+          sCBy: req.user!._id
         })
-        await assignmentController.reportSubmitted(uAssignment, report._id.toString())
+        await assignmentController.reportSubmitted(uAssignment, report._id.toString(), req.user!._id)
       } else {
         // most top level user approved the report, so approve all leaf reporter's reports
         await assignmentController.updateById(assignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.APPROVED
+          status: REPORT_AUDIT_STATUS.APPROVED,
+          sCBy: req.user!._id
         })
 
         let lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!, 'monthly')
         while (lAssignment) {
           await assignmentController.updateById(lAssignment._id.toString(), {
-            status: REPORT_AUDIT_STATUS.APPROVED
+            status: REPORT_AUDIT_STATUS.APPROVED,
+            sCBy: req.user!._id
           })
           lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, lAssignment.reporterId!, 'monthly')
         }
@@ -276,7 +341,8 @@ router.post('/weekly-submissions/:id/reaudit',
       }
 
       await assignmentController.updateById(assignment._id.toString(), {
-        status: REPORT_AUDIT_STATUS.AUDIT
+        status: REPORT_AUDIT_STATUS.AUDIT,
+        sCBy: req.user!._id
       })
 
       // if has leaf reporter who assigned this report to some other persion then
@@ -284,7 +350,8 @@ router.post('/weekly-submissions/:id/reaudit',
       const lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!, 'weekly')
       if (lAssignment) {
         await assignmentController.updateById(lAssignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.AUDIT
+          status: REPORT_AUDIT_STATUS.AUDIT,
+          sCBy: req.user!._id
         })
       } else {
         await assignmentReportController.updateById(report._id.toString(), {
@@ -318,25 +385,28 @@ router.post('/weekly-submissions/:id/approve',
       const uAssignment = await assignmentController.getAssignmentForReporter(assignment.index!, req.user!._id, 'weekly')
       if (uAssignment) {
         await assignmentController.updateById(assignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.PENDING
+          status: REPORT_AUDIT_STATUS.PENDING,
+          sCBy: req.user!._id
         })
-        await assignmentController.reportSubmitted(uAssignment, report._id.toString())
+        await assignmentController.reportSubmitted(uAssignment, report._id.toString(), req.user!._id)
       } else {
         // most top level user approved the report, so approve all leaf reporter's reports
         await assignmentController.updateById(assignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.APPROVED
+          status: REPORT_AUDIT_STATUS.APPROVED,
+          sCBy: req.user!._id
         })
 
         let lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!, 'weekly')
         while (lAssignment) {
           await assignmentController.updateById(lAssignment._id.toString(), {
-            status: REPORT_AUDIT_STATUS.APPROVED
+            status: REPORT_AUDIT_STATUS.APPROVED,
+            sCBy: req.user!._id
           })
           lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, lAssignment.reporterId!, 'weekly')
         }
 
         await assignmentReportController.updateById(report._id.toString(), {
-          auditStatus: REPORT_AUDIT_STATUS.APPROVED
+          auditStatus: REPORT_AUDIT_STATUS.APPROVED,
         })
       }
       res.sendStatus(201)
