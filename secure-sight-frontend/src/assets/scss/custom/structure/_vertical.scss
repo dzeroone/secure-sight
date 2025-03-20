@@ -10,6 +10,15 @@
 .metismenu {
   margin: 0;
 
+  > li {
+    &::after {
+      content: "";
+      display: block;
+      height: 1px;
+      background-color: color-mix(in srgb, var(--bs-white) 20%, transparent);
+    }
+  }
+
   li {
     display: block;
     width: 100%;
@@ -143,7 +152,7 @@
       }
 
       ul.sub-menu {
-        padding-left: 2rem;
+        padding-left: 2.2rem;
 
         li {
           a {

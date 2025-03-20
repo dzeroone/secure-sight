@@ -1,10 +1,6 @@
 import { ROLES } from '../../data/roles'
 
 const SidebarData = [
-	// {
-	// 	label: "Dashboard",
-	// 	isMainMenu: true
-	// },
 	{
 		roles: ['admin'],
 		label: "Dashboard",
@@ -74,11 +70,6 @@ const SidebarData = [
 		],
 	},
 	{
-		label: "Submissions",
-		isMainMenu: true,
-		roles: [ROLES.LEVEL3, ROLES.LEVEL2]
-	},
-	{
 		roles: [ROLES.LEVEL3, ROLES.LEVEL2],
 		label: "Submissions",
 		icon: "ri-article-line",
@@ -96,11 +87,6 @@ const SidebarData = [
 		],
 	},
 	{
-		label: "Report",
-		isMainMenu: true,
-		roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1]
-	},
-	{
 		roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1],
 		label: "Reports",
 		icon: "ri-table-2",
@@ -116,11 +102,6 @@ const SidebarData = [
 				link: "/reports/weekly-report",
 			}
 		],
-	},
-	{
-		label: "Connector",
-		isMainMenu: true,
-		roles: ['admin'],
 	},
 	{
 		roles: ['admin'],
