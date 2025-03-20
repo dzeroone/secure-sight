@@ -1044,16 +1044,14 @@
 
 // export default CreateDashboard;
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import { DashboardList, ReportList } from "../ulit/dashboardlist";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
+import { DashboardList, ReportList } from "../ulit/dashboardlist";
 // import { DashboardList, ReportList } from "../../util/dashboardlist"; // Fixed import path
 
 const CreateDashboard = () => {
-  document.title = "Create Dashboard | Secure Sight";
 
   const [dashboardName, setDashboardName] = useState("");
   const [userData, setUserData] = useState({
@@ -1145,8 +1143,8 @@ const CreateDashboard = () => {
 
   return (
     <React.Fragment>
-      <ToastContainer />
       <div className="page-content dark-dashboard">
+        <BreadcrumbWithTitle title="Create dashboard" />
         <div className="gradient-overlay"></div>
         <div className="container-fluid">
           <div className="dashboard-header">
@@ -1209,11 +1207,10 @@ const CreateDashboard = () => {
                         className="dark-button"
                       >
                         <i
-                          className={`bx ${
-                            isLoading
-                              ? "bx-loader-alt bx-spin"
-                              : "bx-plus-circle"
-                          }`}
+                          className={`bx ${isLoading
+                            ? "bx-loader-alt bx-spin"
+                            : "bx-plus-circle"
+                            }`}
                         ></i>
                         <span>
                           {isLoading ? "Creating..." : "Create Dashboard"}

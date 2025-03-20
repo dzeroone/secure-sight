@@ -1,19 +1,14 @@
-import { useFormik } from "formik";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, Form, FormFeedback, Input, Label } from "reactstrap";
-import * as Yup from 'yup';
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import { FormCustomer } from "../../components/FormCustomer";
 import ModalLoading from "../../components/ModalLoading";
 
 export default function EditCustomerPage(props) {
-  document.title = "Customer Edit | Secure Sight";
-
   const params = useParams()
-  const navigate = useNavigate()
   const id = params.id
 
   const [defaultValues, setDefaultValues] = useState(null)
@@ -118,7 +113,7 @@ export default function EditCustomerPage(props) {
 
   return (
     <div className="page-content">
-      <h1>Edit customer</h1>
+      <BreadcrumbWithTitle title="Edit customer" />
       <FormCustomer
         enableReinitialize={true}
         defaultValues={defaultValues}

@@ -6,10 +6,9 @@ import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import { getRoleTitle } from "../../helpers/utils";
 import ModalLoading from "../../components/ModalLoading";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 
 export default function UserIndexPage() {
-  document.title = "Users | Secure Sight";
-
   const [users, setUsers] = useState([])
   const [busy, setBusy] = useState(false)
 
@@ -36,8 +35,7 @@ export default function UserIndexPage() {
 
   return (
     <div className="page-content">
-      <div className="d-flex flex-row justify-content-between align-items-center">
-        <h1>Users</h1>
+      <BreadcrumbWithTitle title="Users" endContent={
         <div>
           <Link className="btn btn-primary" id="btn-add" to='/users/new'>
             <UserPlus2Icon />
@@ -49,7 +47,7 @@ export default function UserIndexPage() {
             Add User
           </UncontrolledTooltip>
         </div>
-      </div>
+      } />
       <Table className="overflow-auto">
         <thead>
           <tr>

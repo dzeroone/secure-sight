@@ -1,38 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Container,
-  Row,
-  Col,
-  Card,
   Alert,
-  CardBody,
   Button,
-  Label,
-  Input,
-  FormFeedback,
+  Card,
+  CardBody,
+  Col,
+  Container,
   Form,
+  FormFeedback,
+  Input,
+  Label,
+  Row,
 } from "reactstrap";
 
 // Formik Validation
-import * as Yup from "yup";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import withRouter from "../../components/Common/withRouter";
 
 //Import Breadcrumb
-import Breadcrumb from "../../components/Common/Breadcrumb";
 
-import avatar from "../../assets/images/users/avatar-1.jpg";
 // actions
-import { editProfile, resetProfileFlag } from "../../store/actions";
 import user1 from "../../assets/images/logo/Images/profile.png";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
+import { editProfile, resetProfileFlag } from "../../store/actions";
 
 const UserProfile = () => {
-  document.title = "Profile | Secure Sight";
-
   const dispatch = useDispatch();
 
   const [email, setemail] = useState("");
@@ -80,7 +77,7 @@ const UserProfile = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumb title="User" breadcrumbItem="Profile" />
+          <BreadcrumbWithTitle title="Profile" />
 
           <Row className="justify-content-center">
             <Col lg="8">

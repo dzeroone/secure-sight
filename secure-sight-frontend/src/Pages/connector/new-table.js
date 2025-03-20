@@ -15,10 +15,9 @@ import {
 } from "../ulit/commonFunction";
 
 import ModalLoading from "../../components/ModalLoading";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 
 const ConnectorListTwo = () => {
-	// document.title = "Connector List | Trend Micro Unity";
-	document.title = "Connector List | Secure Sight"
 	const tooltipMessage = 'Config data is not added';
 
 	const [openLoader, setOpenLoader] = useState(false);
@@ -311,6 +310,7 @@ const ConnectorListTwo = () => {
 
 	return (
 		<Fragment>
+			<BreadcrumbWithTitle title="Connector List" />
 			<Row>
 				<Col md={12}>
 					<Card>

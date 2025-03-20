@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from 'react';
 
-import { Row, Col, Card, CardBody, CardTitle, CardSubtitle } from 'reactstrap';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+import { Card, CardBody, Col, Row } from 'reactstrap';
 
 //Import Breadcrumb
-import Breadcrumbs, { Breadcrumbsub } from '../../components/Common/Breadcrumb';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import swal from 'sweetalert';
-import ApiServices from '../../Network_call/apiservices';
+import { Breadcrumbsub } from '../../components/Common/Breadcrumb';
 import ApiEndPoints from '../../Network_call/ApiEndPoints';
+import ApiServices from '../../Network_call/apiservices';
 import { DashboardList, ReportList } from '../ulit/dashboardlist';
 
-import EditModals from '../../components/Common/editModel';
-import { Link } from 'react-router-dom';
-import { Backdrop, CircularProgress } from '@mui/material';
 import { CloseOutlined } from '@mui/icons-material';
+import { Backdrop, CircularProgress } from '@mui/material';
+import { Link } from 'react-router-dom';
+import BreadcrumbWithTitle from '../../components/Common/BreadcrumbWithTitle';
 import DeleteModal from '../../components/Common/DeleteModal';
+import EditModals from '../../components/Common/editModel';
 
 const DeleteDashboard = () => {
-  // document.title = "Dashboard | trend micro unity";
-  document.title = 'Dashboard | Secure Sight';
   const [dashboardList, setDadhboardList] = useState([]);
   const [openLoader, setOpenLoader] = React.useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -121,7 +119,6 @@ const DeleteDashboard = () => {
 
   return (
     <React.Fragment>
-      <ToastContainer />
       <DeleteModal
         show={deleteModal}
         onDeleteClick={DeleteDashboard}
@@ -137,7 +134,7 @@ const DeleteDashboard = () => {
       />
       <div className="page-content">
         <div className="container-fluid">
-          <Breadcrumbs title="Dashboard" breadcrumbItem="List" />
+          <BreadcrumbWithTitle title="Dashboard list" />
 
           <Row>
             <Col lg={12}>

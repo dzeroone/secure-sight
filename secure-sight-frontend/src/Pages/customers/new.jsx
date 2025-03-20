@@ -1,16 +1,11 @@
-import { Formik, useFormik } from "formik";
-import * as Yup from 'yup';
-import ApiServices from "../../Network_call/apiservices";
-import ApiEndPoints from "../../Network_call/ApiEndPoints";
-import { toast } from "react-toastify";
-import { Button, Card, CardBody, Col, Container, Form, FormFeedback, Input, Label, Row } from "reactstrap";
-import { DateField, InputField } from "../../components/form-fields";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import { FormCustomer } from "../../components/FormCustomer";
+import ApiEndPoints from "../../Network_call/ApiEndPoints";
+import ApiServices from "../../Network_call/apiservices";
 
 export default function NewCustomerPage(props) {
-  document.title = "New Customer | Secure Sight";
-
   const [connectors, setConnectors] = useState([])
   const [busy, setBusy] = useState(false)
 
@@ -118,7 +113,7 @@ export default function NewCustomerPage(props) {
 
   return (
     <div className="page-content">
-      <h1>New customer</h1>
+      <BreadcrumbWithTitle title="New customer" />
       <FormCustomer
         defaultValues={defaultValues}
         onSubmit={handleSubmit}

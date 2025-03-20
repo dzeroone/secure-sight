@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Col, Row } from "reactstrap";
-import Breadcrumbs from "../../components/Common/Breadcrumb";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import ModalLoading from "../../components/ModalLoading";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
@@ -14,8 +14,6 @@ import {
 import ConnectorListTwo from "./new-table";
 
 const ConnectorSchedule = () => {
-	// document.title = "scheduler | trend micro unity";
-	document.title = "scheduler | Secure Sight";
 	const [openLoader, setOpenLoader] = useState(false);
 	const [connectorList, setConnectorList] = useState([]);
 	const [connectorName, setConnectorName] = useState("");
@@ -170,7 +168,7 @@ const ConnectorSchedule = () => {
 	return (
 		<Fragment>
 			<div className="page-content">
-				<Breadcrumbs title="Schedule" breadcrumbItem="Connector" />
+				<BreadcrumbWithTitle title="Schedule" />
 				<Row>
 					<Col className="col-12 col-md-12">
 						<ConnectorListTwo />

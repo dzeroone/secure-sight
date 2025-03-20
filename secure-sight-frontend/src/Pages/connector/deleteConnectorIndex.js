@@ -1,40 +1,34 @@
 import { CloseOutlined } from "@mui/icons-material";
 import { Backdrop, CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Fragment, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
-  Container,
-  Col,
-  Row,
+  Card,
   CardBody,
   CardTitle,
-  Card,
-  Table,
-  Button,
+  Col,
+  Container,
+  Row,
+  Table
 } from "reactstrap";
-import swal from "sweetalert";
 
 //Import Breadcrumb
-import Breadcrumbs, { Breadcrumbsub } from "../../components/Common/Breadcrumb";
+import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
-import { Link } from "react-router-dom";
-import { allReplace } from "../ulit/commonFunction";
 import DeleteModal from "../Calender/DeleteModal";
+import { allReplace } from "../ulit/commonFunction";
 
 const DeleteConnectorIndexs = () => {
-  // document.title = "Connector Index Delete | Trend Micro Unity";
-  document.title = "Connector Index Delete | Secure Sight";
-
-  const [openLoader, setOpenLoader] = React.useState(false);
-  const [deleteModal, setDeleteModal] = React.useState(false);
-  const [connectorListData, setConnectorListData] = React.useState([]);
+  const [openLoader, setOpenLoader] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [connectorListData, setConnectorListData] = useState([]);
   const [searchedVal, setSearchedVal] = useState("");
   const [connectorName, setConnectorName] = useState("");
   const [indexName, setIndexName] = useState("");
   const [indexList, setIndexList] = useState([]);
-  const [userData, setUserData] = React.useState({
+  const [userData, setUserData] = useState({
     email: "",
     dbName: "",
     user_id: "",
@@ -99,8 +93,7 @@ const DeleteConnectorIndexs = () => {
     HandleConnectorChange();
   };
   return (
-    <React.Fragment>
-      <ToastContainer />
+    <Fragment>
       <div className="page-content">
         <DeleteModal
           show={deleteModal}
@@ -108,7 +101,7 @@ const DeleteConnectorIndexs = () => {
           onCloseClick={() => setDeleteModal(false)}
         />
         <Container fluid={true}>
-          <Breadcrumbs title="connector" breadcrumbItem="Connector List" />
+          <BreadcrumbWithTitle title="connector" />
           <Col xl={12}>
             <Card>
               <CardBody>
@@ -241,7 +234,7 @@ const DeleteConnectorIndexs = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-    </React.Fragment>
+    </Fragment>
   );
 };
 

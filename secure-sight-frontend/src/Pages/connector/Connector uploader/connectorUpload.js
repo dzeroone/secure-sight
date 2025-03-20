@@ -26,13 +26,12 @@ import ApiServices from "../../../Network_call/apiservices";
 import ConnectorList from "../connectorList";
 import ModalLoading from "../../../components/ModalLoading";
 import { ArchiveIcon } from "lucide-react";
+import BreadcrumbWithTitle from "../../../components/Common/BreadcrumbWithTitle";
 
 
 
 const chunkSize = 10000 * 1000;
 const ConnectorUploader = () => {
-	document.title =
-		"Connector Upload | Secure Sight";
 	const [selectedFiles, setSelectedFiles] = useState([]);
 	const [connectorData, setConnectorData] = useState([]);
 	const [refreshSeed, setRefreshSeed] = useState(0);
@@ -305,7 +304,7 @@ const ConnectorUploader = () => {
 		<Fragment>
 			<div className="page-content">
 				<Container fluid={true}>
-					<Breadcrumbs title="Connector" breadcrumbItem="Connector Upload" />
+					<BreadcrumbWithTitle title="Connector upload" />
 					<Row>
 						<Col className="col-12 col-md-8">
 							<Card>

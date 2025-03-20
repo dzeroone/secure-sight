@@ -6,10 +6,9 @@ import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
 import ModalLoading from "../../components/ModalLoading";
 import { format } from "date-fns";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 
 export default function CustomerIndexPage() {
-  document.title = "Customers | Secure Sight";
-
   const [customers, setCustomers] = useState([])
   const [busy, setBusy] = useState(false)
 
@@ -39,8 +38,7 @@ export default function CustomerIndexPage() {
 
   return (
     <div className="page-content">
-      <div className="d-flex flex-row justify-content-between align-items-center">
-        <h1>Customers</h1>
+      <BreadcrumbWithTitle title="Customers" endContent={
         <div>
           <Link className="btn btn-primary" id="btn-add" to='/customers/new'>
             <UserPlus2Icon />
@@ -52,7 +50,8 @@ export default function CustomerIndexPage() {
             Add Customer
           </UncontrolledTooltip>
         </div>
-      </div>
+        }
+      />
       <Table className="overflow-auto">
         <thead>
           <tr>

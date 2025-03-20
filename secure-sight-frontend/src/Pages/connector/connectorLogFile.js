@@ -1,57 +1,59 @@
-import { CloseOutlined } from "@mui/icons-material";
-import { Backdrop, CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Fragment, useEffect, useState } from "react";
 import {
-  Container,
-  Col,
-  Row,
+  Card,
   CardBody,
   CardTitle,
-  Card,
-  Table,
+  Col,
+  Container,
+  Row
 } from "reactstrap";
-import swal from "sweetalert";
 
 //Import Breadcrumb
-import Breadcrumbs, { Breadcrumbsub } from "../../components/Common/Breadcrumb";
+import { useLocation } from "react-router-dom";
+import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
+import ModalLoading from "../../components/ModalLoading";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
-import { useLocation } from "react-router-dom";
+import { getErrorMessage } from "../../helpers/utils";
 
 const ConnectorLogFile = () => {
-  // document.title = "Connector Log | Trend Micro Unity";
-  document.title = "Connector Log | Secure Sight";
+
   const location = useLocation();
-  const [openLoader, setOpenLoader] = React.useState(false);
-  const [connectorLogs, setConnectorLogs] = React.useState("");
+  const [openLoader, setOpenLoader] = useState(false);
+  const [connectorLogs, setConnectorLogs] = useState("");
 
   useEffect(() => {
     Connectorlog();
   }, [location]);
   const Connectorlog = async () => {
-    setOpenLoader(true);
-    const payload = {
-      connectorBasePath: location.state.display_name,
-      logfileName: location.state.display_name + ".log",
-    };
-    const response = await ApiServices(
-      "post",
-      payload,
-      ApiEndPoints.ConnectorLog
-    );
+    try {
+      setOpenLoader(true);
+      const payload = {
+        connectorBasePath: location.state.display_name,
+        logfileName: location.state.display_name + ".log",
+      };
+      const response = await ApiServices(
+        "post",
+        payload,
+        ApiEndPoints.ConnectorLog
+      );
 
-    setConnectorLogs(response.data);
-    setOpenLoader(false);
+      setConnectorLogs(response.data);
+    } catch (e) {
+      console.log(e)
+      const msg = getErrorMessage(e)
+      alert(msg)
+    } finally {
+      setOpenLoader(false);
+    }
   };
 
   return (
-    <React.Fragment>
-      <ToastContainer />
+    <Fragment>
       <div className="page-content">
         <Container fluid={true}>
-          <Breadcrumbs title="connector" breadcrumbItem="Connector Log" />
+          <BreadcrumbWithTitle title="Connector" />
           <Row>
             <Col md={12}>
               <Card>
@@ -76,14 +78,11 @@ const ConnectorLogFile = () => {
           </Row>
         </Container>
       </div>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openLoader}
-        onClick={() => setOpenLoader(false)}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </React.Fragment>
+      <ModalLoading
+        isOpen={openLoader}
+        onClose={() => setOpenLoader(false)}
+      />
+    </Fragment>
   );
 };
 

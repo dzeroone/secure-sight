@@ -1,10 +1,12 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { setDocumentTitle } from '../../helpers/utils';
 
 
 const Error401 = () => {
-    document.title = "Unauthorized | Secure Sight";
+    setDocumentTitle("Unauthorized")
+
     return (
         <React.Fragment>
             <div className="my-5 pt-5">

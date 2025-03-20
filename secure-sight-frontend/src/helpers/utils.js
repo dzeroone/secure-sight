@@ -30,3 +30,7 @@ export const getErrorMessage = (e) => {
   }
   return e.message
 }
+
+export const setDocumentTitle = (title) => {
+  document.title = `${title} | Eventus Reporting`;
+}

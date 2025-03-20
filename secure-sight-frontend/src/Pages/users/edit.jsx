@@ -7,10 +7,9 @@ import { Button, Card, CardBody, Form, FormFeedback, Input, Label } from "reacts
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import ModalLoading from "../../components/ModalLoading";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 
 export default function EditUserPage(props) {
-  document.title = "Edit User | Secure Sight";
-
   const params = useParams()
   const navigate = useNavigate()
   const id = params.id
@@ -97,7 +96,7 @@ export default function EditUserPage(props) {
 
   return (
     <div className="page-content">
-      <h1>Edit user</h1>
+      <BreadcrumbWithTitle title="Edit user" />
       <Card>
         <CardBody>
           <Form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-2">

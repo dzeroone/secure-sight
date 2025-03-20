@@ -6,10 +6,9 @@ import { toast } from "react-toastify";
 import { Button, Card, CardBody, Form, FormFeedback, Input, Label } from "reactstrap";
 import { useState } from "react";
 import ModalLoading from "../../components/ModalLoading";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 
 export default function NewUserPage(props) {
-  document.title = "New User | Secure Sight";
-
   const [busy, setBusy] = useState(false)
 
   const formik = useFormik({
@@ -72,7 +71,7 @@ export default function NewUserPage(props) {
   });
   return (
     <div className="page-content">
-      <h1>New user</h1>
+      <BreadcrumbWithTitle title="New user" />
       <Card>
         <CardBody>
           <Form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-2">

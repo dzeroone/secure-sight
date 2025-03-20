@@ -3,9 +3,10 @@ import { Breadcrumb, BreadcrumbItem, Col, Row } from "reactstrap";
 
 export default function BreadcrumbWithTitle({
   title,
-  linkStack
+  linkStack,
+  endContent
 }) {
-  document.title = `${title} | Secure Sight`
+  document.title = `${title} | Eventus Reporting`
   return (
     <Row>
       <Col xs="12">
@@ -23,7 +24,7 @@ export default function BreadcrumbWithTitle({
               })}
               </Breadcrumb>
             </div>
-          ) : null}
+          ) : endContent ? endContent : null}
         </div>
       </Col>
     </Row>
