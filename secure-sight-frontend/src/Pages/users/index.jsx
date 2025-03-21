@@ -1,12 +1,13 @@
-import { Edit2Icon, PlusIcon, Search, UserPlus2Icon } from "lucide-react";
+import { Edit2Icon, Search, TrashIcon, UserPlus2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Input, Table, UncontrolledTooltip } from "reactstrap";
-import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
-import { getRoleTitle } from "../../helpers/utils";
-import ModalLoading from "../../components/ModalLoading";
+import ApiServices from "../../Network_call/apiservices";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
+import ModalLoading from "../../components/ModalLoading";
+import { getErrorMessage, getRoleTitle } from "../../helpers/utils";
+import swal from "sweetalert";
 
 export default function UserIndexPage() {
   const [users, setUsers] = useState([])
@@ -28,6 +29,31 @@ export default function UserIndexPage() {
       setBusy(false)
     }
   }, [])
+
+  const deleteUser = async (user) => {
+    try {
+      const confirmed = await swal({
+        title: 'Are you sure?',
+        buttons: {
+          cancel: true,
+          confirm: true
+        }
+      })
+      if(!confirmed) return
+      setBusy(true)
+      const response = await ApiServices(
+        'delete',
+        null,
+        `${ApiEndPoints.Users}/${user._id}`,
+      );
+      getUsers()
+    }catch(e) {
+      const msg = getErrorMessage(e)
+      alert(msg)
+    }finally{
+      setBusy(false)
+    }
+  }
 
   useEffect(() => {
     getUsers()
@@ -101,14 +127,25 @@ export default function UserIndexPage() {
                 <td>{user.fullname}</td>
                 <td>{getRoleTitle(user.role)}</td>
                 <td>
-                  <Link className="btn btn-warning btn-sm" id={`edu-${user._id}`} to={`/users/${user._id}`}>
-                    <Edit2Icon size="1em" />
-                  </Link>
+                  <div className="d-flex gap-1">
+                    <Link className="btn btn-warning btn-sm" id={`edu-${user._id}`} to={`/users/${user._id}`}>
+                      <Edit2Icon size="1em" />
+                    </Link>
+                    <Button size="sm" color="danger" id={`ddu-${user._id}`} onClick={() => deleteUser(user)}>
+                      <TrashIcon size="1em" />
+                    </Button>
+                  </div>
                   <UncontrolledTooltip
                     placement="left"
                     target={`edu-${user._id}`}
                   >
                     Edit user
+                  </UncontrolledTooltip>
+                  <UncontrolledTooltip
+                    placement="left"
+                    target={`ddu-${user._id}`}
+                  >
+                    Delete user
                   </UncontrolledTooltip>
                 </td>
               </tr>

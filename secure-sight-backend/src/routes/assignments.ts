@@ -19,19 +19,7 @@ router.delete('/:id',
       return res.status(403).send({ message: 'You are not authorized' })
     }
 
-    let lAssignment = await assignmentController.getAssignmentByIndexForAssignee(assignment.index!, assignment.reporterId!, assignment.rType as ReportType)
-    while (lAssignment) {
-      await assignmentController.deleteById(lAssignment._id.toString())
-      if (lAssignment.reportId) {
-        await assignmentReportController.deleteById(lAssignment.reportId)
-      }
-      lAssignment = await assignmentController.getAssignmentByIndexForAssignee(assignment.index!, lAssignment.reporterId!, assignment.rType as ReportType)
-    }
-
-    if (assignment.reportId) {
-      await assignmentReportController.deleteById(assignment.reportId)
-    }
-    await assignmentController.deleteById(assignment._id.toString())
+    await assignmentController.delete(assignment)
     res.sendStatus(204)
   }
 )
@@ -277,7 +265,7 @@ router.post('/monthly-submissions/:id/approve',
       }
 
       // get upper assignment if exists
-      const uAssignment = await assignmentController.getAssignmentForReporter(assignment.index!, req.user!._id, 'monthly')
+      const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, req.user!._id, 'monthly')
       if (uAssignment) {
         await assignmentController.updateById(assignment._id.toString(), {
           status: REPORT_AUDIT_STATUS.PENDING,
@@ -382,7 +370,7 @@ router.post('/weekly-submissions/:id/approve',
       }
 
       // get upper assignment if exists
-      const uAssignment = await assignmentController.getAssignmentForReporter(assignment.index!, req.user!._id, 'weekly')
+      const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, req.user!._id, 'weekly')
       if (uAssignment) {
         await assignmentController.updateById(assignment._id.toString(), {
           status: REPORT_AUDIT_STATUS.PENDING,

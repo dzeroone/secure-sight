@@ -7,9 +7,13 @@ import { Button, Card, CardBody, Form, FormFeedback, Input, Label } from "reacts
 import { useState } from "react";
 import ModalLoading from "../../components/ModalLoading";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
+import { useProfile } from "../../Hooks/UserHooks";
+import { ROLES } from "../../data/roles";
+import { getErrorMessage } from "../../helpers/utils";
 
 export default function NewUserPage(props) {
   const [busy, setBusy] = useState(false)
+  const { userProfile } = useProfile()
 
   const formik = useFormik({
     initialValues: {
@@ -48,22 +52,10 @@ export default function NewUserPage(props) {
         resetForm()
         // Handle success (optional)
       } catch (e) {
-        if (e.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          let res = e.response.data
-          toast(res.data.message, {
-            autoClose: 2000
-          })
-        } else if (e.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(e.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error', e.message);
-        }
+        const msg = getErrorMessage(e)
+        toast(msg, {
+          autoClose: 2000
+        })
       }finally{
         setBusy(false)
       }
@@ -180,7 +172,9 @@ export default function NewUserPage(props) {
               >
                 <option value='l1'>Level 1</option>
                 <option value='l2'>Level 2</option>
-                <option value='l3'>Level 3</option>
+                {userProfile.role === ROLES.ADMIN ? (
+                  <option value='l3'>Level 3</option>
+                ) : null}
               </Input>
               {formik.touched.role &&
               formik.errors.role ? (

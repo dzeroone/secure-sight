@@ -4,12 +4,35 @@ import assignmentMessageModel from "../models/assignmentMessageModel"
 import assignmentModel, { AssignmentDocumentType } from "../models/assignmentModel"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { ReportAssignmentValidationValues } from "../validators/report-assignment.validator"
+import assignmentReportController from "./assignment-report.controller"
 
 export type ReportType = 'monthly' | 'weekly'
 
 class AssignmentController {
   async getById(id: string) {
     return assignmentModel.findById(id)
+  }
+
+  async delete(assignment: any) {
+    let lAssignment = await this.getAssignmentByIndexForAssignee(assignment.index!, assignment.reporterId!, assignment.rType as ReportType)
+    while (lAssignment) {
+      await this.deleteById(lAssignment._id.toString())
+      if (lAssignment.reportId) {
+        await assignmentReportController.deleteById(lAssignment.reportId)
+      }
+      await assignmentMessageModel.deleteMany({
+        aId: lAssignment._id
+      })
+      lAssignment = await this.getAssignmentByIndexForAssignee(assignment.index!, lAssignment.reporterId!, assignment.rType as ReportType)
+    }
+
+    if (assignment.reportId) {
+      await assignmentReportController.deleteById(assignment.reportId)
+    }
+    await assignmentMessageModel.deleteMany({
+      aId: assignment._id
+    })
+    return this.deleteById(assignment._id.toString())
   }
 
   async deleteById(id: string) {
@@ -224,6 +247,18 @@ class AssignmentController {
     }).lean()
   }
 
+  async getAssignmentsForReporterId(reporterId: string) {
+    return assignmentModel.find({
+      reporterId,
+    }).lean()
+  }
+
+  async getAssignmentsForAssigneeId(assigneeId: string) {
+    return assignmentModel.find({
+      aBy: assigneeId,
+    }).lean()
+  }
+
   async getAssignmentByIndex(index: string) {
     return assignmentModel.findOne({
       index,
@@ -237,7 +272,7 @@ class AssignmentController {
     }).lean()
   }
 
-  async getAssignmentForReporter(index: string, reporterId: string, reportType: ReportType) {
+  async getAssignmentByIndexForReporter(index: string, reporterId: string, reportType: ReportType) {
     const assignment = await assignmentModel.findOne({
       rType: reportType,
       index,
@@ -246,7 +281,7 @@ class AssignmentController {
     return assignment
   }
 
-  async getAssigneesForReport(index: string, reportType: ReportType) {
+  async getAssigneesByIndex(index: string, reportType: ReportType) {
     const assignments = await assignmentModel.find({
       rType: reportType,
       index,
@@ -299,7 +334,7 @@ class AssignmentController {
         role: 1
       })
 
-      const uAssignment = await this.getAssignmentForReporter(assignment.index!, assignee._id, reportType)
+      const uAssignment = await this.getAssignmentByIndexForReporter(assignment.index!, assignee._id, reportType)
       assignment.isRoot = !uAssignment
 
       if (uAssignment) {

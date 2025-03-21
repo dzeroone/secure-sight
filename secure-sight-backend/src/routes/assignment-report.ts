@@ -30,7 +30,7 @@ router.post('/:reportType(monthly|weekly)',
 
       const doc = await assignmentReportController.save(data, req.user!, reportType);
       if (req.body.status == REPORT_STATUS.SUBMIT) {
-        const assignment = await assignmentController.getAssignmentForReporter(doc.index!, req.user!._id, reportType)
+        const assignment = await assignmentController.getAssignmentByIndexForReporter(doc.index!, req.user!._id, reportType)
         if (!assignment) throw new Error("Assignment information not found")
 
         await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id)
@@ -55,7 +55,7 @@ router.get('/:reportType(monthly|weekly)/:id',
 
       if (doc.reporterId != req.user?._id.toString()) {
         if (doc.status == REPORT_STATUS.SUBMIT) {
-          const assignees = await assignmentController.getAssigneesForReport(doc.index!, reportType)
+          const assignees = await assignmentController.getAssigneesByIndex(doc.index!, reportType)
           if (!assignees.includes(req.user?._id)) {
             throw new Error("You are not appropriate reporter")
           }
@@ -91,7 +91,7 @@ router.patch('/:reportType(monthly|weekly)/:id',
       const data = reportType == 'monthly' ? await monthlyReportEditValidationSchema.validate(req.body) : await weeklyReportEditValidationSchema.validate(req.body)
 
       if (req.body.status == REPORT_STATUS.SUBMIT) {
-        const assignment = await assignmentController.getAssignmentForReporter(doc.index!, req.user!._id, reportType)
+        const assignment = await assignmentController.getAssignmentByIndexForReporter(doc.index!, req.user!._id, reportType)
         if (!assignment) throw new Error("Assignment information not found")
 
         await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id)

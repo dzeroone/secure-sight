@@ -8,6 +8,7 @@ import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import ModalLoading from "../../components/ModalLoading";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
+import { ROLES } from "../../data/roles";
 
 export default function EditUserPage(props) {
   const params = useParams()
@@ -185,9 +186,11 @@ export default function EditUserPage(props) {
                 <option value='' disabled>None</option>
                 <option value='l1'>Level 1</option>
                 <option value='l2'>Level 2</option>
-                <option value='l3'>Level 3</option>
-                {formik.values.role === 'admin' ? (
-                  <option value='admin'>Admin</option>
+                {formik.values.role === ROLES.ADMIN ? (
+                  <>
+                    <option value='l3'>Level 3</option>
+                    <option value='admin'>Admin</option>
+                  </>
                 ) : null}
               </Input>
               {formik.touched.role &&

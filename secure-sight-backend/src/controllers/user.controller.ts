@@ -2,6 +2,8 @@ import { genSalt, hash } from "bcryptjs";
 import { COLLECTIONS, MASTER_ADMIN_DB, ROLES } from "../constant"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { Document } from "mongoose";
+import assignmentController from "./assignment.controller";
+import assignmentReportController from "./assignment-report.controller";
 
 class UserController {
   async addUser(data: any) {
@@ -50,9 +52,28 @@ class UserController {
     return userModel.find()
   }
 
+  async listUsersByRole(roles: string[]) {
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    return userModel.find({
+      role: {
+        $in: roles
+      }
+    })
+  }
+
   async getUserById(id: string) {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
     return userModel.findById(id, { password: 0 })
+  }
+
+  async getUserByIdAndRole(id: string, roles: string[]) {
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    return userModel.findOne({
+      _id: id,
+      role: {
+        $in: roles
+      }
+    }, { password: 0 })
   }
 
   async updateUser(user: any, data: any) {
@@ -69,6 +90,28 @@ class UserController {
     return user.updateOne({
       $set: data
     })
+  }
+
+  async deleteUser(user: any) {
+    {
+      const assignments = await assignmentController.getAssignmentsForAssigneeId(user._id)
+      for (let assignment of assignments) {
+        await assignmentController.delete(assignment)
+      }
+    }
+    {
+      const assignments = await assignmentController.getAssignmentsForAssigneeId(user._id)
+      for (let assignment of assignments) {
+        await assignmentController.delete(assignment)
+      }
+    }
+    {
+      const reports = await assignmentReportController.getAllByReporterId(user._id)
+      for (let report of reports) {
+        await assignmentReportController.deleteById(report._id.toString())
+      }
+    }
+    return user.delete()
   }
 
   async removeAll() {

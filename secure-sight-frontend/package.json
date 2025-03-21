@@ -87,7 +87,7 @@
     "react-to-print": "^2.14.12",
     "react-toastify": "^9.1.1",
     "react-twitter-auth": "^0.0.13",
-    "reactstrap": "^9.0.1",
+    "reactstrap": "^9.2.3",
     "recharts": "^2.1.6",
     "redux": "^4.1.2",
     "redux-saga": "^1.1.3",

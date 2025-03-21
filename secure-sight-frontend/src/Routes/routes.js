@@ -68,15 +68,15 @@ const authProtectedRoutes = [
     path: "/dashboard", component: <Dashboard />
   },
   {
-    roles: ['admin'],
+    roles: [ROLES.ADMIN, ROLES.LEVEL3],
     path: "/users", component: <UserIndexPage />
   },
   {
-    roles: ['admin'],
+    roles: [ROLES.ADMIN, ROLES.LEVEL3],
     path: "/users/new", component: <NewUserPage />
   },
   {
-    roles: ['admin'],
+    roles: [ROLES.ADMIN, ROLES.LEVEL3],
     path: "/users/:id", component: <EditUserPage />
   },
   {

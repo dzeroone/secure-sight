@@ -23,14 +23,14 @@ const SidebarData = [
 		],
 	},
 	{
-		roles: ['admin'],
+		roles: [ROLES.ADMIN, ROLES.LEVEL3],
 		label: "Users",
 		icon: "ri-group-line",
 		url: "/users",
 		bgcolor: "bg-primary",
 		subItem: [
 			{
-				roles: ['admin'],
+				roles: [ROLES.ADMIN, ROLES.LEVEL3],
 				sublabel: "List of users",
 				link: "/users",
 			},

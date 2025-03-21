@@ -49,6 +49,13 @@ class AssignmentReportController {
     const data = await assignmentReportModel.find(filterQuery).sort({ cAt: -1 }).limit(20).skip((pageNumber - 1) * 20).lean()
     return { count, data }
   }
+
+  async getAllByReporterId(reporterId: string) {
+    return assignmentReportModel.find({
+      reporterId
+    })
+  }
+
   async save(data: MonthlyReportValidationValues | WeeklyReportValidationValues, user: Express.User, reportType: ReportType) {
     if (reportType == 'monthly') {
       data = data as MonthlyReportValidationValues
