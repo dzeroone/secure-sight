@@ -7,9 +7,12 @@ import ApiServices from "../../Network_call/apiservices";
 import ModalLoading from "../../components/ModalLoading";
 import { format } from "date-fns";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
+import { useProfile } from "../../Hooks/UserHooks";
+import { ROLES } from "../../data/roles";
 
 export default function CustomerIndexPage() {
   const [customers, setCustomers] = useState([])
+  const {userProfile} = useProfile()
   const [busy, setBusy] = useState(false)
 
   const getCustomers = useCallback(async () => {
@@ -39,7 +42,7 @@ export default function CustomerIndexPage() {
   return (
     <div className="page-content">
       <BreadcrumbWithTitle title="Customers" endContent={
-        <div>
+        userProfile.role === ROLES.ADMIN ? (<div>
           <Link className="btn btn-primary" id="btn-add" to='/customers/new'>
             <UserPlus2Icon />
           </Link>
@@ -49,7 +52,7 @@ export default function CustomerIndexPage() {
           >
             Add Customer
           </UncontrolledTooltip>
-        </div>
+        </div>) : null
         }
       />
       <Table className="overflow-auto">

@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import React, { useCallback, useEffect, useRef } from "react";
 import sidebarData from "./SidebarData";
 //Simple bar
 import SimpleBar from "simplebar-react";
 // MetisMenu
 import MetisMenu from "metismenujs";
-import withRouter from "../../components/Common/withRouter";
 import { Link } from "react-router-dom";
+import withRouter from "../../components/Common/withRouter";
 //i18n
 import { withTranslation } from "react-i18next";
 import { useProfile } from "../../Hooks/UserHooks";
@@ -155,12 +155,40 @@ const Sidebar = (props) => {
 								<React.Fragment key={key}>
 									{item.isMainMenu ? (
 										<li
-											style={{
-												height: '1px',
-												margin: '1px 0',
-												backgroundColor: 'rgba(255, 255, 255, 0.2)'
-											}}
+											key={key}
+											style={{ marginBottom: '0.25rem' }}
 										>
+											<Link
+												to={item.url ? item.url : "#"}
+												title={item.label}
+												style={{
+													display: 'flex',
+													alignItems: 'center',
+													justifyContent: 'center',
+													padding: '0.5rem 0.75rem',
+													color: '#ffffff',
+													transition: 'all 0.15s ease',
+													textDecoration: 'none',
+													fontWeight: '500'
+												}}
+												onMouseEnter={(e) => {
+													e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+													e.currentTarget.style.color = '#ffffff';
+												}}
+												onMouseLeave={(e) => {
+													e.currentTarget.style.backgroundColor = '';
+													e.currentTarget.style.color = '#ffffff';
+												}}
+											>
+												<i
+													className={`${item.icon}`}
+													style={{
+														color: '#ffffff',
+														fontSize: '1.125rem'
+													}}
+												></i>
+												<span style={{ flex: 1 }}>{props.t(item.label)}</span>
+											</Link>
 										</li>
 									) : (
 										<li

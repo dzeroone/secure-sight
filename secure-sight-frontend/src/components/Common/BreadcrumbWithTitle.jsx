@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { Breadcrumb, BreadcrumbItem, Col, Row } from "reactstrap";
+import { setDocumentTitle } from "../../helpers/utils";
 
 export default function BreadcrumbWithTitle({
   title,
   linkStack,
   endContent
 }) {
-  document.title = `${title} | Eventus Reporting`
+  setDocumentTitle(title)
   return (
     <Row>
       <Col xs="12">
@@ -16,9 +17,10 @@ export default function BreadcrumbWithTitle({
             <div className="page-title-right">
               <Breadcrumb listClassName="m-0">
               {linkStack.map((ls, i) => {
+                const isActive = i === linkStack.length - 1
                 return (
-                  <BreadcrumbItem active={i === linkStack.length - 1} key={ls.route}>
-                    <Link to={ls.route}>{ls.title}</Link>
+                  <BreadcrumbItem active={isActive} key={ls.route}>
+                    {!isActive ? <Link to={ls.route}>{ls.title}</Link> : ls.title}
                   </BreadcrumbItem>
                 )
               })}

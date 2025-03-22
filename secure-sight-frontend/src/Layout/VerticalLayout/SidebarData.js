@@ -2,10 +2,18 @@ import { ROLES } from '../../data/roles'
 
 const SidebarData = [
 	{
-		roles: ['admin'],
 		label: "Dashboard",
 		icon: "ri-dashboard-fill",
 		url: "/dashboard",
+		// issubMenubadge: true,
+		bgcolor: "bg-primary",
+		isMainMenu: true
+	},
+	{
+		roles: [ROLES.ADMIN],
+		label: "Report Graphs",
+		icon: "ri-line-chart-fill",
+		url: "/graphs",
 		// issubMenubadge: true,
 		bgcolor: "bg-primary",
 		// badgeValue: "3",
@@ -13,12 +21,12 @@ const SidebarData = [
 			{
 				roles: ['admin'],
 				sublabel: "Monthly report",
-				link: "/dashboard/monthly-report",
+				link: "/graphs/monthly-report",
 			},
 			{
 				roles: ['admin'],
 				sublabel: "Weekly report ",
-				link: "/dashboard/weekly-report",
+				link: "/graphs/weekly-report",
 			},
 		],
 	},
@@ -37,14 +45,14 @@ const SidebarData = [
 		],
 	},
 	{
-		roles: ['admin'],
+		roles: [ROLES.ADMIN, ROLES.LEVEL3],
 		label: "Customers",
 		icon: "ri-user-2-line",
 		url: "/customers",
 		bgcolor: "bg-primary",
 		subItem: [
 			{
-				roles: ['admin'],
+				roles: [ROLES.ADMIN, ROLES.LEVEL3],
 				sublabel: "List of customers",
 				link: "/customers",
 			},

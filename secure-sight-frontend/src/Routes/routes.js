@@ -1,7 +1,7 @@
 import React from "react";
 
 // Dashboard
-import Dashboard from "../Pages/Dashboard/index";
+import Dashboard from "../Pages/dashboard/index";
 
 // Import Authentication pages
 import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
@@ -23,6 +23,10 @@ import Maintenance from "../Pages/Utility/Maintenance-Page";
 
 // Import Map Pages
 import { createBrowserHistory } from "history";
+import { ROLES } from "../data/roles";
+import AssignMonthlyReportPage from "../Pages/assign/montly-report";
+import AssignWeeklyReportPage from "../Pages/assign/weekly-report";
+import AssignmentMessagePage from "../Pages/assignments/[id]";
 import ConnectorUploader from "../Pages/connector/Connector uploader/connectorUpload";
 import ConnectorList from "../Pages/connector/connectorList";
 import ConnectorLogFile from "../Pages/connector/connectorLogFile";
@@ -30,42 +34,32 @@ import ConnectorSchedule from "../Pages/connector/connectorSchedul";
 import CustomerIndexPage from "../Pages/customers";
 import EditCustomerPage from "../Pages/customers/edit";
 import NewCustomerPage from "../Pages/customers/new";
-import AssignMonthlyReportPage from "../Pages/Dashboard/assign/montly-report";
-import CreateDashboard from "../Pages/Dashboard/createdashboard";
-import DashboardMonthlyReport from "../Pages/Dashboard/monthly-report";
-import DashboardWeeklyReport from "../Pages/Dashboard/weekly-report";
-import CSVFileView from "../Pages/reports/csvData/csvFileView";
-import CSVDataList from "../Pages/reports/csvData/importedDataList";
+import MonthlyReportGraphPage from "../Pages/graphs/monthly-report";
+import WeeklyReportGraphPage from "../Pages/graphs/weekly-report";
 import MonthlyReport from "../Pages/reports/monthly-report";
 import WeeklyReport from "../Pages/reports/weekly-report";
+import MonthlySubmissionsPage from "../Pages/submissions/monthly-submissions";
+import WeeklySubmissionsPage from "../Pages/submissions/weekly-submissions";
 import UserIndexPage from "../Pages/users";
 import EditUserPage from "../Pages/users/edit";
 import NewUserPage from "../Pages/users/new";
-import { ROLES } from "../data/roles";
-import AssignWeeklyReportPage from "../Pages/Dashboard/assign/weekly-report";
-import MonthlySubmissionsPage from "../Pages/submissions/monthly-submissions";
-import WeeklySubmissionsPage from "../Pages/submissions/weekly-submissions";
-import AssignmentMessagePage from "../Pages/assignments/[id]";
+import DLChangeRequestsPage from "../Pages/customers/dl-change-requests";
 
 export const history = createBrowserHistory({ window });
 
 const authProtectedRoutes = [
   // Dashboard
-  { path: "/logout", component: <Logout /> },
-  {
-    roles: ['admin'],
-    path: "/dashboard/create-dashboard", component: <CreateDashboard />
-  },
-  {
-    roles: ['admin'],
-    path: "/dashboard/monthly-report", component: <DashboardMonthlyReport />
-  },
-  {
-    roles: ['admin'],
-    path: "/dashboard/weekly-report", component: <DashboardWeeklyReport />
-  },
   {
     path: "/dashboard", component: <Dashboard />
+  },
+  { path: "/logout", component: <Logout /> },
+  {
+    roles: [ROLES.ADMIN],
+    path: "/graphs/monthly-report", component: <MonthlyReportGraphPage />
+  },
+  {
+    roles: [ROLES.ADMIN],
+    path: "/graphs/weekly-report", component: <WeeklyReportGraphPage />
   },
   {
     roles: [ROLES.ADMIN, ROLES.LEVEL3],
@@ -79,20 +73,25 @@ const authProtectedRoutes = [
     roles: [ROLES.ADMIN, ROLES.LEVEL3],
     path: "/users/:id", component: <EditUserPage />
   },
+  // Customers
   {
-    roles: ['admin'],
+    roles: [ROLES.ADMIN, ROLES.LEVEL3],
     path: "/customers", component: <CustomerIndexPage />
   },
   {
-    roles: ['admin'],
+    roles: [ROLES.ADMIN],
     path: "/customers/new", component: <NewCustomerPage />
   },
   {
-    roles: ['admin'],
+    roles: [ROLES.ADMIN, ROLES.LEVEL3],
     path: "/customers/:id", component: <EditCustomerPage />
   },
   {
-    roles: ['l3', 'l2'],
+    roles: [ROLES.ADMIN],
+    path: "/customers/:id/dl-change-requests", component: <DLChangeRequestsPage />
+  },
+  {
+    roles: [ROLES.LEVEL3, ROLES.LEVEL2],
     path: "/assign/monthly-report", component: <AssignMonthlyReportPage />
   },
   {
@@ -123,16 +122,6 @@ const authProtectedRoutes = [
     roles: ['admin', 'l1', 'l2', 'l3'],
     path: "/reports/weekly-report", component: <WeeklyReport />
   },
-
-  // CSV
-  {
-    roles: ['admin'],
-    path: "/csv-list", component: <CSVDataList />
-  },
-  {
-    roles: ['admin'],
-    path: "/csv-list/:id", component: <CSVFileView />
-  }, // Added route for viewing a specific CSV file
 
   // Connector
   {

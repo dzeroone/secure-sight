@@ -4,6 +4,7 @@ import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { Document } from "mongoose";
 import assignmentController from "./assignment.controller";
 import assignmentReportController from "./assignment-report.controller";
+import customerController from "./customer.controller";
 
 class UserController {
   async addUser(data: any) {
@@ -112,6 +113,13 @@ class UserController {
       }
     }
     return user.delete()
+  }
+
+  async getDashboardDataForUser(user: Express.User) {
+    return {
+      submissions: await assignmentController.getPendingReviewsForUser(user),
+      dlChanges: user.role == ROLES.ADMIN ? await customerController.getDLChangeProposals() : []
+    }
   }
 
   async removeAll() {

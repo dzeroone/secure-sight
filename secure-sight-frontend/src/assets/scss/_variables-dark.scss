@@ -133,11 +133,19 @@ $warning: $yellow;
 $danger: $red;
 $light: $gray-300;
 $dark: $gray-800;
-// scss-docs-end theme-color-variables
 
-// scss-docs-start theme-colors-rgb
-$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
-// scss-docs-end theme-colors-rgb
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+  "pitch-black": $pitch-black
+);
+// scss-docs-end theme-color-variables
 
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
 // See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
@@ -419,7 +427,7 @@ $blockquote-font-size: $font-size-base * 1.25;
 $blockquote-footer-color: $gray-600;
 $blockquote-footer-font-size: $small-font-size;
 
-$hr-margin-y: $spacer;
+$hr-margin-y: $spacer / 2;
 $hr-color: inherit;
 $hr-height: $border-width;
 $hr-opacity: 0.2;

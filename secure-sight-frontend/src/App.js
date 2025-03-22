@@ -10,7 +10,7 @@ function App() {
   return (
     <React.Fragment>
       <Routes />
-      <ToastContainer />
+      <ToastContainer theme="light" autoClose={5000} />
     </React.Fragment>
   );
 }

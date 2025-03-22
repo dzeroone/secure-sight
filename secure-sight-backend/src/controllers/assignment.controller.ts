@@ -355,6 +355,53 @@ class AssignmentController {
     return assignments
   }
 
+  async getPendingReviewsForUser(assignee: Express.User) {
+    const assignments = await assignmentModel.find({
+      aBy: assignee._id,
+      status: REPORT_AUDIT_STATUS.SUBMITTED
+    }).sort({
+      uAt: -1
+    }).lean() as any[]
+
+    const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+
+    for (let assignment of assignments) {
+      const customer = await CustomerModel.findOne({
+        _id: assignment.cId
+      }, {
+        name: 1
+      })
+      assignment.customer = customer
+
+      const reporter = await UserModel.findOne({
+        _id: assignment.reporterId
+      }, {
+        fullname: 1,
+        role: 1
+      })
+
+      const uAssignment = await this.getAssignmentByIndexForReporter(assignment.index!, assignee._id, assignment.rType)
+      assignment.isRoot = !uAssignment
+
+      if (uAssignment) {
+        const assignee = await UserModel.findOne({
+          _id: uAssignment.aBy
+        }, {
+          fullname: 1,
+          role: 1
+        })
+        assignment.upperAssignment = {
+          _id: uAssignment._id,
+          assignedBy: assignee
+        }
+      }
+
+      assignment.reporter = reporter
+    }
+    return assignments
+  }
+
   async getAssignmentByReportIdForAssignee(reportId: string, assignedBy: string, reportType: ReportType) {
     return assignmentModel.findOne({
       rType: reportType,
