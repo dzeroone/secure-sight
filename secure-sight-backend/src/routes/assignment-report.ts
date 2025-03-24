@@ -2,7 +2,7 @@ import { Router } from "express";
 import { auth } from "../utils/auth-util";
 import assignmentReportController from "../controllers/assignment-report.controller";
 import { monthlyReportEditValidationSchema, monthlyReportValidationSchema } from "../validators/monthly-report.validator";
-import { REPORT_STATUS } from "../constant";
+import { REPORT_STATUS, ROLES } from "../constant";
 import assignmentController, { ReportType } from "../controllers/assignment.controller";
 import { weeklyReportEditValidationSchema, weeklyReportValidationSchema } from "../validators/weekly-report.validator";
 
@@ -81,16 +81,16 @@ router.patch('/:reportType(monthly|weekly)/:id',
 
       const doc = await assignmentReportController.getById(req.params.id);
       if (!doc) throw new Error("Report not found!")
-      if (doc.reporterId != req.user?._id.toString()) {
-        throw new Error("You are not appropriate reporter")
-      }
-      if (doc.status == REPORT_STATUS.SUBMIT) {
+      if (doc.reporterId == req.user?._id.toString() && doc.status == REPORT_STATUS.SUBMIT) {
         throw new Error("This report is already submitted for review.")
+      }
+      if (![ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2].includes(req.user!.role)) {
+        throw new Error('You are not allowed')
       }
 
       const data = reportType == 'monthly' ? await monthlyReportEditValidationSchema.validate(req.body) : await weeklyReportEditValidationSchema.validate(req.body)
 
-      if (req.body.status == REPORT_STATUS.SUBMIT) {
+      if ((doc.status != REPORT_STATUS.SUBMIT) && (req.body.status == REPORT_STATUS.SUBMIT)) {
         const assignment = await assignmentController.getAssignmentByIndexForReporter(doc.index!, req.user!._id, reportType)
         if (!assignment) throw new Error("Assignment information not found")
 

@@ -46,16 +46,12 @@ export default function NewUserPage(props) {
           })
           return
         }
-        toast('Data saved.', {
-          autoClose: 2000
-        })
+        toast.success('Data saved.')
         resetForm()
         // Handle success (optional)
       } catch (e) {
         const msg = getErrorMessage(e)
-        toast(msg, {
-          autoClose: 2000
-        })
+        toast.error(msg)
       }finally{
         setBusy(false)
       }

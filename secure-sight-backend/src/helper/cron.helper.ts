@@ -6,7 +6,7 @@ import mongoose from 'mongoose'
 const path = require('path')
 import decompress from 'decompress'
 import Pulse from '@pulsecron/pulse'
-import notificationModel from '../models/notificationModel'
+import notificationController from '../controllers/notification.controller'
 
 export enum SCHEDULE_JOB_NAME {
 	RUN_PYTHON_COMMAND = 'run_python_command'
@@ -35,33 +35,20 @@ scheduler.define(SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, async (job, done) => {
 
 	const title = connectorData.display_name.replaceAll("_", " ")
 
-	await notificationModel.findOneAndUpdate({
-		relId: job.attrs._id
-	}, {
-		$set: {
-			title,
-			message: 'Job is running',
-			status: 0,
-			updatedAt: new Date()
-		}
-	}, {
-		upsert: true
+	await notificationController.jobNotification(job.attrs._id.toString(), {
+		title,
+		message: 'Job is running'
 	})
+
 	child_process.exec(command, {}, async (err, stdout, stderr) => {
 		console.log(err, stdout, stderr)
 		console.log('job running completed')
-		await notificationModel.findOneAndUpdate({
-			relId: job.attrs._id
-		}, {
-			$set: {
-				title,
-				message: stderr ? stderr : 'Job running completed',
-				status: stderr ? -1 : 1,
-				updatedAt: new Date()
-			}
-		}, {
-			upsert: true
+		await notificationController.jobNotification(job.attrs._id.toString(), {
+			title,
+			message: stderr ? stderr : 'Job running completed',
+			status: stderr ? -1 : 1
 		})
+
 		done(err as any, stdout)
 	})
 })

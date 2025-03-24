@@ -115,9 +115,12 @@ const Navbar = ({
             Eventus Report Generation
           </Typography>
           {currentUser ? (
-            <Button color="inherit" onClick={() => signout()}>
-              Signout
-            </Button>
+            <Box display="flex" gap={1} alignItems="center">
+              <span>{currentUser.email}</span>
+              <Button color="inherit" onClick={() => signout()}>
+                Signout
+              </Button>
+            </Box>
           ) : null}
         </Toolbar>
       </AppBar>

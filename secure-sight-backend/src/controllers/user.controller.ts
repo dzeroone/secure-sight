@@ -101,7 +101,7 @@ class UserController {
       }
     }
     {
-      const assignments = await assignmentController.getAssignmentsForAssigneeId(user._id)
+      const assignments = await assignmentController.getAssignmentsForReporterId(user._id)
       for (let assignment of assignments) {
         await assignmentController.delete(assignment)
       }

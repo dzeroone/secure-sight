@@ -56,32 +56,33 @@ const Login = (props) => {
       <div className="account-pages py-5">
         <Container>
           <Row className="justify-content-between align-items-center">
-            <Col lg={6} className="text-center">
-              <h2
+            <Col lg={6}>
+              <h1
+                className="h1"
                 style={{
                   color: "#f0f0f0",
-                  fontWeight: "bold",
-                  fontSize: "52px",
-                  textAlign: "left",
-                  marginBottom: "30px",
+                  marginBottom: "2rem",
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0. 6)",
                 }}
               >
                 Custom Reports for Eventus Security <br /> All in One
-              </h2>
-              <h2
+              </h1>
+              <p
                 style={{
                   color: "#f0f0f0",
-                  fontWeight: "bold",
-                  fontSize: "20px",
-                  textAlign: "left",
-                  marginBottom: "70px",
+                  fontSize: "1.1rem",
+                  textAlign: "justify",
+                  marginBottom: "1.2rem",
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
                 }}
               >
                 The Eventus Security SOC Automated Reporting Tool is an advanced solution designed to automate the generation, encryption, and distribution of security reports. It seamlessly integrates with SOAR (Security Orchestration, Automation, and Response) platforms and Trend Micro Vision One to pull critical security data, including alerts, incidents, and threat intelligence. The tool then aggregates, normalizes, and analyzes this data to generate comprehensive weekly and monthly reports that provide valuable insights into the security landscape.
-              </h2>
-              <p className="text-start">
+              </p>
+              <p style={{
+                fontSize: "1.1rem",
+                textAlign: "justify",
+                marginBottom: "1.2rem",
+              }}>
                 The Eventus Security SOC Automated Reporting Tool boosts security, compliance, and operational efficiency by automating reporting and incorporating strong encryption features. It helps SOC teams reduce manual work, allowing them to concentrate on more valuable tasks, making it an essential tool for handling large amounts of sensitive data.
               </p>
               {/* <div className="text-center">

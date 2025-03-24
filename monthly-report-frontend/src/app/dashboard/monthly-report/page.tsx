@@ -30,8 +30,10 @@ import WorkbenchIncidentsSummary from "@@/components/monthly-report/WorkbenchInc
 import axiosApi from "@@/config/axios";
 import { getErrorMessage } from "@@/helper/helper";
 import {
+  setAssignmentId,
   setAuditStatus,
   setProcessing,
+  setReporterId,
   setStatus,
   setStatusFromServer,
 } from "@@/lib/features/monthly-report/monthlyPageStateSlice";
@@ -73,6 +75,7 @@ const MonthlyReportPage = () => {
         dispatch(setStatusFromServer(responseData.status));
         dispatch(setStatus(responseData.status));
         dispatch(setAuditStatus(responseData.auditStatus));
+        dispatch(setReporterId(responseData.reporterId));
       } else if (elasticIndex) {
         dispatch(setProcessing(true));
         let payload = {
@@ -84,16 +87,18 @@ const MonthlyReportPage = () => {
         });
 
         const responseData = res.data;
-        if (Array.isArray(responseData) && responseData.length > 0) {
-          const data = responseData[0]._source;
+        if (responseData && responseData.data.length > 0) {
+          const data = responseData.data[0]._source;
 
           dispatch(updateFromElasticData(data));
+          dispatch(setAssignmentId(responseData.assignmentId));
         }
       } else {
         dispatch(resetMonthlyReportState(null));
         dispatch(setStatusFromServer(0));
         dispatch(setStatus(0));
         dispatch(setAuditStatus(-999));
+        dispatch(setAssignmentId(""));
       }
     } catch (e: any) {
       const msg = getErrorMessage(e);

@@ -41,8 +41,8 @@ const NotificationDropdown = (props) => {
   const maxNotificationDate = useMemo(() => {
     let max = ""
     notifications.forEach(n => {
-      if (n.updatedAt > max) {
-        max = n.updatedAt
+      if (n.uAt > max) {
+        max = n.uAt
       }
     })
     return max
@@ -119,7 +119,7 @@ const NotificationDropdown = (props) => {
                           {notification.message}
                         </p>
                         <p className="mb-0">
-                          <i className="mdi mdi-clock-outline"></i> {formatDate(notification.updatedAt)}
+                          <i className="mdi mdi-clock-outline"></i> {formatDate(notification.uAt)}
                         </p>
                       </div>
                     </div>

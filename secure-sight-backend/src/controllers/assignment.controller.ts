@@ -1,10 +1,11 @@
 import { COLLECTIONS, MASTER_ADMIN_DB, REPORT_AUDIT_STATUS } from "../constant"
-import { getMontlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
+import { formatReportSession, getMontlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
 import assignmentMessageModel from "../models/assignmentMessageModel"
 import assignmentModel, { AssignmentDocumentType } from "../models/assignmentModel"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { ReportAssignmentValidationValues } from "../validators/report-assignment.validator"
 import assignmentReportController from "./assignment-report.controller"
+import notificationController from "./notification.controller"
 
 export type ReportType = 'monthly' | 'weekly'
 
@@ -13,7 +14,7 @@ class AssignmentController {
     return assignmentModel.findById(id)
   }
 
-  async delete(assignment: any) {
+  async delete(assignment: AssignmentDocumentType) {
     let lAssignment = await this.getAssignmentByIndexForAssignee(assignment.index!, assignment.reporterId!, assignment.rType as ReportType)
     while (lAssignment) {
       await this.deleteById(lAssignment._id.toString())
@@ -250,19 +251,19 @@ class AssignmentController {
   async getAssignmentsForReporterId(reporterId: string) {
     return assignmentModel.find({
       reporterId,
-    }).lean()
+    })
   }
 
   async getAssignmentsForAssigneeId(assigneeId: string) {
     return assignmentModel.find({
       aBy: assigneeId,
-    }).lean()
+    })
   }
 
   async getAssignmentByIndex(index: string) {
     return assignmentModel.findOne({
       index,
-    }).lean()
+    })
   }
 
   async getAssignmentByIndexForUser(index: string, userId: string) {
@@ -292,7 +293,7 @@ class AssignmentController {
   }
 
   async reportSubmitted(assignment: AssignmentDocumentType, reportId: string, submitterId: string) {
-    return await assignment.updateOne({
+    const res = await assignment.updateOne({
       $set: {
         reportId,
         status: REPORT_AUDIT_STATUS.SUBMITTED,
@@ -303,6 +304,16 @@ class AssignmentController {
         auditStatus: ""
       }
     })
+
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    const submitter = await UserModel.findById(submitterId, { fullname: 1 }).lean()
+
+    const message = `A ${assignment.rType} report has been submitted by ${submitter?.fullname} for session (${formatReportSession(assignment.rType as ReportType, assignment.date!)})`
+    await notificationController.notifyUser(assignment.aBy!, {
+      title: "Report submission",
+      message
+    })
+    return res
   }
 
   async getSubmissions(assignee: Express.User, reportType: ReportType) {

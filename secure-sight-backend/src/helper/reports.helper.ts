@@ -1,4 +1,5 @@
 import { format, getYear, subDays } from "date-fns"
+import { ReportType } from "../controllers/assignment.controller"
 
 export const jsonFlattenObject = function (data: any) {
 	var result: any = {}
@@ -43,4 +44,22 @@ export const getWeeklyReportIndex = (date: string, tenantCode: string) => {
 	const tenant = tenantCode.toLowerCase()
 
 	return `${start_month}_${start_day}_to_${end_month}_${end_day}_${year}_${tenant}_report`
+}
+
+const formatMonthlyReportDate = (date: string) => {
+	return format(date, 'PP')
+}
+
+const formatWeeklyReportDate = (date: string) => {
+	const start_date = subDays(date, 7)
+	const end_date = subDays(date, 1)
+
+	return `${format(start_date, 'PP')} - ${format(end_date, 'PP')}`
+}
+
+export const formatReportSession = (rt: ReportType, date: string) => {
+	if (rt == 'monthly') {
+		return formatMonthlyReportDate(date)
+	}
+	return formatWeeklyReportDate(date)
 }

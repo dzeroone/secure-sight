@@ -67,6 +67,7 @@ import {
 import axiosApi from "@@/config/axios";
 import { getErrorMessage } from "@@/helper/helper";
 import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "@@/constants";
+import { useAuth } from "@@/providers/AuthProvider";
 const steps = [
   {
     label: "First Page",
@@ -187,6 +188,7 @@ const MonthlyReportForm = () => {
   const searchParams = useSearchParams();
   const reportId = searchParams.get("id");
   const elasticIndex = searchParams.get("index");
+  const { currentUser } = useAuth();
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -315,30 +317,34 @@ const MonthlyReportForm = () => {
             >
               <PictureAsPdf />
             </LoadingButton>
-            <FormControl fullWidth size="small">
-              <InputLabel id="status-select-label">Status</InputLabel>
-              <Select
-                labelId="status-select-label"
-                id="status-select"
-                label="Status"
-                value={pageState.status}
-                onChange={(e) => {
-                  dispatch(setStatus(e.target.value as number));
-                }}
-              >
-                <MenuItem value={0}>Draft</MenuItem>
-                <MenuItem value={1}>Submit for review</MenuItem>
-              </Select>
-            </FormControl>
+            {pageState.assignmentId ||
+            pageState.reporterId == currentUser?.id ? (
+              <FormControl fullWidth size="small">
+                <InputLabel id="status-select-label">Status</InputLabel>
+                <Select
+                  labelId="status-select-label"
+                  id="status-select"
+                  label="Status"
+                  value={pageState.status}
+                  onChange={(e) => {
+                    dispatch(setStatus(e.target.value as number));
+                  }}
+                >
+                  <MenuItem value={0}>Draft</MenuItem>
+                  <MenuItem value={1}>Submit for review</MenuItem>
+                </Select>
+              </FormControl>
+            ) : null}
             <LoadingButton
               variant="contained"
               color="info"
               disabled={
-                REPORT_STATUS.SUBMIT == pageState.statusFromServer ||
-                [
-                  REPORT_AUDIT_STATUS.APPROVED,
-                  REPORT_AUDIT_STATUS.PENDING,
-                ].includes(pageState.auditStatus)
+                pageState.reporterId == currentUser?.id &&
+                (REPORT_STATUS.SUBMIT == pageState.statusFromServer ||
+                  [
+                    REPORT_AUDIT_STATUS.APPROVED,
+                    REPORT_AUDIT_STATUS.PENDING,
+                  ].includes(pageState.auditStatus))
               }
               loading={pageState.processing}
               onClick={saveMonthlyReport}

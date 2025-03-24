@@ -11,6 +11,7 @@ import ModalLoading from "../../components/ModalLoading"
 import { useProfile } from "../../Hooks/UserHooks"
 import { ROLES } from "../../data/roles"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 export default function WeeklySubmissionsPage() {
   const [busy, setBusy] = useState(false)
@@ -85,11 +86,12 @@ export default function WeeklySubmissionsPage() {
           null,
           `${ApiEndPoints.Assignments}/weekly-submissions/${assignment.reportId}/approve`
         )
+        toast.success('Submitted successfully')
         loadSubmissions()
       }
     }catch(e) {
       const msg = getErrorMessage(e)
-      alert(msg)
+      toast.error(msg)
     }finally{
       setBusy(false)
     }

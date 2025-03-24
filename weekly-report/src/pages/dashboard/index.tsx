@@ -41,6 +41,7 @@ import { getErrorMessage } from "../../utils/helpers";
 import InputLabel from "../../components/InputLabel";
 import SelectInput from "../../components/SelectInput";
 import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "../../data/data";
+import { useAuth } from "../../providers/AuthProvider";
 
 const Dashboard = () => {
   const [reportData, setReportData] = useState<any>(null);
@@ -48,11 +49,14 @@ const Dashboard = () => {
     serverStatus: 0,
     status: 0,
     auditStatus: -999,
+    assignmentId: "",
+    reporterId: "",
   });
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [isPreparingPdf, setIsPreparingPdf] = useState<boolean>(false);
+  const { currentUser } = useAuth();
 
   const router = useNavigate();
   const location = useLocation();
@@ -118,6 +122,7 @@ const Dashboard = () => {
             ...s,
             serverStatus: responseData.status,
             status: responseData.status,
+            reporterId: responseData.reporterId,
           };
         });
       } else if (elasticIndex) {
@@ -133,14 +138,30 @@ const Dashboard = () => {
           data: payload,
         });
         const responseData = res.data;
-        if (Array.isArray(responseData) && responseData.length > 0) {
-          const data = responseData[0]._source;
+        if (responseData && responseData.data.length > 0) {
+          const data = responseData.data[0]._source;
 
           setReportData(data);
+          setReportState((s) => {
+            return {
+              ...s,
+              assignmentId: responseData.assignmentId,
+            };
+          });
         }
       } else {
         dispatch({
           type: "RESET",
+        });
+        setReportState((s) => {
+          return {
+            ...s,
+            reporterId: "",
+            assignmentId: "",
+            serverStatus: 0,
+            status: 0,
+            auditStatus: -999,
+          };
         });
       }
     } catch (e) {
@@ -343,11 +364,12 @@ const Dashboard = () => {
           <button
             className="btn-primary rounded-md inline-flex items-center disabled:cursor-not-allowed disabled:opacity-50"
             disabled={
-              REPORT_STATUS.SUBMIT === reportState.serverStatus ||
-              [
-                REPORT_AUDIT_STATUS.APPROVED,
-                REPORT_AUDIT_STATUS.PENDING,
-              ].includes(reportState.auditStatus)
+              reportState.reporterId === currentUser?.id &&
+              (REPORT_STATUS.SUBMIT === reportState.serverStatus ||
+                [
+                  REPORT_AUDIT_STATUS.APPROVED,
+                  REPORT_AUDIT_STATUS.PENDING,
+                ].includes(reportState.auditStatus))
             }
             onClick={saveReport}
           >
@@ -397,27 +419,30 @@ const Dashboard = () => {
             <div className="sticky top-0 flex flex-col gap-4 max-h-screen overflow-auto max-w-[450px]">
               {!isPreparingPdf && (
                 <div className="ml-[50px]">
-                  <div>
-                    <InputLabel htmlFor="status-select-label">
-                      Status
-                    </InputLabel>
-                    <SelectInput
-                      id="status-select-label"
-                      value={reportState.status}
-                      onChange={(e) => {
-                        // dispatch(setStatus(e.target.value as number));
-                        setReportState((s) => {
-                          return {
-                            ...s,
-                            status: Number(e.target.value),
-                          };
-                        });
-                      }}
-                    >
-                      <option value={0}>Draft</option>
-                      <option value={1}>Submit for review</option>
-                    </SelectInput>
-                  </div>
+                  {reportState.assignmentId ||
+                  reportState.reporterId === currentUser?.id ? (
+                    <div>
+                      <InputLabel htmlFor="status-select-label">
+                        Status
+                      </InputLabel>
+                      <SelectInput
+                        id="status-select-label"
+                        value={reportState.status}
+                        onChange={(e) => {
+                          // dispatch(setStatus(e.target.value as number));
+                          setReportState((s) => {
+                            return {
+                              ...s,
+                              status: Number(e.target.value),
+                            };
+                          });
+                        }}
+                      >
+                        <option value={0}>Draft</option>
+                        <option value={1}>Submit for review</option>
+                      </SelectInput>
+                    </div>
+                  ) : null}
                   <div className="flex justify-between my-4 sticky top-2 z-50 bg-white">
                     <button
                       onClick={handlePrev}

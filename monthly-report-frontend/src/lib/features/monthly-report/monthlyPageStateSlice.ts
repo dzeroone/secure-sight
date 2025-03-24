@@ -6,7 +6,9 @@ const monthlyPageStateSlice = createSlice({
     processing: false,
     auditStatus: -999,
     statusFromServer: 0,
-    status: 0
+    status: 0,
+    reporterId: '',
+    assignmentId: ''
   },
   reducers: {
     setProcessing(state, action: PayloadAction<boolean>) {
@@ -21,6 +23,12 @@ const monthlyPageStateSlice = createSlice({
     },
     setAuditStatus(state, action: PayloadAction<number>) {
       state.auditStatus = action.payload
+    },
+    setReporterId(state, action: PayloadAction<string>) {
+      state.reporterId = action.payload
+    },
+    setAssignmentId(state, action: PayloadAction<string>) {
+      state.assignmentId = action.payload
     }
   }
 })
@@ -29,7 +37,9 @@ export const {
   setProcessing,
   setAuditStatus,
   setStatus,
-  setStatusFromServer
+  setStatusFromServer,
+  setReporterId,
+  setAssignmentId
 } = monthlyPageStateSlice.actions
 
 export default monthlyPageStateSlice.reducer;

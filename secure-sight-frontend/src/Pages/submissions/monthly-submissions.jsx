@@ -10,6 +10,7 @@ import swal from "sweetalert"
 import { ROLES } from "../../data/roles"
 import { useProfile } from "../../Hooks/UserHooks"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 export default function MonthlySubmissionsPage() {
   const [busy, setBusy] = useState(false)
@@ -84,11 +85,12 @@ export default function MonthlySubmissionsPage() {
           null,
           `${ApiEndPoints.Assignments}/monthly-submissions/${assignment.reportId}/approve`
         )
+        toast.success('Submitted successfully')
         loadSubmissions()
       }
     }catch(e) {
       const msg = getErrorMessage(e)
-      alert(msg)
+      toast.error(msg)
     }finally{
       setBusy(false)
     }

@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 export type AuthUser = {
+  id: string;
   email: string;
   role: string;
   token: string;

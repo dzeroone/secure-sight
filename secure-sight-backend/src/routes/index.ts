@@ -14,6 +14,7 @@ import userRouter from './user/index'
 import customerRouter from './customers/index'
 import assignmentRouter from './assignments'
 import assignmentReportRouter from './assignment-report'
+import pdfRouter from './pdf'
 
 
 
@@ -31,5 +32,6 @@ router.use('/notifications', notificationRouter)
 router.use('/users', userRouter)
 router.use('/customers', customerRouter)
 router.use('/assignments', assignmentRouter)
+router.use('/pdf-download', pdfRouter)
 
 export default router

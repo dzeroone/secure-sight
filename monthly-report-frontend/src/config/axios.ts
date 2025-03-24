@@ -19,4 +19,17 @@ axiosApi.interceptors.request.use(
     }
 )
 
+axiosApi.interceptors.response.use(
+    (response) => {
+        return response
+    },
+    (error) => {
+        if (error.status == 401) {
+            location.href = "/"
+            return
+        }
+        return Promise.reject(error)
+    },
+)
+
 export default axiosApi;

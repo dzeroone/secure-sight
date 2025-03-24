@@ -12,6 +12,7 @@ import {
 } from "react";
 
 export type AuthUser = {
+  id: string;
   email: string;
   role: string;
   token: string;
