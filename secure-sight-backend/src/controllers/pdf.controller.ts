@@ -6,7 +6,19 @@ import path from "path";
 class PdfController {
   async generatePdf(data: any) {
     try {
-      const browser = await puppeteer.launch({ headless: "shell" });
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-accelerated-2d-canvas",
+          "--no-first-run",
+          "--headless",
+          "--no-zygote",
+          "--disable-gpu",
+        ]
+      });
 
       // Generate the first PDF
       const html1 = await ejs.renderFile(path.resolve("./src/pdf-template/firstPage.ejs"), {
