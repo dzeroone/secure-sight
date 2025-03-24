@@ -1,7 +1,7 @@
 import React from "react";
 
 // Dashboard
-import Dashboard from "../Pages/dashboard/index";
+import Dashboard from "../Pages/dashboard/page";
 
 // Import Authentication pages
 import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
