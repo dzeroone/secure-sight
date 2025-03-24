@@ -7,7 +7,7 @@ class PdfController {
   async generatePdf(data: any) {
     try {
       const browser = await puppeteer.launch({
-        headless: true,
+        headless: 'shell',
         args: [
           "--no-sandbox",
           "--disable-setuid-sandbox",
