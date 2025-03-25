@@ -1,23 +1,23 @@
+import { useFormik } from "formik";
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 import {
-  Row,
-  Col,
   CardBody,
+  Col,
   Container,
   Form,
-  Input,
   FormFeedback,
+  Input,
   Label,
+  Row,
 } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import withRouter from "../../components/Common/withRouter";
 import * as Yup from "yup";
-import { useFormik } from "formik";
+import eventusLogoHorizontal from "../../assets/images/eventus_logo_vertical.png";
+import withRouter from "../../components/Common/withRouter";
 import { loginUser } from "../../store/actions";
-import "react-toastify/dist/ReactToastify.css";
-import PointDropBG from "../../components/point-drop-bg";
 
 const Login = (props) => {
   document.title = "Login | Eventus";
@@ -43,29 +43,25 @@ const Login = (props) => {
     error: state.login.error,
   }));
 
-  useEffect(() => {
-    document.body.className = "bg-pattern";
-    return function cleanup() {
-      document.body.className = "";
-    };
-  }, []);
-
   return (
     <React.Fragment>
-      <PointDropBG />
       <div className="account-pages py-5">
         <Container>
           <Row className="justify-content-between align-items-center">
             <Col lg={6}>
+              <div className="text-center">
+                <img src={eventusLogoHorizontal} alt="eventus" width='256px' className="mb-4" />
+              </div>
               <h1
                 className="h1"
                 style={{
                   color: "#f0f0f0",
+                  textAlign: "center",
                   marginBottom: "2rem",
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0. 6)",
                 }}
               >
-                Custom Reports for Eventus Security <br /> All in One
+                Custom Reports for Eventus Security
               </h1>
               <p
                 style={{
@@ -235,7 +231,7 @@ const Login = (props) => {
                             className="fw-medium"
                             style={{ color: "#27294F" }}
                           >
-                            Register
+                            Sign up
                           </Link>
                         </p>
                       </div>

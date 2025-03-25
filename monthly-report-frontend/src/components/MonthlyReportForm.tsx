@@ -181,6 +181,7 @@ const steps = [
   },
 ];
 const MonthlyReportForm = () => {
+  const [generatingPdf, setGeneratingPdf] = useState(false);
   const data = useAppSelector((state) => state.monthlyReport);
   const pageState = useAppSelector((state) => state.monthlyReportPageState);
   const dispatch = useAppDispatch();
@@ -237,7 +238,9 @@ const MonthlyReportForm = () => {
     } catch (e) {
       console.error(e);
       const msg = getErrorMessage(e);
-      alert(msg);
+      enqueueSnackbar(msg, {
+        variant: "error",
+      });
     } finally {
       dispatch(setProcessing(false));
     }
@@ -268,6 +271,7 @@ const MonthlyReportForm = () => {
     //   toast.error(error.message);
     // }
     try {
+      setGeneratingPdf(true);
       const response = await getMonthlyReportPdf(data);
 
       if (typeof window !== "undefined") {
@@ -282,6 +286,12 @@ const MonthlyReportForm = () => {
       }
     } catch (error) {
       console.error("Error downloading PDF:", error);
+      const msg = getErrorMessage(error);
+      enqueueSnackbar(msg, {
+        variant: "error",
+      });
+    } finally {
+      setGeneratingPdf(false);
     }
   };
 
@@ -312,7 +322,7 @@ const MonthlyReportForm = () => {
             <LoadingButton
               variant="contained"
               color="success"
-              loading={pageState.processing}
+              loading={pageState.processing || generatingPdf}
               onClick={handleDownloadPdf}
             >
               <PictureAsPdf />

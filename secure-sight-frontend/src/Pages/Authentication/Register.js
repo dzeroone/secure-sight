@@ -1,22 +1,22 @@
+import axios from "axios";
+import { useFormik } from "formik";
 import React from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
-  Row,
-  Col,
-  CardBody,
   Card,
+  CardBody,
+  Col,
   Container,
-  Input,
-  Label,
   Form,
   FormFeedback,
+  Input,
+  Label,
+  Row,
 } from "reactstrap";
 import * as Yup from "yup";
-import { useFormik } from "formik";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import ApiEndPoints from '../../Network_call/ApiEndPoints'
-import PointDropBG from "../../components/point-drop-bg";
-import { toast } from "react-toastify";
+import ApiEndPoints from '../../Network_call/ApiEndPoints';
+import eventusLogoHorizontal from "../../assets/images/eventus_logo_vertical.png";
 import withRouter from "../../components/Common/withRouter";
 
 const Register = (props) => {
@@ -70,7 +70,6 @@ const Register = (props) => {
 
   return (
     <div>
-      <PointDropBG />
       <div className="account-pages py-5">
         <Container className="h-100">
           <Row className="justify-content-center align-items-center h-100">
@@ -111,13 +110,13 @@ const Register = (props) => {
                           value={validation.values.email || ""}
                           invalid={
                             validation.touched.email &&
-                            validation.errors.email
+                              validation.errors.email
                               ? true
                               : false
                           }
                         />
                         {validation.touched.email &&
-                        validation.errors.email ? (
+                          validation.errors.email ? (
                           <FormFeedback type="invalid">
                             {validation.errors.email}
                           </FormFeedback>
@@ -137,13 +136,13 @@ const Register = (props) => {
                           value={validation.values.username || ""}
                           invalid={
                             validation.touched.username &&
-                            validation.errors.username
+                              validation.errors.username
                               ? true
                               : false
                           }
                         />
                         {validation.touched.username &&
-                        validation.errors.username ? (
+                          validation.errors.username ? (
                           <FormFeedback type="invalid">
                             {validation.errors.username}
                           </FormFeedback>
@@ -163,13 +162,13 @@ const Register = (props) => {
                           value={validation.values.password || ""}
                           invalid={
                             validation.touched.password &&
-                            validation.errors.password
+                              validation.errors.password
                               ? true
                               : false
                           }
                         />
                         {validation.touched.password &&
-                        validation.errors.password ? (
+                          validation.errors.password ? (
                           <FormFeedback type="invalid">
                             {validation.errors.password}
                           </FormFeedback>
@@ -184,9 +183,9 @@ const Register = (props) => {
                         </button>
                       </div>
                       <div className="mt-4 text-center">
-                        <p className="text-muted">
+                        <p style={{ color: "rgb(119, 119, 119)" }}>
                           Already have an account?{" "}
-                          <Link to="/login" className="text-[#27294F]">
+                          <Link to="/login" className="fw-medium" style={{ color: "rgb(39, 41, 79)" }}>
                             Login
                           </Link>
                         </p>
@@ -199,33 +198,34 @@ const Register = (props) => {
             <Col
               lg={6}
               className="text-center d-flex flex-column justify-content-center align-items-start"
-              style={{ paddingLeft: "180px" }}
+              style={{ paddingLeft: "5rem" }}
             >
-              <h2
+              <div className="text-center w-100">
+                <img src={eventusLogoHorizontal} alt="eventus" width='256px' className="mb-4" />
+              </div>
+              <h1
+                className="h1"
                 style={{
                   color: "#f0f0f0",
-                  fontWeight: "bold",
-                  fontSize: "40px",
-                  textAlign: "left",
-                  marginBottom: "30px",
+                  textAlign: "center",
+                  marginBottom: "2rem",
+                  textShadow: "2px 2px 4px rgba(0, 0, 0, 0. 6)",
+                }}
+              >
+                Custom Reports for Eventus Security
+              </h1>
+              <p
+                style={{
+                  color: "#f0f0f0",
+                  fontSize: "1.1rem",
+                  textAlign: "justify",
+                  marginBottom: "1.2rem",
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
                 }}
               >
-                Custom Reports for CloudOne/Deep Security <br /> All in One
-              </h2>
-              <h2
-                style={{
-                  color: "#f0f0f0",
-                  fontWeight: "bold",
-                  fontSize: "20px",
-                  textAlign: "left",
-                  marginBottom: "70px",
-                  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
-                }}
-              >
-                Unlock insights with tailored reports for CloudOne and Deep
+                Unlock insights with tailored reports for Eventus
                 Security. Streamline security and make informed decisions.
-              </h2>
+              </p>
               {/* <div>
                 <img
                   src="https://png.pngtree.com/thumb_back/fw800/background/20230928/pngtree-dark-background-showcasing-3d-safety-security-logo-and-ample-copy-space-image_13513928.png"
