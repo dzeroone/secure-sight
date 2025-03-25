@@ -327,7 +327,7 @@ const MonthlyReportForm = () => {
             >
               <PictureAsPdf />
             </LoadingButton>
-            {pageState.assignmentId ||
+            {pageState.isLastReporter ||
             pageState.reporterId == currentUser?.id ? (
               <FormControl fullWidth size="small">
                 <InputLabel id="status-select-label">Status</InputLabel>

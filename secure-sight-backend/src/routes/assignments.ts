@@ -265,7 +265,7 @@ router.post('/monthly-submissions/:id/approve',
       }
 
       // get upper assignment if exists
-      const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, req.user!._id, 'monthly')
+      const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, req.user!._id)
       if (uAssignment) {
         await assignmentController.updateById(assignment._id.toString(), {
           status: REPORT_AUDIT_STATUS.PENDING,
@@ -370,7 +370,7 @@ router.post('/weekly-submissions/:id/approve',
       }
 
       // get upper assignment if exists
-      const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, req.user!._id, 'weekly')
+      const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, req.user!._id)
       if (uAssignment) {
         await assignmentController.updateById(assignment._id.toString(), {
           status: REPORT_AUDIT_STATUS.PENDING,

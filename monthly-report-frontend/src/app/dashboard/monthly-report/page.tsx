@@ -30,7 +30,7 @@ import WorkbenchIncidentsSummary from "@@/components/monthly-report/WorkbenchInc
 import axiosApi from "@@/config/axios";
 import { getErrorMessage } from "@@/helper/helper";
 import {
-  setAssignmentId,
+  setIsLastReporter,
   setAuditStatus,
   setProcessing,
   setReporterId,
@@ -91,14 +91,14 @@ const MonthlyReportPage = () => {
           const data = responseData.data[0]._source;
 
           dispatch(updateFromElasticData(data));
-          dispatch(setAssignmentId(responseData.assignmentId));
+          dispatch(setIsLastReporter(responseData.isLastReporter || false));
         }
       } else {
         dispatch(resetMonthlyReportState(null));
         dispatch(setStatusFromServer(0));
         dispatch(setStatus(0));
         dispatch(setAuditStatus(-999));
-        dispatch(setAssignmentId(""));
+        dispatch(setIsLastReporter(false));
       }
     } catch (e: any) {
       const msg = getErrorMessage(e);

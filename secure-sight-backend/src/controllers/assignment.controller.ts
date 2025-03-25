@@ -15,7 +15,7 @@ class AssignmentController {
   }
 
   async delete(assignment: AssignmentDocumentType) {
-    let lAssignment = await this.getAssignmentByIndexForAssignee(assignment.index!, assignment.reporterId!, assignment.rType as ReportType)
+    let lAssignment = await this.getAssignmentByIndexForAssignee(assignment.index!, assignment.reporterId!)
     while (lAssignment) {
       await this.deleteById(lAssignment._id.toString())
       if (lAssignment.reportId) {
@@ -24,7 +24,7 @@ class AssignmentController {
       await assignmentMessageModel.deleteMany({
         aId: lAssignment._id
       })
-      lAssignment = await this.getAssignmentByIndexForAssignee(assignment.index!, lAssignment.reporterId!, assignment.rType as ReportType)
+      lAssignment = await this.getAssignmentByIndexForAssignee(assignment.index!, lAssignment.reporterId!)
     }
 
     if (assignment.reportId) {
@@ -254,16 +254,8 @@ class AssignmentController {
     })
   }
 
-  async getAssignmentByIndexForUser(index: string, userId: string) {
-    return assignmentModel.findOne({
-      index,
-      reporterId: userId
-    }).lean()
-  }
-
-  async getAssignmentByIndexForReporter(index: string, reporterId: string, reportType: ReportType) {
+  async getAssignmentByIndexForReporter(index: string, reporterId: string) {
     const assignment = await assignmentModel.findOne({
-      rType: reportType,
       index,
       reporterId
     })
@@ -333,7 +325,7 @@ class AssignmentController {
         role: 1
       })
 
-      const uAssignment = await this.getAssignmentByIndexForReporter(assignment.index!, assignee._id, reportType)
+      const uAssignment = await this.getAssignmentByIndexForReporter(assignment.index!, assignee._id)
       assignment.isRoot = !uAssignment
 
       if (uAssignment) {
@@ -380,7 +372,7 @@ class AssignmentController {
         role: 1
       })
 
-      const uAssignment = await this.getAssignmentByIndexForReporter(assignment.index!, assignee._id, assignment.rType)
+      const uAssignment = await this.getAssignmentByIndexForReporter(assignment.index!, assignee._id)
       assignment.isRoot = !uAssignment
 
       if (uAssignment) {
@@ -409,9 +401,8 @@ class AssignmentController {
     })
   }
 
-  async getAssignmentByIndexForAssignee(index: string, assignedBy: string, reportType: ReportType) {
+  async getAssignmentByIndexForAssignee(index: string, assignedBy: string) {
     return assignmentModel.findOne({
-      rType: reportType,
       index,
       aBy: assignedBy
     })

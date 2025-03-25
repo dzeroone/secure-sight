@@ -5,7 +5,7 @@ export const weeklyReportValidationSchema = yup.object({
   formData: yup.mixed().required(),
   reportData: yup.mixed().required(),
   comment: yup.string().optional(),
-  status: yup.number().required()
+  status: yup.number().optional()
 })
 
 export type WeeklyReportValidationValues = yup.InferType<typeof weeklyReportValidationSchema>
@@ -15,7 +15,7 @@ export const weeklyReportEditValidationSchema = yup.object({
   formData: yup.mixed().required(),
   reportData: yup.mixed().required(),
   comment: yup.string().optional(),
-  status: yup.number().required()
+  status: yup.number().optional()
 })
 
 export type WeeklyReportEditValidationValues = yup.InferType<typeof weeklyReportEditValidationSchema>
