@@ -718,7 +718,9 @@ router.post("/data/search",
       res.json(dataToSend);
 
     } catch (error: any) {
-      res.status(error.status || 400).json(error);
+      res.status(error.status || 400).json({
+        message: error.message
+      });
     }
   }
 );
