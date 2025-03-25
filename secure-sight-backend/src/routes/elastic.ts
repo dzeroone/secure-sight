@@ -714,7 +714,7 @@ router.post("/data/search",
           response = await axios.get(`${esUrl}/${req.body.index}/_search?size=10000`);
           break;
       }
-      dataToSend.data = response
+      dataToSend.data = response.data.hits.hits
       res.json(dataToSend);
 
     } catch (error: any) {
