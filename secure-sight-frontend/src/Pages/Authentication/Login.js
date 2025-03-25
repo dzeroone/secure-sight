@@ -50,7 +50,7 @@ const Login = (props) => {
           <Row className="justify-content-between align-items-center">
             <Col lg={6}>
               <div className="text-center">
-                <img src={eventusLogoHorizontal} alt="eventus" width='256px' className="mb-4" />
+                <img src={eventusLogoHorizontal} alt="eventus" width='150px' className="mb-4" />
               </div>
               <h1
                 className="h1"
