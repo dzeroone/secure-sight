@@ -9,11 +9,13 @@ import { useCallback, useEffect, useState } from "react";
 import ModalLoading from "../../components/ModalLoading";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import { ROLES } from "../../data/roles";
+import { useProfile } from "../../Hooks/UserHooks";
 
 export default function EditUserPage(props) {
   const params = useParams()
   const navigate = useNavigate()
   const id = params.id
+  const { userProfile } = useProfile()
 
   const [busy, setBusy] = useState(false)
 
@@ -186,11 +188,11 @@ export default function EditUserPage(props) {
                 <option value='' disabled>None</option>
                 <option value='l1'>Level 1</option>
                 <option value='l2'>Level 2</option>
+                {userProfile.role === ROLES.ADMIN ? (
+                  <option value='l3'>Level 3</option>
+                ): null}
                 {formik.values.role === ROLES.ADMIN ? (
-                  <>
-                    <option value='l3'>Level 3</option>
-                    <option value='admin'>Admin</option>
-                  </>
+                  <option value='admin'>Admin</option>
                 ) : null}
               </Input>
               {formik.touched.role &&
