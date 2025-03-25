@@ -22,8 +22,9 @@ class UserController {
     return true
   }
 
-  async search(query: string, user: Express.User) {
+  async search(search: string, index: string, user: Express.User) {
     const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    const skipedUserIds = await assignmentController.getReporterIdsForIndex(index)
     const skippedRoles = [ROLES.ADMIN]
     if (user.role == ROLES.LEVEL3) {
       skippedRoles.push(ROLES.LEVEL3)
@@ -31,15 +32,18 @@ class UserController {
       skippedRoles.push(ROLES.LEVEL3, ROLES.LEVEL2)
     }
     return UserModel.find({
+      _id: {
+        $nin: skipedUserIds
+      },
       role: {
         $nin: skippedRoles
       },
       $or: [
         {
-          email: new RegExp(query, "si")
+          email: new RegExp(search, "si")
         },
         {
-          fullname: new RegExp(query, "si")
+          fullname: new RegExp(search, "si")
         }
       ]
     }, {

@@ -133,13 +133,7 @@ class AssignmentController {
   }
 
   async assignMonthlyReport(data: ReportAssignmentValidationValues, assignedBy: string) {
-    const exists = await assignmentModel.findOne({
-      rType: 'monthly',
-      date: data.date,
-      index: data.index,
-      aBy: assignedBy,
-      reporterId: data.reporterId,
-    })
+    const exists = await this.isReporterAssignedForIndex(data.reporterId, data.index)
 
     if (exists) throw new Error("Assignment already exists")
 
@@ -214,13 +208,7 @@ class AssignmentController {
   }
 
   async assignWeeklyReport(data: ReportAssignmentValidationValues, assignedBy: string) {
-    const exists = await assignmentModel.findOne({
-      rType: 'weekly',
-      date: data.date,
-      index: data.index,
-      aBy: assignedBy,
-      reporterId: data.reporterId,
-    })
+    const exists = await this.isReporterAssignedForIndex(data.reporterId, data.index)
 
     if (exists) throw new Error("Assignment already exists")
 
@@ -427,6 +415,21 @@ class AssignmentController {
       index,
       aBy: assignedBy
     })
+  }
+
+  async getReporterIdsForIndex(index: string) {
+    const docs = await assignmentModel.find({
+      index
+    }, { reporterId: 1 })
+    return docs.map(d => d.reporterId)
+  }
+
+  async isReporterAssignedForIndex(reporterId: string, index: string) {
+    const doc = await assignmentModel.findOne({
+      index,
+      reporterId
+    }, { reporterId: 1 })
+    return !!doc
   }
 
   private async _populateAssignmentsForCustomerForDate(customer: any, date: string, assignedBy: string, reportType: 'monthly' | 'weekly' = 'monthly') {

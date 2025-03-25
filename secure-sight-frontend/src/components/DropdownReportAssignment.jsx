@@ -3,8 +3,9 @@ import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Sp
 import ApiEndPoints from "../Network_call/ApiEndPoints";
 import ApiServices from "../Network_call/apiservices";
 import { CheckIcon } from "lucide-react";
-import { getRoleTitle } from "../helpers/utils";
+import { getErrorMessage, getRoleTitle } from "../helpers/utils";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 export default function DropdownReportAssignment({
   customerId,
@@ -30,7 +31,8 @@ export default function DropdownReportAssignment({
       const res = await ApiServices(
         'get',
         {
-          search
+          search,
+          index
         },
         `${ApiEndPoints.Users}/search`
       )
@@ -78,8 +80,9 @@ export default function DropdownReportAssignment({
         }
       })
     }catch(e) {
-      alert(e.message)
       console.error(e)
+      const msg = getErrorMessage(e)
+      toast.error(msg)
     }finally{
       setBusy(false)
       setAffectedUserId(null)

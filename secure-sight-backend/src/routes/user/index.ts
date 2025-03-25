@@ -52,7 +52,7 @@ router.get('/search',
   hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
   async (req: Request, res: Response) => {
     try {
-      let data = await userController.search(req.query.search as string, req.user!)
+      let data = await userController.search(req.query.search as string, req.query.index as string, req.user!)
       res.send(data)
     } catch (e: any) {
       res.status(400).send({
