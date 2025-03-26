@@ -715,6 +715,7 @@ router.post("/data/search",
           break;
       }
       response = response.data.hits.hits
+
       dataToSend.data = response
       res.json(dataToSend);
 
