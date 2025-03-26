@@ -13,6 +13,7 @@ module.exports = (passport: any) => {
             const user = await dm.findOne({ email: jwt_payload.email }, { password: 0 }).lean()
             return user ? done(null, {
                 _id: user._id.toString(),
+                email: user.email,
                 fullname: user.fullname,
                 role: user.role
             }) : done(null, false)

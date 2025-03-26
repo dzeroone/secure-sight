@@ -1,10 +1,10 @@
 import bcryptjs from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
-import { UserProps } from '../types/types'
-import jwt from 'jsonwebtoken'
-import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { AUTH, COLLECTIONS, MASTER_ADMIN_DB, ROLES } from '../constant/index'
 import passport from 'passport'
+import { AUTH, COLLECTIONS, MASTER_ADMIN_DB, ROLES } from '../constant/index'
+import { signAuthToken } from '../helper/token.helper'
+import { dynamicModelWithDBConnection } from '../models/dynamicModel'
+import { UserProps } from '../types/types'
 
 declare global {
     namespace Express {
@@ -30,12 +30,10 @@ export const setDbName = async (req: Request<UserProps>, _res: Response, next: N
 }
 
 async function matchCredential(params: any, user: any) {
-    let jwtSecret: any = process.env.jwtSecret
-    let jwtSignInExpiresIn = process.env.jwtSignInExpiresIn
     const isMatch = await bcryptjs.compare(params.password, user.password)
     if (isMatch) {
         delete params.password;
-        const token = jwt.sign(params, jwtSecret, { expiresIn: jwtSignInExpiresIn })
+        const token = signAuthToken(params)
         params.username = user.username;
         params.role = user.role;
         params.id = user._id;

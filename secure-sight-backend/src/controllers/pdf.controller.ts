@@ -2,9 +2,10 @@ import puppeteer from "puppeteer";
 import ejs from 'ejs';
 import { PDFDocument } from "pdf-lib";
 import path from "path";
+import { signAuthToken } from "../helper/token.helper";
 
 class PdfController {
-  async generatePdf(data: any) {
+  async generateMonthlyPdf(data: any) {
     try {
       const browser = await puppeteer.launch({
         headless: 'shell',
@@ -75,6 +76,68 @@ class PdfController {
       pdf1Pages.forEach((page) => mergedPdf.addPage(page));
 
       return mergedPdf.save();
+      // res.render("pdf.ejs", { data: data });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async generateWeeklyPdf(query: any, user: Express.User) {
+    try {
+      const fontendBase = process.env.WEEKLY_REPORT_FONTEND_BASEURL || "http://localhost:3003"
+
+      const browser = await puppeteer.launch({
+        headless: 'shell',
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-accelerated-2d-canvas",
+          "--no-first-run",
+          "--headless",
+          "--no-zygote",
+          "--disable-gpu",
+        ]
+      });
+
+      const page = await browser.newPage();
+      await page.goto(fontendBase);
+
+      await page.evaluateOnNewDocument(
+        (authData) => {
+          localStorage.clear();
+          localStorage.setItem('authUser', JSON.stringify(authData));
+        },
+        {
+          email: user.email,
+          id: user._id,
+          role: user.role,
+          token: signAuthToken({ email: user.email }),
+        }
+      );
+
+      const params = new URLSearchParams(query)
+      params.set("print", "true")
+
+      await page.goto(`${fontendBase}/dashboard?${params.toString()}`, {
+        waitUntil: ["load", "networkidle0", "domcontentloaded"],
+      });
+
+      const pdfBuffer = await page.pdf({
+        format: "A4",
+        printBackground: true,
+        margin: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0
+        },
+        displayHeaderFooter: false
+      });
+
+      await browser.close();
+
+      return pdfBuffer;
       // res.render("pdf.ejs", { data: data });
     } catch (error) {
       throw error;

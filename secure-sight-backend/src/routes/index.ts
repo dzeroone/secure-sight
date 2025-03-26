@@ -32,6 +32,6 @@ router.use('/notifications', notificationRouter)
 router.use('/users', userRouter)
 router.use('/customers', customerRouter)
 router.use('/assignments', assignmentRouter)
-router.use('/pdf-download', pdfRouter)
+router.use('/pdf', pdfRouter)
 
 export default router
