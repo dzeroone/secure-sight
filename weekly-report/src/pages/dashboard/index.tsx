@@ -44,24 +44,27 @@ import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "../../data/data";
 import { useAuth } from "../../providers/AuthProvider";
 
 const Dashboard = () => {
+  const router = useNavigate();
+  const location = useLocation();
+
+  const [searchParams] = useSearchParams();
+
   const [reportData, setReportData] = useState<any>(null);
   const [reportState, setReportState] = useState({
     serverStatus: 0,
     status: 0,
     auditStatus: -999,
-    assignmentId: "",
+    isLastReporter: false,
     reporterId: "",
   });
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [isPreparingPdf, setIsPreparingPdf] = useState<boolean>(false);
+  const [isPreparingPdf, setIsPreparingPdf] = useState<boolean>(
+    searchParams.get("print") ? true : false
+  );
   const { currentUser } = useAuth();
 
-  const router = useNavigate();
-  const location = useLocation();
-
-  const [searchParams] = useSearchParams();
   const elasticIndex = searchParams.get("index");
   const reportId = searchParams.get("id");
 
@@ -145,7 +148,7 @@ const Dashboard = () => {
           setReportState((s) => {
             return {
               ...s,
-              assignmentId: responseData.assignmentId,
+              isLastReporter: responseData.isLastReporter,
             };
           });
         }
@@ -157,7 +160,7 @@ const Dashboard = () => {
           return {
             ...s,
             reporterId: "",
-            assignmentId: "",
+            isLastReporter: false,
             serverStatus: 0,
             status: 0,
             auditStatus: -999,
@@ -180,12 +183,30 @@ const Dashboard = () => {
 
   // - end
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     setIsPreparingPdf(true);
-    setTimeout(() => {
-      window.print();
-      setIsPreparingPdf(false);
-    }, 1000);
+    const response = await axiosApi.post("/pdf/weekly", null, {
+      params: {
+        index: elasticIndex ?? undefined,
+        id: reportId ?? undefined,
+      },
+      responseType: "arraybuffer",
+    });
+    if (typeof window !== "undefined") {
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "weekly-report.pdf";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+    setIsPreparingPdf(false);
+    // setTimeout(() => {
+    //   window.print();
+    //   setIsPreparingPdf(false);
+    // }, 1000);
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -394,7 +415,8 @@ const Dashboard = () => {
         </form>
         {reportData && (
           <button
-            className="btn-primary rounded-md inline-flex items-center"
+            className="btn-primary rounded-md inline-flex items-center disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isPreparingPdf}
             onClick={handlePrint}
           >
             <MdDownload className="mr-2" /> Download Pdf
@@ -419,7 +441,7 @@ const Dashboard = () => {
             <div className="sticky top-0 flex flex-col gap-4 max-h-screen overflow-auto max-w-[450px]">
               {!isPreparingPdf && (
                 <div className="ml-[50px]">
-                  {reportState.assignmentId ||
+                  {reportState.isLastReporter ||
                   reportState.reporterId === currentUser?.id ? (
                     <div>
                       <InputLabel htmlFor="status-select-label">
