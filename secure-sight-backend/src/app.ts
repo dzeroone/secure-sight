@@ -4,13 +4,12 @@ import passport from 'passport'
 import cors from 'cors'
 import express, { Application, Request, Response, NextFunction, ErrorRequestHandler } from 'express'
 import dotenv from 'dotenv'
+dotenv.config()
+
 import './helper/yup.helper'
 import schema from './schema/schema'
 import routes from './routes'
 import csvRoutes from './routes/csvRoutes'
-import { createElasticIndices } from './helper/elastic.helper'
-
-dotenv.config()
 
 declare global {
     namespace Express {

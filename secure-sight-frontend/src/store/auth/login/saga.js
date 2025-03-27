@@ -13,6 +13,7 @@ import ApiServices from "../../../Network_call/apiservices";
 import ApiEndPoints from "../../../Network_call/ApiEndPoints";
 import { toast } from "react-toastify";
 import { DashboardList, ReportList } from "../../../Pages/ulit/dashboardlist";
+import { getMSALApplication } from "../../../helpers/azure_sso.helper";
 
 const fireBaseBackend = getFirebaseBackend();
 
@@ -66,7 +67,15 @@ function* loginUser({ payload: { user, history } }) {
 
 function* logoutUser() {
   try {
-    localStorage.removeItem("authUser");
+    const msalInstance = yield getMSALApplication();
+    yield msalInstance.logoutRedirect({
+      onRedirectNavigate: (url) => {
+        // Return false if you would like to stop navigation after local logout
+        localStorage.removeItem("authUser");
+        return false;
+      }
+    });
+
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
       const response = yield call(fireBaseBackend.logout);
       yield put(logoutUserSuccess(LOGOUT_USER, response));

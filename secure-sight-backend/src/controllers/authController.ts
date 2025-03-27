@@ -1,8 +1,9 @@
 import { UserProps } from '../types/types';
 import { sendRegisterInfo, sendUserDetail } from '../utils/auth-util';
-import { ROLES, COLLECTIONS } from '../constant';
+import { ROLES, COLLECTIONS, MASTER_ADMIN_DB } from '../constant';
 import { dynamicModelWithDBConnection } from '../models/dynamicModel';
 import { sendEmail } from '../helper/email.helper';
+import { signAuthToken } from '../helper/token.helper';
 
 class AuthController {
   async register(params: UserProps) {
@@ -11,6 +12,34 @@ class AuthController {
 
   async login(params: UserProps) {
     return sendUserDetail(params);
+  }
+
+  async azureSignin({ email, name }: { email: string, name: string }) {
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    let user = await UserModel.findOne({ email }).lean()
+    if (!user) {
+      const userParams: any = {
+        email,
+        fullname: name
+      }
+      const userCount = await UserModel.countDocuments()
+      if (userCount > 0) {
+        userParams.role = ''
+      } else {
+        userParams.role = 'admin'
+      }
+
+      user = new UserModel(userParams)
+      await user.save()
+    }
+    const token = signAuthToken({ email })
+    return {
+      token,
+      id: user._id,
+      email,
+      fullname: name,
+      role: user.role
+    }
   }
 
   async licenseKey(params: any) {

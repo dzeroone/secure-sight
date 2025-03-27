@@ -79,7 +79,7 @@ const ApiServices = async (
 					}
 					if (error.response.status === 401) {
 						localStorage.removeItem('authUser')
-						history.replace('/login')
+						history.replace('/')
 						return;
 					}
 					if (error.response.status === 403) {

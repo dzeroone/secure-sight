@@ -4,17 +4,10 @@ import React from "react";
 import Dashboard from "../Pages/dashboard/page";
 
 // Import Authentication pages
-import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
-import Login from "../Pages/Authentication/Login";
 import Logout from "../Pages/Authentication/Logout";
-import Register from "../Pages/Authentication/Register";
 import UserProfile from "../Pages/Authentication/user-profile";
 
 // Import Authentication Inner Pages
-import LockScreen from "../Pages/AuthenticationPages/LockScreen";
-import Login1 from "../Pages/AuthenticationPages/Login";
-import RecoverPassword from "../Pages/AuthenticationPages/RecoverPassword";
-import Register1 from "../Pages/AuthenticationPages/Register";
 
 // Import Utility Pages
 import Error404 from "../Pages/Utility/Error404-Page";
@@ -27,11 +20,13 @@ import { ROLES } from "../data/roles";
 import AssignMonthlyReportPage from "../Pages/assign/montly-report";
 import AssignWeeklyReportPage from "../Pages/assign/weekly-report";
 import AssignmentMessagePage from "../Pages/assignments/[id]";
+import LoginSSO from "../Pages/Authentication/LoginSSO";
 import ConnectorUploader from "../Pages/connector/Connector uploader/connectorUpload";
 import ConnectorList from "../Pages/connector/connectorList";
 import ConnectorLogFile from "../Pages/connector/connectorLogFile";
 import ConnectorSchedule from "../Pages/connector/connectorSchedul";
 import CustomerIndexPage from "../Pages/customers";
+import DLChangeRequestsPage from "../Pages/customers/dl-change-requests";
 import EditCustomerPage from "../Pages/customers/edit";
 import NewCustomerPage from "../Pages/customers/new";
 import MonthlyReportGraphPage from "../Pages/graphs/monthly-report";
@@ -43,7 +38,6 @@ import WeeklySubmissionsPage from "../Pages/submissions/weekly-submissions";
 import UserIndexPage from "../Pages/users";
 import EditUserPage from "../Pages/users/edit";
 import NewUserPage from "../Pages/users/new";
-import DLChangeRequestsPage from "../Pages/customers/dl-change-requests";
 
 export const history = createBrowserHistory({ window });
 
@@ -147,16 +141,7 @@ const authProtectedRoutes = [
 
 const nonAuthRoutes = [
   // Authentication Page
-  { path: "/", component: <Login /> },
-  { path: "/login", component: <Login /> },
-  { path: "/forgot-password", component: <ForgetPasswordPage /> },
-  { path: "/register", component: <Register /> },
-
-  // Authentication Inner Pages
-  { path: "/auth-login", component: <Login1 /> },
-  { path: "/auth-register", component: <Register1 /> },
-  { path: "/auth-recoverpw", component: <RecoverPassword /> },
-  { path: "/auth-lock-screen", component: <LockScreen /> },
+  { path: "/", component: <LoginSSO /> }
 ];
 
 const publicRoutes = [
