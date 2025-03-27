@@ -25,7 +25,7 @@ function App() {
     ChartDataLabels
   );
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="weekly-reporting">
       <Providers>
         <Router />
       </Providers>
