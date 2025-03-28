@@ -374,9 +374,8 @@ class AssignmentController {
     return assignments
   }
 
-  async getAssignmentByReportIdForAssignee(reportId: string, assignedBy: string, reportType: ReportType) {
+  async getAssignmentByReportIdForAssignee(reportId: string, assignedBy: string) {
     return assignmentModel.findOne({
-      rType: reportType,
       reportId,
       aBy: assignedBy
     })

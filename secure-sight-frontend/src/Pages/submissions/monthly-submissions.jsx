@@ -25,7 +25,7 @@ export default function MonthlySubmissionsPage() {
       const res = await ApiServices(
         'get',
         null,
-        `${ApiEndPoints.Assignments}/monthly-submissions`
+        `${ApiEndPoints.Assignments}/submissions/monthly`
       )
       setAssignments(res)
     }catch(e) {
@@ -55,7 +55,7 @@ export default function MonthlySubmissionsPage() {
         const res = await ApiServices(
           "post",
           null,
-          `${ApiEndPoints.Assignments}/monthly-submissions/${assignment.reportId}/reaudit`
+          `${ApiEndPoints.Assignments}/submissions/${assignment.reportId}/reaudit`
         )
         loadSubmissions()
       }
@@ -83,7 +83,7 @@ export default function MonthlySubmissionsPage() {
         const res = await ApiServices(
           "post",
           null,
-          `${ApiEndPoints.Assignments}/monthly-submissions/${assignment.reportId}/approve`
+          `${ApiEndPoints.Assignments}/submissions/${assignment.reportId}/approve`
         )
         toast.success('Submitted successfully')
         loadSubmissions()

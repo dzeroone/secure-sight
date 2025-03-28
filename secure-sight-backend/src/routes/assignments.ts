@@ -144,11 +144,12 @@ router.post('/:reportType(monthly|weekly)/assign',
   }
 )
 
-router.get('/monthly-submissions',
+router.get('/submissions/:reportType(monthly|weekly)',
   auth,
   async (req, res) => {
     try {
-      const data = await assignmentController.getSubmissions(req.user!, 'monthly')
+      const reportType = req.params.reportType as ReportType
+      const data = await assignmentController.getSubmissions(req.user!, reportType)
       res.send(data)
     } catch (e: any) {
       res.status(400).send({
@@ -158,11 +159,12 @@ router.get('/monthly-submissions',
   }
 )
 
-router.post('/monthly-submissions/:id/reaudit',
+router.post('/submissions/:id/reaudit',
   auth,
   async (req, res) => {
     try {
-      const assignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, req.user!._id, 'monthly')
+      const reportType = req.params.reportType as ReportType
+      const assignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, req.user!._id)
       if (!assignment) {
         throw new Error("Assignment not found")
       }
@@ -176,9 +178,9 @@ router.post('/monthly-submissions/:id/reaudit',
         sCBy: req.user!._id
       })
 
-      // if has leaf reporter who assigned this report to some other persion then
+      // if has leaf reporter who assigned this report to some other person then
       // don't flag report to DRAFT mode, because draft mode disables assignees to view the report
-      const lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!, 'monthly')
+      const lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!)
       if (lAssignment) {
         await assignmentController.updateById(lAssignment._id.toString(), {
           status: REPORT_AUDIT_STATUS.AUDIT,
@@ -199,11 +201,11 @@ router.post('/monthly-submissions/:id/reaudit',
   }
 )
 
-router.post('/monthly-submissions/:id/approve',
+router.post('/submissions/:id/approve',
   auth,
   async (req, res) => {
     try {
-      const assignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, req.user!._id, 'monthly')
+      const assignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, req.user!._id)
       if (!assignment) {
         throw new Error("Assignment not found")
       }
@@ -227,122 +229,17 @@ router.post('/monthly-submissions/:id/approve',
           sCBy: req.user!._id
         })
 
-        let lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!, 'monthly')
+        let lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!)
         while (lAssignment) {
           await assignmentController.updateById(lAssignment._id.toString(), {
             status: REPORT_AUDIT_STATUS.APPROVED,
             sCBy: req.user!._id
           })
-          lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, lAssignment.reporterId!, 'monthly')
+          lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, lAssignment.reporterId!)
         }
 
         await assignmentReportController.updateById(report._id.toString(), {
           auditStatus: REPORT_AUDIT_STATUS.APPROVED
-        })
-      }
-      res.sendStatus(201)
-    } catch (e: any) {
-      res.status(400).send({
-        message: e.message
-      })
-    }
-  }
-)
-
-router.get('/weekly-submissions',
-  auth,
-  async (req, res) => {
-    try {
-      const data = await assignmentController.getSubmissions(req.user!, 'weekly')
-      res.send(data)
-    } catch (e: any) {
-      res.status(400).send({
-        message: e.message
-      })
-    }
-  }
-)
-
-router.post('/weekly-submissions/:id/reaudit',
-  auth,
-  async (req, res) => {
-    try {
-      const assignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, req.user!._id, 'weekly')
-      if (!assignment) {
-        throw new Error("Assignment not found")
-      }
-      const report = await assignmentReportController.getById(req.params.id)
-      if (!report) {
-        throw new Error("Report not found")
-      }
-
-      await assignmentController.updateById(assignment._id.toString(), {
-        status: REPORT_AUDIT_STATUS.AUDIT,
-        sCBy: req.user!._id
-      })
-
-      // if has leaf reporter who assigned this report to some other persion then
-      // don't flag report to DRAFT mode, because draft mode disables assignees to view the report
-      const lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!, 'weekly')
-      if (lAssignment) {
-        await assignmentController.updateById(lAssignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.AUDIT,
-          sCBy: req.user!._id
-        })
-      } else {
-        await assignmentReportController.updateById(report._id.toString(), {
-          status: REPORT_STATUS.DRAFT,
-          auditStatus: REPORT_AUDIT_STATUS.AUDIT
-        })
-      }
-      res.sendStatus(201)
-    } catch (e: any) {
-      res.status(400).send({
-        message: e.message
-      })
-    }
-  }
-)
-
-router.post('/weekly-submissions/:id/approve',
-  auth,
-  async (req, res) => {
-    try {
-      const assignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, req.user!._id, 'weekly')
-      if (!assignment) {
-        throw new Error("Assignment not found")
-      }
-      const report = await assignmentReportController.getById(req.params.id)
-      if (!report) {
-        throw new Error("Report not found")
-      }
-
-      // get upper assignment if exists
-      const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, req.user!._id)
-      if (uAssignment) {
-        await assignmentController.updateById(assignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.PENDING,
-          sCBy: req.user!._id
-        })
-        await assignmentController.reportSubmitted(uAssignment, report._id.toString(), req.user!._id)
-      } else {
-        // most top level user approved the report, so approve all leaf reporter's reports
-        await assignmentController.updateById(assignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.APPROVED,
-          sCBy: req.user!._id
-        })
-
-        let lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!, 'weekly')
-        while (lAssignment) {
-          await assignmentController.updateById(lAssignment._id.toString(), {
-            status: REPORT_AUDIT_STATUS.APPROVED,
-            sCBy: req.user!._id
-          })
-          lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, lAssignment.reporterId!, 'weekly')
-        }
-
-        await assignmentReportController.updateById(report._id.toString(), {
-          auditStatus: REPORT_AUDIT_STATUS.APPROVED,
         })
       }
       res.sendStatus(201)

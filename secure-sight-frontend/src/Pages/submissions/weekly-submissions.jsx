@@ -26,7 +26,7 @@ export default function WeeklySubmissionsPage() {
       const res = await ApiServices(
         'get',
         null,
-        `${ApiEndPoints.Assignments}/weekly-submissions`
+        `${ApiEndPoints.Assignments}/submissions/weekly`
       )
       setAssignments(res)
     }catch(e) {
@@ -56,7 +56,7 @@ export default function WeeklySubmissionsPage() {
         const res = await ApiServices(
           "post",
           null,
-          `${ApiEndPoints.Assignments}/weekly-submissions/${assignment.reportId}/reaudit`
+          `${ApiEndPoints.Assignments}/submissions/${assignment.reportId}/reaudit`
         )
         loadSubmissions()
       }
@@ -84,7 +84,7 @@ export default function WeeklySubmissionsPage() {
         const res = await ApiServices(
           "post",
           null,
-          `${ApiEndPoints.Assignments}/weekly-submissions/${assignment.reportId}/approve`
+          `${ApiEndPoints.Assignments}/submissions/${assignment.reportId}/approve`
         )
         toast.success('Submitted successfully')
         loadSubmissions()
