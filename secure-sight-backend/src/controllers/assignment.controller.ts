@@ -76,22 +76,22 @@ class AssignmentController {
     return data.save()
   }
 
-  async getMonthlyAssignmentsForDate(date: string, assignedBy: string) {
+  async getCustomerWithAssignmentsForDate(date: string, assignedBy: string, reportType: ReportType) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
     const customers = await CustomerModel.find({}, { name: 1, tCode: 1 }).lean()
     for (let customer of customers) {
-      await this._populateAssignmentsForCustomerForDate(customer, date, assignedBy)
+      await this._populateAssignmentsForCustomerForDate(customer, date, assignedBy, reportType)
     }
     return customers
   }
 
-  async getMonthlyAssignmentsForDateForUser(date: string, userId: string) {
+  async getAssignmentsForDateForReporter(date: string, reporterId: string, reportType: ReportType) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
 
     const assignments: any[] = await assignmentModel.find({
-      rType: 'monthly',
+      rType: reportType,
       date,
-      reporterId: userId
+      reporterId: reporterId
     }).lean()
     const customerIds = assignments.map(a => a.cId)
     const customers = await CustomerModel.find({
@@ -104,7 +104,7 @@ class AssignmentController {
     }).lean()
 
     for (let customer of customers) {
-      await this._populateAssignmentsForCustomerForDate(customer, date, userId)
+      await this._populateAssignmentsForCustomerForDate(customer, date, reporterId)
     }
     return customers
   }
@@ -132,13 +132,13 @@ class AssignmentController {
     })
   }
 
-  async assignMonthlyReport(data: ReportAssignmentValidationValues, assignedBy: string) {
+  async assignReport(data: ReportAssignmentValidationValues, assignedBy: string, reportType: ReportType) {
     const exists = await this.isReporterAssignedForIndex(data.reporterId, data.index)
 
     if (exists) throw new Error("Assignment already exists")
 
     const assignment = new assignmentModel({
-      rType: 'monthly',
+      rType: reportType,
       date: data.date,
       index: data.index,
       cId: data.customerId,
@@ -205,25 +205,6 @@ class AssignmentController {
       assignment.customer = customers.find(c => c._id.toString() == assignment.cId)
       return assignment
     })
-  }
-
-  async assignWeeklyReport(data: ReportAssignmentValidationValues, assignedBy: string) {
-    const exists = await this.isReporterAssignedForIndex(data.reporterId, data.index)
-
-    if (exists) throw new Error("Assignment already exists")
-
-    const assignment = new assignmentModel({
-      rType: 'weekly',
-      date: data.date,
-      index: data.index,
-      cId: data.customerId,
-      aBy: assignedBy,
-      reporterId: data.reporterId,
-      cAt: new Date(),
-      uAt: new Date()
-    })
-
-    return assignment.save()
   }
 
   async getCustomerIdsForUser(date: string, type: string, userId: string) {

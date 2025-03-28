@@ -6,6 +6,8 @@ import ModalLoading from "../../components/ModalLoading";
 import MonthlyReportGraphs from "../../components/MonthlyReportGraphs";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
+import { getErrorMessage } from "../../helpers/utils";
+import { toast } from "react-toastify";
 
 const validate = values => {
   const errors = {};
@@ -47,6 +49,8 @@ export default function MonthlyReportGraphPage() {
         setReportData(data)
       } catch (e) {
         console.log(e)
+        const msg = getErrorMessage(e)
+        toast.error(msg)
       } finally {
         setBusy(false);
       }

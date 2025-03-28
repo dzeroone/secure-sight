@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { auth, hasRole } from "../utils/auth-util";
-import assignmentController, { ReportType } from "../controllers/assignment.controller";
 import { REPORT_AUDIT_STATUS, REPORT_STATUS, ROLES } from "../constant";
-import { reportAssignmentValidationSchema } from "../validators/report-assignment.validator";
-import userController from "../controllers/user.controller";
 import assignmentReportController from "../controllers/assignment-report.controller";
+import assignmentController, { ReportType } from "../controllers/assignment.controller";
+import userController from "../controllers/user.controller";
+import { auth, hasRole } from "../utils/auth-util";
+import { reportAssignmentValidationSchema } from "../validators/report-assignment.validator";
 const router = Router();
 
 router.delete('/:id',
@@ -84,27 +84,31 @@ router.post('/:id/messages',
   }
 )
 
-router.get('/monthly',
+router.get('/:reportType(monthly|weekly)',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
   async (req, res) => {
     if (!req.query.date) return res.send([])
 
+    const reportType = req.params.reportType as ReportType
+
     if (ROLES.LEVEL2 == req.user?.role) {
-      const data = await assignmentController.getMonthlyAssignmentsForDateForUser(req.query.date as string, req.user!._id)
+      const data = await assignmentController.getAssignmentsForDateForReporter(req.query.date as string, req.user!._id, reportType)
       res.send(data)
       return
     }
-    const data = await assignmentController.getMonthlyAssignmentsForDate(req.query.date as string, req.user!._id)
+    const data = await assignmentController.getCustomerWithAssignmentsForDate(req.query.date as string, req.user!._id, reportType)
     res.send(data)
   }
 )
 
-router.post('/monthly/assign',
+router.post('/:reportType(monthly|weekly)/assign',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
   async (req, res) => {
     try {
+      const reportType = req.params.reportType as ReportType
+
       const body = await reportAssignmentValidationSchema.validate(req.body)
       if (req.user?.role == ROLES.ADMIN) {
         const reporter = await userController.getUserById(body.reporterId)
@@ -114,7 +118,7 @@ router.post('/monthly/assign',
           throw new Error("You don't have permission to assign to this user")
         }
 
-        const data = await assignmentController.assignMonthlyReport(body, req.user!._id)
+        const data = await assignmentController.assignReport(body, req.user!._id, reportType)
         res.send(data)
         return
       } else if (req.user?.role == ROLES.LEVEL3 || req.user?.role == ROLES.LEVEL2) {
@@ -127,63 +131,7 @@ router.post('/monthly/assign',
           throw new Error("You don't have permission to assign to this user")
         }
 
-        const data = await assignmentController.assignMonthlyReport(body, req.user!._id)
-        res.send(data)
-        return
-      }
-      throw new Error("Haven't assigned the report")
-    } catch (e: any) {
-      res.status(400).send({
-        message: e.message
-      })
-    }
-  }
-)
-
-router.get('/weekly',
-  auth,
-  hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
-  async (req, res) => {
-    if (!req.query.date) return res.send([])
-
-    if (ROLES.LEVEL2 == req.user?.role) {
-      const data = await assignmentController.getWeeklyAssignmentsForDateForUser(req.query.date as string, req.user!._id)
-      res.send(data)
-      return
-    }
-    const data = await assignmentController.getWeeklyAssignmentsForDate(req.query.date as string, req.user!._id)
-    res.send(data)
-  }
-)
-
-router.post('/weekly/assign',
-  auth,
-  hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
-  async (req, res) => {
-    try {
-      const body = await reportAssignmentValidationSchema.validate(req.body)
-      if (req.user?.role == ROLES.ADMIN) {
-        const reporter = await userController.getUserById(body.reporterId)
-        if (!reporter) throw new Error("Reporter not found")
-
-        if (reporter.role == ROLES.ADMIN) {
-          throw new Error("You don't have permission to assign to this user")
-        }
-
-        const data = await assignmentController.assignWeeklyReport(body, req.user!._id)
-        res.send(data)
-        return
-      } else if (req.user?.role == ROLES.LEVEL3 || req.user?.role == ROLES.LEVEL2) {
-        const reporter = await userController.getUserById(body.reporterId)
-        if (!reporter) throw new Error("Reporter not found")
-
-        if (req.user.role == ROLES.LEVEL3 && [ROLES.LEVEL2, ROLES.LEVEL1].indexOf(reporter.role) < 0) {
-          throw new Error("You don't have permission to assign to this user")
-        } else if (req.user.role == ROLES.LEVEL2 && reporter.role != ROLES.LEVEL1) {
-          throw new Error("You don't have permission to assign to this user")
-        }
-
-        const data = await assignmentController.assignWeeklyReport(body, req.user!._id)
+        const data = await assignmentController.assignReport(body, req.user!._id, reportType)
         res.send(data)
         return
       }

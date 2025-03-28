@@ -25,7 +25,7 @@ function App() {
     ChartDataLabels
   );
   return (
-    <BrowserRouter basename="weekly-reporting">
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Providers>
         <Router />
       </Providers>
