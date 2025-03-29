@@ -60,13 +60,13 @@ const ExecutiveSummary = () => {
             </p>
           ))}
           <div style={{ display: "flex", gap: 20 }}>
-            <img style={{ width: 60 }} src={Recommendations.src} alt="" />
+            <img style={{ width: 60 }} src={Actions.src} alt="" />
             <h3 style={{ fontWeight: "bold", fontSize: 24 }}>
               {data.data[1].title}
             </h3>
           </div>
           {data.data[1].sub?.map((k, l) => (
-            <p style={{ fontSize: 24 }} key={l}>
+            <p style={{ fontSize: 24, wordBreak: "break-word" }} key={l}>
               {k.title && <strong>{k.title}:</strong>}
               {" " + k.desc}
             </p>
@@ -81,7 +81,7 @@ const ExecutiveSummary = () => {
             }}
           >
             <div style={{ display: "flex", gap: 20 }}>
-              <img style={{ width: 60 }} src={Actions.src} alt="" />
+              <img style={{ width: 60 }} src={Recommendations.src} alt="" />
               <h3 style={{ fontWeight: "bold", fontSize: 24 }}>
                 {data.data[2].title}
               </h3>

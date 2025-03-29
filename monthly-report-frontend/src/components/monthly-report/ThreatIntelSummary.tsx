@@ -42,6 +42,20 @@ export const ThreatIntelSummary = () => {
             marginBottom: 0,
           }}
         >
+          Total IOC Sweep for the Month -{" "}
+          {data.ioc_chart.datasets[0].data.reduce(
+            (v: number, t: number) => t + v,
+            0
+          )}
+        </p>
+        <p
+          style={{
+            fontSize: 26,
+            fontWeight: "bold",
+            color: "#090c9b",
+            marginBottom: 0,
+          }}
+        >
           Indicators of Compromise (IOC) Match against Sweep
         </p>
         <div style={{ width: "60%", height: "400px", margin: "auto" }}>

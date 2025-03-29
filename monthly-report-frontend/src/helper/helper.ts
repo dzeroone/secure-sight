@@ -1,4 +1,5 @@
 import { REPORT_AUDIT_STATUS_LABEL, REPORT_STATUS_LABEL } from "@@/constants";
+import { format } from "date-fns/format";
 
 export function updateNestedField(obj: any, path: string, value: any): any {
     const keys = path.split(".");
@@ -36,4 +37,8 @@ export const getReportStatusTitle = (statusCode: number) => {
 
 export const getReportAuditStatusTitle = (statusCode: number) => {
     return REPORT_AUDIT_STATUS_LABEL['' + statusCode] || ""
+}
+
+export const formatMonthlyReportSession = (date: string) => {
+    return format(date, 'MMMM, yyyy')
 }

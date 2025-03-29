@@ -299,32 +299,6 @@ export const monthlyReportInitialValue = {
                 ]
             },
             {
-                "title": "Recommendations by SOC Team",
-                "desc": "",
-                "sub": [
-                    {
-                        "title": "Possible Spear Phishing Attack via Link",
-                        "desc": "Preventing spear phishing attacks via links involves several strategies such as verifying the link without clicking, employing web proxies or web gateways, and ensuring regular updates and patches to mitigate the risks associated with clicking on suspicious links."
-                    },
-                    {
-                        "title": "Hacking Tool Detection – Blocked",
-                        "desc": "Implement access controls and strong authentication methods to prevent unauthorized access to sensitive systems. This includes deploying robust authentication mechanisms and continuously monitoring for any unauthorized access attempts."
-                    },
-                    {
-                        "title": "Suspicious File Creation in Uncommon Folder",
-                        "desc": "Implement file monitoring solutions to detect and alert on suspicious file activities in real-time. Regularly review and update security policies to restrict access to critical folders and files, thereby reducing the risk of unauthorized file creation and potential malware deployment."
-                    },
-                    {
-                        "title": "Targeted Attack Detection: Removal of Access to Common Administrative or Troubleshooting Tools",
-                        "desc": "Review and tighten access controls to common administrative and troubleshooting tools. Limit access to privileged accounts, regularly audit permissions, and implement multi-factor authentication (MFA) for accessing critical systems and applications to add an extra layer of security against targeted attacks."
-                    },
-                    {
-                        "title": "Possible Spear Phishing Attack on High-profile User via Link",
-                        "desc": "Preventing spear phishing attacks via links involves strategies like verifying the link without clicking, employing web proxies or web gateways, and ensuring regular updates and patches. These measures help mitigate the risks associated with clicking on suspicious links sent to high-profile users."
-                    }
-                ]
-            },
-            {
                 "title": "Action Performed by SOC Team",
                 "desc": "",
                 "sub": [
@@ -347,6 +321,32 @@ export const monthlyReportInitialValue = {
                     {
                         "title": "Possible Spear Phishing Attack on High-profile User via Link",
                         "desc": "While investigating, the SOC team identified the Sender: prathama_ghosal@XXX[.]com, dxlulevu@gmail[.]com, suketukothari@XXXX[.]com. The SOC team shared all the information regarding the incidents for the required action."
+                    }
+                ]
+            },
+            {
+                "title": "Recommendations by SOC Team",
+                "desc": "",
+                "sub": [
+                    {
+                        "title": "Possible Spear Phishing Attack via Link",
+                        "desc": "Preventing spear phishing attacks via links involves several strategies such as verifying the link without clicking, employing web proxies or web gateways, and ensuring regular updates and patches to mitigate the risks associated with clicking on suspicious links."
+                    },
+                    {
+                        "title": "Hacking Tool Detection – Blocked",
+                        "desc": "Implement access controls and strong authentication methods to prevent unauthorized access to sensitive systems. This includes deploying robust authentication mechanisms and continuously monitoring for any unauthorized access attempts."
+                    },
+                    {
+                        "title": "Suspicious File Creation in Uncommon Folder",
+                        "desc": "Implement file monitoring solutions to detect and alert on suspicious file activities in real-time. Regularly review and update security policies to restrict access to critical folders and files, thereby reducing the risk of unauthorized file creation and potential malware deployment."
+                    },
+                    {
+                        "title": "Targeted Attack Detection: Removal of Access to Common Administrative or Troubleshooting Tools",
+                        "desc": "Review and tighten access controls to common administrative and troubleshooting tools. Limit access to privileged accounts, regularly audit permissions, and implement multi-factor authentication (MFA) for accessing critical systems and applications to add an extra layer of security against targeted attacks."
+                    },
+                    {
+                        "title": "Possible Spear Phishing Attack on High-profile User via Link",
+                        "desc": "Preventing spear phishing attacks via links involves strategies like verifying the link without clicking, employing web proxies or web gateways, and ensuring regular updates and patches. These measures help mitigate the risks associated with clicking on suspicious links sent to high-profile users."
                     }
                 ]
             },
@@ -1118,14 +1118,14 @@ export const monthlyReportInitialValue = {
             ],
             "datasets": [
                 {
-                    "label": "Total",
+                    "label": "Total endpoints",
                     "data": [
                         6552,
                     ],
                     "backgroundColor": "rgb(255, 130, 0)"
                 },
                 {
-                    "label": "Count",
+                    "label": "Feature enabled",
                     "data": [
                         0,
                     ],
@@ -1144,42 +1144,52 @@ export const monthlyReportInitialValue = {
             "visible": true,
             "type": "pie",
             "key": [
-                "Total (Workload + Apex)",
-                "Latest version (Workload + Apex) as a Service",
-                "Outdated version (Workload + Apex) as a Service",
-                "End-of-Life version (Workload + Apex) as a Service"
+                "OS not supported (Server + Endpoint)",
+                "Agent End of Life (Server + Endpoint)",
+                "OS and agent incompatible (Server + Endpoint)",
+                "Older supported version (Server + Endpoint)",
+                "Up-to-date version (Server + Endpoint)",
+                "All versions (Server + Endpoint)",
             ],
             "datasets": [
                 {
                     "data": [
+                        0,
+                        0,
                         0,
                         0,
                         0,
                         0
                     ],
                     "backgroundColor": [
+                        "rgb(255, 247, 231)",
+                        "rgb(250, 219, 187)",
+                        "rgb(250, 203, 153)",
+                        "rgb(252, 174, 90)",
+                        "rgb(250, 143, 29)",
                         "rgb(255, 130, 0)",
-                        "rgb(255, 162, 64)",
-                        "rgb(255, 204, 148)",
-                        "rgb(255, 247, 231)"
                     ]
                 }
             ]
         },
         "server_workload_protection_chart": {
             "visible": true,
-            "title": "C1WS / Server & Workload Protection / Security",
+            "title": "Server & Workload Protection",
             "type": "horizontal_bar",
             "key": [
+                "OS not supported",
+                "Agent end-of-life",
+                "OS and agent incompatible",
+                "Older supported version",
+                "Up-to-date version",
                 "All versions",
-                "Latest version",
-                "Outdated Version",
-                "End-of-Life Version",
             ],
             "datasets": [
                 {
                     "label": "",
                     "data": [
+                        0,
+                        0,
                         0,
                         0,
                         0,
@@ -1191,18 +1201,22 @@ export const monthlyReportInitialValue = {
         },
         "standard_endpoint_protection_chart": {
             "visible": true,
-            "title": "Apex One as a Service / Std Endpoint Protection",
+            "title": "Standard Endpoint Protection",
             "type": "horizontal_bar",
             "key": [
+                "OS not supported",
+                "Agent end-of-life",
+                "OS and agent incompatible",
+                "Older supported version",
+                "Up-to-date version",
                 "All versions",
-                "Latest version",
-                "Outdated Version",
-                "End-of-Life Version",
             ],
             "datasets": [
                 {
                     "label": "",
                     "data": [
+                        0,
+                        0,
                         0,
                         0,
                         0,

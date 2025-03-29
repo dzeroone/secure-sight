@@ -28,7 +28,7 @@ import TopVulnerabilitiesDetected from "@@/components/monthly-report/TopVulnerab
 import VulnerabilityAssessmentReport from "@@/components/monthly-report/VulnerabilityAssessmentReport";
 import WorkbenchIncidentsSummary from "@@/components/monthly-report/WorkbenchIncidentsSummary";
 import axiosApi from "@@/config/axios";
-import { getErrorMessage } from "@@/helper/helper";
+import { formatMonthlyReportSession, getErrorMessage } from "@@/helper/helper";
 import {
   setCanSubmitReport,
   setAuditStatus,
@@ -38,6 +38,7 @@ import {
   setStatusFromServer,
 } from "@@/lib/features/monthly-report/monthlyPageStateSlice";
 import {
+  firstPage,
   resetMonthlyReportState,
   updateFromElasticData,
 } from "@@/lib/features/monthly-report/monthlySlice";
@@ -93,6 +94,14 @@ const MonthlyReportPage = () => {
           const data = responseData.data[0]._source;
 
           dispatch(updateFromElasticData(data));
+          dispatch(
+            firstPage({
+              ...report.monthly_report,
+              client_name: responseData.customer.name,
+              date: formatMonthlyReportSession(responseData.date),
+              customer_name: responseData.customer.tCode.toUpperCase(),
+            })
+          );
           dispatch(setCanSubmitReport(responseData.canSubmitReport || false));
         }
       } else {

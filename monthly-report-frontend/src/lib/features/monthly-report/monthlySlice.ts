@@ -718,7 +718,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "agent_version_chart",
                             datasetIndex: 0,
-                            index: 0,
+                            index: 5,
                             value: eData['Total (Endpoint + Server)']
                         }
                     })
@@ -727,7 +727,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "agent_version_chart",
                             datasetIndex: 0,
-                            index: 1,
+                            index: 4,
                             value: eData['Latest Version (Endpoint + Server)']
                         }
                     })
@@ -736,7 +736,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "agent_version_chart",
                             datasetIndex: 0,
-                            index: 2,
+                            index: 3,
                             value: eData['Older Version (Endpoint + Server)']
                         }
                     })
@@ -745,7 +745,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "agent_version_chart",
                             datasetIndex: 0,
-                            index: 3,
+                            index: 1,
                             value: eData['End-of-Life version (Endpoint + Server)']
                         }
                     })
@@ -758,7 +758,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "server_workload_protection_chart",
                             datasetIndex: 0,
-                            index: 0,
+                            index: 5,
                             value: wData['Older'] + wData['Latest'] + wData['End of Life']
                         }
                     })
@@ -767,7 +767,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "server_workload_protection_chart",
                             datasetIndex: 0,
-                            index: 1,
+                            index: 4,
                             value: wData['Latest']
                         }
                     })
@@ -776,7 +776,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "server_workload_protection_chart",
                             datasetIndex: 0,
-                            index: 2,
+                            index: 3,
                             value: wData['Older']
                         }
                     })
@@ -786,7 +786,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "server_workload_protection_chart",
                             datasetIndex: 0,
-                            index: 3,
+                            index: 1,
                             value: wData['End of Life']
                         }
                     })
@@ -799,7 +799,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "standard_endpoint_protection_chart",
                             datasetIndex: 0,
-                            index: 0,
+                            index: 5,
                             value: sData['Older'] + sData['Latest'] + sData['End of Life']
                         }
                     })
@@ -808,7 +808,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "standard_endpoint_protection_chart",
                             datasetIndex: 0,
-                            index: 1,
+                            index: 4,
                             value: sData['Latest']
                         }
                     })
@@ -817,7 +817,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "standard_endpoint_protection_chart",
                             datasetIndex: 0,
-                            index: 2,
+                            index: 3,
                             value: sData['Older']
                         }
                     })
@@ -826,7 +826,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             chart: "standard_endpoint_protection_chart",
                             datasetIndex: 0,
-                            index: 3,
+                            index: 1,
                             value: sData['End of Life']
                         }
                     })
@@ -839,6 +839,21 @@ export const monthlyReportSlice = createSlice({
         // First page
         firstPage: (state, action: PayloadAction<FirstPageType>) => {
             state.monthly_report = action.payload
+            state.overall_incident_summary.incidents_chart.key[2] = `Pending Incidents with ${state.monthly_report.customer_name}`
+            state.overall_incident_summary.p1.pending_with_customer.customer_name = state.monthly_report.customer_name
+            state.overall_incident_summary.p2.pending_with_customer.customer_name = state.monthly_report.customer_name
+            state.overall_incident_summary.p3.pending_with_customer.customer_name = state.monthly_report.customer_name
+            state.overall_incident_summary.p4.pending_with_customer.customer_name = state.monthly_report.customer_name
+
+            state.workbench_incident_summary.p1.pending_with_customer.customer_name = state.monthly_report.customer_name
+            state.workbench_incident_summary.p2.pending_with_customer.customer_name = state.monthly_report.customer_name
+            state.workbench_incident_summary.p3.pending_with_customer.customer_name = state.monthly_report.customer_name
+            state.workbench_incident_summary.p4.pending_with_customer.customer_name = state.monthly_report.customer_name
+
+            state.siem_incident_summary.p1.pending_with_customer.customer_name = state.monthly_report.customer_name
+            state.siem_incident_summary.p2.pending_with_customer.customer_name = state.monthly_report.customer_name
+            state.siem_incident_summary.p3.pending_with_customer.customer_name = state.monthly_report.customer_name
+            state.siem_incident_summary.p4.pending_with_customer.customer_name = state.monthly_report.customer_name
         },
 
         // Table of content

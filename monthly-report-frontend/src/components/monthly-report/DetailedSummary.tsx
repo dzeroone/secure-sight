@@ -71,10 +71,8 @@ const DetailedSummary = () => {
       <div style={{ marginTop: 20 }}>
         <ul style={{ listStyleType: "disc", paddingLeft: 20 }}>
           <li style={{ fontSize: 24, marginBottom: "1rem" }}>
-            <strong>
-              {data.highly_exploitable} Highly exploitable unique CVEs
-            </strong>{" "}
-            noted in Endpoints.
+            <strong>{data.highly_exploitable} CVEs detected</strong> in internal
+            assets.
           </li>
           <li style={{ fontSize: 24, marginBottom: "1rem" }}>
             <strong>{data.incidents_closed} Incident</strong> Closed without
