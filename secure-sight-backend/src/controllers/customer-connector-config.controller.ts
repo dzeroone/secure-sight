@@ -3,9 +3,9 @@ import { CustomerCreateValidationValues } from "../validators/customer-create.va
 import { COLLECTIONS, DIRS, MASTER_ADMIN_DB } from "../constant";
 import { dynamicModelWithDBConnection } from "../models/dynamicModel";
 import mongoose from "mongoose";
-import ini, { stringify } from 'ini';
 import { access, constants, readFile, writeFile } from "fs/promises";
 import decompress from "decompress";
+import { parse, safe, stringify } from "../helper/ini.helper";
 
 type ConfigDataType = CustomerCreateValidationValues['apiConfig']
 
@@ -70,7 +70,7 @@ class CustomerConnectorConfigController {
     }
 
     const iniText = await readFile(configFilePath, { encoding: 'utf-8' })
-    const iniConfig = ini.parse(iniText)
+    const iniConfig = parse(iniText)
 
     const upperCasedTenantCode = tenantCode.toUpperCase()
     if (!iniConfig[upperCasedTenantCode]) {
@@ -103,6 +103,7 @@ class CustomerConnectorConfigController {
      * Deep security config parameters are missing
      */
     const updatedIni = stringify(iniConfig)
+
     await writeFile(configFilePath, updatedIni)
   }
 }

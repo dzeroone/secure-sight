@@ -9,7 +9,7 @@ import { formatWeeklyReportSession } from "../../helpers/form_helper"
 import { EyeIcon, MessageSquareIcon } from "lucide-react"
 import ModalLoading from "../../components/ModalLoading"
 import { useProfile } from "../../Hooks/UserHooks"
-import { ROLES } from "../../data/roles"
+import { REPORT_AUDIT_STATUS, ROLES } from "../../data/app"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
@@ -31,7 +31,7 @@ export default function WeeklySubmissionsPage() {
       setAssignments(res)
     }catch(e) {
       const msg = getErrorMessage(e)
-      alert(msg)
+      toast.error(msg)
     }finally{
       setBusy(false)
     }
@@ -62,7 +62,7 @@ export default function WeeklySubmissionsPage() {
       }
     }catch(e) {
       const msg = getErrorMessage(e)
-      alert(msg)
+      toast.error(msg)
     }finally{
       setBusy(false)
     }
@@ -151,12 +151,16 @@ export default function WeeklySubmissionsPage() {
                     <Button size="sm" onClick={() => viewReport(assignment)}>
                       <EyeIcon size="1rem" />
                     </Button>
-                    <Button size="sm" onClick={() => sendReassign(assignment)} color="danger">
-                      Reassign
-                    </Button>
-                    <Button size="sm" onClick={() => approveAssignment(assignment)} color="success">
-                      {assignment.isRoot ? 'Approve' : 'Submit for approval'}
-                    </Button>
+                    {assignment.status !== REPORT_AUDIT_STATUS.APPROVED ? (
+                      <>
+                        <Button size="sm" onClick={() => sendReassign(assignment)} color="danger">
+                          Reassign
+                        </Button>
+                        <Button size="sm" onClick={() => approveAssignment(assignment)} color="success">
+                          {assignment.isRoot ? 'Approve' : 'Submit for approval'}
+                        </Button>
+                      </>
+                    ) : null}
                   </div>
                 </td>
               </tr>

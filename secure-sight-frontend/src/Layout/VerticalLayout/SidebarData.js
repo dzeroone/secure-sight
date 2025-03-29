@@ -1,4 +1,4 @@
-import { ROLES } from '../../data/roles'
+import { ROLES } from '../../data/app'
 
 const SidebarData = [
 	{

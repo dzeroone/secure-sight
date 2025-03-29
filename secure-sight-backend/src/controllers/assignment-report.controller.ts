@@ -1,7 +1,11 @@
+import { writeFile } from "fs/promises"
+import { REPORT_AUDIT_STATUS, REPORT_DIR } from "../constant"
 import assignmentReportModel, { AssignmentReportDocumentType } from "../models/assignmentReportModel"
 import { MonthlyReportEditValidationValues, MonthlyReportValidationValues } from "../validators/monthly-report.validator"
 import { WeeklyReportEditValidationValues, WeeklyReportValidationValues } from "../validators/weekly-report.validator"
 import { ReportType } from "./assignment.controller"
+import pdfController from "./pdf.controller"
+import path from "path"
 
 class AssignmentReportController {
   async getPaginated(query: any, user: Express.User, reportType: ReportType) {
@@ -107,11 +111,40 @@ class AssignmentReportController {
     }
   }
 
+  async reportApproved(id: string, reportType: ReportType, user: Express.User) {
+    const reportData = await this.getById(id)
+    if (!reportData) throw new Error("Report not found!")
+
+    // generate pdf
+    let fileName = ''
+    if (reportType == 'monthly') {
+      // save monthly pdf
+      const pdfData = await pdfController.generateMonthlyPdf(reportData?.data)
+      fileName = `mr-${reportData.index}.pdf`
+      await writeFile(path.resolve(REPORT_DIR, fileName), pdfData)
+    } else {
+      // save weekly pdf
+      const pdfData = await pdfController.generateWeeklyPdf({
+        id
+      }, user)
+      fileName = `wr-${reportData.index}.pdf`
+      await writeFile(path.resolve(REPORT_DIR, fileName), pdfData)
+
+    }
+    return this.updateById(id, {
+      auditStatus: REPORT_AUDIT_STATUS.APPROVED,
+      fileName
+    })
+  }
+
   async updateById(id: string, data: any) {
     return assignmentReportModel.updateOne({
       _id: id
     }, {
-      $set: data
+      $set: {
+        ...data,
+        uAt: new Date()
+      }
     })
   }
 

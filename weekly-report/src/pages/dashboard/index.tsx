@@ -1,4 +1,4 @@
-import { enqueueSnackbar, useSnackbar } from "notistack";
+import { enqueueSnackbar } from "notistack";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { GrFormPrevious } from "react-icons/gr";
 import {
@@ -23,6 +23,7 @@ import KfwForm from "../../components/form/KfwForm";
 import PisForm from "../../components/form/PisForm";
 import SloForm from "../../components/form/SloFrom";
 import TisForm from "../../components/form/TisForm";
+import InputLabel from "../../components/InputLabel";
 import Navbar from "../../components/Navbar";
 import EndpointInventory from "../../components/pdf-components/EndpointInventory";
 import ExecutiveSummary from "../../components/pdf-components/ExecutiveSummary";
@@ -34,14 +35,14 @@ import PendingIncidentsSummary from "../../components/pdf-components/PendingInci
 import SloSummary from "../../components/pdf-components/SloSummary";
 import TableOfContents from "../../components/pdf-components/TableOfContents";
 import ThreatIntelSummary from "../../components/pdf-components/ThreatIntelSummary";
-import { withAuth } from "../../hocs/withAuth";
-import store, { RootState } from "../../store/store";
-import axiosApi from "../../config/axios";
-import { getErrorMessage } from "../../utils/helpers";
-import InputLabel from "../../components/InputLabel";
 import SelectInput from "../../components/SelectInput";
+import axiosApi from "../../config/axios";
 import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "../../data/data";
+import { withAuth } from "../../hocs/withAuth";
 import { useAuth } from "../../providers/AuthProvider";
+import store, { RootState } from "../../store/store";
+import { getErrorMessage } from "../../utils/helpers";
+import Alert from "../../components/ui/Alert";
 
 const Dashboard = () => {
   const router = useNavigate();
@@ -54,7 +55,7 @@ const Dashboard = () => {
     serverStatus: 0,
     status: 0,
     auditStatus: -999,
-    isLastReporter: false,
+    canSubmitReport: false,
     reporterId: "",
   });
   const [file, setFile] = useState<File | null>(null);
@@ -115,17 +116,21 @@ const Dashboard = () => {
           responseType: "json",
         });
         const responseData = res.data;
+        const reportDoc = responseData.data;
+
         dispatch({
           type: "RESTORE",
-          payload: responseData.data.formData,
+          payload: reportDoc.data.formData,
         });
-        setReportData(responseData.data.reportData);
+        setReportData(reportDoc.data.reportData);
         setReportState((s) => {
           return {
             ...s,
-            serverStatus: responseData.status,
-            status: responseData.status,
-            reporterId: responseData.reporterId,
+            serverStatus: reportDoc.status,
+            status: reportDoc.status,
+            auditStatus: reportDoc.auditStatus,
+            reporterId: reportDoc.reporterId,
+            canSubmitReport: responseData.canSubmitReport,
           };
         });
       } else if (elasticIndex) {
@@ -148,7 +153,10 @@ const Dashboard = () => {
           setReportState((s) => {
             return {
               ...s,
-              isLastReporter: responseData.isLastReporter,
+              serverStatus: 0,
+              status: 0,
+              auditStatus: -999,
+              canSubmitReport: responseData.canSubmitReport,
             };
           });
         }
@@ -160,7 +168,7 @@ const Dashboard = () => {
           return {
             ...s,
             reporterId: "",
-            isLastReporter: false,
+            canSubmitReport: false,
             serverStatus: 0,
             status: 0,
             auditStatus: -999,
@@ -385,16 +393,19 @@ const Dashboard = () => {
           <button
             className="btn-primary rounded-md inline-flex items-center disabled:cursor-not-allowed disabled:opacity-50"
             disabled={
-              reportState.reporterId === currentUser?.id &&
-              (REPORT_STATUS.SUBMIT === reportState.serverStatus ||
-                [
-                  REPORT_AUDIT_STATUS.APPROVED,
-                  REPORT_AUDIT_STATUS.PENDING,
-                ].includes(reportState.auditStatus))
+              loading ||
+              reportState.auditStatus === REPORT_AUDIT_STATUS.APPROVED ||
+              (reportState.reporterId === currentUser?.id &&
+                (REPORT_STATUS.SUBMIT === reportState.serverStatus ||
+                  [
+                    REPORT_AUDIT_STATUS.APPROVED,
+                    REPORT_AUDIT_STATUS.PENDING,
+                  ].includes(reportState.auditStatus)))
             }
             onClick={saveReport}
           >
-            <MdSave className="mr-2" /> Save report
+            <MdSave className="mr-2" />{" "}
+            {reportState.status === 0 ? "Save" : "Submit"} report
           </button>
         ) : null}
         <form>
@@ -441,8 +452,14 @@ const Dashboard = () => {
             <div className="sticky top-0 flex flex-col gap-4 max-h-screen overflow-auto max-w-[450px]">
               {!isPreparingPdf && (
                 <div className="ml-[50px]">
-                  {reportState.isLastReporter ||
-                  reportState.reporterId === currentUser?.id ? (
+                  {reportState.auditStatus === REPORT_AUDIT_STATUS.APPROVED ? (
+                    <div className="mb-2">
+                      <Alert variant="success" elevated>
+                        This report has been approved.
+                      </Alert>
+                    </div>
+                  ) : null}
+                  {reportState.canSubmitReport ? (
                     <div>
                       <InputLabel htmlFor="status-select-label">
                         Status

@@ -55,3 +55,5 @@ export const REPORT_AUDIT_STATUS = {
     PENDING: 1,
     APPROVED: 2
 }
+
+export const REPORT_DIR = path.resolve(process.cwd(), 'pdf_reports')

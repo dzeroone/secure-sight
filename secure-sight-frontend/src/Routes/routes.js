@@ -16,7 +16,7 @@ import Maintenance from "../Pages/Utility/Maintenance-Page";
 
 // Import Map Pages
 import { createBrowserHistory } from "history";
-import { ROLES } from "../data/roles";
+import { ROLES } from "../data/app";
 import AssignMonthlyReportPage from "../Pages/assign/montly-report";
 import AssignWeeklyReportPage from "../Pages/assign/weekly-report";
 import AssignmentMessagePage from "../Pages/assignments/[id]";

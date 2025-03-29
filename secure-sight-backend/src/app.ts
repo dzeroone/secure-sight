@@ -10,16 +10,8 @@ import './helper/yup.helper'
 import schema from './schema/schema'
 import routes from './routes'
 import csvRoutes from './routes/csvRoutes'
-
-declare global {
-    namespace Express {
-        interface User {
-            _id: string
-            fullname: string,
-            role: string
-        }
-    }
-}
+import { mkdir } from 'fs/promises'
+import { REPORT_DIR } from './constant'
 
 const build = async () => {
 
@@ -43,6 +35,9 @@ const build = async () => {
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
         next()
     })
+
+    // create necessary directories
+    await mkdir(REPORT_DIR, { recursive: true })
 
     // Routes
     app.use('/api', routes)

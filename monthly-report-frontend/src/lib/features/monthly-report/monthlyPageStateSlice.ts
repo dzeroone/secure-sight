@@ -8,7 +8,7 @@ const monthlyPageStateSlice = createSlice({
     statusFromServer: 0,
     status: 0,
     reporterId: '',
-    isLastReporter: false
+    canSubmitReport: false
   },
   reducers: {
     setProcessing(state, action: PayloadAction<boolean>) {
@@ -27,8 +27,8 @@ const monthlyPageStateSlice = createSlice({
     setReporterId(state, action: PayloadAction<string>) {
       state.reporterId = action.payload
     },
-    setIsLastReporter(state, action: PayloadAction<boolean>) {
-      state.isLastReporter = action.payload
+    setCanSubmitReport(state, action: PayloadAction<boolean>) {
+      state.canSubmitReport = action.payload
     }
   }
 })
@@ -39,7 +39,7 @@ export const {
   setStatus,
   setStatusFromServer,
   setReporterId,
-  setIsLastReporter
+  setCanSubmitReport
 } = monthlyPageStateSlice.actions
 
 export default monthlyPageStateSlice.reducer;

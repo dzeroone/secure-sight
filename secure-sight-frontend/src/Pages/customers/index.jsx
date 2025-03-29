@@ -8,7 +8,7 @@ import ModalLoading from "../../components/ModalLoading";
 import { format } from "date-fns";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import { useProfile } from "../../Hooks/UserHooks";
-import { ROLES } from "../../data/roles";
+import { ROLES } from "../../data/app";
 
 export default function CustomerIndexPage() {
   const [customers, setCustomers] = useState([])

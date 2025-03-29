@@ -30,7 +30,7 @@ import WorkbenchIncidentsSummary from "@@/components/monthly-report/WorkbenchInc
 import axiosApi from "@@/config/axios";
 import { getErrorMessage } from "@@/helper/helper";
 import {
-  setIsLastReporter,
+  setCanSubmitReport,
   setAuditStatus,
   setProcessing,
   setReporterId,
@@ -71,11 +71,13 @@ const MonthlyReportPage = () => {
           }
         );
         const responseData = res.data;
-        dispatch(resetMonthlyReportState(responseData.data));
-        dispatch(setStatusFromServer(responseData.status));
-        dispatch(setStatus(responseData.status));
-        dispatch(setAuditStatus(responseData.auditStatus));
-        dispatch(setReporterId(responseData.reporterId));
+        const reportDoc = responseData.data;
+        dispatch(resetMonthlyReportState(reportDoc.data));
+        dispatch(setStatusFromServer(reportDoc.status));
+        dispatch(setStatus(reportDoc.status));
+        dispatch(setAuditStatus(reportDoc.auditStatus));
+        dispatch(setReporterId(reportDoc.reporterId));
+        dispatch(setCanSubmitReport(responseData.canSubmitReport));
       } else if (elasticIndex) {
         dispatch(setProcessing(true));
         let payload = {
@@ -91,14 +93,14 @@ const MonthlyReportPage = () => {
           const data = responseData.data[0]._source;
 
           dispatch(updateFromElasticData(data));
-          dispatch(setIsLastReporter(responseData.isLastReporter || false));
+          dispatch(setCanSubmitReport(responseData.canSubmitReport || false));
         }
       } else {
         dispatch(resetMonthlyReportState(null));
         dispatch(setStatusFromServer(0));
         dispatch(setStatus(0));
         dispatch(setAuditStatus(-999));
-        dispatch(setIsLastReporter(false));
+        dispatch(setCanSubmitReport(false));
       }
     } catch (e: any) {
       const msg = getErrorMessage(e);

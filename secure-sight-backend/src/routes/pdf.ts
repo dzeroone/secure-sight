@@ -1,12 +1,22 @@
 import express from 'express'
 import pdfController from '../controllers/pdf.controller';
 import { auth } from '../utils/auth-util';
+import assignmentReportController from '../controllers/assignment-report.controller';
+import { REPORT_AUDIT_STATUS, REPORT_DIR } from '../constant';
+import path from 'path';
 const router = express.Router();
 
 router.post("/monthly",
   auth,
   async (req, res) => {
     try {
+      if (req.query.id) {
+        const report = await assignmentReportController.getById(req.query.id as string)
+        if (report?.auditStatus === REPORT_AUDIT_STATUS.APPROVED) {
+          res.sendFile(path.resolve(REPORT_DIR, report.fileName!))
+          return
+        }
+      }
       const mergedPdfBuffer = await pdfController.generateMonthlyPdf(req.body)
       // Set response headers correctly and send the PDF as a binary stream
       res.setHeader("Content-Type", "application/pdf");
@@ -28,6 +38,13 @@ router.post("/weekly",
   auth,
   async (req, res) => {
     try {
+      if (req.query.id) {
+        const report = await assignmentReportController.getById(req.query.id as string)
+        if (report?.auditStatus === REPORT_AUDIT_STATUS.APPROVED) {
+          res.sendFile(path.resolve(REPORT_DIR, report.fileName!))
+          return
+        }
+      }
       const pdfBuffer = await pdfController.generateWeeklyPdf(req.query, req.user!)
       // Set response headers correctly and send the PDF as a binary stream
       res.setHeader("Content-Type", "application/pdf");

@@ -16,6 +16,8 @@ export const REPORT_STATUS_LABEL: any = {
 }
 
 export const REPORT_AUDIT_STATUS_LABEL: any = {
-  "0": "NEED CORRECTION",
-  "1": "APPROVED",
+  "-1": "NEEDS CORRECTION",
+  "0": "PENDING APPROVAL",
+  "1": "PENDING APPROVAL",
+  "2": "APPROVED",
 }

@@ -46,7 +46,10 @@ class AssignmentController {
     return assignmentModel.updateOne({
       _id: id
     }, {
-      $set: data
+      $set: {
+        ...data,
+        uAt: new Date()
+      }
     })
   }
 
@@ -277,6 +280,24 @@ class AssignmentController {
     return res
   }
 
+  async reportApproved(assignment: AssignmentDocumentType, reportId: string, submitter: Express.User) {
+    await this.updateById(assignment._id.toString(), {
+      status: REPORT_AUDIT_STATUS.APPROVED,
+      sCBy: submitter._id
+    })
+
+    let lAssignment = await this.getAssignmentByReportIdForAssignee(reportId, assignment.reporterId!)
+    while (lAssignment) {
+      await this.updateById(lAssignment._id.toString(), {
+        status: REPORT_AUDIT_STATUS.APPROVED,
+        sCBy: submitter._id
+      })
+      lAssignment = await this.getAssignmentByReportIdForAssignee(reportId, lAssignment.reporterId!)
+    }
+
+    await assignmentReportController.reportApproved(reportId, assignment.rType as ReportType, submitter)
+  }
+
   async getSubmissions(assignee: Express.User, reportType: ReportType) {
     const assignments = await assignmentModel.find({
       rType: reportType,
@@ -401,6 +422,15 @@ class AssignmentController {
       reporterId
     }, { reporterId: 1 })
     return !!doc
+  }
+
+  async isLastReporter(index: string, reporterId: string) {
+    const assignment = await this.getAssignmentByIndexForAssignee(index, reporterId)
+    if (assignment) {
+      // user have assigned report to another user
+      return false
+    }
+    return true
   }
 
   private async _populateAssignmentsForCustomerForDate(customer: any, date: string, assignedBy: string, reportType: 'monthly' | 'weekly' = 'monthly') {

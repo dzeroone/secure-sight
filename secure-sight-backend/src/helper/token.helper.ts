@@ -24,7 +24,9 @@ export const signAuthToken = (dataToSign: Record<string, any>) => {
 
 export const verifyAzureIdToken = async (token: string) => {
   return new Promise((resolve, reject) => {
-    jwt.verify(token, getSigningKey, (e, decoded) => {
+    jwt.verify(token, getSigningKey, {
+      ignoreNotBefore: true
+    }, (e, decoded) => {
       if (e) reject(e)
       else resolve(decoded)
     })

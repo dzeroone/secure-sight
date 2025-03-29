@@ -7,7 +7,7 @@ import { Button, Table } from "reactstrap"
 import { formatMonthlyReportSession } from "../../helpers/form_helper"
 import { EyeIcon, MessageSquareIcon } from "lucide-react"
 import swal from "sweetalert"
-import { ROLES } from "../../data/roles"
+import { REPORT_AUDIT_STATUS, ROLES } from "../../data/app"
 import { useProfile } from "../../Hooks/UserHooks"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
@@ -150,12 +150,16 @@ export default function MonthlySubmissionsPage() {
                     <Button size="sm" onClick={() => viewReport(assignment)}>
                       <EyeIcon size="1rem" />
                     </Button>
-                    <Button size="sm" onClick={() => sendReassign(assignment)} color="danger">
-                      Reassign
-                    </Button>
-                    <Button size="sm" onClick={() => approveAssignment(assignment)} color="success">
-                      {assignment.isRoot ? 'Approve' : 'Submit for approval'}
-                    </Button>
+                    {assignment.status !== REPORT_AUDIT_STATUS.APPROVED ? (
+                      <>
+                        <Button size="sm" onClick={() => sendReassign(assignment)} color="danger">
+                          Reassign
+                        </Button>
+                        <Button size="sm" onClick={() => approveAssignment(assignment)} color="success">
+                          {assignment.isRoot ? 'Approve' : 'Submit for approval'}
+                        </Button>
+                      </>
+                    ): null}
                   </div>
                 </td>
               </tr>

@@ -1,5 +1,4 @@
-import { HydratedDocumentFromSchema, InferSchemaType, model, Schema, Types } from "mongoose"
-const ObjectId = Types.ObjectId
+import { HydratedDocumentFromSchema, model, Schema } from "mongoose"
 
 const dbSchema = new Schema({
   index: String,
@@ -9,6 +8,7 @@ const dbSchema = new Schema({
     type: String,
     index: true
   },
+  fileName: String,
   status: Number,
   auditStatus: Number,
   cAt: Date,

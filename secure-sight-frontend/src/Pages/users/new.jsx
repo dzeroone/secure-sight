@@ -8,7 +8,7 @@ import { useState } from "react";
 import ModalLoading from "../../components/ModalLoading";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import { useProfile } from "../../Hooks/UserHooks";
-import { ROLES } from "../../data/roles";
+import { ROLES } from "../../data/app";
 import { getErrorMessage } from "../../helpers/utils";
 
 export default function NewUserPage(props) {

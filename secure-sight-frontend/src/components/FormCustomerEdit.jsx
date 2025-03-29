@@ -5,6 +5,7 @@ import ApiEndPoints from "../Network_call/ApiEndPoints"
 import { FormCustomer } from "./FormCustomer"
 import ModalLoading from "./ModalLoading"
 import { toast } from "react-toastify"
+import { getErrorMessage } from "../helpers/utils"
 
 export default function FormCustomerEdit() {
   const params = useParams()
@@ -60,32 +61,18 @@ export default function FormCustomerEdit() {
         `${ApiEndPoints.Customers}/${id}`,
       );
       if(response.success === false) {
-        toast(response.message, {
+        toast.error(response.message, {
           autoClose: 2000
         })
         return
       }
-      toast('Data saved.', {
+      toast.success('Data saved.', {
         autoClose: 2000
       })
       // Handle success (optional)
     } catch (e) {
-      if (e.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        let res = e.response.data
-        toast(res.data.message, {
-          autoClose: 2000
-        })
-      } else if (e.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(e.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', e.message);
-      }
+      const msg = getErrorMessage(e)
+      toast.error(msg)
     }finally{
       setBusy(false)
     }

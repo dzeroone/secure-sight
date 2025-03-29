@@ -1,9 +1,23 @@
 "use client";
+import axiosApi from "@@/config/axios";
+import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "@@/constants";
+import { getErrorMessage } from "@@/helper/helper";
+import {
+  setProcessing,
+  setStatus,
+} from "@@/lib/features/monthly-report/monthlyPageStateSlice";
+import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
+import { useAuth } from "@@/providers/AuthProvider";
+import {
+  createMonthlyReport,
+  getMonthlyReportPdf,
+} from "@@/services/monthly-report";
 import {
   KeyboardArrowLeft,
   KeyboardArrowRight,
   PictureAsPdf,
 } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import {
   Alert,
   Box,
@@ -18,56 +32,37 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useCallback, useState } from "react";
-import FirstPageForm from "./monthly-report/forms/FirstPageForm";
-import TableOfContentsForm from "./monthly-report/forms/TableOfContentsForm";
-import SystemConfigReportForm from "./monthly-report/forms/SystemConfigReportForm";
-import VulnAssessmentReportForm from "./monthly-report/forms/VulnAssessmentReportForm";
-import PendingIncidentsSummaryForm from "./monthly-report/forms/PendingIncidentsSummaryForm";
-import DetailedSummary from "./monthly-report/forms/DetailedSummary";
-import AboutThisReportForm from "./monthly-report/forms/AboutThisReport";
-import ExecutiveSummaryForm from "./monthly-report/forms/ExecutiveSummaryForm";
-import HighIncidentSummaryForm from "./monthly-report/forms/HighIncidentSummaryForm";
-import OverallIncidentSummaryForm from "./monthly-report/forms/OverallIncidentSummaryForm";
-import SiemIncidentSummaryForm from "./monthly-report/forms/SiemIncidentSummaryForm";
-import WorkbenchIncidentSummaryForm from "./monthly-report/forms/WorkbenchIncidentSummaryForm";
-import AccountCompromiseEventsForm from "./monthly-report/forms/AccountCompromiseEventsForm";
-import RiskMetricsForm from "./monthly-report/forms/RiskMetricsForm";
-import ThreatIntelSummaryForm from "./monthly-report/forms/ThreatIntelSummaryForm";
-import SLOSummaryForm from "./monthly-report/forms/SLOSummaryForm";
-import ApexOneSummaryForm from "./monthly-report/forms/ApexOneSummaryForm";
+import { useRouter, useSearchParams } from "next/navigation";
+import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
 import { toast } from "react-toastify";
-import {
-  createMonthlyReport,
-  getMonthlyReportPdf,
-} from "@@/services/monthly-report";
-import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
+import AboutThisReportForm from "./monthly-report/forms/AboutThisReport";
+import AccountCompromiseEventsForm from "./monthly-report/forms/AccountCompromiseEventsForm";
+import AgentVersionForm from "./monthly-report/forms/AgentVersionForm";
+import ApexOneSummaryForm from "./monthly-report/forms/ApexOneSummaryForm";
+import DetailedSummary from "./monthly-report/forms/DetailedSummary";
 import EmailQuarantineSummaryForm from "./monthly-report/forms/EmailQuarantineSummaryForm";
-import TopVulnerabilitiesForm from "./monthly-report/forms/TopVulnerabilitiesForm";
+import EndpointFeatureForm from "./monthly-report/forms/EndpointFeatureForm";
+import ExecutiveSummaryForm from "./monthly-report/forms/ExecutiveSummaryForm";
+import FirstPageForm from "./monthly-report/forms/FirstPageForm";
+import HighIncidentSummaryForm from "./monthly-report/forms/HighIncidentSummaryForm";
+import KFAApexOneForm from "./monthly-report/forms/KFAApexOneForm";
+import KFADeepSecurityForm from "./monthly-report/forms/KFADeepSecurityForm";
+import KFAWorkloadForm from "./monthly-report/forms/KFAWorkloadForm";
+import OverallIncidentSummaryForm from "./monthly-report/forms/OverallIncidentSummaryForm";
+import PendingIncidentsSummaryForm from "./monthly-report/forms/PendingIncidentsSummaryForm";
+import ProductAssessmentForm from "./monthly-report/forms/ProductAssessmentForm";
+import RiskMetricsForm from "./monthly-report/forms/RiskMetricsForm";
+import SiemIncidentSummaryForm from "./monthly-report/forms/SiemIncidentSummaryForm";
+import SLOSummaryForm from "./monthly-report/forms/SLOSummaryForm";
+import SystemConfigReportForm from "./monthly-report/forms/SystemConfigReportForm";
+import TableOfContentsForm from "./monthly-report/forms/TableOfContentsForm";
+import ThreatIntelSummaryForm from "./monthly-report/forms/ThreatIntelSummaryForm";
 import TopRiskDeviceForm from "./monthly-report/forms/TopRiskDeviceForm";
 import TopRiskUsersForm from "./monthly-report/forms/TopRiskUsersForm";
-import ProductAssessmentForm from "./monthly-report/forms/ProductAssessmentForm";
-import EndpointFeatureForm from "./monthly-report/forms/EndpointFeatureForm";
-import KFAApexOneForm from "./monthly-report/forms/KFAApexOneForm";
-import KFAWorkloadForm from "./monthly-report/forms/KFAWorkloadForm";
-import AgentVersionForm from "./monthly-report/forms/AgentVersionForm";
-import KFADeepSecurityForm from "./monthly-report/forms/KFADeepSecurityForm";
-import { LoadingButton } from "@mui/lab";
-import {
-  redirect,
-  RedirectType,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-import { enqueueSnackbar } from "notistack";
-import {
-  setProcessing,
-  setStatus,
-} from "@@/lib/features/monthly-report/monthlyPageStateSlice";
-import axiosApi from "@@/config/axios";
-import { getErrorMessage } from "@@/helper/helper";
-import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "@@/constants";
-import { useAuth } from "@@/providers/AuthProvider";
+import TopVulnerabilitiesForm from "./monthly-report/forms/TopVulnerabilitiesForm";
+import VulnAssessmentReportForm from "./monthly-report/forms/VulnAssessmentReportForm";
+import WorkbenchIncidentSummaryForm from "./monthly-report/forms/WorkbenchIncidentSummaryForm";
 const steps = [
   {
     label: "First Page",
@@ -234,7 +229,7 @@ const MonthlyReportForm = () => {
       });
       if (elasticIndex)
         router.replace(`/dashboard/monthly-report?id=${responseData._id}`);
-      else router.refresh();
+      else location.reload();
     } catch (e) {
       console.error(e);
       const msg = getErrorMessage(e);
@@ -272,7 +267,11 @@ const MonthlyReportForm = () => {
     // }
     try {
       setGeneratingPdf(true);
-      const response = await getMonthlyReportPdf(data);
+      const response = await getMonthlyReportPdf(
+        pageState.auditStatus == REPORT_AUDIT_STATUS.APPROVED
+          ? { id: reportId }
+          : data
+      );
 
       if (typeof window !== "undefined") {
         const blob = new Blob([response], { type: "application/pdf" });
@@ -327,8 +326,7 @@ const MonthlyReportForm = () => {
             >
               <PictureAsPdf />
             </LoadingButton>
-            {pageState.isLastReporter ||
-            pageState.reporterId == currentUser?.id ? (
+            {pageState.canSubmitReport ? (
               <FormControl fullWidth size="small">
                 <InputLabel id="status-select-label">Status</InputLabel>
                 <Select
@@ -349,17 +347,18 @@ const MonthlyReportForm = () => {
               variant="contained"
               color="info"
               disabled={
-                pageState.reporterId == currentUser?.id &&
-                (REPORT_STATUS.SUBMIT == pageState.statusFromServer ||
-                  [
-                    REPORT_AUDIT_STATUS.APPROVED,
-                    REPORT_AUDIT_STATUS.PENDING,
-                  ].includes(pageState.auditStatus))
+                pageState.auditStatus === REPORT_AUDIT_STATUS.APPROVED ||
+                (pageState.reporterId == currentUser?.id &&
+                  (REPORT_STATUS.SUBMIT == pageState.statusFromServer ||
+                    [
+                      REPORT_AUDIT_STATUS.APPROVED,
+                      REPORT_AUDIT_STATUS.PENDING,
+                    ].includes(pageState.auditStatus)))
               }
               loading={pageState.processing}
               onClick={saveMonthlyReport}
             >
-              Save
+              {pageState.status == 0 ? "Save" : "Submit"}
             </LoadingButton>
           </Stack>
         </Grid>

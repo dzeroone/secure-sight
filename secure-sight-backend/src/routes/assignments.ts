@@ -172,6 +172,9 @@ router.post('/submissions/:id/reaudit',
       if (!report) {
         throw new Error("Report not found")
       }
+      if (report.auditStatus && report.auditStatus == REPORT_AUDIT_STATUS.APPROVED) {
+        throw new Error("Report is already approved")
+      }
 
       await assignmentController.updateById(assignment._id.toString(), {
         status: REPORT_AUDIT_STATUS.AUDIT,
@@ -214,6 +217,10 @@ router.post('/submissions/:id/approve',
         throw new Error("Report not found")
       }
 
+      if (report.auditStatus && report.auditStatus == REPORT_AUDIT_STATUS.APPROVED) {
+        throw new Error("Report is already approved")
+      }
+
       // get upper assignment if exists
       const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, req.user!._id)
       if (uAssignment) {
@@ -224,23 +231,7 @@ router.post('/submissions/:id/approve',
         await assignmentController.reportSubmitted(uAssignment, report._id.toString(), req.user!._id)
       } else {
         // most top level user approved the report, so approve all leaf reporter's reports
-        await assignmentController.updateById(assignment._id.toString(), {
-          status: REPORT_AUDIT_STATUS.APPROVED,
-          sCBy: req.user!._id
-        })
-
-        let lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!)
-        while (lAssignment) {
-          await assignmentController.updateById(lAssignment._id.toString(), {
-            status: REPORT_AUDIT_STATUS.APPROVED,
-            sCBy: req.user!._id
-          })
-          lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, lAssignment.reporterId!)
-        }
-
-        await assignmentReportController.updateById(report._id.toString(), {
-          auditStatus: REPORT_AUDIT_STATUS.APPROVED
-        })
+        await assignmentController.reportApproved(assignment, report._id.toString(), req.user!)
       }
       res.sendStatus(201)
     } catch (e: any) {

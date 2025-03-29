@@ -43,7 +43,7 @@ router.post("/data/search",
   async (req, res) => {
     try {
       const dataToSend: any = {
-        isLastReporter: false
+        canSubmitReport: false
       }
       if (req.user?.role == ROLES.LEVEL2 || req.user?.role == ROLES.LEVEL1) {
         const assessment = await assignmentController.getAssignmentByIndexForReporter(req.body.index, req.user._id)
@@ -53,9 +53,7 @@ router.post("/data/search",
           throw err
         }
         // check if he assgined this report to anyother
-        const assignmentAsAssginee = await assignmentController.getAssignmentByIndexForAssignee(req.body.index, req.user._id)
-        if (!assignmentAsAssginee)
-          dataToSend.isLastReporter = true
+        dataToSend.canSubmitReport = await assignmentController.isLastReporter(req.body.index, req.user._id)
       }
       // alu
       // const response = [

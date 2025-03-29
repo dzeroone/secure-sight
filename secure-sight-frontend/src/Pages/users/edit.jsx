@@ -8,7 +8,7 @@ import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import ModalLoading from "../../components/ModalLoading";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
-import { ROLES } from "../../data/roles";
+import { ROLES } from "../../data/app";
 import { useProfile } from "../../Hooks/UserHooks";
 
 export default function EditUserPage(props) {

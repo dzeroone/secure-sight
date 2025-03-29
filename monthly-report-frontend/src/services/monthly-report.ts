@@ -14,9 +14,10 @@ export const createMonthlyReport = async (data: any) => {
 
 export const getMonthlyReportPdf = async (data: any) => {
     try {
-        const response = await axiosApi.post("/pdf/monthly", {
+        const response = await axiosApi.post("/pdf/monthly", data.id ? null : {
             ...data
         }, {
+            params: data.id ? data : undefined,
             responseType: "arraybuffer"
         })
         return response.data;

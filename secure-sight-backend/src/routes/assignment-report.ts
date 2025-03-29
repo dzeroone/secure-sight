@@ -2,7 +2,7 @@ import { Router } from "express";
 import { auth } from "../utils/auth-util";
 import assignmentReportController from "../controllers/assignment-report.controller";
 import { monthlyReportEditValidationSchema, monthlyReportValidationSchema } from "../validators/monthly-report.validator";
-import { REPORT_STATUS, ROLES } from "../constant";
+import { REPORT_AUDIT_STATUS, REPORT_STATUS, ROLES } from "../constant";
 import assignmentController, { ReportType } from "../controllers/assignment.controller";
 import { weeklyReportEditValidationSchema, weeklyReportValidationSchema } from "../validators/weekly-report.validator";
 
@@ -32,6 +32,9 @@ router.post('/:reportType(monthly|weekly)',
       if (req.body.status == REPORT_STATUS.SUBMIT) {
         const assignment = await assignmentController.getAssignmentByIndexForReporter(doc.index!, req.user!._id)
         if (!assignment) throw new Error("Assignment information not found")
+
+        const isLastReporter = await assignmentController.isLastReporter(doc.index!, req.user!._id)
+        if (!isLastReporter) throw new Error("You are not allowed to submit the report!")
 
         await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id)
       }
@@ -64,7 +67,12 @@ router.get('/:reportType(monthly|weekly)/:id',
         }
       }
 
-      res.send(doc)
+      const canSubmitReport = await assignmentController.isLastReporter(doc.index!, req.user!._id)
+
+      res.send({
+        canSubmitReport,
+        data: doc
+      })
     } catch (e: any) {
       res.status(400).send({
         message: e.message
@@ -84,8 +92,8 @@ router.patch('/:reportType(monthly|weekly)/:id',
       if (doc.reporterId == req.user?._id.toString() && doc.status == REPORT_STATUS.SUBMIT) {
         throw new Error("This report is already submitted for review.")
       }
-      if (![ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2].includes(req.user!.role)) {
-        throw new Error('You are not allowed')
+      if (doc.auditStatus && doc.auditStatus == REPORT_AUDIT_STATUS.APPROVED) {
+        throw new Error("This report is already approved.")
       }
 
       const data = reportType == 'monthly' ? await monthlyReportEditValidationSchema.validate(req.body) : await weeklyReportEditValidationSchema.validate(req.body)
@@ -93,6 +101,9 @@ router.patch('/:reportType(monthly|weekly)/:id',
       if ((doc.status != REPORT_STATUS.SUBMIT) && (req.body.status == REPORT_STATUS.SUBMIT)) {
         const assignment = await assignmentController.getAssignmentByIndexForReporter(doc.index!, req.user!._id)
         if (!assignment) throw new Error("Assignment information not found")
+
+        const isLastReporter = await assignmentController.isLastReporter(doc.index!, req.user!._id)
+        if (!isLastReporter) throw new Error("You are not allowed to submit the report!")
 
         await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id)
       }
