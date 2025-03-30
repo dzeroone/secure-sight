@@ -114,11 +114,11 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 	console.log('connector scheduler start!!')
 
 	try {
-		let { minute, hour, date, day, repeat, connectorId, userId, dbName } =
+		let { minute, hour, date, day, repeat, connectorId } =
 			response
 
 		const dbConnection = dynamicModelWithDBConnection(
-			dbName,
+			MASTER_ADMIN_DB,
 			COLLECTIONS.CONNECTOR_CONFIG,
 		)
 
