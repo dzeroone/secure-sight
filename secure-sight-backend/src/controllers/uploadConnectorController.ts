@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { COLLECTIONS } from '../constant'
+import { COLLECTIONS, MASTER_ADMIN_DB } from '../constant'
 
 class UploadConnectorController {
 
@@ -30,11 +30,11 @@ class UploadConnectorController {
         if (lastChunk) {
             if ((parseInt(totalChunks) - 1) === parseInt(currentChunkIndex)) {
                 const connectorConfigModel = dynamicModelWithDBConnection(
-                    dbName,
+                    MASTER_ADMIN_DB,
                     COLLECTIONS.CONNECTOR_CONFIG,
                 )
                 const connectorModel = dynamicModelWithDBConnection(
-                    dbName,
+                    MASTER_ADMIN_DB,
                     COLLECTIONS.CONNECTOR,
                 )
                 // const query = { email, name: nameWithoutExtension, display_name, category }
