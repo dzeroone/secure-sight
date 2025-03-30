@@ -4,6 +4,7 @@ import { ELASTIC_INDICES, ROLES } from '../constant';
 import { auth } from '../utils/auth-util';
 import assignmentController from '../controllers/assignment.controller';
 import customerController from '../controllers/customer.controller';
+import { extractInfoFromIndex } from '../helper/reports.helper';
 const router = express.Router();
 
 const esUrl = process.env.ELASTIC_BASE || "http://localhost:9200";
@@ -46,6 +47,17 @@ router.post("/data/search",
       const dataToSend: any = {
         canSubmitReport: false
       }
+      const { date, tCode, rType } = extractInfoFromIndex(req.body.index)
+      const customer = await customerController.getCustomerByTenantCode(tCode)
+      if (!customer) {
+        throw new Error("Customer data not found")
+      }
+      dataToSend.customer = {
+        name: customer.name,
+        tCode: customer.tCode
+      };
+      dataToSend.date = date;
+
       if (req.user?.role == ROLES.LEVEL2 || req.user?.role == ROLES.LEVEL1) {
         const assignment = await assignmentController.getAssignmentByIndexForReporter(req.body.index, req.user._id)
         if (!assignment) {
@@ -53,15 +65,7 @@ router.post("/data/search",
           err.message = "Assignment not found"
           throw err
         }
-        const customer = await customerController.getCustomerById(assignment.cId!)
-        if (!customer) {
-          throw new Error("Customer data not found")
-        }
-        dataToSend.customer = {
-          name: customer.name,
-          tCode: customer.tCode
-        };
-        dataToSend.date = assignment.date;
+
         // check if he assgined this report to anyother
         dataToSend.canSubmitReport = await assignmentController.isLastReporter(req.body.index, req.user._id)
       }

@@ -35,6 +35,15 @@ class CustomerController {
     return CustomerModel.findById(id)
   }
 
+  async getCustomerByTenantCode(tCode: string) {
+    const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+    return CustomerModel.findOne({
+      tCode: {
+        $regex: tCode, $options: 'i'
+      }
+    })
+  }
+
   async getDLChangeProposalById(id: string) {
     return customerDLChangeModel.findById(id)
   }

@@ -94,14 +94,16 @@ const MonthlyReportPage = () => {
           const data = responseData.data[0]._source;
 
           dispatch(updateFromElasticData(data));
-          dispatch(
-            firstPage({
-              ...report.monthly_report,
-              client_name: responseData.customer.name,
-              date: formatMonthlyReportSession(responseData.date),
-              customer_name: responseData.customer.tCode.toUpperCase(),
-            })
-          );
+          if (responseData.customer) {
+            dispatch(
+              firstPage({
+                ...report.monthly_report,
+                client_name: responseData.customer.name,
+                date: formatMonthlyReportSession(responseData.date),
+                customer_name: responseData.customer.tCode.toUpperCase(),
+              })
+            );
+          }
           dispatch(setCanSubmitReport(responseData.canSubmitReport || false));
         }
       } else {
