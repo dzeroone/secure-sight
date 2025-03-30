@@ -10,7 +10,6 @@ import mongoose from 'mongoose'
 
 interface ConnectorSchedulerTestDataType {
 	info: {
-		dbName: string
 		connectorId: any
 		isScheduled: boolean
 	}
@@ -29,7 +28,7 @@ class ConnectorController {
 
 	async createUpdateConnector(params: ConnectorProps) {
 		let query = { ...params.query, ...params.info }, info = params.info
-		const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.CONNECTOR)
+		const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR)
 		const obj = await dm.findOne({ connectorName: query.connectorName, email: info.email })
 		if (!obj) {
 			const doc = new dm(query)
@@ -44,7 +43,7 @@ class ConnectorController {
 		let info = params.info,
 			_date = new Date(),
 			data = params.data.map((p: any) => ({ ...info, ...p, created_at: _date, updated_at: _date })).map(({ tenantCode, ...p }: any) => p)
-		const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.CONNECTOR)
+		const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR)
 		for (let index in data) {
 			let obj = data[index]
 			// const query = { email: obj.email, name: obj.name, display_name: obj.display_name, category: obj.category }
@@ -67,7 +66,7 @@ class ConnectorController {
 
 	async activateConnector(params: any) {
 		const { info, data } = params
-		let dm = dynamicModelWithDBConnection(params.info.dbName, COLLECTIONS.CONNECTOR)
+		let dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR)
 		await dm.findOneAndUpdate({ role: info.role, email: info.email, display_name: data.display_name }, { $set: { status: data.status, userInputs: data.userInputs } })
 		return { error: false }
 	}
@@ -78,9 +77,9 @@ class ConnectorController {
 			const { info, data } = params
 			if (data) {
 				params.data.map(async (p: any) => {
-					const dm = dynamicModelWithDBConnection(p.dbName, COLLECTIONS.CONNECTOR);
+					const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR);
 					const getEntry = await dm.findOne({ connectorId: info._id }).lean();
-					const query = { connectorId: info._id, name: info.name, role: ROLES.ROLE2, display_name: info.display_name, category: info.category, config: info.config, actions: info.actions, filePath: info.filePath, email: `tenant@${p.domain}`, dbName: p.dbName, tenantCode: p.tenantCode }
+					const query = { connectorId: info._id, name: info.name, role: ROLES.ROLE2, display_name: info.display_name, category: info.category, config: info.config, actions: info.actions, filePath: info.filePath, email: `tenant@${p.domain}`, dbName: MASTER_ADMIN_DB, tenantCode: p.tenantCode }
 					if (!getEntry) {
 						const doc = new dm({ ...query, created_at: new Date() })
 						await doc.save();
@@ -107,7 +106,7 @@ class ConnectorController {
 
 			let response;
 			const { info } = params
-			const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.CONNECTOR);
+			const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR);
 			const connector = await dm.findOne({ _id: info.connectorId }).lean();
 			const connectorDirName = crypto.createHash('md5').update(connector?.email + connector?.display_name).digest('hex')
 			if (connector) {
@@ -116,12 +115,12 @@ class ConnectorController {
 				await stopTestConnectorScheduler(info.connectorId)
 
 				const cc = dynamicModelWithDBConnection(
-					info.dbName,
+					MASTER_ADMIN_DB,
 					COLLECTIONS.CONNECTOR_CONFIG,
 				)
 				await cc.deleteMany({ "connectorId": connector._id });
 
-				const um = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.USERCONNECTOR);
+				const um = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERCONNECTOR);
 				await um.deleteMany({ "connectorId": connector._id });
 
 				try {
@@ -150,15 +149,15 @@ class ConnectorController {
 		return new Promise(async (resolve, reject) => {
 			let response;
 			const { info } = params
-			const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.TENANT);
+			const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.TENANT);
 			const tenant = await dm.find().lean();
 			tenant.map(async (p: any) => {
-				const bm = dynamicModelWithDBConnection(p.dbName, COLLECTIONS.USERCONNECTOR);
+				const bm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERCONNECTOR);
 				await bm.deleteMany({ "connectorId": info.connectorId });
-				const cm = dynamicModelWithDBConnection(p.dbName, COLLECTIONS.CONNECTOR);
+				const cm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR);
 				await cm.deleteMany({ "connectorId": info.connectorId });
 			});
-			const gm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.CONNECTOR);
+			const gm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR);
 			const connector = await gm.findOne({ _id: info.connectorId }).lean();
 			if (connector) {
 				await gm.deleteOne({ "_id": info.connectorId });
@@ -179,7 +178,7 @@ class ConnectorController {
 			const { info, data } = params
 			if (data) {
 				params.data.map(async (p: any) => {
-					const dm = dynamicModelWithDBConnection(info.dbName, COLLECTIONS.USERCONNECTOR);
+					const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERCONNECTOR);
 					const getEntry = await dm.findOne({ $and: [{ user_id: p._id }, { connectorId: info.connectorId }] }).lean();
 					if (!getEntry) {
 						const query = { user_id: p._id, ...info, role: ROLES.ROLE3 }
@@ -205,7 +204,7 @@ class ConnectorController {
 	async connectorListForUser(params: any) {
 		return new Promise(async resolve => {
 			let response;
-			let dm = dynamicModelWithDBConnection(params.dbName, COLLECTIONS.USERCONNECTOR)
+			let dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERCONNECTOR)
 			const list = await dm.find({ user_id: params.user_id }).lean();
 			if (list.length > 0) {
 				response = { success: true, status: 200, data: list, msg: `User connector list.` };
@@ -229,7 +228,6 @@ class ConnectorController {
 		interface ConnectorConfigDataType {
 			info: {
 				connectorId: string
-				dbName: string
 				isScheduled: boolean
 			}
 			data: {
@@ -278,23 +276,23 @@ class ConnectorController {
 					})
 				})
 
-				const { dbName, connectorId } = info
-				if (!dbName || !connectorId) {
+				const { connectorId } = info
+				if (!connectorId) {
 					response = {
 						success: false,
 						status: 404,
-						msg: `Bad Request: dbName & connectorId field is must include in info`,
+						msg: `Bad Request: connectorId field is must include in info`,
 					}
 					resolve(response)
 					return
 				}
 
 				const dbConnection = dynamicModelWithDBConnection(
-					dbName,
+					MASTER_ADMIN_DB,
 					COLLECTIONS.CONNECTOR_CONFIG,
 				)
 				const connectorModel = dynamicModelWithDBConnection(
-					dbName,
+					MASTER_ADMIN_DB,
 					COLLECTIONS.CONNECTOR,
 				)
 
@@ -396,13 +394,13 @@ class ConnectorController {
 				return
 			}
 
-			const { dbName, connectorId, isScheduled } = info
+			const { connectorId, isScheduled } = info
 			const connectorConfigModel = dynamicModelWithDBConnection(
-				dbName,
+				MASTER_ADMIN_DB,
 				COLLECTIONS.CONNECTOR_CONFIG,
 			)
 			const connectorModel = dynamicModelWithDBConnection(
-				dbName,
+				MASTER_ADMIN_DB,
 				COLLECTIONS.CONNECTOR,
 			)
 
@@ -531,9 +529,9 @@ class ConnectorController {
 				resolve(response)
 				return
 			}
-			let { dbName, connectorId, userId } = info
+			let { connectorId, userId } = info
 			const dbConnection = await dynamicModelWithDBConnection(
-				dbName,
+				MASTER_ADMIN_DB,
 				COLLECTIONS.CONNECTOR_CONFIG,
 			)
 		})
