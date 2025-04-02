@@ -67,7 +67,7 @@ const ConnectorList = () => {
       payload,
       ApiEndPoints.ConnectorConfig
     );
-    toast(response.msg, { autoClose: 2000 });
+    toast.success(response.msg);
     setOpenLoader(false);
   };
 
@@ -94,7 +94,7 @@ const ConnectorList = () => {
       payload,
       ApiEndPoints.ConnecterDeleteTenant
     );
-    toast(response.msg, { autoClose: 2000 });
+    toast.success(response.msg);
     setOpenLoader(false);
     connectorData(userData.dbName);
   };

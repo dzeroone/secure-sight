@@ -65,7 +65,7 @@ const PendingIncidentsSummaryForm = () => {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                label="No. Occurence"
+                label="Date of Occurence"
                 variant="outlined"
                 value={item.no_of_occurrence}
                 onChange={(e) =>

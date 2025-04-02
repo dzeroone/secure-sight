@@ -243,8 +243,8 @@ export const monthlyReportInitialValue = {
                 ]
             },
             {
-                "title": "Top Global Industries Attack",
-                "desc": "To enhance security against attacks from top global industries, focus on robust access controls and authentication mechanisms, like multi-factor authentication (MFA). Regularly update and patch software to address vulnerabilities, employ network segmentation to isolate critical systems, and establish continuous monitoring for rapid threat detection and response."
+                "title": "Cyber Threats",
+                "desc": "It provides a detailed overview of detected malicious activities and their associated risks within the organization.To enhance security against attacks from top global industries, focus on robust access controls and authentication mechanisms, like multi- factor authentication(MFA). Regularly update and patch software to address vulnerabilities, employ network segmentation to isolate critical systems, and establish continuous monitoring for rapid threat detection and response.By acting on the provided remediation policies and continuing to monitor attack intensity, the organization can strengthen its overall security posture and reduce exposure to potential breaches."
             }
         ],
         "chart": {

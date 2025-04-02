@@ -11,7 +11,7 @@ const ModalLoading = ({ isOpen, persistent = false, onClose }) => {
       toggle={onClose}
     >
       <ModalBody>
-        <Spinner color="dark" />
+        <Spinner />
       </ModalBody>
     </Modal>
   )

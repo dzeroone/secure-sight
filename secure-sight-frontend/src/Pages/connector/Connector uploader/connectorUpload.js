@@ -273,7 +273,7 @@ const ConnectorUploader = () => {
 				totalHit: prevState.totalHit + 1,
 			}));
 			setOpenLoader(false);
-			toast("Connector has been added!");
+			toast.success("Connector has been added!");
 		} else {
 			setState((prevState) => ({
 				...prevState,

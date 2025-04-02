@@ -18,8 +18,6 @@ import ModalLoading from "../../components/ModalLoading";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 
 const ConnectorListTwo = () => {
-	const tooltipMessage = 'Config data is not added';
-
 	const [openLoader, setOpenLoader] = useState(false);
 	const [connectorList, setConnectorList] = useState([]);
 	const [searchedVal, setSearchedVal] = useState("");
@@ -176,7 +174,7 @@ const ConnectorListTwo = () => {
 		//             ApiEndPoints.ConnectorParameterSave
 		//         )
 		//         : null;
-		toast(respons.msg, { autoClose: 2000 });
+		toast.success(respons.msg);
 		connectorData()
 		setScheduleModalVisible(false);
 		setOpenLoader(false);

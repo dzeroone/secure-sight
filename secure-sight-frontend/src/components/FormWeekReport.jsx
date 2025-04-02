@@ -79,12 +79,11 @@ export default function FormWeekReport({ formik }) {
                     value={formik.values.tenant}
                     onChange={formik.handleChange}
                     invalid={!!formik.errors.tenant}
-                    className="text-uppercase"
                   >
                     <option value='' disabled>Select a tenant</option>
                     {customers?.map(customer => {
                       return (
-                        <option value={customer.tCode} key={customer._id}>{customer.tCode}</option>
+                        <option value={customer.tCode} key={customer._id}>{customer.name}</option>
                       )
                     })}
                   </Input>
