@@ -1,10 +1,8 @@
-import { useState } from "react";
-import FormMonthReport from "./FormMonthReport";
-import ModalLoading from "./ModalLoading";
 import { useFormik } from "formik";
-import { format, getYear } from "date-fns";
-import { getMonthlyReportIndex, getWeeklyReportIndex } from "../helpers/form_helper";
+import { useState } from "react";
+import { getWeeklyReportIndex } from "../helpers/form_helper";
 import FormWeekReport from "./FormWeekReport";
+import ModalLoading from "./ModalLoading";
 
 const validate = values => {
   const errors = {};

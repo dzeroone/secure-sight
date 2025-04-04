@@ -12,6 +12,7 @@ const ApiEndPoints = {
   AzureAD: createEndpoint("/auth/azure-ad"),
   Register: createEndpoint('/auth/register'),
   Users: createEndpoint('/users'),
+  CommonData: createEndpoint('/common-data'),
   Customers: createEndpoint('/customers'),
   TenantAddUpdate: createEndpoint("/master/add-update-tenant"),
   MasterList: createEndpoint("/master/list"),

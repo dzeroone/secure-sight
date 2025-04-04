@@ -2,9 +2,10 @@ import express, { Request, Response } from 'express'
 import axios from 'axios';
 import { ELASTIC_INDICES, ROLES } from '../constant';
 import { auth } from '../utils/auth-util';
-import assignmentController from '../controllers/assignment.controller';
+import assignmentController, { ReportType } from '../controllers/assignment.controller';
 import customerController from '../controllers/customer.controller';
 import { extractInfoFromIndex } from '../helper/reports.helper';
+import commonDataController from '../controllers/common-data.controller';
 const router = express.Router();
 
 const esUrl = process.env.ELASTIC_BASE || "http://localhost:9200";
@@ -52,11 +53,20 @@ router.post("/data/search",
       if (!customer) {
         throw new Error("Customer data not found")
       }
+
       dataToSend.customer = {
         name: customer.name,
         tCode: customer.tCode
       };
       dataToSend.date = date;
+
+      const commonDataDoc = await commonDataController.get(rType as ReportType)
+
+      if (commonDataDoc) {
+        //@ts-ignore
+        const { _id, _v, uAt, uBy, ...commonData } = commonDataDoc.toObject()
+        dataToSend.commonData = commonData
+      }
 
       if (req.user?.role == ROLES.LEVEL2 || req.user?.role == ROLES.LEVEL1) {
         const assignment = await assignmentController.getAssignmentByIndexForReporter(req.body.index, req.user._id)

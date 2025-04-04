@@ -835,7 +835,37 @@ export const monthlyReportSlice = createSlice({
             }
             // -
         },
+        setCommonData(state, action: PayloadAction<any>) {
+            if (Array.isArray(action.payload?.tg_cyber_cri) && action.payload.tg_cyber_cri.length) {
+                state.about_this_report.data[0].sub = action.payload.tg_cyber_cri
+            }
+            if (Array.isArray(action.payload?.tg_vul) && action.payload.tg_vul.length) {
+                state.about_this_report.data[1].sub = action.payload.tg_vul
+            }
+            if (Array.isArray(action.payload?.tg_mal) && action.payload.tg_mal.length) {
+                state.about_this_report.data[2].sub = action.payload.tg_mal
+            }
+            if (Array.isArray(action.payload?.tg_mitre) && action.payload.tg_mitre.length) {
+                state.about_this_report.data[3].sub = action.payload.tg_mitre
+            }
 
+            if (action.payload?.threat_intel_summary?.advisory_chart) {
+                state.threat_intel_summary.count_of_advisory_chart.datasets[0].data = [
+                    action.payload.threat_intel_summary.advisory_chart.ioc,
+                    action.payload.threat_intel_summary.advisory_chart.advisories
+                ]
+            }
+
+            if (action.payload?.threat_intel_summary?.ioc_chart) {
+                state.threat_intel_summary.ioc_chart.datasets[0].data = [
+                    action.payload.threat_intel_summary.ioc_chart.ip,
+                    action.payload.threat_intel_summary.ioc_chart.url,
+                    action.payload.threat_intel_summary.ioc_chart.domain,
+                    action.payload.threat_intel_summary.ioc_chart.hash,
+                    action.payload.threat_intel_summary.ioc_chart.sender_email
+                ]
+            }
+        },
         // First page
         firstPage: (state, action: PayloadAction<FirstPageType>) => {
             state.monthly_report = action.payload
@@ -1738,6 +1768,7 @@ export const monthlyReportSlice = createSlice({
 export const {
     resetMonthlyReportState,
     updateFromElasticData,
+    setCommonData,
     firstPage,
     // table of content
     tableOfContents,

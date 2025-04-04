@@ -40,6 +40,7 @@ import {
 import {
   firstPage,
   resetMonthlyReportState,
+  setCommonData,
   updateFromElasticData,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
@@ -103,6 +104,9 @@ const MonthlyReportPage = () => {
                 customer_name: responseData.customer.tCode.toUpperCase(),
               })
             );
+          }
+          if (responseData.commonData) {
+            dispatch(setCommonData(responseData.commonData));
           }
           dispatch(setCanSubmitReport(responseData.canSubmitReport || false));
         }

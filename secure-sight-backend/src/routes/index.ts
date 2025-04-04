@@ -15,6 +15,7 @@ import customerRouter from './customers/index'
 import assignmentRouter from './assignments'
 import assignmentReportRouter from './assignment-report'
 import pdfRouter from './pdf'
+import commonDataRouter from './common-data'
 
 
 
@@ -22,6 +23,7 @@ router.use('/auth', auth)
 router.use('/master', master)
 router.use('/tenant', tenant)
 router.use('/connector', connector)
+router.use('/common-data', commonDataRouter)
 router.use('/upload-connector', uploadConnector)
 router.use('/elastic', elastic)
 router.use('/dashboard', dashboard)

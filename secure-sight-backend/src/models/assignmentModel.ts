@@ -1,5 +1,4 @@
-import { HydratedDocumentFromSchema, InferSchemaType, Model, model, Schema, Types } from "mongoose"
-const ObjectId = Types.ObjectId
+import { HydratedDocumentFromSchema, model, Schema, Types } from "mongoose"
 
 const assignmentSchema = new Schema({
   rType: String,

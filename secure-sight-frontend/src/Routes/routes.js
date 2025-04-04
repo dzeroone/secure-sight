@@ -38,6 +38,7 @@ import WeeklySubmissionsPage from "../Pages/submissions/weekly-submissions";
 import UserIndexPage from "../Pages/users";
 import EditUserPage from "../Pages/users/edit";
 import NewUserPage from "../Pages/users/new";
+import CommonDataPage from "../Pages/common-data";
 
 export const history = createBrowserHistory({ window });
 
@@ -134,7 +135,10 @@ const authProtectedRoutes = [
     roles: ['admin'],
     path: "/connector-upload", component: <ConnectorUploader />
   },
-
+  {
+    roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2],
+    path: "/common-data", component: <CommonDataPage />
+  },
   // Profile
   { path: "/userprofile", component: <UserProfile /> },
 ];
