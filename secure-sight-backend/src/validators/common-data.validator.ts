@@ -22,6 +22,7 @@ export const commonDataValidationSchema = yup.object({
       ioc: yup.number().default(0),
       advisories: yup.number().default(0)
     }),
+    total_ioc_sweep: yup.number(),
     ioc_chart: yup.object({
       ip: yup.number().default(0),
       url: yup.number().default(0),

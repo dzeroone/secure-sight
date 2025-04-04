@@ -33,6 +33,7 @@ const validationSchema = yup.object({
       ioc: yup.number().default(0),
       advisories: yup.number().default(0)
     }),
+    total_ioc_sweep: yup.number(),
     ioc_chart: yup.object({
       ip: yup.number().default(0),
       url: yup.number().default(0),
@@ -347,6 +348,13 @@ export default function CommonDataPage() {
                             />
                           </Col>
                         </Row>
+                      </Col>
+                      <Col md="12">
+                        <InputField
+                          type="number"
+                          name={`threat_intel_summary.total_ioc_sweep`}
+                          label="Total IOC Sweep for the Month"
+                        />
                       </Col>
                       <Col md="12">
                         <div className="h6">Indicators of compromise(IOC) Match against Sweeped</div>

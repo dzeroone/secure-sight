@@ -344,7 +344,7 @@
           <canvas style="margin-top: 10px;" id="TISHorizontalBar1"></canvas>
         </div>
         <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-          Total IOC Sweep for the Month - <%= data.threat_intel_summary.ioc_chart.datasets[0].data.reduce((v, t) => t+v, 0) %>
+          Total IOC Sweep for the Month - <%= data.threat_intel_summary.total_ioc_sweep %>
         </p>
         <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
           Indicators of Compromise (IOC) Match against Sweep

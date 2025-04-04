@@ -472,6 +472,7 @@ export const monthlyReportInitialValue = {
     },
     "threat_intel_summary": {
         "id": "threat_intel_summary",
+        total_ioc_sweep: 0,
         "count_of_advisory_chart": {
             "type": "grouped_horizontal_bar",
             "key": [

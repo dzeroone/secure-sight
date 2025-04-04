@@ -42,11 +42,7 @@ export const ThreatIntelSummary = () => {
             marginBottom: 0,
           }}
         >
-          Total IOC Sweep for the Month -{" "}
-          {data.ioc_chart.datasets[0].data.reduce(
-            (v: number, t: number) => t + v,
-            0
-          )}
+          Total IOC Sweep for the Month - {data.total_ioc_sweep}
         </p>
         <p
           style={{

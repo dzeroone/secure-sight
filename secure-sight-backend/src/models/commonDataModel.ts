@@ -41,6 +41,10 @@ const IOCChartSchema = new Schema({
 
 const ThreatIntelSummarySchema = new Schema({
   advisory_chart: AdvisoryChartSchema,
+  total_ioc_sweep: {
+    type: Number,
+    default: 0
+  },
   ioc_chart: IOCChartSchema
 })
 

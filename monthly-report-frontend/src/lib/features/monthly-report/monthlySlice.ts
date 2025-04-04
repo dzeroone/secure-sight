@@ -849,6 +849,10 @@ export const monthlyReportSlice = createSlice({
                 state.about_this_report.data[3].sub = action.payload.tg_mitre
             }
 
+            if (action.payload?.threat_intel_summary) {
+                state.threat_intel_summary.total_ioc_sweep = action.payload?.threat_intel_summary.total_ioc_sweep
+            }
+
             if (action.payload?.threat_intel_summary?.advisory_chart) {
                 state.threat_intel_summary.count_of_advisory_chart.datasets[0].data = [
                     action.payload.threat_intel_summary.advisory_chart.ioc,
@@ -1027,6 +1031,9 @@ export const monthlyReportSlice = createSlice({
         },
 
         //Threat Inter Summary
+        updateTISIOCSweep(state, action: PayloadAction<number>) {
+            state.threat_intel_summary.total_ioc_sweep = action.payload
+        },
         updateTISIOCMatchDetail: (state, action: PayloadAction<{ index: number; field: string; value: string }>) => {
             const { index, field, value } = action.payload;
             (state.threat_intel_summary.ioc_match_details.data[index] as any)[field] = value;
@@ -1802,6 +1809,7 @@ export const {
     removeRMSRSN,
     updateRMSRSNKey,
     // Threat intel summary
+    updateTISIOCSweep,
     updateTISIOCMatchDetail,
     addTISIOCMatchDetail,
     removeTISIOCMatchDetail,

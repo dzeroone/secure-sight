@@ -24,6 +24,7 @@ import {
   updateTISChartData,
   updateTISIOCInvestigation,
   updateTISIOCMatchDetail,
+  updateTISIOCSweep,
   updateTISInvestigationSummary,
   updateTISRSN,
   updateTISRSNKey,
@@ -165,6 +166,21 @@ const ThreatIntelSummaryForm = () => {
             </Grid>
           ))
         )}
+      </Grid>
+      <Grid item xs={12}>
+        <Divider />
+      </Grid>
+      <Grid item xs={12}>
+        <h3>Total IOC Sweep for the Month</h3>
+        <TextField
+          type="number"
+          variant="outlined"
+          value={data.total_ioc_sweep}
+          onChange={(e) =>
+            dispatch(updateTISIOCSweep(parseInt(e.target.value)))
+          }
+          fullWidth
+        />
       </Grid>
       <Grid item xs={12}>
         <Divider />
