@@ -1,11 +1,16 @@
 "use client";
-import { updateAboutField, updateAboutChart } from "@@/lib/features/monthly-report/monthlySlice";
+import {
+  updateAboutField,
+  updateAboutChart,
+} from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
-import { Grid, TextField } from "@mui/material";
+import { Grid, Stack, TextField } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 
 const AboutThisReportForm = () => {
-  const report = useAppSelector((state) => state.monthlyReport.about_this_report);
+  const report = useAppSelector(
+    (state) => state.monthlyReport.about_this_report
+  );
   const dispatch = useAppDispatch();
 
   const handleChange = (path: (string | number)[], value: any) => {
@@ -29,20 +34,26 @@ const AboutThisReportForm = () => {
     return Object.keys(data).map((key) => {
       const newPath = [...path, key];
       const value = data[key];
-      if (key === 'chart') {
+      if (key === "chart") {
         return null; // Skip the chart key
       } else if (typeof value === "object" && !Array.isArray(value)) {
         return (
-          <Grid container item xs={12} spacing={2} key={newPath.join(".")}>
+          <Grid item xs={12} key={newPath.join(".")}>
             <h3>{key}</h3>
-            <Grid container item spacing={2}>{renderInputs(value, newPath)}</Grid>
+            <Grid container item spacing={2}>
+              {renderInputs(value, newPath)}
+            </Grid>
           </Grid>
         );
       } else if (Array.isArray(value)) {
         return value.map((item, index) => (
-          <Grid container item spacing={2} xs={12} key={index}>
-            <h4>{key} - {index + 1}</h4>
-            {renderInputs(item, [...newPath, index])}
+          <Grid item xs={12} key={index}>
+            <h4>
+              {key} - {index + 1}
+            </h4>
+            <Grid container spacing={2}>
+              {renderInputs(item, [...newPath, index])}
+            </Grid>
           </Grid>
         ));
       } else {
@@ -64,48 +75,50 @@ const AboutThisReportForm = () => {
   };
 
   return (
-    <Grid container spacing={3} p={2}>
+    <Grid container spacing={2} p={2}>
       {renderInputs(report)}
-      <Grid container item spacing={2} xs={12}>
+      <Grid item xs={12}>
         <h3>Chart Data</h3>
-        {report.chart.datasets[0].data.map((dataPoint, i) => (
-          <Grid container item spacing={2} key={i}>
-            <Grid item xs={12}>
-              <TextField
-                label={`Label ${i + 1}`}
-                variant="outlined"
-                value={report.chart.datasets[0].label[i]}
-                onChange={(e) => {
-                  const updatedLabels = [...report.chart.datasets[0].label];
-                  updatedLabels[i] = e.target.value;
-                  handleChartChange(i, "label", updatedLabels);
-                }}
-                fullWidth
-              />
+        <Stack direction={"column"} gap={2}>
+          {report.chart.datasets[0].data.map((dataPoint, i) => (
+            <Grid container spacing={2} key={i}>
+              <Grid item xs={12}>
+                <TextField
+                  label={`Label ${i + 1}`}
+                  variant="outlined"
+                  value={report.chart.datasets[0].label[i]}
+                  onChange={(e) => {
+                    const updatedLabels = [...report.chart.datasets[0].label];
+                    updatedLabels[i] = e.target.value;
+                    handleChartChange(i, "label", updatedLabels);
+                  }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label={`Data Point ${i + 1}`}
+                  variant="outlined"
+                  value={dataPoint}
+                  onChange={(e) => {
+                    const updatedData = [...report.chart.datasets[0].data];
+                    updatedData[i] = parseInt(e.target.value);
+                    handleChartChange(i, "data", updatedData);
+                  }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <MuiColorInput
+                  label={`Color ${i + 1}`}
+                  value={report.chart.datasets[0].backgroundColor[i]}
+                  onChange={(color) => handleColorChange(color, i)}
+                  fullWidth
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label={`Data Point ${i + 1}`}
-                variant="outlined"
-                value={dataPoint}
-                onChange={(e) => {
-                  const updatedData = [...report.chart.datasets[0].data];
-                  updatedData[i] = parseInt(e.target.value);
-                  handleChartChange(i, "data", updatedData);
-                }}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <MuiColorInput
-                label={`Color ${i + 1}`}
-                value={report.chart.datasets[0].backgroundColor[i]}
-                onChange={(color) => handleColorChange(color, i)}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        ))}
+          ))}
+        </Stack>
       </Grid>
     </Grid>
   );

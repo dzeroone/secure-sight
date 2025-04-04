@@ -7,7 +7,7 @@ const ProductAssessmentReport = () => {
     (state) => state.monthlyReport.product_assessment_report
   );
   return (
-    <div style={{ marginTop: 40 }}>
+    <div style={{ marginTop: 40 }} id="product_assessment_report">
       <p
         style={{
           fontSize: "4.2rem",

@@ -37,7 +37,7 @@ export default function MonthlySubmissionsPage() {
   }, [])
 
   const viewReport = (assignment) => {
-    window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}?id=${assignment.reportId}`, "_blank")
+    window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}/monthly-report?id=${assignment.reportId}`, "_blank")
   }
 
   const sendReassign = async (assignment) => {

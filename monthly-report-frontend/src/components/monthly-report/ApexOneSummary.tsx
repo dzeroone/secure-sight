@@ -9,7 +9,7 @@ const ApexOneSummary = () => {
   );
   return (
     <>
-      <div>
+      <div id="detection_summary_from_apex_one">
         <p
           style={{
             marginTop: 40,

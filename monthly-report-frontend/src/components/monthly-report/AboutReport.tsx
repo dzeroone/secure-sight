@@ -3,11 +3,10 @@
 import { useAppSelector } from "@@/lib/hooks";
 import VerticalBarChart from "../charts/VerticalBarChart";
 
-
 const AboutReport = () => {
   const data = useAppSelector((state) => state.monthlyReport.about_this_report);
   return (
-    <div style={{boxSizing: "border-box"}}>
+    <div style={{ boxSizing: "border-box" }} id="about_this_report">
       <div>
         <p
           style={{

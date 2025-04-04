@@ -9,7 +9,7 @@ const OverallIncidentsSummary = () => {
   );
 
   return (
-    <div>
+    <div id="incidents_summary">
       <p
         style={{
           marginTop: 40,
@@ -89,7 +89,8 @@ const OverallIncidentsSummary = () => {
               padding: 30,
             }}
           >
-            Incidents Closed with<br />
+            Incidents Closed with
+            <br />
             Resolution
           </div>
           <div
@@ -200,7 +201,8 @@ const OverallIncidentsSummary = () => {
               padding: 30,
             }}
           >
-            Incidents Closed with<br />
+            Incidents Closed with
+            <br />
             Resolution
           </div>
           <div
@@ -311,7 +313,8 @@ const OverallIncidentsSummary = () => {
               padding: 30,
             }}
           >
-            Incidents Closed with<br />
+            Incidents Closed with
+            <br />
             Resolution
           </div>
           <div
@@ -422,7 +425,8 @@ const OverallIncidentsSummary = () => {
               padding: 30,
             }}
           >
-            Incidents Closed with<br />
+            Incidents Closed with
+            <br />
             Resolution
           </div>
           <div

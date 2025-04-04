@@ -34,7 +34,7 @@ import {
 } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AboutThisReportForm from "./monthly-report/forms/AboutThisReport";
 import AccountCompromiseEventsForm from "./monthly-report/forms/AccountCompromiseEventsForm";
@@ -63,114 +63,142 @@ import TopRiskUsersForm from "./monthly-report/forms/TopRiskUsersForm";
 import TopVulnerabilitiesForm from "./monthly-report/forms/TopVulnerabilitiesForm";
 import VulnAssessmentReportForm from "./monthly-report/forms/VulnAssessmentReportForm";
 import WorkbenchIncidentSummaryForm from "./monthly-report/forms/WorkbenchIncidentSummaryForm";
+import MonthlyFormStepper from "./MonthlyFormStepper";
 const steps = [
   {
+    id: "first_page",
     label: "First Page",
     component: <FirstPageForm />,
   },
   {
+    id: "table_of_contents",
     label: "Table of Contents",
     component: <TableOfContentsForm />,
   },
   {
+    id: "about_this_report",
     label: "About this report",
     component: <AboutThisReportForm />,
   },
   {
+    id: "executive_summary",
     label: "Executive Summary",
     component: <ExecutiveSummaryForm />,
   },
   {
+    id: "detailed_summary",
     label: "Detailed Summary",
     component: <DetailedSummary />,
   },
   {
+    id: "risk_metrics",
     label: "Risk Metrics",
     component: <RiskMetricsForm />,
   },
   {
+    id: "threat_intel_summary",
     label: "Threat Intel Summary",
     component: <ThreatIntelSummaryForm />,
   },
   {
+    id: "incidents_summary",
     label: "Overall Incidents Summary",
     component: <OverallIncidentSummaryForm />,
   },
   {
+    id: "workbench_incidents_summary",
     label: "Vision One Workbench Incidents Summary",
     component: <WorkbenchIncidentSummaryForm />,
   },
   {
+    id: "third_party_siem_incidents_summary",
     label: "Third Party / SIEM Incidents Summary",
     component: <SiemIncidentSummaryForm />,
   },
   {
+    id: "high_incidents_summary",
     label: "High Incidents Summary",
     component: <HighIncidentSummaryForm />,
   },
   {
+    id: "waiting_incidents_summary",
     label: "Pending Incidents Summary",
     component: <PendingIncidentsSummaryForm />,
   },
   {
+    id: "slo_summary",
     label: "SLO Summary",
     component: <SLOSummaryForm />,
   },
   {
+    id: "detection_summary_from_apex_one",
     label: "Detection Summary from Apex One",
     component: <ApexOneSummaryForm />,
   },
   {
+    id: "email_quarantine_summary_from_cas",
     label: "Email Quarantine Summary from CAS",
     component: <EmailQuarantineSummaryForm />,
   },
   {
+    id: "vulnerability_assessment_report",
     label: "Vulnerability Assessment Report",
     component: <VulnAssessmentReportForm />,
   },
   {
+    id: "system_configuration_report",
     label: "System Configuration Report",
     component: <SystemConfigReportForm />,
   },
   {
+    id: "top_vulnerabilities_detected",
     label: "Top Vulnerabilities Detected",
     component: <TopVulnerabilitiesForm />,
   },
   {
+    id: "top_risk_devices",
     label: "Top Risk Device",
     component: <TopRiskDeviceForm />,
   },
   {
+    id: "top_risk_users",
     label: "Top Risk Users",
     component: <TopRiskUsersForm />,
   },
   {
+    id: "account_compromise_report",
     label: "Account Compromise Events",
     component: <AccountCompromiseEventsForm />,
   },
   {
+    id: "product_assessment_report",
     label: "Product Assessment Report",
     component: <ProductAssessmentForm />,
   },
   {
+    id: "endpoint_feature_compliance",
     label: "Endpoint Feature Compliance",
     component: <EndpointFeatureForm />,
   },
   {
+    id: "key_feature_adoption_rate_of_std_endpoint_protection",
     label:
       "Key Feature Adoption Rate of Apex one as Service / Std Endpoint Protection",
     component: <KFAApexOneForm />,
   },
   {
+    id: "key_feature_adoption_rate_of_server_workload_security",
     label:
       "Key Feature Adoption Rate of Server & Workload Security / Protection",
     component: <KFAWorkloadForm />,
   },
   {
+    id: "key_feature_adoption_rate_of_deep_security",
     label: "Key Feature Adoption Rate of Deep Security",
     component: <KFADeepSecurityForm />,
   },
   {
+    id: "agent_versions_summary",
     label: "Agent Versions Summary",
     component: <AgentVersionForm />,
   },
@@ -294,6 +322,16 @@ const MonthlyReportForm = () => {
     }
   };
 
+  useEffect(() => {
+    if (steps[activeStep]?.id) {
+      document.getElementById(steps[activeStep]?.id)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    }
+  }, [activeStep]);
+
   return (
     <div className="form-wrapper">
       <Grid container spacing={2} justifyContent="flex-end" p={2}>
@@ -386,60 +424,26 @@ const MonthlyReportForm = () => {
         >
           <Typography>{steps[activeStep].label}</Typography>
         </Paper>
-        <MobileStepper
-          variant="text"
-          steps={maxSteps}
-          position="static"
+        <MonthlyFormStepper
           activeStep={activeStep}
-          nextButton={
-            <Button
-              size="small"
-              onClick={handleNext}
-              disabled={activeStep === maxSteps - 1}
-            >
-              Next
-              <KeyboardArrowRight />
-            </Button>
-          }
-          backButton={
-            <Button
-              size="small"
-              onClick={handleBack}
-              disabled={activeStep === 0}
-            >
-              <KeyboardArrowLeft />
-              Back
-            </Button>
-          }
+          totalStep={steps.length}
+          handleBack={handleBack}
+          handleNext={handleNext}
+          onChangeStep={(e) => {
+            setActiveStep(Number(e.target.value));
+          }}
         />
         <Box sx={{ minHeight: 255, width: "100%" }}>
           {steps[activeStep].component}
         </Box>
-        <MobileStepper
-          variant="text"
-          steps={maxSteps}
-          position="static"
+        <MonthlyFormStepper
           activeStep={activeStep}
-          nextButton={
-            <Button
-              size="small"
-              onClick={handleNext}
-              disabled={activeStep === maxSteps - 1}
-            >
-              Next
-              <KeyboardArrowRight />
-            </Button>
-          }
-          backButton={
-            <Button
-              size="small"
-              onClick={handleBack}
-              disabled={activeStep === 0}
-            >
-              <KeyboardArrowLeft />
-              Back
-            </Button>
-          }
+          totalStep={steps.length}
+          handleBack={handleBack}
+          handleNext={handleNext}
+          onChangeStep={(e) => {
+            setActiveStep(Number(e.target.value));
+          }}
         />
       </Box>
     </div>

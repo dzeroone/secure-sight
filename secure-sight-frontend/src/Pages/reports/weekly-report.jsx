@@ -11,6 +11,7 @@ import { useProfile } from "../../Hooks/UserHooks";
 import WeeklyReportSearch from "../../components/WeeklyReportSearch";
 import Error401 from "../Utility/Error401-Page";
 import AssignedWeeklyReportList from "../../components/AssignedWeeklyReportList";
+import { FileStack } from "lucide-react";
 
 const validate = values => {
   const errors = {};
@@ -39,7 +40,9 @@ export default function WeeklyReport() {
 
   return (
     <div className="page-content">
-      <BreadcrumbWithTitle title="Weekly reports" linkStack={linkStack} />
+      <BreadcrumbWithTitle title="Weekly reports" startContent={
+        <a href={`${process.env.REACT_APP_WEEKLY_REPORT_BASE}/saved`} className="btn btn-outline-primary"><FileStack className="mr-1" size="1rem" /> Saved reports</a>
+      } linkStack={linkStack} />
       { priorityRoles.includes(userProfile.role) ? (
         <WeeklyReportSearch />
       ) : nonPriorityRoles.includes(userProfile.role) ? (

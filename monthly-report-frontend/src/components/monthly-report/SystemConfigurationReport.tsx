@@ -6,7 +6,7 @@ const SystemConfigurationReport = () => {
     (state) => state.monthlyReport.system_configuration_report
   );
   return (
-    <div style={{ marginTop: 40 }}>
+    <div style={{ marginTop: 40 }} id="system_configuration_report">
       <p
         style={{
           marginTop: 40,

@@ -7,7 +7,7 @@ const TopRiskUsers = () => {
   const data = useAppSelector((state) => state.monthlyReport.top_risk_users);
 
   return (
-    <div style={{ marginTop: 40 }}>
+    <div style={{ marginTop: 40 }} id="top_risk_users">
       <p
         style={{
           marginTop: 40,

@@ -8,7 +8,7 @@ const SIEMIncidentsSummary = () => {
   );
 
   return (
-    <div>
+    <div id="third_party_siem_incidents_summary">
       <p
         style={{
           marginTop: 40,
@@ -87,7 +87,8 @@ const SIEMIncidentsSummary = () => {
               padding: 30,
             }}
           >
-            Incidents Closed with<br />
+            Incidents Closed with
+            <br />
             Resolution
           </div>
           <div
@@ -198,7 +199,8 @@ const SIEMIncidentsSummary = () => {
               padding: 30,
             }}
           >
-            Incidents Closed with<br />
+            Incidents Closed with
+            <br />
             Resolution
           </div>
           <div
@@ -309,7 +311,8 @@ const SIEMIncidentsSummary = () => {
               padding: 30,
             }}
           >
-            Incidents Closed with<br />
+            Incidents Closed with
+            <br />
             Resolution
           </div>
           <div
@@ -420,7 +423,8 @@ const SIEMIncidentsSummary = () => {
               padding: 30,
             }}
           >
-            Incidents Closed with<br />
+            Incidents Closed with
+            <br />
             Resolution
           </div>
           <div

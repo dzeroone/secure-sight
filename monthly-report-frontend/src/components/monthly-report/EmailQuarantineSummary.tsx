@@ -9,7 +9,7 @@ const EmailQuarantineSummary = () => {
   );
 
   return (
-    <div>
+    <div id="email_quarantine_summary_from_cas">
       <p
         style={{
           marginTop: 40,

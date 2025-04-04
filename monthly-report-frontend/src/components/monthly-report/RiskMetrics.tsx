@@ -8,7 +8,7 @@ const RiskMetrics = () => {
   const data = useAppSelector((state) => state.monthlyReport.risk_metrics);
 
   return (
-    <div>
+    <div id="risk_metrics">
       <p
         style={{
           marginTop: 40,

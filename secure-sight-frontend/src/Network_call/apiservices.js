@@ -112,11 +112,6 @@ const ApiServices = async (
 					resolve(error.response.data);
 					return
 				}
-				if (error.code === 'ECONNABORTED') {
-					// Utility.showToast('Request timeout. Please check your internet connection')
-					reject(error)
-					return
-				}
 				// Utility.showToast('Something went wrong, Please try again later.')
 				reject(error)
 			})

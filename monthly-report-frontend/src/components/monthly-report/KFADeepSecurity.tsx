@@ -9,7 +9,10 @@ const KFADeepSecurity = () => {
   );
 
   return (
-    <div style={{ marginTop: 40 }}>
+    <div
+      style={{ marginTop: 40 }}
+      id="key_feature_adoption_rate_of_deep_security"
+    >
       <p
         style={{
           fontSize: "4.2rem",

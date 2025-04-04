@@ -9,7 +9,7 @@ const EndpointFeatureCompliance = () => {
   );
 
   return (
-    <div style={{ marginTop: 40 }}>
+    <div style={{ marginTop: 40 }} id="endpoint_feature_compliance">
       <p style={{ fontSize: "4.2rem", fontWeight: 700, color: "#090c9b" }}>
         Endpoint Feature <br />
         Compliance

@@ -6,7 +6,7 @@ const TableOfContents = () => {
   );
 
   return (
-    <div>
+    <div id="table_of_contents">
       <p
         style={{
           margin: 0,

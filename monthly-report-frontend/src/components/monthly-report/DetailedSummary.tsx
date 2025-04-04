@@ -6,7 +6,7 @@ const DetailedSummary = () => {
   const data = useAppSelector((state) => state.monthlyReport.detailed_summary);
 
   return (
-    <div>
+    <div id="detailed_summary">
       <div>
         <p
           style={{

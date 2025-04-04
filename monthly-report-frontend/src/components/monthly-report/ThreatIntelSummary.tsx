@@ -8,7 +8,7 @@ export const ThreatIntelSummary = () => {
     (state) => state.monthlyReport.threat_intel_summary
   );
   return (
-    <div>
+    <div id="threat_intel_summary">
       <div>
         <p
           style={{

@@ -33,7 +33,7 @@ export default function MonthlyReportSearch() {
         setBusy(true);
         const index = getMonthlyReportIndex(values.selectedDate, values.tenant)
         // console.log(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}?index=${payload.index}`)
-        window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}?index=${index}`, "_blank")
+        window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}/monthly-report?index=${index}`, "_blank")
         // const data = await ApiServices('post', payload, ApiEndPoints.SearchData)
         // setReportData(data)
       } catch (e) {

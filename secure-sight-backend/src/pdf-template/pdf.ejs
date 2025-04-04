@@ -70,7 +70,7 @@
 
   <div style="padding: 0 140px;">
     <!-- About this report -->
-    <div class="print-page">
+    <div class="print-page" id="about_this_report">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
                 About this report
@@ -113,7 +113,7 @@
     </div>
 
     <!-- Executive summary -->
-    <div class="print-page">
+    <div class="print-page" id="executive_summary">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
                 Executive Summary
@@ -184,7 +184,7 @@
 
 
     <!-- Detailed summary -->
-    <div class="print-page">
+    <div class="print-page" id="detailed_summary">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
             Detailed Summary
@@ -277,7 +277,7 @@
     </div>
 
     <!-- Risk metrics -->
-    <div class="print-page">
+    <div class="print-page" id="risk_metrics">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
             Risk Metrics
         </p>
@@ -331,7 +331,7 @@
     </div>
 
     <!-- Threat intel summary -->
-    <div class="print-page">
+    <div class="print-page" id="threat_intel_summary">
       <div>
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
         Threat Intel Summary
@@ -429,7 +429,7 @@
     </div>
 
     <!-- Overall incident summary -->
-    <div class="print-page">
+    <div class="print-page" id="incidents_summary">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin: 0;">
             Overall Incidents Summary
         </p>
@@ -604,7 +604,7 @@
 
     <!-- workbench incident summary -->
      <% if(data.workbench_incident_summary.visible) { %>
-    <div class="print-page">
+    <div class="print-page" id="workbench_incidents_summary">
         <p style="font-size: 4rem;font-weight: 700;color: #090c9b;margin-bottom: 0px;">
             Vision One Workbench Incidents Summary
         </p>
@@ -772,7 +772,7 @@
     <% } %>
     <!-- SIEM incident summary -->
      <% if(data.siem_incident_summary.visible) { %>
-    <div class="print-page">
+    <div class="print-page" id="third_party_siem_incidents_summary">
         <p style="font-size: 4rem;font-weight: 700;color: #090c9b;margin-bottom: 0px;">
         Third Party / SIEM
         <br />
@@ -942,7 +942,7 @@
     <% } %>
     <!-- High incident summary -->
      <% if(data.high_incident_summary.data.length > 0) { %>
-    <div class="print-page">
+    <div class="print-page" id="high_incidents_summary">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
           Critical/High Incidents Summary
         </p>
@@ -984,7 +984,7 @@
 
     <!-- pending incident summary -->
     <% if(data.pending_incident_summary.data.length > 0 ) { %>
-    <div class="print-page">
+    <div class="print-page" id="waiting_incidents_summary">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
           Pending Incidents Summary
         </p>
@@ -1012,7 +1012,7 @@
     <% } %>
 
     <!-- SLO summary -->
-    <div class="print-page">
+    <div class="print-page" id="slo_summary">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
           SLO Summary
         </p>
@@ -1047,7 +1047,7 @@
     </div>
 
     <!-- detection summary from apexone -->
-    <div class="print-page">
+    <div class="print-page" id="detection_summary_from_apex_one">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
               Detection Summary from Apex One as a Service / Std Endpoint Protection
@@ -1123,7 +1123,8 @@
     </div>
       
     <!-- Email quarantine summary -->
-    <div class="print-page">
+    <% if(data.email_quarantine_summary_cas.visible) { %>
+    <div class="print-page" id="email_quarantine_summary_from_cas">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
           Email Quarantine <br />
           Summary from CAS
@@ -1192,9 +1193,10 @@
           <% }); %>
         </ul>
     </div>
+    <% } %>
 
     <!-- vulnerability assessment -->
-    <div class="print-page">
+    <div class="print-page" id="vulnerability_assessment_report">
       <div class="margin-top:40px">
           <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
               Vulnerability Assessment <br />
@@ -1350,7 +1352,7 @@
     </div>
 
     <!-- system configuration report -->
-    <div class="print-page">
+    <div class="print-page" id="system_configuration_report">
         <div>
           <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
             System Configuration Report
@@ -1481,7 +1483,7 @@
     </div>
     
     <!-- top vulnerabilities -->
-    <div class="print-page">
+    <div class="print-page" id="top_vulnerabilities_detected">
         <div>
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Vulnerabilities <br />
@@ -1506,7 +1508,7 @@
 
     <!-- top risk device -->
     <% if(data.top_risk_device.visible) { %>
-    <div class="print-page">
+    <div class="print-page" id="top_risk_devices">
         <div>
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Risk Device
@@ -1531,7 +1533,7 @@
 
     <!-- top risk user -->
     <% if(data.top_risk_users.visible) { %>
-    <div class="print-page">
+    <div class="print-page" id="top_risk_users">
         <div>
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Risk Users
@@ -1555,7 +1557,7 @@
     <% } %>
 
     <!-- account compromise events -->
-    <div class="print-page">
+    <div class="print-page" id="account_compromise_report">
       <div>
           <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
             Account Compromise Events
@@ -1607,7 +1609,7 @@
     </div>
 
     <!-- product assessment report -->
-    <div class="print-page">
+    <div class="print-page" id="product_assessment_report">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
               Product Assessment <br />
@@ -1700,7 +1702,7 @@
     </div>
 
     <!-- endpoint compliance feature -->
-    <div class="print-page">
+    <div class="print-page" id="endpoint_feature_compliance">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
               Endpoint Feature Compliance
@@ -1725,7 +1727,7 @@
 
     <!-- key feature adoption apex one -->
     <% if(data.key_feature_adoption_apex_one.visible) { %>
-      <div class="print-page">
+      <div class="print-page" id="key_feature_adoption_rate_of_std_endpoint_protection">
           <div>
               <p
                 style="
@@ -1784,7 +1786,7 @@
       
       <!-- key feature adoption workload security -->
       <% if(data.key_feature_adoption_server_workload.visible) { %>
-        <div class="print-page">
+        <div class="print-page" id="key_feature_adoption_rate_of_server_workload_security">
             <div>
                 <p
                   style="
@@ -1844,7 +1846,7 @@
 
     <!-- key feature adoption deep security -->
     <% if(data.key_feature_adoption_deep_security.visible) { %>
-      <div class="print-page">
+      <div class="print-page" id="key_feature_adoption_rate_of_deep_security">
         <div>
             <p
               style="
@@ -1876,7 +1878,7 @@
     <% } %>
 
     <!-- agents version summary -->
-    <div class="print-page">
+    <div class="print-page" id="agent_versions_summary">
         <p
           style="
             font-size: 4rem;

@@ -9,7 +9,10 @@ const KFAWorkloadSecurity = () => {
   );
 
   return (
-    <div style={{ marginTop: 40 }}>
+    <div
+      style={{ marginTop: 40 }}
+      id="key_feature_adoption_rate_of_server_workload_security"
+    >
       <p
         style={{
           fontSize: "4.2rem",

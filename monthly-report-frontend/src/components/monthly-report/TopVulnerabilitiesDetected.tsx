@@ -9,7 +9,7 @@ const TopVulnerabilitiesDetected = () => {
   );
 
   return (
-    <div style={{ marginTop: 40 }}>
+    <div style={{ marginTop: 40 }} id="top_vulnerabilities_detected">
       <p
         style={{
           marginTop: 40,

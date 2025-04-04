@@ -80,7 +80,7 @@ export const monthlyReportInitialValue = {
             {
                 "title": "System Configuration Report",
                 "page_no": "19",
-                "link": "vulnerability_assessment_report"
+                "link": "system_configuration_report"
             },
             {
                 "title": "Top Vulnerabilities Detected",
@@ -100,7 +100,7 @@ export const monthlyReportInitialValue = {
             {
                 "title": "Account Compromise events",
                 "page_no": "23",
-                "link": "product_assessment_report"
+                "link": "account_compromise_report"
             },
             {
                 "title": "Product Assessment Report",
@@ -125,7 +125,7 @@ export const monthlyReportInitialValue = {
             {
                 "title": "Key Feature Adoption Rate of Deep Security",
                 "page_no": "28",
-                "link": "key_feature_adoption_rate_of_server_workload_security"
+                "link": "key_feature_adoption_rate_of_deep_security"
             },
             {
                 "title": "Agent Versions Summary",

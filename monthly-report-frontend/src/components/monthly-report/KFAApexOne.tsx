@@ -9,7 +9,10 @@ const KFAApexOne = () => {
   );
 
   return (
-    <div style={{ marginTop: 40 }}>
+    <div
+      style={{ marginTop: 40 }}
+      id="key_feature_adoption_rate_of_std_endpoint_protection"
+    >
       <p
         style={{
           fontSize: "4.2rem",

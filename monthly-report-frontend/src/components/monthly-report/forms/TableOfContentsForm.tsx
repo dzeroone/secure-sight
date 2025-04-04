@@ -4,7 +4,7 @@ import {
   updateTableOfContents,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
-import { Button, Grid, IconButton, TextField } from "@mui/material";
+import { Box, Button, Grid, IconButton, Stack, TextField } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 
 const TableOfContentsForm = () => {
@@ -35,10 +35,10 @@ const TableOfContentsForm = () => {
     );
   };
   return (
-    <Grid container xs={12} rowSpacing={3} p={2}>
+    <Stack direction="column" gap={2} p={2}>
       {report.map((item, i) => (
-        <Grid container item xs={12} columnSpacing={2} key={i}>
-          <Grid item xs={8}>
+        <Grid container spacing={2} key={i}>
+          <Grid item xs>
             <TextField
               label="Title"
               variant="outlined"
@@ -71,7 +71,7 @@ const TableOfContentsForm = () => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={1}>
+          <Grid item>
             <IconButton
               aria-label="delete"
               color="primary"
@@ -82,12 +82,12 @@ const TableOfContentsForm = () => {
           </Grid>
         </Grid>
       ))}
-      <Grid item xs={12}>
+      <Box>
         <Button variant="contained" color="primary" onClick={handleAdd}>
           Add
         </Button>
-      </Grid>
-    </Grid>
+      </Box>
+    </Stack>
   );
 };
 

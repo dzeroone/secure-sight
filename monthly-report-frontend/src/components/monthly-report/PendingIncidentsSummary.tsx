@@ -7,7 +7,7 @@ const PendingIncidentsSummary = () => {
     (state) => state.monthlyReport.pending_incident_summary.data
   );
   return (
-    <div>
+    <div id="waiting_incidents_summary">
       <p
         style={{
           marginTop: 40,

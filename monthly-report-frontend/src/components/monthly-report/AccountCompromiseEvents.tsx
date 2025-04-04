@@ -8,7 +8,7 @@ const AccountCompromiseEvents = () => {
   );
 
   return (
-    <div style={{ marginTop: 40 }}>
+    <div style={{ marginTop: 40 }} id="account_compromise_report">
       <div>
         <p
           style={{

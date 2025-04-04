@@ -6,7 +6,7 @@ import BarChartHorizontal from "../charts/BarChartHorizontal";
 const SLOSummary = () => {
   const data = useAppSelector((state) => state.monthlyReport.slo_summary);
   return (
-    <div>
+    <div id="slo_summary">
       <p
         style={{
           marginTop: 40,

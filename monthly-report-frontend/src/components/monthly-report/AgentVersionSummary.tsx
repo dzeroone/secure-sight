@@ -10,7 +10,7 @@ const AgentVersionSummary = () => {
   );
 
   return (
-    <div>
+    <div id="agent_versions_summary">
       <p
         style={{
           fontSize: "4.2rem",
