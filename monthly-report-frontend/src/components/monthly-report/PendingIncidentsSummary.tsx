@@ -4,10 +4,10 @@ import { useAppSelector } from "@@/lib/hooks";
 
 const PendingIncidentsSummary = () => {
   const data = useAppSelector(
-    (state) => state.monthlyReport.pending_incident_summary.data
+    (state) => state.monthlyReport.pending_incident_summary
   );
   return (
-    <div id="waiting_incidents_summary">
+    <div id={data.id}>
       <p
         style={{
           marginTop: 40,
@@ -40,7 +40,7 @@ const PendingIncidentsSummary = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, i) => (
+          {data.data.map((item, i) => (
             <tr
               style={{
                 fontSize: 20,

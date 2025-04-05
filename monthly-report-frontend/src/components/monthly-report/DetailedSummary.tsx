@@ -1,12 +1,13 @@
 "use client";
 import { useAppSelector } from "@@/lib/hooks";
 import DoughnutChart from "../charts/DoughnutChart";
+import { pluralize } from "@@/helper/helper";
 
 const DetailedSummary = () => {
   const data = useAppSelector((state) => state.monthlyReport.detailed_summary);
 
   return (
-    <div id="detailed_summary">
+    <div id={data.id}>
       <div>
         <p
           style={{
@@ -75,8 +76,10 @@ const DetailedSummary = () => {
             assets.
           </li>
           <li style={{ fontSize: 24, marginBottom: "1rem" }}>
-            <strong>{data.incidents_closed} Incident</strong> Closed without
-            customer resolution.
+            <strong>
+              {pluralize(Number(data.incidents_closed) || 0, "Incident")}
+            </strong>{" "}
+            Closed without customer resolution.
           </li>
         </ul>
       </div>

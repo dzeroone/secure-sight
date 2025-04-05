@@ -220,7 +220,9 @@ const MonthlyReportPage = () => {
           {report.top_risk_users.visible && <TopRiskUsers />}
 
           {/* Account compromise events */}
-          {report.account_compromise_events && <AccountCompromiseEvents />}
+          {report.account_compromise_events.visible && (
+            <AccountCompromiseEvents />
+          )}
 
           {/* Product assessment report */}
           {report.product_assessment_report && <ProductAssessmentReport />}

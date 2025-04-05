@@ -27,6 +27,7 @@ import {
   updateKFADPRSNKey,
   updateKFADPvisibility,
 } from "@@/lib/features/monthly-report/monthlySlice";
+import RecommendationInput from "@@/components/RecommendationInput";
 
 const KFADeepSecurityForm = () => {
   const data = useAppSelector(
@@ -183,50 +184,10 @@ const KFADeepSecurityForm = () => {
         <Divider />
       </Grid>
       <Grid item xs={12}>
-        <h3>Recommendations/Notes/Summary</h3>
-      </Grid>
-      <Grid item xs={12}>
-        <FormControl fullWidth>
-          <InputLabel id="rsn-label">Recommendations/Notes/Summary</InputLabel>
-          <Select
-            labelId="rsn-label"
-            id="demo-simple-select"
-            value={data.rsn.key}
-            onChange={(e) => handleRSNKeyChange(e.target.value)}
-            label="Recommendations/Notes/Summary"
-          >
-            <MenuItem value="Recommendation">Recommendation</MenuItem>
-            <MenuItem value="Notes">Notes</MenuItem>
-            <MenuItem value="Summary">Summary</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      {data.rsn.data.map((r, k) => (
-        <Grid container item spacing={2} xs={12} key={k}>
-          <Grid item xs={10}>
-            <TextField
-              label={`RSN ${k + 1}`}
-              variant="outlined"
-              value={r}
-              onChange={(e) => handleRSNChange(k, e.target.value)}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <IconButton
-              aria-label="delete"
-              color="primary"
-              onClick={() => handleRemoveRSN(k)}
-            >
-              <ClearIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ))}
-      <Grid item xs={12}>
-        <Button variant="outlined" color="primary" onClick={handleAddRSN}>
-          Add Recommendation/Note/Summary
-        </Button>
+        <RecommendationInput
+          values={data.notes}
+          entity="key_feature_adoption_deep_security"
+        />
       </Grid>
     </Grid>
   );

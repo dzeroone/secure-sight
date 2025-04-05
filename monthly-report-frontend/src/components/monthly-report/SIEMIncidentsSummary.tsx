@@ -8,7 +8,7 @@ const SIEMIncidentsSummary = () => {
   );
 
   return (
-    <div id="third_party_siem_incidents_summary">
+    <div id={data.id}>
       <p
         style={{
           marginTop: 40,

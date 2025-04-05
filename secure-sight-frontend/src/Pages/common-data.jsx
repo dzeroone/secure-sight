@@ -12,7 +12,7 @@ import ApiServices from "../Network_call/apiservices";
 import ApiEndPoints from "../Network_call/ApiEndPoints";
 
 const validationSchema = yup.object({
-  tg_cyber_atk: yup.array().of(yup.object({ // Top Global Cyber Criminals
+  tg_cyber_cri: yup.array().of(yup.object({ // Top Global Cyber Criminals
     title: yup.string(),
     desc: yup.string()
   })),
@@ -47,6 +47,63 @@ const validationSchema = yup.object({
 function FormSectionTitle({ children }) {
   return (
     <div className="h5 py-2 position-sticky" style={{background: 'var(--bs-gray-900)', top: '70px', zIndex: 1}}>{children}</div>
+  )
+}
+
+function CommonDataFieldArray({
+  title,
+  name,
+  values
+}) {
+  return (
+    <FieldArray
+      name={name}
+      render={arrayHelpers => (
+        <Container fluid className="border p-2 rounded">
+          <FormSectionTitle>{title}</FormSectionTitle>
+          {values && values.length ? (
+            <Row className="mb-2 g-4">
+            {
+              values.map((d, i) => (
+                <Col md="6">
+                  <fieldset className="d-flex flex-column position-relative gap-2" key={i}>
+                    <InputField
+                      name={`${name}.${i}.title`}
+                      label="Title"
+                      placeholder="Write title..."
+                    />
+                    <InputField
+                      type="textarea"
+                      name={`${name}.${i}.desc`}
+                      label="Description"
+                      placeholder="Write description..."
+                    />
+                    <Button
+                      size="sm"
+                      className="position-absolute end-0 top-0"
+                      onClick={() => {
+                        arrayHelpers.remove(i)
+                      }}
+                    >
+                      <TrashIcon size="1rem" />
+                    </Button>
+                  </fieldset>
+                </Col>)
+              )
+            }
+            </Row>
+          ) : null}
+          <Button onClick={() => {
+            arrayHelpers.push({
+              title: '',
+              desc: ''
+            })
+          }}>
+            Add more
+          </Button>
+        </Container>
+      )}
+    />
   )
 }
 
@@ -127,203 +184,31 @@ export default function CommonDataPage() {
             return (
               <Form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-3">
                 <div>
-                  <FieldArray
+                  <CommonDataFieldArray
+                    title="Top Global Cyber Criminals"
                     name="tg_cyber_cri"
-                    render={arrayHelpers => (
-                      <Container fluid className="border p-2 rounded">
-                        <FormSectionTitle>Top Global Cyber Criminals</FormSectionTitle>
-                        {formik.values.tg_cyber_cri && formik.values.tg_cyber_cri.length ? (
-                          <Row className="mb-2 g-4">
-                          {
-                            formik.values.tg_cyber_cri.map((d, i) => (
-                              <Col md="6">
-                                <fieldset className="d-flex flex-column position-relative gap-2" key={i}>
-                                  <InputField
-                                    name={`tg_cyber_cri.${i}.title`}
-                                    label="Title"
-                                    placeholder="Write title..."
-                                  />
-                                  <InputField
-                                    type="textarea"
-                                    name={`tg_cyber_cri.${i}.desc`}
-                                    label="Description"
-                                    placeholder="Write title..."
-                                  />
-                                  <Button
-                                    size="sm"
-                                    className="position-absolute end-0 top-0"
-                                    onClick={() => {
-                                      arrayHelpers.remove(i)
-                                    }}
-                                  >
-                                    <TrashIcon size="1rem" />
-                                  </Button>
-                                </fieldset>
-                              </Col>)
-                            )
-                          }
-                          </Row>
-                        ) : null}
-                        <Button onClick={() => {
-                          arrayHelpers.push({
-                            title: '',
-                            desc: ''
-                          })
-                        }}>
-                          Add more
-                        </Button>
-                      </Container>
-                    )}
+                    values={formik.values.tg_cyber_cri}
                   />
                 </div>
                 <div>
-                  <FieldArray
+                  <CommonDataFieldArray
+                    title="Top Global Vulnerabilities"
                     name="tg_vul"
-                    render={arrayHelpers => (
-                      <Container fluid className="border p-2 rounded">
-                        <FormSectionTitle>Top Global Vulnerabilities</FormSectionTitle>
-                        {formik.values.tg_vul && formik.values.tg_vul.length ? (
-                          <Row className="mb-2 g-4">
-                          {
-                            formik.values.tg_vul.map((d, i) => (
-                              <Col md="6">
-                                <fieldset className="d-flex flex-column position-relative gap-2" key={i}>
-                                  <InputField
-                                    name={`tg_vul.${i}.title`}
-                                    label="Title"
-                                    placeholder="Write title..."
-                                  />
-                                  <InputField
-                                    type="textarea"
-                                    name={`tg_vul.${i}.desc`}
-                                    label="Description"
-                                    placeholder="Write title..."
-                                  />
-                                  <Button
-                                    size="sm"
-                                    className="position-absolute end-0 top-0"
-                                    onClick={() => {
-                                      arrayHelpers.remove(i)
-                                    }}
-                                  >
-                                    <TrashIcon size="1rem" />
-                                  </Button>
-                                </fieldset>
-                              </Col>)
-                            )
-                          }
-                          </Row>
-                        ) : null}
-                        <Button onClick={() => {
-                          arrayHelpers.push({
-                            title: '',
-                            desc: ''
-                          })
-                        }}>
-                          Add more
-                        </Button>
-                      </Container>
-                    )}
+                    values={formik.values.tg_vul}
                   />
                 </div>
                 <div>
-                  <FieldArray
+                  <CommonDataFieldArray
+                    title="Top Global Malware"
                     name="tg_mal"
-                    render={arrayHelpers => (
-                      <Container fluid className="border p-2 rounded">
-                        <FormSectionTitle>Top Global Malware</FormSectionTitle>
-                        {formik.values.tg_mal && formik.values.tg_mal.length ? (
-                          <Row className="mb-2 g-4">
-                          {
-                            formik.values.tg_mal.map((d, i) => (
-                              <Col md="6">
-                                <fieldset className="d-flex flex-column position-relative gap-2" key={i}>
-                                  <InputField
-                                    name={`tg_mal.${i}.title`}
-                                    label="Title"
-                                    placeholder="Write title..."
-                                  />
-                                  <InputField
-                                    type="textarea"
-                                    name={`tg_mal.${i}.desc`}
-                                    label="Description"
-                                    placeholder="Write title..."
-                                  />
-                                  <Button
-                                    size="sm"
-                                    className="position-absolute end-0 top-0"
-                                    onClick={() => {
-                                      arrayHelpers.remove(i)
-                                    }}
-                                  >
-                                    <TrashIcon size="1rem" />
-                                  </Button>
-                                </fieldset>
-                              </Col>)
-                            )
-                          }
-                          </Row>
-                        ) : null}
-                        <Button onClick={() => {
-                          arrayHelpers.push({
-                            title: '',
-                            desc: ''
-                          })
-                        }}>
-                          Add more
-                        </Button>
-                      </Container>
-                    )}
+                    values={formik.values.tg_mal}
                   />
                 </div>
                 <div>
-                  <FieldArray
+                  <CommonDataFieldArray
+                    title="Top Global MITRE ATTACK Techniques"
                     name="tg_mitre"
-                    render={arrayHelpers => (
-                      <Container fluid className="border p-2 rounded">
-                        <FormSectionTitle>Top Global MITRE ATTACK Techniques</FormSectionTitle>
-                        {formik.values.tg_mitre && formik.values.tg_mitre.length ? (
-                          <Row className="mb-2 g-4">
-                          {
-                            formik.values.tg_mitre.map((d, i) => (
-                              <Col md="6">
-                                <fieldset className="d-flex flex-column position-relative gap-2" key={i}>
-                                  <InputField
-                                    name={`tg_mitre.${i}.title`}
-                                    label="Title"
-                                    placeholder="Write title..."
-                                  />
-                                  <InputField
-                                    type="textarea"
-                                    name={`tg_mitre.${i}.desc`}
-                                    label="Description"
-                                    placeholder="Write title..."
-                                  />
-                                  <Button
-                                    size="sm"
-                                    className="position-absolute end-0 top-0"
-                                    onClick={() => {
-                                      arrayHelpers.remove(i)
-                                    }}
-                                  >
-                                    <TrashIcon size="1rem" />
-                                  </Button>
-                                </fieldset>
-                              </Col>)
-                            )
-                          }
-                          </Row>
-                        ) : null}
-                        <Button onClick={() => {
-                          arrayHelpers.push({
-                            title: '',
-                            desc: ''
-                          })
-                        }}>
-                          Add more
-                        </Button>
-                      </Container>
-                    )}
+                    values={formik.values.tg_mitre}
                   />
                 </div>
                 <div>

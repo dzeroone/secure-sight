@@ -282,3 +282,8 @@ export type RiskIndicatorType = {
     value: "Low" | "High" | "Medium";
     risk_name: string;
 }
+
+export type RecommendationNote = {
+    key: string;
+    data: string[];
+}

@@ -2,13 +2,14 @@
 
 import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
+import RecommendationNotes from "../RecommendationNotes";
 
 export const ThreatIntelSummary = () => {
   const data = useAppSelector(
     (state) => state.monthlyReport.threat_intel_summary
   );
   return (
-    <div id="threat_intel_summary">
+    <div id={data.id}>
       <div>
         <p
           style={{
@@ -149,33 +150,7 @@ export const ThreatIntelSummary = () => {
           </table>
         )}
       </div>
-      <div>
-        <p
-          style={{
-            fontSize: 26,
-            fontWeight: "bold",
-            color: "#090c9b",
-            marginBottom: 0,
-          }}
-        >
-          {data.rsn.key}
-        </p>
-        <div>
-          <ul
-            style={{
-              listStyleType: "disc",
-              paddingLeft: 20,
-              marginBottom: "1rem",
-            }}
-          >
-            {data.rsn.data.map((n, o) => (
-              <li style={{ fontSize: 24 }} key={o}>
-                {n}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

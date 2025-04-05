@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppSelector } from "@@/lib/hooks";
+import RecommendationNotes from "../RecommendationNotes";
 
 const AccountCompromiseEvents = () => {
   const data = useAppSelector(
@@ -8,7 +9,7 @@ const AccountCompromiseEvents = () => {
   );
 
   return (
-    <div style={{ marginTop: 40 }} id="account_compromise_report">
+    <div style={{ marginTop: 40 }} id={data.id}>
       <div>
         <p
           style={{
@@ -60,25 +61,7 @@ const AccountCompromiseEvents = () => {
           </table>
         )}
       </div>
-      <div>
-        <p
-          style={{
-            fontSize: 26,
-            fontWeight: "bold",
-            color: "#090c9b",
-            marginBottom: 0,
-          }}
-        >
-          {data.rsn.key}
-        </p>
-        <ul>
-          {data.rsn.data.map((j, k) => (
-            <li style={{ fontSize: 24 }} key={k}>
-              {j}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

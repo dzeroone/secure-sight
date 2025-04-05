@@ -8,7 +8,7 @@ const WorkbenchIncidentsSummary = () => {
   );
 
   return (
-    <div id="workbench_incidents_summary">
+    <div id={data.id}>
       <p
         style={{
           marginTop: 40,

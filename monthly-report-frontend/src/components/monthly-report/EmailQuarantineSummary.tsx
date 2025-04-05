@@ -2,6 +2,7 @@
 
 import { useAppSelector } from "@@/lib/hooks";
 import BarChartHorizontal from "../charts/BarChartHorizontal";
+import RecommendationNotes from "../RecommendationNotes";
 
 const EmailQuarantineSummary = () => {
   const data = useAppSelector(
@@ -9,7 +10,7 @@ const EmailQuarantineSummary = () => {
   );
 
   return (
-    <div id="email_quarantine_summary_from_cas">
+    <div id={data.id}>
       <p
         style={{
           marginTop: 40,
@@ -109,14 +110,7 @@ const EmailQuarantineSummary = () => {
           </tbody>
         </table>
       </div>
-      <p style={{ fontSize: 24 }}>
-        <strong>{data.rsn.key}:</strong>
-      </p>
-      <ul style={{ fontSize: 24 }}>
-        {data.rsn.data.map((item, i) => (
-          <li key={i}>{item}</li>
-        ))}
-      </ul>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

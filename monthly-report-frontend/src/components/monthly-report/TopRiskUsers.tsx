@@ -2,12 +2,13 @@
 
 import { useAppSelector } from "@@/lib/hooks";
 import BarChartHorizontal from "../charts/BarChartHorizontal";
+import RecommendationNotes from "../RecommendationNotes";
 
 const TopRiskUsers = () => {
   const data = useAppSelector((state) => state.monthlyReport.top_risk_users);
 
   return (
-    <div style={{ marginTop: 40 }} id="top_risk_users">
+    <div style={{ marginTop: 40 }} id={data.id}>
       <p
         style={{
           marginTop: 40,
@@ -21,23 +22,7 @@ const TopRiskUsers = () => {
       <div style={{ width: "80%", height: 1000, margin: "auto" }}>
         <BarChartHorizontal data={data.risk_score_chart} />
       </div>
-      <p
-        style={{
-          fontSize: 26,
-          fontWeight: "bold",
-          color: "#090c9b",
-          marginBottom: 0,
-        }}
-      >
-        {data.rsn.key}
-      </p>
-      <ul>
-        {data.rsn.data.map((item, i) => (
-          <li style={{ fontSize: 24 }} key={i}>
-            {item}
-          </li>
-        ))}
-      </ul>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

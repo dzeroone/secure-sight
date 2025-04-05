@@ -166,7 +166,7 @@ const steps = [
     component: <TopRiskUsersForm />,
   },
   {
-    id: "account_compromise_report",
+    id: "account_compromise_events",
     label: "Account Compromise Events",
     component: <AccountCompromiseEventsForm />,
   },
@@ -181,19 +181,19 @@ const steps = [
     component: <EndpointFeatureForm />,
   },
   {
-    id: "key_feature_adoption_rate_of_std_endpoint_protection",
+    id: "key_feature_adoption_apex_one",
     label:
       "Key Feature Adoption Rate of Apex one as Service / Std Endpoint Protection",
     component: <KFAApexOneForm />,
   },
   {
-    id: "key_feature_adoption_rate_of_server_workload_security",
+    id: "key_feature_adoption_server_workload",
     label:
       "Key Feature Adoption Rate of Server & Workload Security / Protection",
     component: <KFAWorkloadForm />,
   },
   {
-    id: "key_feature_adoption_rate_of_deep_security",
+    id: "key_feature_adoption_deep_security",
     label: "Key Feature Adoption Rate of Deep Security",
     component: <KFADeepSecurityForm />,
   },
@@ -324,6 +324,10 @@ const MonthlyReportForm = () => {
 
   useEffect(() => {
     if (steps[activeStep]?.id) {
+      // console.log(
+      //   steps[activeStep].id,
+      //   document.getElementById(steps[activeStep]?.id)
+      // );
       document.getElementById(steps[activeStep]?.id)?.scrollIntoView({
         behavior: "smooth",
         block: "start",

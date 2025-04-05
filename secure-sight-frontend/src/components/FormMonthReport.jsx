@@ -5,7 +5,7 @@ import { Button, Card, CardBody, Col, Form, FormFeedback, FormGroup, Input, Labe
 import ApiEndPoints from "../Network_call/ApiEndPoints";
 import ApiServices from "../Network_call/apiservices";
 
-export default function FormMonthReport({ formik }) {
+export default function FormMonthReport({ formik, afterForm }) {
   const [busy, setBusy] = useState(false)
   const [customers, setCustomers] = useState([])
 
@@ -86,6 +86,7 @@ export default function FormMonthReport({ formik }) {
           </Row>
           <Button type="submit">Find</Button>
         </Form>
+        {afterForm}
       </CardBody>
     </Card>
   )

@@ -3,12 +3,13 @@ import { useAppSelector } from "@@/lib/hooks";
 import DoughnutChart from "../charts/DoughnutChart";
 import GaugeChart from "../charts/GaugeChart";
 import { RiskIndicatorType } from "@@/types/types";
+import RecommendationNotes from "../RecommendationNotes";
 
 const RiskMetrics = () => {
   const data = useAppSelector((state) => state.monthlyReport.risk_metrics);
 
   return (
-    <div id="risk_metrics">
+    <div id={data.id}>
       <p
         style={{
           marginTop: 40,
@@ -111,33 +112,7 @@ const RiskMetrics = () => {
             </div>
           </>
         )}
-        <div>
-          <p
-            style={{
-              fontSize: 26,
-              fontWeight: "bold",
-              color: "#090c9b",
-              marginBottom: 0,
-            }}
-          >
-            {data.rsn.key}
-          </p>
-          <div>
-            <ul
-              style={{
-                listStyleType: "disc",
-                paddingLeft: 20,
-                marginBottom: "1rem",
-              }}
-            >
-              {data.rsn.data.map((n, o) => (
-                <li style={{ fontSize: 24 }} key={o}>
-                  {n}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        <RecommendationNotes notes={data.notes} />
       </div>
     </div>
   );

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { getWeeklyReportIndex } from "../helpers/form_helper";
 import FormWeekReport from "./FormWeekReport";
 import ModalLoading from "./ModalLoading";
+import { Card, CardBody } from "reactstrap";
+import { FileStack } from "lucide-react";
 
 const validate = values => {
   const errors = {};
@@ -43,6 +45,15 @@ export default function WeeklyReportSearch() {
     <div>
       <FormWeekReport
         formik={formik}
+        afterForm={
+          <div className="mt-2">
+            <a
+              href={`${process.env.REACT_APP_WEEKLY_REPORT_BASE}/saved`}
+              className="btn btn-outline-primary"
+              target="_blank"
+            ><FileStack className="mr-1" size="1rem" /> Saved reports</a>
+          </div>
+        }
       />
       <ModalLoading
         isOpen={busy}

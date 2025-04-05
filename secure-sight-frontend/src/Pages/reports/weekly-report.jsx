@@ -40,9 +40,7 @@ export default function WeeklyReport() {
 
   return (
     <div className="page-content">
-      <BreadcrumbWithTitle title="Weekly reports" startContent={
-        <a href={`${process.env.REACT_APP_WEEKLY_REPORT_BASE}/saved`} className="btn btn-outline-primary"><FileStack className="mr-1" size="1rem" /> Saved reports</a>
-      } linkStack={linkStack} />
+      <BreadcrumbWithTitle title="Weekly reports" linkStack={linkStack} />
       { priorityRoles.includes(userProfile.role) ? (
         <WeeklyReportSearch />
       ) : nonPriorityRoles.includes(userProfile.role) ? (

@@ -9,7 +9,7 @@ const OverallIncidentsSummary = () => {
   );
 
   return (
-    <div id="incidents_summary">
+    <div id={data.id}>
       <p
         style={{
           marginTop: 40,

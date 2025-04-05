@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import ClearIcon from "@mui/icons-material/Clear";
+import RecommendationInput from "@@/components/RecommendationInput";
 
 const RiskMetricsForm = () => {
   const data = useAppSelector((state) => state.monthlyReport.risk_metrics);
@@ -203,54 +204,8 @@ const RiskMetricsForm = () => {
       <Grid item xs={12}>
         <Divider />
       </Grid>
-
       <Grid item xs={12}>
-        <h3>Recommendations/Notes/Summary</h3>
-      </Grid>
-      <Grid item xs={12}>
-        <FormControl fullWidth>
-          <InputLabel id="rsn-label">Recommendations/Notes/Summary</InputLabel>
-          <Select
-            labelId="rsn-label"
-            id="demo-simple-select"
-            value={data.rsn.key}
-            onChange={(e) => handleRSNKeyChange(e.target.value)}
-            label="Recommendations/Notes/Summary"
-          >
-            <MenuItem value="Recommendations">Recommendations</MenuItem>
-            <MenuItem value="Notes">Notes</MenuItem>
-            <MenuItem value="Summary">Summary</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      {data.rsn.data.map((j, k) => (
-        <Grid container item xs={12} alignItems="center" spacing={2} key={k}>
-          <Grid item xs={10}>
-            <TextField
-              label="Recommendations/Notes/Summary"
-              variant="outlined"
-              value={j}
-              rows={3}
-              fullWidth
-              multiline
-              onChange={(e) => handleRSNChange(k, e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <IconButton
-              aria-label="delete"
-              color="primary"
-              onClick={() => handleRemoveRSN(k)}
-            >
-              <ClearIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ))}
-      <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={handleAddRSN}>
-          Add
-        </Button>
+        <RecommendationInput values={data.notes} entity="risk_metrics" />
       </Grid>
     </Grid>
   );

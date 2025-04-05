@@ -1,12 +1,13 @@
 "use client";
 import { useAppSelector } from "@@/lib/hooks";
+import RecommendationNotes from "../RecommendationNotes";
 
 const SystemConfigurationReport = () => {
   const data = useAppSelector(
     (state) => state.monthlyReport.system_configuration_report
   );
   return (
-    <div style={{ marginTop: 40 }} id="system_configuration_report">
+    <div style={{ marginTop: 40 }} id={data.id}>
       <p
         style={{
           marginTop: 40,
@@ -242,14 +243,7 @@ const SystemConfigurationReport = () => {
           </tbody>
         </table>
       </div>
-      <p style={{ fontSize: 24 }}>
-        <strong>{data.rsn.key}</strong>
-      </p>
-      <ul style={{ fontSize: 24 }}>
-        {data.rsn.data.map((item, i) => (
-          <li key={i}>{item}</li>
-        ))}
-      </ul>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

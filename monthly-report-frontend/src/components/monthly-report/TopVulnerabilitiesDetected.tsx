@@ -2,6 +2,7 @@
 
 import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
+import RecommendationNotes from "../RecommendationNotes";
 
 const TopVulnerabilitiesDetected = () => {
   const data = useAppSelector(
@@ -9,7 +10,7 @@ const TopVulnerabilitiesDetected = () => {
   );
 
   return (
-    <div style={{ marginTop: 40 }} id="top_vulnerabilities_detected">
+    <div style={{ marginTop: 40 }} id={data.id}>
       <p
         style={{
           marginTop: 40,
@@ -24,23 +25,7 @@ const TopVulnerabilitiesDetected = () => {
       <div style={{ width: "80%", height: 1000, margin: "auto" }}>
         <GroupedBarChartHorizontal data={data.impact_chart} />
       </div>
-      <p
-        style={{
-          fontSize: 26,
-          fontWeight: "bold",
-          color: "#090c9b",
-          marginBottom: 0,
-        }}
-      >
-        {data.rsn.key}
-      </p>
-      <ul>
-        {data.rsn.data.map((item: string, index: number) => (
-          <li key={index} style={{ fontSize: 24 }}>
-            {item}
-          </li>
-        ))}
-      </ul>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

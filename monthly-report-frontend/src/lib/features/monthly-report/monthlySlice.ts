@@ -2,6 +2,8 @@ import { monthlyReportInitialValue } from "@@/data/monthly-report";
 import { updateNestedField } from "@@/helper/helper";
 import { ACERiskEvent, AVSChartData, AboutChart, AgentVersionsSummary, EmailThreatType, FirstPageType, IntegrationSummary, POSItem, POSItemWithIndex, SLOTableType, SystemConfigurationReportType, TMProductSummary, TOCItem, TableOfContentsType, VulnerabilityAssessmentReportType } from "@@/types/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import _set from 'lodash/set';
+import _get from 'lodash/get';
 
 export const monthlyReportSlice = createSlice({
     name: "monthlyReport",
@@ -870,6 +872,15 @@ export const monthlyReportSlice = createSlice({
                 ]
             }
         },
+        updateReportProp(state, action: PayloadAction<{ attr: string, value: any }>) {
+            _set(state, action.payload.attr, action.payload.value)
+        },
+        removeReportPropArr(state, action: PayloadAction<{ attr: string, index: number }>) {
+            const vArr = _get(state, action.payload.attr)
+            if (Array.isArray(vArr)) {
+                vArr.splice(action.payload.index, 1)
+            }
+        },
         // First page
         firstPage: (state, action: PayloadAction<FirstPageType>) => {
             state.monthly_report = action.payload
@@ -1421,6 +1432,9 @@ export const monthlyReportSlice = createSlice({
         },
 
         // account compromise events
+        updateACERiskVisibility(state, action: PayloadAction<boolean>) {
+            state.account_compromise_events.visible = action.payload
+        },
         updateACERiskEvent: (state, action: PayloadAction<{ index: number; field: keyof ACERiskEvent; value: string }>) => {
             const { index, field, value } = action.payload;
             state.account_compromise_events.risk_event_table[index][field] = value;
@@ -1435,19 +1449,6 @@ export const monthlyReportSlice = createSlice({
         },
         removeACERiskEvent: (state, action: PayloadAction<number>) => {
             state.account_compromise_events.risk_event_table.splice(action.payload, 1);
-        },
-        addACERSN: (state) => {
-            state.account_compromise_events.rsn.data.push('');
-        },
-        updateACERSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.account_compromise_events.rsn.data[index] = value;
-        },
-        removeACERSN: (state, action: PayloadAction<number>) => {
-            state.account_compromise_events.rsn.data.splice(action.payload, 1);
-        },
-        updateACERSNKey: (state, action: PayloadAction<string>) => {
-            state.account_compromise_events.rsn.key = action.payload;
         },
 
         // product assessment report
@@ -1776,6 +1777,8 @@ export const {
     resetMonthlyReportState,
     updateFromElasticData,
     setCommonData,
+    updateReportProp,
+    removeReportPropArr,
     firstPage,
     // table of content
     tableOfContents,
@@ -1907,13 +1910,10 @@ export const {
     updateTRURSNKey,
     updateTRUvisibility,
     // account compromise events
+    updateACERiskVisibility,
     updateACERiskEvent,
     addACERiskEvent,
     removeACERiskEvent,
-    addACERSN,
-    updateACERSN,
-    removeACERSN,
-    updateACERSNKey,
     // product assessment summary
     updatePARTMProduct,
     addPARTMProduct,

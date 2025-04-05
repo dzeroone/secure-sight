@@ -1,0 +1,14 @@
+<% notes.forEach(note => { %>
+  <div>
+    <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
+      <%= note.key %>
+    </p>
+    <ul>
+      <% note.data.forEach(item=> { %>
+        <li style="font-size: 19px;">
+          <%= item %>
+        </li>
+        <% }); %>
+    </ul>
+  </div>
+<% }); %>

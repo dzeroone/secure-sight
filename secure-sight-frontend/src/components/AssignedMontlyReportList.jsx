@@ -3,7 +3,7 @@ import ModalLoading from "./ModalLoading"
 import ApiServices from '../Network_call/apiservices'
 import ApiEndPoints from "../Network_call/ApiEndPoints"
 import { Button, Table } from "reactstrap"
-import { EyeIcon, MessageSquareIcon } from "lucide-react"
+import { EyeIcon, FileStack, MessageSquareIcon } from "lucide-react"
 import { format } from "date-fns"
 import { formatMonthlyReportSession } from "../helpers/form_helper"
 import { useNavigate } from "react-router-dom"
@@ -50,6 +50,15 @@ export default function AssignedMonthlyReportList() {
     <div>
       <Table>
         <thead>
+          <tr>
+            <td colSpan={4}>
+              <a
+                href={`${process.env.REACT_APP_MONTHLY_REPORT_BASE}/monthly-report/saved`}
+                className="btn btn-outline-primary"
+                target="_blank"
+              ><FileStack className="mr-1" size="1rem" /> Saved reports</a>
+            </td>
+          </tr>
           <tr>
             <th>Customer</th>
             <th>Report session</th>

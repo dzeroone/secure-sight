@@ -2,6 +2,7 @@
 
 import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
+import RecommendationNotes from "../RecommendationNotes";
 
 const KFAApexOne = () => {
   const data = useAppSelector(
@@ -9,10 +10,7 @@ const KFAApexOne = () => {
   );
 
   return (
-    <div
-      style={{ marginTop: 40 }}
-      id="key_feature_adoption_rate_of_std_endpoint_protection"
-    >
+    <div style={{ marginTop: 40 }} id={data.id}>
       <p
         style={{
           fontSize: "4.2rem",
@@ -27,23 +25,7 @@ const KFAApexOne = () => {
       <div style={{ width: "auto", height: 1000, margin: "auto" }}>
         <GroupedBarChartHorizontal data={data.apex_one_chart} />
       </div>
-      <p
-        style={{
-          fontSize: 26,
-          fontWeight: "bold",
-          color: "#090c9b",
-          marginBottom: 0,
-        }}
-      >
-        {data.rsn.key}
-      </p>
-      <ul>
-        {data.rsn.data.map((item, i) => (
-          <li style={{ fontSize: 24 }} key={i}>
-            {item}
-          </li>
-        ))}
-      </ul>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

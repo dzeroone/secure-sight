@@ -3,6 +3,7 @@
 import { useAppSelector } from "@@/lib/hooks";
 import BarChartHorizontal from "../charts/BarChartHorizontal";
 import PieChart from "../charts/PieChart";
+import RecommendationNotes from "../RecommendationNotes";
 
 const AgentVersionSummary = () => {
   const data = useAppSelector(
@@ -10,7 +11,7 @@ const AgentVersionSummary = () => {
   );
 
   return (
-    <div id="agent_versions_summary">
+    <div id={data.id}>
       <p
         style={{
           fontSize: "4.2rem",
@@ -70,25 +71,7 @@ const AgentVersionSummary = () => {
           </div>
         </div>
       )}
-      <div>
-        <p
-          style={{
-            fontSize: 26,
-            fontWeight: "bold",
-            color: "#090c9b",
-            marginBottom: 0,
-          }}
-        >
-          {data.rsn.key}
-        </p>
-        <ul>
-          {data.rsn.data.map((item: string, index: number) => (
-            <li key={index} style={{ fontSize: 24 }}>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

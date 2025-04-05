@@ -8,7 +8,7 @@ const HighIncidentsSummary = () => {
   );
 
   return (
-    <div id="high_incidents_summary">
+    <div id={data.id}>
       <p
         style={{
           marginTop: 40,

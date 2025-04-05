@@ -1,27 +1,24 @@
+import RecommendationInput from "@@/components/RecommendationInput";
+import {
+  addACERiskEvent,
+  removeACERiskEvent,
+  updateACERiskEvent,
+  updateACERiskVisibility,
+} from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppSelector } from "@@/lib/hooks";
+import { ACERiskEvent } from "@@/types/types";
+import ClearIcon from "@mui/icons-material/Clear";
 import {
   Button,
+  Checkbox,
   Divider,
-  FormControl,
+  FormControlLabel,
+  FormGroup,
   Grid,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import ClearIcon from "@mui/icons-material/Clear";
-import {
-  updateACERiskEvent,
-  addACERiskEvent,
-  removeACERiskEvent,
-  addACERSN,
-  removeACERSN,
-  updateACERSN,
-  updateACERSNKey,
-} from "@@/lib/features/monthly-report/monthlySlice";
-import { ACERiskEvent } from "@@/types/types";
 
 const AccountCompromiseEventsForm = () => {
   const data = useAppSelector(
@@ -37,6 +34,10 @@ const AccountCompromiseEventsForm = () => {
     dispatch(updateACERiskEvent({ index, field, value }));
   };
 
+  const handleVisibilityChange = (value: boolean) => {
+    dispatch(updateACERiskVisibility(value));
+  };
+
   const handleAdd = () => {
     dispatch(addACERiskEvent());
   };
@@ -45,23 +46,21 @@ const AccountCompromiseEventsForm = () => {
     dispatch(removeACERiskEvent(index));
   };
 
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateACERSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addACERSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeACERSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateACERSNKey(value));
-  };
   return (
     <Grid container xs={12} rowSpacing={3} p={3}>
+      <Grid item xs={12}>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={data.visible}
+                onChange={(e) => handleVisibilityChange(e.target.checked)}
+              />
+            }
+            label="Show/Hide"
+          />
+        </FormGroup>
+      </Grid>
       {data.risk_event_table.map((item, i) => (
         <Grid container item xs={12} spacing={2} alignItems="center" key={i}>
           <Grid container item xs={11} spacing={2}>
@@ -129,52 +128,10 @@ const AccountCompromiseEventsForm = () => {
         <Divider />
       </Grid>
       <Grid item xs={12}>
-        <h3>Recommendations/Notes/Summary</h3>
-      </Grid>
-      <Grid item xs={12}>
-        <FormControl fullWidth>
-          <InputLabel id="rsn-label">Recommendations/Notes/Summary</InputLabel>
-          <Select
-            labelId="rsn-label"
-            id="demo-simple-select"
-            value={data.rsn.key}
-            onChange={(e) => handleRSNKeyChange(e.target.value)}
-            label="Recommendations/Notes/Summary"
-          >
-            <MenuItem value="Recommendations">Recommendations</MenuItem>
-            <MenuItem value="Notes">Notes</MenuItem>
-            <MenuItem value="Summary">Summary</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      {data.rsn.data.map((j, k) => (
-        <Grid container item xs={12} alignItems="center" spacing={2} key={k}>
-          <Grid item xs={10}>
-            <TextField
-              label="Recommendations/Notes/Summary"
-              variant="outlined"
-              value={j}
-              rows={3}
-              fullWidth
-              multiline
-              onChange={(e) => handleRSNChange(k, e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <IconButton
-              aria-label="delete"
-              color="primary"
-              onClick={() => handleRemoveRSN(k)}
-            >
-              <ClearIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ))}
-      <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={handleAddRSN}>
-          Add Note
-        </Button>
+        <RecommendationInput
+          values={data.notes}
+          entity="account_compromise_events"
+        />
       </Grid>
     </Grid>
   );

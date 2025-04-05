@@ -100,7 +100,7 @@ export const monthlyReportInitialValue = {
             {
                 "title": "Account Compromise events",
                 "page_no": "23",
-                "link": "account_compromise_report"
+                "link": "account_compromise_events"
             },
             {
                 "title": "Product Assessment Report",
@@ -115,17 +115,17 @@ export const monthlyReportInitialValue = {
             {
                 "title": "Key Feature Adoption Rate of STD. Endpoint Protection",
                 "page_no": "26",
-                "link": "key_feature_adoption_rate_of_std_endpoint_protection"
+                "link": "key_feature_adoption_apex_one"
             },
             {
                 "title": "Key Feature Adoption Rate of Server & Workload Security",
                 "page_no": "27",
-                "link": "key_feature_adoption_rate_of_server_workload_security"
+                "link": "key_feature_adoption_server_workload"
             },
             {
                 "title": "Key Feature Adoption Rate of Deep Security",
                 "page_no": "28",
-                "link": "key_feature_adoption_rate_of_deep_security"
+                "link": "key_feature_adoption_deep_security"
             },
             {
                 "title": "Agent Versions Summary",
@@ -465,10 +465,12 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "threat_intel_summary": {
         "id": "threat_intel_summary",
@@ -548,10 +550,12 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "overall_incident_summary": {
         "id": "incidents_summary",
@@ -870,10 +874,12 @@ export const monthlyReportInitialValue = {
             "suspicious_objects": 0,
             "blocked_objects": 0
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "vulnerability_assessment_report": {
         "id": "vulnerability_assessment_report",
@@ -890,10 +896,12 @@ export const monthlyReportInitialValue = {
             "vulnerable_host": 0,
             "cve_density": 0
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "system_configuration_report": {
         "id": "system_configuration_report",
@@ -909,10 +917,12 @@ export const monthlyReportInitialValue = {
             "insecure_connection": 0,
             "total": 0
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "top_vulnerabilities_detected": {
         "id": "top_vulnerabilities_detected",
@@ -938,10 +948,12 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "top_risk_device": {
         "id": "top_risk_devices",
@@ -961,10 +973,12 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "top_risk_users": {
         "id": "top_risk_users",
@@ -984,13 +998,16 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "account_compromise_events": {
         "id": "account_compromise_events",
+        visible: true,
         "risk_event_table": [
             {
                 "risk_event": "",
@@ -999,10 +1016,12 @@ export const monthlyReportInitialValue = {
                 "event_risk": ""
             },
         ],
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "product_assessment_report": {
         "id": "product_assessment_report",
@@ -1044,10 +1063,12 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "key_feature_adoption_apex_one": {
         "id": "key_feature_adoption_apex_one",
@@ -1074,10 +1095,12 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "key_feature_adoption_server_workload": {
         "id": "key_feature_adoption_server_workload",
@@ -1104,13 +1127,15 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "key_feature_adoption_deep_security": {
-        "id": "key_feature_adoption_apex_one",
+        "id": "key_feature_adoption_deep_security",
         "visible": true,
         "deep_security_chart": {
             "type": "grouped_horizontal_bar",
@@ -1134,10 +1159,12 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "agent_versions_summary": {
         "id": "agent_versions_summary",
@@ -1227,9 +1254,11 @@ export const monthlyReportInitialValue = {
                 }
             ]
         },
-        "rsn": {
-            "key": "",
-            "data": [""]
-        }
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     }
 }

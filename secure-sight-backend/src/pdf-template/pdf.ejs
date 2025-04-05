@@ -70,7 +70,7 @@
 
   <div style="padding: 0 140px;">
     <!-- About this report -->
-    <div class="print-page" id="about_this_report">
+    <div class="print-page" id="<%= data.about_this_report.id %>">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
                 About this report
@@ -113,7 +113,7 @@
     </div>
 
     <!-- Executive summary -->
-    <div class="print-page" id="executive_summary">
+    <div class="print-page" id="<%= data.executive_summary.id %>">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
                 Executive Summary
@@ -184,7 +184,7 @@
 
 
     <!-- Detailed summary -->
-    <div class="print-page" id="detailed_summary">
+    <div class="print-page" id="<%= data.detailed_summary.id %>">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
             Detailed Summary
@@ -221,7 +221,7 @@
                 <strong><%= data.detailed_summary.highly_exploitable %> CVEs detected</strong> in internal assets.
             </li>
             <li style="font-size: 19px; margin-bottom: 1rem;">
-                <strong><%= data.detailed_summary.incidents_closed %> Incident</strong> Closed without customer resolution.
+                <strong><%= pluralize(Number(data.detailed_summary.incidents_closed) || 0, "Incident") %></strong> Closed without customer resolution.
             </li>
             </ul>
         </div>
@@ -277,7 +277,7 @@
     </div>
 
     <!-- Risk metrics -->
-    <div class="print-page" id="risk_metrics">
+    <div class="print-page" id="<%= data.risk_metrics.id %>">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
             Risk Metrics
         </p>
@@ -315,23 +315,12 @@
           </div>
         <% } %>
         <div>
-          <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-            <%= data.risk_metrics?.rsn.key %>
-            </p>
-          <div>
-            <ul style="list-style-type: disc; padding-left: 20; margin-bottom: 1rem;">
-              <% data.risk_metrics?.rsn.data.forEach((n, o) => { %>
-              <li style="font-size: 19px;">
-                <%= n %>
-                </li>
-                <% }); %>
-            </ul>
-          </div>
+          <%- include('./partials/recommendations', { notes: data.risk_metrics.notes }) %>
         </div>
     </div>
 
     <!-- Threat intel summary -->
-    <div class="print-page" id="threat_intel_summary">
+    <div class="print-page" id="<%= data.threat_intel_summary.id %>">
       <div>
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
         Threat Intel Summary
@@ -413,23 +402,12 @@
           <% } %>
       </div>
       <div>
-        <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-          <%= data.threat_intel_summary.rsn.key %>
-          </p>
-        <div>
-          <ul style="list-style-type: disc; padding-left: 20; margin-bottom: 1rem;">
-            <% data.threat_intel_summary.rsn.data.forEach((n, o) => { %>
-            <li style="font-size: 19px;">
-              <%= n %>
-              </li>
-              <% }); %>
-          </ul>
-        </div>
+        <%- include('./partials/recommendations', { notes: data.threat_intel_summary.notes }) %>
       </div>
     </div>
 
     <!-- Overall incident summary -->
-    <div class="print-page" id="incidents_summary">
+    <div class="print-page" id="<%= data.overall_incident_summary.id %>">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin: 0;">
             Overall Incidents Summary
         </p>
@@ -604,7 +582,7 @@
 
     <!-- workbench incident summary -->
      <% if(data.workbench_incident_summary.visible) { %>
-    <div class="print-page" id="workbench_incidents_summary">
+    <div class="print-page" id="<%= data.workbench_incident_summary.id %>">
         <p style="font-size: 4rem;font-weight: 700;color: #090c9b;margin-bottom: 0px;">
             Vision One Workbench Incidents Summary
         </p>
@@ -772,7 +750,7 @@
     <% } %>
     <!-- SIEM incident summary -->
      <% if(data.siem_incident_summary.visible) { %>
-    <div class="print-page" id="third_party_siem_incidents_summary">
+    <div class="print-page" id="<%= data.siem_incident_summary.id %>">
         <p style="font-size: 4rem;font-weight: 700;color: #090c9b;margin-bottom: 0px;">
         Third Party / SIEM
         <br />
@@ -942,7 +920,7 @@
     <% } %>
     <!-- High incident summary -->
      <% if(data.high_incident_summary.data.length > 0) { %>
-    <div class="print-page" id="high_incidents_summary">
+    <div class="print-page" id="<%= data.high_incident_summary.id %>">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
           Critical/High Incidents Summary
         </p>
@@ -984,7 +962,7 @@
 
     <!-- pending incident summary -->
     <% if(data.pending_incident_summary.data.length > 0 ) { %>
-    <div class="print-page" id="waiting_incidents_summary">
+    <div class="print-page" id="<%= data.pending_incident_summary.id %>">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
           Pending Incidents Summary
         </p>
@@ -1012,7 +990,7 @@
     <% } %>
 
     <!-- SLO summary -->
-    <div class="print-page" id="slo_summary">
+    <div class="print-page" id="<%= data.slo_summary.id %>">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
           SLO Summary
         </p>
@@ -1047,7 +1025,7 @@
     </div>
 
     <!-- detection summary from apexone -->
-    <div class="print-page" id="detection_summary_from_apex_one">
+    <div class="print-page" id="<%= data.detection_summary_apex_one.id %>">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
               Detection Summary from Apex One as a Service / Std Endpoint Protection
@@ -1124,7 +1102,7 @@
       
     <!-- Email quarantine summary -->
     <% if(data.email_quarantine_summary_cas.visible) { %>
-    <div class="print-page" id="email_quarantine_summary_from_cas">
+    <div class="print-page" id="<%= data.email_quarantine_summary_cas.id %>">
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
           Email Quarantine <br />
           Summary from CAS
@@ -1184,19 +1162,14 @@
             </tbody>
           </table>
         </div>
-        <p style="font-size: 19px;">
-          <strong><%= data.email_quarantine_summary_cas.rsn.key %></strong>
-        </p>
-        <ul style="font-size: 19px;">
-          <% data.email_quarantine_summary_cas.rsn.data.forEach((item, i) => { %>
-          <li key="<%= i %>"><%= item %></li>
-          <% }); %>
-        </ul>
+        <div>
+          <%- include('./partials/recommendations', { notes: data.email_quarantine_summary_cas.notes }) %>
+        </div>
     </div>
     <% } %>
 
     <!-- vulnerability assessment -->
-    <div class="print-page" id="vulnerability_assessment_report">
+    <div class="print-page" id="<%= data.vulnerability_assessment_report.id %>">
       <div class="margin-top:40px">
           <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
               Vulnerability Assessment <br />
@@ -1335,86 +1308,75 @@
               </table>
           </div>
           <div>
-            <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-              <%= data.vulnerability_assessment_report?.rsn.key %>
-              </p>
-            <div>
-              <ul style="list-style-type: disc; padding-left: 20; margin-bottom: 1rem;">
-                <% data.vulnerability_assessment_report?.rsn.data.forEach((n, o) => { %>
-                <li style="font-size: 19px;">
-                  <%= n %>
-                  </li>
-                  <% }); %>
-              </ul>
-            </div>                                     
-      </div>
+            <%- include('./partials/recommendations', { notes: data.vulnerability_assessment_report.notes }) %>
+          </div>
       </div>
     </div>
 
     <!-- system configuration report -->
-    <div class="print-page" id="system_configuration_report">
-        <div>
-          <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
-            System Configuration Report
-          </p>
-          <div style="margin: auto;">
-            <table style="width: 100%; border-collapse: collapse;">
-              <thead>
-                <tr style="background-color: #090c9b; color: white;">
-                  <th style="padding: 24; width: 40%;"></th>
-                  <th style="padding: 24;"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;">
-                    ACCOUNTS WITH WEAK AUTHENTICATION
-                  </td>
-                  <td style="background-color: #f4f6fb; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; font-weight: bold;">
-                    <%= data.system_configuration_report.accounts_with_weak_auth %><br />
-                    <span style="font-weight: normal;">
-                      of your Accounts have weak authentication.
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;">
-                    ACCOUNTS THAT INCREASE ATTACK SURFACE RISK
-                  </td>
-                  <td style="background-color: #f4f6fb; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; font-weight: bold;">
-                    <%= data.system_configuration_report.account_attack_surface_risk %><br />
-                    <span style="font-weight: normal;">
-                      of your accounts increases the attack surface risk
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;">
-                    ACCOUNTS WITH EXCESSIVE PRIVILEGE
-                  </td>
-                  <td style="background-color: #f4f6fb; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; font-weight: bold;">
-                    <%= data.system_configuration_report.accounts_with_excessive_privilege %><br />
-                    <span style="font-weight: normal;">
-                      of your accounts have excessive privilege
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;">
-                    LEGACY AUTHENTICATION PROTOCOL WITH LOG ON ACTIVITY
-                  </td>
-                  <td style="background-color: #f4f6fb; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; font-weight: bold;">
-                    <%= data.system_configuration_report.legacy_auth_logon_activity %><br />
-                    <span style="font-weight: normal;">
-                      Log on activity from legacy authentication protocols
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;"
-                    rowspan="2"
-                  >
+    <div class="print-page" id="<%= data.system_configuration_report.id %>">
+      <div>
+        <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
+          System Configuration Report
+        </p>
+        <div style="margin: auto;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #090c9b; color: white;">
+                <th style="padding: 24; width: 40%;"></th>
+                <th style="padding: 24;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;">
+                  ACCOUNTS WITH WEAK AUTHENTICATION
+                </td>
+                <td style="background-color: #f4f6fb; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; font-weight: bold;">
+                  <%= data.system_configuration_report.accounts_with_weak_auth %><br />
+                  <span style="font-weight: normal;">
+                    of your Accounts have weak authentication.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;">
+                  ACCOUNTS THAT INCREASE ATTACK SURFACE RISK
+                </td>
+                <td style="background-color: #f4f6fb; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; font-weight: bold;">
+                  <%= data.system_configuration_report.account_attack_surface_risk %><br />
+                  <span style="font-weight: normal;">
+                    of your accounts increases the attack surface risk
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;">
+                  ACCOUNTS WITH EXCESSIVE PRIVILEGE
+                </td>
+                <td style="background-color: #f4f6fb; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; font-weight: bold;">
+                  <%= data.system_configuration_report.accounts_with_excessive_privilege %><br />
+                  <span style="font-weight: normal;">
+                    of your accounts have excessive privilege
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;">
+                  LEGACY AUTHENTICATION PROTOCOL WITH LOG ON ACTIVITY
+                </td>
+                <td style="background-color: #f4f6fb; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; font-weight: bold;">
+                  <%= data.system_configuration_report.legacy_auth_logon_activity %><br />
+                  <span style="font-weight: normal;">
+                    Log on activity from legacy authentication protocols
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style="background-color: #d9e2f1; border-bottom: 1px solid #090c9b; padding: 16px; font-size: 20px; color: #090c9b; font-weight: bold;"
+                  rowspan="2"
+                >
                   UNEXPECTED INTERNET-FACING SERVICES/PORTS
                 </td>
                 <td
@@ -1467,23 +1429,12 @@
         </div>
       </div>
       <div>
-        <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-          <%= data.system_configuration_report?.rsn.key %>
-          </p>
-        <div>
-          <ul style="list-style-type: disc; padding-left: 20; margin-bottom: 1rem;">
-            <% data.system_configuration_report?.rsn.data.forEach((n, o) => { %>
-            <li style="font-size: 19px;">
-              <%= n %>
-              </li>
-              <% }); %>
-          </ul>
-        </div>                                     
-  </div>
+        <%- include('./partials/recommendations', { notes: data.system_configuration_report.notes }) %>
+      </div>
     </div>
     
     <!-- top vulnerabilities -->
-    <div class="print-page" id="top_vulnerabilities_detected">
+    <div class="print-page" id="<%= data.top_vulnerabilities_detected.id %>">
         <div>
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Vulnerabilities <br />
@@ -1493,22 +1444,15 @@
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts7"></canvas>
             </div>
-            <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-              <%= data.top_vulnerabilities_detected.rsn.key %>
-            </p>
-            <ul>
-              <% data.top_vulnerabilities_detected.rsn.data.forEach((item, index) => { %>
-                <li style="font-size: 19px;">
-                  <%= item %>
-                </li>
-              <% }); %>
-            </ul>
+            <div>
+              <%- include('./partials/recommendations', { notes: data.top_vulnerabilities_detected.notes }) %>
+            </div>
         </div>
     </div>
 
     <!-- top risk device -->
     <% if(data.top_risk_device.visible) { %>
-    <div class="print-page" id="top_risk_devices">
+    <div class="print-page" id="<%= data.top_risk_device.id %>">
         <div>
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Risk Device
@@ -1517,23 +1461,16 @@
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts8"></canvas>
             </div>
-            <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-              <%= data.top_risk_device.rsn.key %>
-            </p>
-            <ul>
-              <% data.top_risk_device.rsn.data.forEach((item, index) => { %>
-                <li key="<%= index %>" style="font-size: 19px;">
-                  <%= item %>
-                </li>
-              <% }); %>
-            </ul>
+            <div>
+              <%- include('./partials/recommendations', { notes: data.top_risk_device.notes }) %>
+            </div>
         </div>
     </div>
     <% } %>
 
     <!-- top risk user -->
     <% if(data.top_risk_users.visible) { %>
-    <div class="print-page" id="top_risk_users">
+    <div class="print-page" id="<%= data.top_risk_users.id %>">
         <div>
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Risk Users
@@ -1542,74 +1479,64 @@
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts9"></canvas>
             </div>
-            <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-              <%= data.top_risk_users.rsn.key %>
-            </p>
-            <ul>
-              <% data.top_risk_users.rsn.data.forEach((item, index) => { %>
-                <li key="<%= index %>" style="font-size: 19px;">
-                  <%= item %>
-                </li>
-              <% }); %>
-            </ul>
+            <div>
+              <%- include('./partials/recommendations', { notes: data.top_risk_users.notes }) %>
+            </div>
         </div>
     </div>
     <% } %>
 
     <!-- account compromise events -->
-    <div class="print-page" id="account_compromise_report">
+    <% if(data.account_compromise_events.visible) { %>
+    <div class="print-page" id="<%= data.account_compromise_events.id %>">
       <div>
-          <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
-            Account Compromise Events
-          </p>
+        <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
+          Account Compromise Events
+        </p>
+        <div>
           <div>
-            <div>
-              <table
-                border="1"
-                cellpadding="14"
-                cellspacing="0"
-                style="
-                  margin-top: 24px;
-                  width: 100%;
-                  border-collapse: collapse;
-                  border-color: #c6c6c9;
-                  text-align: center;
-                "
-              >
-                <thead>
-                  <tr style="color: #090c9b; font-size: 19px;">
-                    <th>Risk Event</th>
-                    <th>Data Source</th>
-                    <th style="white-space: nowrap">Asset</th>
-                    <th>Event Risk</th>
-                  </tr>
-                </thead>
-                <tbody style="text-align: start;">
-                  <% data.account_compromise_events.risk_event_table.forEach((item, index) => { %>
-                  <tr style="font-size: 20px;" key="<%= index %>">
-                    <td><%= item.risk_event %></td>
-                    <td style="text-align: start;"><%= item.data_source %></td>
-                    <td><%= item.asset %></td>
-                    <td><%= item.event_risk %></td>
-                  </tr>
-                  <% }); %>
-                </tbody>
-              </table>
-            </div>
-            <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-              <%= data.account_compromise_events.rsn.key %>
-            </p>
-            <ul>
-              <% data.account_compromise_events.rsn.data.forEach((item, index) => { %>
-                <li style="font-size: 19px;" key="<%= index %>"><%= item %></li>
-              <% }); %>
-            </ul>
+            <table
+              border="1"
+              cellpadding="14"
+              cellspacing="0"
+              style="
+                margin-top: 24px;
+                width: 100%;
+                border-collapse: collapse;
+                border-color: #c6c6c9;
+                text-align: center;
+              "
+            >
+              <thead>
+                <tr style="color: #090c9b; font-size: 19px;">
+                  <th>Risk Event</th>
+                  <th>Data Source</th>
+                  <th style="white-space: nowrap">Asset</th>
+                  <th>Event Risk</th>
+                </tr>
+              </thead>
+              <tbody style="text-align: start;">
+                <% data.account_compromise_events.risk_event_table.forEach((item, index) => { %>
+                <tr style="font-size: 20px;" key="<%= index %>">
+                  <td><%= item.risk_event %></td>
+                  <td style="text-align: start;"><%= item.data_source %></td>
+                  <td><%= item.asset %></td>
+                  <td><%= item.event_risk %></td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
           </div>
+          <div>
+            <%- include('./partials/recommendations', { notes: data.account_compromise_events.notes }) %>
+          </div>
+        </div>
       </div>          
     </div>
+    <% } %>
 
     <!-- product assessment report -->
-    <div class="print-page" id="product_assessment_report">
+    <div class="print-page" id="<%= data.product_assessment_report.id %>">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin-bottom: 0;">
               Product Assessment <br />
@@ -1702,32 +1629,76 @@
     </div>
 
     <!-- endpoint compliance feature -->
-    <div class="print-page" id="endpoint_feature_compliance">
-        <div>
-            <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
-              Endpoint Feature Compliance
-            </p>
-            <div style="width: 800px; height: 300px; margin: auto;">
-              <!-- horizontal bar chart -->
-              <canvas style="margin-top: 10px;" id="horizontalBarCharts10"></canvas>
-            </div>
-            <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-              <%= data.endpoint_feature_compliance.rsn.key %>
-            </p>
-            <ul>
-              <% data.endpoint_feature_compliance.rsn.data.forEach((item, index) => { %>
-                <li key="<%= index %>" style="font-size: 19px;">
-                  <%= item %>
-                </li>
-              <% }); %>
-            </ul>
+    <div class="print-page" id="<%= data.endpoint_feature_compliance.id %>">
+      <div>
+        <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
+          Endpoint Feature Compliance
+        </p>
+        <div style="width: 800px; height: 300px; margin: auto;">
+          <!-- horizontal bar chart -->
+          <canvas style="margin-top: 10px;" id="horizontalBarCharts10"></canvas>
         </div>
-          
+        <div>
+          <%- include('./partials/recommendations', { notes: data.endpoint_feature_compliance.notes }) %>
+        </div>
+      </div>
     </div>
 
     <!-- key feature adoption apex one -->
     <% if(data.key_feature_adoption_apex_one.visible) { %>
-      <div class="print-page" id="key_feature_adoption_rate_of_std_endpoint_protection">
+    <div class="print-page" id="<%= data.key_feature_adoption_apex_one.id %>">
+        <div>
+            <p
+              style="
+                font-size: 4rem;
+                font-weight: 700;
+                color: #090c9b;
+                margin-bottom: 0px;
+              "
+            >
+              Key Feature Adoption Rate of Apex one as Service / Std Endpoint Protection
+            </p>
+            <div style="display: flex; justify-content: center;">
+              <div style="width: 80%; height: 1000px; margin: auto">
+                <canvas style="margin-top: 10px" id="myChart"></canvas>
+              </div>
+              <!-- <div style="width: 25%; margin-top: 24px">
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 95.5%">95.5%</div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 18.1%">18.1%</div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 89.6%">89.6%</div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 70.7%">70.7%</div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 67.7%">67.7%</div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 95.7%">95.7%</div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 95.5%">95.5%</div>
+                </div>
+              </div> -->
+            </div>
+            <div>
+              <%- include('./partials/recommendations', { notes: data.key_feature_adoption_apex_one.notes }) %>
+            </div>
+        </div>
+    </div>
+    <% } %>
+      
+      <!-- key feature adoption workload security -->
+      <% if(data.key_feature_adoption_server_workload.visible) { %>
+      <div class="print-page" id="<%= data.key_feature_adoption_server_workload.id %>">
           <div>
               <p
                 style="
@@ -1737,11 +1708,11 @@
                   margin-bottom: 0px;
                 "
               >
-                Key Feature Adoption Rate of Apex one as Service / Std Endpoint Protection
+              Key feature adoption rate of C1WS / server & workload security / protection
               </p>
               <div style="display: flex; justify-content: center;">
                 <div style="width: 80%; height: 1000px; margin: auto">
-                  <canvas style="margin-top: 10px" id="myChart"></canvas>
+                  <canvas style="margin-top: 10px" id="myChart2"></canvas>
                 </div>
                 <!-- <div style="width: 25%; margin-top: 24px">
                   <div class="progress-bar-container">
@@ -1770,1196 +1741,1112 @@
                   </div>
                 </div> -->
               </div>
-              <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-                  <%= data.key_feature_adoption_apex_one.rsn.key %>
-              </p>
-              <ul>
-                  <% data.key_feature_adoption_apex_one.rsn.data.forEach((item, index) => { %>
-                    <li style="font-size: 19px;">
-                      <%= item %>
-                    </li>
-                  <% }); %>
-              </ul>          
+              <div>
+                <%- include('./partials/recommendations', { notes: data.key_feature_adoption_server_workload.notes }) %>
+              </div>
           </div>
       </div>
-    <% } %>
-      
-      <!-- key feature adoption workload security -->
-      <% if(data.key_feature_adoption_server_workload.visible) { %>
-        <div class="print-page" id="key_feature_adoption_rate_of_server_workload_security">
-            <div>
-                <p
-                  style="
-                    font-size: 4rem;
-                    font-weight: 700;
-                    color: #090c9b;
-                    margin-bottom: 0px;
-                  "
-                >
-                Key feature adoption rate of C1WS / server & workload security / protection
-                </p>
-                <div style="display: flex; justify-content: center;">
-                  <div style="width: 80%; height: 1000px; margin: auto">
-                    <canvas style="margin-top: 10px" id="myChart2"></canvas>
-                  </div>
-                  <!-- <div style="width: 25%; margin-top: 24px">
-                    <div class="progress-bar-container">
-                      <div class="progress-bar" style="width: 95.5%">95.5%</div>
-                    </div>
-                    <div class="progress-bar-container">
-                      <div class="progress-bar" style="width: 18.1%">18.1%</div>
-                    </div>
-                    <div class="progress-bar-container">
-                      <div class="progress-bar" style="width: 89.6%">89.6%</div>
-                    </div>
-                    <div class="progress-bar-container">
-                      <div class="progress-bar" style="width: 70.7%">70.7%</div>
-                    </div>
-                    <div class="progress-bar-container">
-                      <div class="progress-bar" style="width: 67.7%">67.7%</div>
-                    </div>
-                    <div class="progress-bar-container">
-                      <div class="progress-bar" style="width: 95.7%">95.7%</div>
-                    </div>
-                    <div class="progress-bar-container">
-                      <div class="progress-bar" style="width: 0%">0%</div>
-                    </div>
-                    <div class="progress-bar-container">
-                      <div class="progress-bar" style="width: 95.5%">95.5%</div>
-                    </div>
-                  </div> -->
-                </div>
-                <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-                    <%= data.key_feature_adoption_server_workload.rsn.key %>
-                </p>
-                <ul>
-                <% data.key_feature_adoption_server_workload.rsn.data.forEach((item, index) => { %>
-                    <li style="font-size: 19px;" key="<%= index %>">
-                    <%= item %>
-                    </li>
-                <% }); %>
-                </ul>
-                  
-            </div>
-        </div>
       <% } %>
 
     <!-- key feature adoption deep security -->
     <% if(data.key_feature_adoption_deep_security.visible) { %>
-      <div class="print-page" id="key_feature_adoption_rate_of_deep_security">
-        <div>
-            <p
-              style="
-                font-size: 4rem;
-                font-weight: 700;
-                color: #090c9b;
-                margin-bottom: 0px;
-              "
-            >
-            Key Feature Adoption Rate of Deep Security
-            </p>
-            <div style="display: flex; justify-content: center;">
-              <div style="width: 80%; height: 1000px; margin: auto">
-                <canvas style="margin-top: 10px" id="KFADP"></canvas>
-              </div>
-            </div>
-            <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-                <%= data.key_feature_adoption_deep_security.rsn.key %>
-            </p>
-            <ul>
-                <% data.key_feature_adoption_deep_security.rsn.data.forEach((item, index) => { %>
-                  <li style="font-size: 19px;">
-                    <%= item %>
-                  </li>
-                <% }); %>
-            </ul>          
-        </div>
-      </div>
-    <% } %>
-
-    <!-- agents version summary -->
-    <div class="print-page" id="agent_versions_summary">
-        <p
-          style="
-            font-size: 4rem;
-            font-weight: 700;
-            color: #090c9b;
-            margin-bottom: 0px;
-          "
-        >
-          Agent Versions Summary
-        </p>
-        <% if(data.agent_versions_summary.agent_version_chart.visible) { %>
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            text-align: center;
-          "
-        >
-          <div style="width: 50%; height: auto; margin: auto">
-            <canvas style="margin-top: 20px" id="pieChart"></canvas>
-          </div>
-        </div>
-        <% } %>
-        <% if(data.agent_versions_summary.server_workload_protection_chart.visible) { %>
-        <div>
+    <div class="print-page" id="<%= data.key_feature_adoption_deep_security.id %>">
+      <div>
           <p
             style="
-              font-size: 26px;
-              font-weight: bold;
+              font-size: 4rem;
+              font-weight: 700;
               color: #090c9b;
               margin-bottom: 0px;
             "
           >
-          <%= data.agent_versions_summary.server_workload_protection_chart.title %>
-        </p>
-        <div style="width: 750px; height: auto; margin: auto">
-            <canvas style="margin-top: 10px" id="horizontalBarCharts22"></canvas>
-          </div>
-        </div>
-        <% } %>
-        <% if(data.agent_versions_summary.standard_endpoint_protection_chart.visible) { %>
-        <div>
-          <p
-            style="
-              font-size: 26px;
-              font-weight: bold;
-              color: #090c9b;
-              margin-bottom: 0px;
-              "
-            >
-              <%= data.agent_versions_summary.standard_endpoint_protection_chart.title %>
-            </p>
-            <div style="width: 750px; height: auto; margin: auto">
-              <canvas style="margin-top: 10px" id="horizontalBarCharts23"></canvas>
+          Key Feature Adoption Rate of Deep Security
+          </p>
+          <div style="display: flex; justify-content: center;">
+            <div style="width: 80%; height: 1000px; margin: auto">
+              <canvas style="margin-top: 10px" id="KFADP"></canvas>
             </div>
+          </div>
+          <div>
+            <%- include('./partials/recommendations', { notes: data.key_feature_adoption_deep_security.notes }) %>
+          </div>
+      </div>
+    </div>
+    <% } %>
+
+    <!-- agents version summary -->
+    <div class="print-page" id="<%= data.agent_versions_summary.id %>">
+      <p
+        style="
+          font-size: 4rem;
+          font-weight: 700;
+          color: #090c9b;
+          margin-bottom: 0px;
+        "
+      >
+        Agent Versions Summary
+      </p>
+      <% if(data.agent_versions_summary.agent_version_chart.visible) { %>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          text-align: center;
+        "
+      >
+        <div style="width: 50%; height: auto; margin: auto">
+          <canvas style="margin-top: 20px" id="pieChart"></canvas>
         </div>
-        <% } %>
-        <div>
-            <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
-            <%= data.agent_versions_summary.rsn.key %>
-            </p>
-            <ul>
-            <% data.agent_versions_summary.rsn.data.forEach((item, index) => { %>
-                <li key="<%= index %>" style="font-size: 19px;">
-                <%= item %>
-                </li>
-            <% }); %>
-            </ul>
-          
+      </div>
+      <% } %>
+      <% if(data.agent_versions_summary.server_workload_protection_chart.visible) { %>
+      <div>
+        <p
+          style="
+            font-size: 26px;
+            font-weight: bold;
+            color: #090c9b;
+            margin-bottom: 0px;
+          "
+        >
+        <%= data.agent_versions_summary.server_workload_protection_chart.title %>
+      </p>
+      <div style="width: 750px; height: auto; margin: auto">
+          <canvas style="margin-top: 10px" id="horizontalBarCharts22"></canvas>
         </div>
+      </div>
+      <% } %>
+      <% if(data.agent_versions_summary.standard_endpoint_protection_chart.visible) { %>
+      <div>
+        <p
+          style="
+            font-size: 26px;
+            font-weight: bold;
+            color: #090c9b;
+            margin-bottom: 0px;
+            "
+          >
+            <%= data.agent_versions_summary.standard_endpoint_protection_chart.title %>
+          </p>
+          <div style="width: 750px; height: auto; margin: auto">
+            <canvas style="margin-top: 10px" id="horizontalBarCharts23"></canvas>
+          </div>
+      </div>
+      <% } %>
+      <div>
+        <%- include('./partials/recommendations', { notes: data.agent_versions_summary.notes }) %>
+      </div>
     </div>
   </div>
 
-    <!-- scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+  <!-- scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
 
 
-    <script type="text/javascript">
-      <% if(data.risk_metrics.top_risk_incidents.indicators.length > 0) { %>
-        const indicators = <%- JSON.stringify(data.risk_metrics.top_risk_incidents.indicators) %>;
+  <script type="text/javascript">
+    <% if(data.risk_metrics.top_risk_incidents.indicators.length > 0) { %>
+      const indicators = <%- JSON.stringify(data.risk_metrics.top_risk_incidents.indicators) %>;
 
-        function valueToAngle(value) {
-          const mapping = { "Low": 45, "Medium": 180, "High": 315 };
-          return mapping[value] || 180;
-        }
+      function valueToAngle(value) {
+        const mapping = { "Low": 45, "Medium": 180, "High": 315 };
+        return mapping[value] || 180;
+      }
 
-        indicators.forEach((indicator, index) => {
-            const width = 200;
-            const height = 200;
-            const radius = Math.min(width, height) / 2;
-            const needleLength = radius * 0.8;
+      indicators.forEach((indicator, index) => {
+          const width = 200;
+          const height = 200;
+          const radius = Math.min(width, height) / 2;
+          const needleLength = radius * 0.8;
 
-            const container = d3.select(`#gauge${index}`);
+          const container = d3.select(`#gauge${index}`);
 
-            // Append value label on top with different class
-            container.append("div")
-                .attr("class", "gauge-value-label")
-                .text(indicator.value);
+          // Append value label on top with different class
+          container.append("div")
+              .attr("class", "gauge-value-label")
+              .text(indicator.value);
 
-            const svg = container.append("svg")
-                .attr("width", width)
-                .attr("height", height);
+          const svg = container.append("svg")
+              .attr("width", width)
+              .attr("height", height);
 
-            const valueMap = {
-                "Low": -Math.PI / 1.2,    // Pointing straight up (0 degrees)
-                "Medium": Math.PI * 1.5,            // Pointing to the right (90 degrees)
-                "High": Math.PI * 1.8    // Pointing straight down (180 degrees)
-            };
+          const valueMap = {
+              "Low": -Math.PI / 1.2,    // Pointing straight up (0 degrees)
+              "Medium": Math.PI * 1.5,            // Pointing to the right (90 degrees)
+              "High": Math.PI * 1.8    // Pointing straight down (180 degrees)
+          };
 
-            const colorMap = {
-                "Low": "green",
-                "Medium": "orange",
-                "High": "red"
-            };
+          const colorMap = {
+              "Low": "green",
+              "Medium": "orange",
+              "High": "red"
+          };
 
-            const angle = valueMap[indicator.value];
-            const arcColor = colorMap[indicator.value];
+          const angle = valueMap[indicator.value];
+          const arcColor = colorMap[indicator.value];
 
-            // Draw the full arc in the corresponding color
-            const arc = d3.arc()
-                .innerRadius(radius - 20)
-                .outerRadius(radius)
-                .startAngle(-Math.PI / 2)
-                .endAngle(Math.PI / 2);
+          // Draw the full arc in the corresponding color
+          const arc = d3.arc()
+              .innerRadius(radius - 20)
+              .outerRadius(radius)
+              .startAngle(-Math.PI / 2)
+              .endAngle(Math.PI / 2);
 
-            svg.append("path")
-                .attr("d", arc)
-                .attr("transform", `translate(${width / 2}, ${height / 2})`)
-                .attr("fill", arcColor);
+          svg.append("path")
+              .attr("d", arc)
+              .attr("transform", `translate(${width / 2}, ${height / 2})`)
+              .attr("fill", arcColor);
 
-            // Draw the needle
-            svg.append("line")
-                .attr("x1", width / 2)
-                .attr("y1", height / 2)
-                .attr("x2", width / 2 + needleLength * Math.cos(angle))
-                .attr("y2", height / 2 + needleLength * Math.sin(angle))
-                .attr("stroke", "steelblue")
-                .attr("stroke-width", 4);
+          // Draw the needle
+          svg.append("line")
+              .attr("x1", width / 2)
+              .attr("y1", height / 2)
+              .attr("x2", width / 2 + needleLength * Math.cos(angle))
+              .attr("y2", height / 2 + needleLength * Math.sin(angle))
+              .attr("stroke", "steelblue")
+              .attr("stroke-width", 4);
 
-            // Add a circle at the needle base
-            svg.append("circle")
-                .attr("cx", width / 2)
-                .attr("cy", height / 2)
-                .attr("r", 5)
-                .attr("fill", "steelblue");
+          // Add a circle at the needle base
+          svg.append("circle")
+              .attr("cx", width / 2)
+              .attr("cy", height / 2)
+              .attr("r", 5)
+              .attr("fill", "steelblue");
 
-            // Append risk name label at the bottom with different class
-            container.append("div")
-                .attr("class", "gauge-risk-label")
-                .text(indicator.risk_name);
-        });
-      <% } %>
+          // Append risk name label at the bottom with different class
+          container.append("div")
+              .attr("class", "gauge-risk-label")
+              .text(indicator.risk_name);
+      });
+    <% } %>
 
-      <% if(data.about_this_report.chart.datasets.length > 0) { %>
-        const ctx1 = document.getElementById('workloadSecurity').getContext('2d');
-        const workloadSecurityChart = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.about_this_report.chart.datasets[0].label) %>,
-                datasets: <%- JSON.stringify(data.about_this_report.chart.datasets) %>
-            },
-  
-            options: {
-                plugins: {
-                  legend: {
-                    display: false
-                  },
-                  datalabels: {
-                    anchor: 'end',
-                    align: 'end',
-                    offset: -6,
-                    formatter: (value) => value,
-                    color: '#090c9b',
-                    font: {
-                      weight: 'bold',
-                      size: 14
-                    }
-                  }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                    top: 20,
-                    bottom: 10
-                  },
-                },
-                scales: {
-                  x: {
-                    grid: {
-                      display: false
-                    }
-                  },
-                  y: {
-                    grid: {
-                      display: true
-                    },
-                    beginAtZero: true,
-                  }
-                }
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.detailed_summary.risk_index_chart.datasets.length > 0) { %>
-        // Risk Index Charts //
-        const ctx4 = document.getElementById('riskIndex').getContext('2d');
-        const riskIndexChart = new Chart(ctx4, {
-            type: 'doughnut',
-            data: {
-                labels: "",
-                datasets: <%- JSON.stringify(data.detailed_summary.risk_index_chart.datasets) %>
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: true
-                    }
-                }
-            }
-        });
-      <% } %>
-
-      <% if(data.risk_metrics.last_risk_score.visible && data.risk_metrics.last_risk_score?.charts[0].datasets[0].data[0] !== 0) { %>
-        // Risk Score Charts //
-        const ctx5 = document.getElementById('riskScore0').getContext('2d');
-        const riskScore = new Chart(ctx5, {
-            type: 'doughnut',
-            data: {
-                labels: "",
-                datasets: <%- JSON.stringify(data.risk_metrics.last_risk_score?.charts[0].datasets) %>
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: true
-                    }
-                }
-            }
-        });
-      <% } %>
-
-      <% if(data.risk_metrics.last_risk_score.visible && data.risk_metrics.last_risk_score?.charts[1].datasets[0].data[0] !== 0) { %>
-        const ctx6 = document.getElementById('riskScore1').getContext('2d');
-        const riskScore2 = new Chart(ctx6, {
-            type: 'doughnut',
-            data: {
-                labels: "",
-                datasets: <%- JSON.stringify(data.risk_metrics.last_risk_score?.charts[1].datasets) %>
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: true
-                    }
-                }
-            }
-        });
-      <% } %>
-
-      <% if(data.risk_metrics.last_risk_score.visible && data.risk_metrics.last_risk_score?.charts[2].datasets[0].data[0] !== 0) { %>
-        const ctx7 = document.getElementById('riskScore2').getContext('2d');
-        const riskScore3 = new Chart(ctx7, {
-            type: 'doughnut',
-            data: {
-                labels: "",
-                datasets: <%- JSON.stringify(data.risk_metrics.last_risk_score?.charts[2].datasets) %>
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: true
-                    }
-                }
-            }
-        });
-      <% } %>
-
-      <% if(data.threat_intel_summary.count_of_advisory_chart?.datasets.length > 0) { %>
-        // threat intel summary
-        const ctx24 = document.getElementById('TISHorizontalBar1').getContext('2d');
-        const TISHorizontalBar1 = new Chart(ctx24, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.threat_intel_summary.count_of_advisory_chart?.key) %>,
-                datasets: <%- JSON.stringify(data.threat_intel_summary.count_of_advisory_chart?.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        offset: -1,
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        },
-                        beginAtZero: true,
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    },
-                }
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.threat_intel_summary.ioc_chart?.datasets.length > 0) { %>
-        // Horizontal Bar Chart //
-        const ctx9 = document.getElementById('horizontalBarCharts').getContext('2d');
-        const horizontalBarChart = new Chart(ctx9, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.threat_intel_summary.ioc_chart?.key) %>,
-                datasets: <%- JSON.stringify(data.threat_intel_summary.ioc_chart?.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        },
-                        beginAtZero: true,
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    },
-                }
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.overall_incident_summary.incidents_chart.datasets.length > 0) { %>
-        const ctx10 = document.getElementById('horizontalBarCharts2').getContext('2d');
-        const horizontalBarChart2 = new Chart(ctx10, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.overall_incident_summary.incidents_chart.key) %>,
-                datasets: <%- JSON.stringify(data.overall_incident_summary.incidents_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        },
-                        beginAtZero: true,
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.slo_summary.slo_chart.datasets.length > 0) { %>
-        const ctx11 = document.getElementById('horizontalBarCharts3').getContext('2d');
-        const horizontalBarChart3 = new Chart(ctx11, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.slo_summary.slo_chart.key) %>,
-                datasets: <%- JSON.stringify(data.slo_summary.slo_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.detection_summary_apex_one.detection_chart.datasets.length > 0) { %>
-        const ctx12 = document.getElementById('horizontalBarCharts4').getContext('2d');
-        const horizontalBarChart4 = new Chart(ctx12, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.detection_summary_apex_one.detection_chart.key) %>,
-                datasets: <%- JSON.stringify(data.detection_summary_apex_one.detection_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.detection_summary_apex_one.attempts_blocked_chart.datasets.length > 0) { %>
-        const ctx13 = document.getElementById('horizontalBarCharts5').getContext('2d');
-        const horizontalBarChart5 = new Chart(ctx13, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.detection_summary_apex_one.attempts_blocked_chart.key) %>,
-                datasets: <%- JSON.stringify(data.detection_summary_apex_one.attempts_blocked_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.email_quarantine_summary_cas.visible && data.email_quarantine_summary_cas.status_chart.datasets.length > 0) { %>
-        const ctx14 = document.getElementById('horizontalBarCharts6').getContext('2d');
-        const horizontalBarChart6 = new Chart(ctx14, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.email_quarantine_summary_cas.status_chart.key) %>,
-                datasets: <%- JSON.stringify(data.email_quarantine_summary_cas.status_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    },
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.top_vulnerabilities_detected.impact_chart.datasets.length > 0) { %>
-        const ctx15 = document.getElementById('horizontalBarCharts7').getContext('2d');
-        const horizontalBarChart7 = new Chart(ctx15, {
-            type: 'bar',
-            data: {
-                labels:<%- JSON.stringify(data.top_vulnerabilities_detected.impact_chart.key) %>,
-                datasets: <%- JSON.stringify(data.top_vulnerabilities_detected.impact_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.top_risk_device.visible && data.top_risk_device.risk_score_chart.datasets.length > 0) { %>
-        const ctx16 = document.getElementById('horizontalBarCharts8').getContext('2d');
-        const horizontalBarChart8 = new Chart(ctx16, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.top_risk_device.risk_score_chart.key) %>,
-                datasets: <%- JSON.stringify(data.top_risk_device.risk_score_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.top_risk_users.visible && data.top_risk_users.risk_score_chart.datasets.length > 0) { %>
-        const ctx17 = document.getElementById('horizontalBarCharts9').getContext('2d');
-        const horizontalBarChart9 = new Chart(ctx17, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.top_risk_users.risk_score_chart.key) %>,
-                datasets: <%- JSON.stringify(data.top_risk_users.risk_score_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.endpoint_feature_compliance.compliance_chart.datasets.length > 0) { %>
-        const ctx18 = document.getElementById('horizontalBarCharts10').getContext('2d');
-        const horizontalBarChart10 = new Chart(ctx18, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.endpoint_feature_compliance.compliance_chart.key) %>,
-                datasets: <%- JSON.stringify(data.endpoint_feature_compliance.compliance_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.key_feature_adoption_apex_one.visible && data.key_feature_adoption_apex_one.apex_one_chart.datasets.length > 0) { %>
-        const ctx19 = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx19, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.key_feature_adoption_apex_one.apex_one_chart.key) %>,
-                datasets: <%- JSON.stringify(data.key_feature_adoption_apex_one.apex_one_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.key_feature_adoption_server_workload.visible && data.key_feature_adoption_server_workload.workload_security_chart.datasets.length > 0) { %>
-        const ctx20 = document.getElementById('myChart2').getContext('2d');
-        const myChart2 = new Chart(ctx20, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.key_feature_adoption_server_workload.workload_security_chart.key) %>,
-                datasets: <%- JSON.stringify(data.key_feature_adoption_server_workload.workload_security_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.key_feature_adoption_deep_security.visible && data.key_feature_adoption_deep_security.deep_security_chart.datasets.length > 0) { %>
-        // KFA Deep security
-        const ctx25 = document.getElementById('KFADP').getContext('2d');
-        const KFADP = new Chart(ctx25, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.key_feature_adoption_deep_security.deep_security_chart.key) %>,
-                datasets: <%- JSON.stringify(data.key_feature_adoption_deep_security.deep_security_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
-                  },
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-
-      <% if(data.agent_versions_summary.agent_version_chart.visible && data.agent_versions_summary.agent_version_chart.datasets.length > 0) { %>
-        const ctx21 = document.getElementById('pieChart').getContext('2d');
-
-        const pieChart = new Chart(ctx21, {
-          type: 'pie',
+    <% if(data.about_this_report.chart.datasets.length > 0) { %>
+      const ctx1 = document.getElementById('workloadSecurity').getContext('2d');
+      const workloadSecurityChart = new Chart(ctx1, {
+          type: 'bar',
           data: {
-            labels: <%- JSON.stringify(data.agent_versions_summary.agent_version_chart.key) %>,
-            datasets: <%- JSON.stringify(data.agent_versions_summary.agent_version_chart.datasets) %>
+              labels: <%- JSON.stringify(data.about_this_report.chart.datasets[0].label) %>,
+              datasets: <%- JSON.stringify(data.about_this_report.chart.datasets) %>
+          },
+
+          options: {
+              plugins: {
+                legend: {
+                  display: false
+                },
+                datalabels: {
+                  anchor: 'end',
+                  align: 'end',
+                  offset: -6,
+                  formatter: (value) => value,
+                  color: '#090c9b',
+                  font: {
+                    weight: 'bold',
+                    size: 14
+                  }
+                }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                  top: 20,
+                  bottom: 10
+                },
+              },
+              scales: {
+                x: {
+                  grid: {
+                    display: false
+                  }
+                },
+                y: {
+                  grid: {
+                    display: true
+                  },
+                  beginAtZero: true,
+                }
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.detailed_summary.risk_index_chart.datasets.length > 0) { %>
+      // Risk Index Charts //
+      const ctx4 = document.getElementById('riskIndex').getContext('2d');
+      const riskIndexChart = new Chart(ctx4, {
+          type: 'doughnut',
+          data: {
+              labels: "",
+              datasets: <%- JSON.stringify(data.detailed_summary.risk_index_chart.datasets) %>
           },
           options: {
-          maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: true,
-                position: "right"
+              responsive: true,
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  tooltip: {
+                      enabled: true
+                  }
+              }
+          }
+      });
+    <% } %>
+
+    <% if(data.risk_metrics.last_risk_score.visible && data.risk_metrics.last_risk_score?.charts[0].datasets[0].data[0] !== 0) { %>
+      // Risk Score Charts //
+      const ctx5 = document.getElementById('riskScore0').getContext('2d');
+      const riskScore = new Chart(ctx5, {
+          type: 'doughnut',
+          data: {
+              labels: "",
+              datasets: <%- JSON.stringify(data.risk_metrics.last_risk_score?.charts[0].datasets) %>
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  tooltip: {
+                      enabled: true
+                  }
+              }
+          }
+      });
+    <% } %>
+
+    <% if(data.risk_metrics.last_risk_score.visible && data.risk_metrics.last_risk_score?.charts[1].datasets[0].data[0] !== 0) { %>
+      const ctx6 = document.getElementById('riskScore1').getContext('2d');
+      const riskScore2 = new Chart(ctx6, {
+          type: 'doughnut',
+          data: {
+              labels: "",
+              datasets: <%- JSON.stringify(data.risk_metrics.last_risk_score?.charts[1].datasets) %>
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  tooltip: {
+                      enabled: true
+                  }
+              }
+          }
+      });
+    <% } %>
+
+    <% if(data.risk_metrics.last_risk_score.visible && data.risk_metrics.last_risk_score?.charts[2].datasets[0].data[0] !== 0) { %>
+      const ctx7 = document.getElementById('riskScore2').getContext('2d');
+      const riskScore3 = new Chart(ctx7, {
+          type: 'doughnut',
+          data: {
+              labels: "",
+              datasets: <%- JSON.stringify(data.risk_metrics.last_risk_score?.charts[2].datasets) %>
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  tooltip: {
+                      enabled: true
+                  }
+              }
+          }
+      });
+    <% } %>
+
+    <% if(data.threat_intel_summary.count_of_advisory_chart?.datasets.length > 0) { %>
+      // threat intel summary
+      const ctx24 = document.getElementById('TISHorizontalBar1').getContext('2d');
+      const TISHorizontalBar1 = new Chart(ctx24, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.threat_intel_summary.count_of_advisory_chart?.key) %>,
+              datasets: <%- JSON.stringify(data.threat_intel_summary.count_of_advisory_chart?.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      offset: -1,
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
               },
-              datalabels: {
-                anchor: "center",
-                align: "center",
-                formatter: (value) => value,
-                color: '#000000',
-                font: {
-                  weight: 'bold',
-                  size: 14
-                }
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
               },
-              tooltip: {
-                  callbacks: {
-                      label: function (tooltipItem) {
-                          return `${tooltipItem.label}: ${tooltipItem.raw}`;
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      },
+                      beginAtZero: true,
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  },
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.threat_intel_summary.ioc_chart?.datasets.length > 0) { %>
+      // Horizontal Bar Chart //
+      const ctx9 = document.getElementById('horizontalBarCharts').getContext('2d');
+      const horizontalBarChart = new Chart(ctx9, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.threat_intel_summary.ioc_chart?.key) %>,
+              datasets: <%- JSON.stringify(data.threat_intel_summary.ioc_chart?.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      },
+                      beginAtZero: true,
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  },
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.overall_incident_summary.incidents_chart.datasets.length > 0) { %>
+      const ctx10 = document.getElementById('horizontalBarCharts2').getContext('2d');
+      const horizontalBarChart2 = new Chart(ctx10, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.overall_incident_summary.incidents_chart.key) %>,
+              datasets: <%- JSON.stringify(data.overall_incident_summary.incidents_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      },
+                      beginAtZero: true,
+                  },
+                  y: {
+                      grid: {
+                          display: false
                       }
                   }
               }
-            }
           },
           plugins: [ChartDataLabels]
-        });
-      <% } %>
+      });
+    <% } %>
 
-      <% if(data.agent_versions_summary.server_workload_protection_chart.visible && data.agent_versions_summary.server_workload_protection_chart.datasets.length > 0 ) { %>
-        const ctx22 = document.getElementById('horizontalBarCharts22').getContext('2d');
-        const horizontalBarChart22 = new Chart(ctx22, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.agent_versions_summary.server_workload_protection_chart.key) %>,
-                datasets: <%- JSON.stringify(data.agent_versions_summary.server_workload_protection_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
+    <% if(data.slo_summary.slo_chart.datasets.length > 0) { %>
+      const ctx11 = document.getElementById('horizontalBarCharts3').getContext('2d');
+      const horizontalBarChart3 = new Chart(ctx11, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.slo_summary.slo_chart.key) %>,
+              datasets: <%- JSON.stringify(data.slo_summary.slo_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
                 },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
                   },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.detection_summary_apex_one.detection_chart.datasets.length > 0) { %>
+      const ctx12 = document.getElementById('horizontalBarCharts4').getContext('2d');
+      const horizontalBarChart4 = new Chart(ctx12, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.detection_summary_apex_one.detection_chart.key) %>,
+              datasets: <%- JSON.stringify(data.detection_summary_apex_one.detection_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
                 },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              },
+              maintainAspectRatio: false
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.detection_summary_apex_one.attempts_blocked_chart.datasets.length > 0) { %>
+      const ctx13 = document.getElementById('horizontalBarCharts5').getContext('2d');
+      const horizontalBarChart5 = new Chart(ctx13, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.detection_summary_apex_one.attempts_blocked_chart.key) %>,
+              datasets: <%- JSON.stringify(data.detection_summary_apex_one.attempts_blocked_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              },
+              maintainAspectRatio: false
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.email_quarantine_summary_cas.visible && data.email_quarantine_summary_cas.status_chart.datasets.length > 0) { %>
+      const ctx14 = document.getElementById('horizontalBarCharts6').getContext('2d');
+      const horizontalBarChart6 = new Chart(ctx14, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.email_quarantine_summary_cas.status_chart.key) %>,
+              datasets: <%- JSON.stringify(data.email_quarantine_summary_cas.status_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  },
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              },
+              maintainAspectRatio: false
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.top_vulnerabilities_detected.impact_chart.datasets.length > 0) { %>
+      const ctx15 = document.getElementById('horizontalBarCharts7').getContext('2d');
+      const horizontalBarChart7 = new Chart(ctx15, {
+          type: 'bar',
+          data: {
+              labels:<%- JSON.stringify(data.top_vulnerabilities_detected.impact_chart.key) %>,
+              datasets: <%- JSON.stringify(data.top_vulnerabilities_detected.impact_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              },
+              maintainAspectRatio: false
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.top_risk_device.visible && data.top_risk_device.risk_score_chart.datasets.length > 0) { %>
+      const ctx16 = document.getElementById('horizontalBarCharts8').getContext('2d');
+      const horizontalBarChart8 = new Chart(ctx16, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.top_risk_device.risk_score_chart.key) %>,
+              datasets: <%- JSON.stringify(data.top_risk_device.risk_score_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              },
+              maintainAspectRatio: false
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.top_risk_users.visible && data.top_risk_users.risk_score_chart.datasets.length > 0) { %>
+      const ctx17 = document.getElementById('horizontalBarCharts9').getContext('2d');
+      const horizontalBarChart9 = new Chart(ctx17, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.top_risk_users.risk_score_chart.key) %>,
+              datasets: <%- JSON.stringify(data.top_risk_users.risk_score_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              },
+              maintainAspectRatio: false
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.endpoint_feature_compliance.compliance_chart.datasets.length > 0) { %>
+      const ctx18 = document.getElementById('horizontalBarCharts10').getContext('2d');
+      const horizontalBarChart10 = new Chart(ctx18, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.endpoint_feature_compliance.compliance_chart.key) %>,
+              datasets: <%- JSON.stringify(data.endpoint_feature_compliance.compliance_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.key_feature_adoption_apex_one.visible && data.key_feature_adoption_apex_one.apex_one_chart.datasets.length > 0) { %>
+      const ctx19 = document.getElementById('myChart').getContext('2d');
+      const myChart = new Chart(ctx19, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.key_feature_adoption_apex_one.apex_one_chart.key) %>,
+              datasets: <%- JSON.stringify(data.key_feature_adoption_apex_one.apex_one_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              },
+              maintainAspectRatio: false
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.key_feature_adoption_server_workload.visible && data.key_feature_adoption_server_workload.workload_security_chart.datasets.length > 0) { %>
+      const ctx20 = document.getElementById('myChart2').getContext('2d');
+      const myChart2 = new Chart(ctx20, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.key_feature_adoption_server_workload.workload_security_chart.key) %>,
+              datasets: <%- JSON.stringify(data.key_feature_adoption_server_workload.workload_security_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              },
+              maintainAspectRatio: false
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.key_feature_adoption_deep_security.visible && data.key_feature_adoption_deep_security.deep_security_chart.datasets.length > 0) { %>
+      // KFA Deep security
+      const ctx25 = document.getElementById('KFADP').getContext('2d');
+      const KFADP = new Chart(ctx25, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.key_feature_adoption_deep_security.deep_security_chart.key) %>,
+              datasets: <%- JSON.stringify(data.key_feature_adoption_deep_security.deep_security_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              },
+              maintainAspectRatio: false
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.agent_versions_summary.agent_version_chart.visible && data.agent_versions_summary.agent_version_chart.datasets.length > 0) { %>
+      const ctx21 = document.getElementById('pieChart').getContext('2d');
+
+      const pieChart = new Chart(ctx21, {
+        type: 'pie',
+        data: {
+          labels: <%- JSON.stringify(data.agent_versions_summary.agent_version_chart.key) %>,
+          datasets: <%- JSON.stringify(data.agent_versions_summary.agent_version_chart.datasets) %>
+        },
+        options: {
+        maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: "right"
+            },
+            datalabels: {
+              anchor: "center",
+              align: "center",
+              formatter: (value) => value,
+              color: '#000000',
+              font: {
+                weight: 'bold',
+                size: 14
+              }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function (tooltipItem) {
+                        return `${tooltipItem.label}: ${tooltipItem.raw}`;
                     }
                 }
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
+            }
+          }
+        },
+        plugins: [ChartDataLabels]
+      });
+    <% } %>
 
-      <% if(data.agent_versions_summary.standard_endpoint_protection_chart.visible && data.agent_versions_summary.standard_endpoint_protection_chart.datasets.length > 0) { %>
-        const ctx23 = document.getElementById('horizontalBarCharts23').getContext('2d');
-        const horizontalBarChart23 = new Chart(ctx23, {
-            type: 'bar',
-            data: {
-                labels: <%- JSON.stringify(data.agent_versions_summary.standard_endpoint_protection_chart.key) %>,
-                datasets: <%- JSON.stringify(data.agent_versions_summary.standard_endpoint_protection_chart.datasets) %>
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value) => value,
-                        color: '#090c9b',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
-                    }
-                },
-                layout: {
-                  padding: {
-                    right: 30,
-                    left: 10,
+    <% if(data.agent_versions_summary.server_workload_protection_chart.visible && data.agent_versions_summary.server_workload_protection_chart.datasets.length > 0 ) { %>
+      const ctx22 = document.getElementById('horizontalBarCharts22').getContext('2d');
+      const horizontalBarChart22 = new Chart(ctx22, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.agent_versions_summary.server_workload_protection_chart.key) %>,
+              datasets: <%- JSON.stringify(data.agent_versions_summary.server_workload_protection_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  legend: {
+                      display: false
                   },
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
                 },
-                scales: {
-                    x: {
-                        grid: {
-                            display: true
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            },
-            plugins: [ChartDataLabels]
-        });
-      <% } %>
-    </script>
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.agent_versions_summary.standard_endpoint_protection_chart.visible && data.agent_versions_summary.standard_endpoint_protection_chart.datasets.length > 0) { %>
+      const ctx23 = document.getElementById('horizontalBarCharts23').getContext('2d');
+      const horizontalBarChart23 = new Chart(ctx23, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.agent_versions_summary.standard_endpoint_protection_chart.key) %>,
+              datasets: <%- JSON.stringify(data.agent_versions_summary.standard_endpoint_protection_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+  </script>
 
 </body>
 

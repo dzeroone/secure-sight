@@ -2,6 +2,7 @@
 
 import { useAppSelector } from "@@/lib/hooks";
 import BarChartHorizontal from "../charts/BarChartHorizontal";
+import RecommendationNotes from "../RecommendationNotes";
 
 const EndpointFeatureCompliance = () => {
   const data = useAppSelector(
@@ -9,7 +10,7 @@ const EndpointFeatureCompliance = () => {
   );
 
   return (
-    <div style={{ marginTop: 40 }} id="endpoint_feature_compliance">
+    <div style={{ marginTop: 40 }} id={data.id}>
       <p style={{ fontSize: "4.2rem", fontWeight: 700, color: "#090c9b" }}>
         Endpoint Feature <br />
         Compliance
@@ -18,23 +19,7 @@ const EndpointFeatureCompliance = () => {
         {/* <canvas style={{ marginTop: 10 }} id="horizontalBarCharts10" /> */}
         <BarChartHorizontal data={data.compliance_chart} />
       </div>
-      <p
-        style={{
-          fontSize: 26,
-          fontWeight: "bold",
-          color: "#090c9b",
-          marginBottom: 0,
-        }}
-      >
-        {data.rsn.key}
-      </p>
-      <ul>
-        {data.rsn.data.map((item: any, index: number) => (
-          <li key={index} style={{ fontSize: 24 }}>
-            {item}
-          </li>
-        ))}
-      </ul>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

@@ -19,9 +19,7 @@ export default function MonthlyReport() {
 
   return (
     <div className="page-content">
-      <BreadcrumbWithTitle title="Monthly reports" startContent={
-        <a href={`${process.env.REACT_APP_MONTHLY_REPORT_BASE}/monthly-report/saved`} className="btn btn-outline-primary"><FileStack className="mr-1" size="1rem" /> Saved reports</a>
-      } linkStack={linkStack} />
+      <BreadcrumbWithTitle title="Monthly reports" linkStack={linkStack} />
       { priorityRoles.includes(userProfile.role) ? (
         <MonthlyReportSearch />
       ) : nonPriorityRoles.includes(userProfile.role) ? (

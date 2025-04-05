@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import { EyeIcon, MessageSquareIcon } from "lucide-react"
+import { EyeIcon, FileStack, MessageSquareIcon } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 import { Button, Table } from "reactstrap"
 import { formatWeeklyReportSession } from "../helpers/form_helper"
@@ -49,6 +49,15 @@ export default function AssignedWeeklyReportList() {
     <div>
       <Table>
         <thead>
+          <tr>
+            <td colSpan={4}>
+              <a
+                href={`${process.env.REACT_APP_WEEKLY_REPORT_BASE}/saved`}
+                className="btn btn-outline-primary"
+                target="_blank"
+              ><FileStack className="mr-1" size="1rem" /> Saved reports</a>
+            </td>
+          </tr>
           <tr>
             <th>Customer</th>
             <th>Report session</th>

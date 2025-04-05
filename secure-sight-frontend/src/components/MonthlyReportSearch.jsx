@@ -3,6 +3,8 @@ import { useState } from "react";
 import { getMonthlyReportIndex } from "../helpers/form_helper";
 import FormMonthReport from "./FormMonthReport";
 import ModalLoading from "./ModalLoading";
+import { Card, CardBody } from "reactstrap";
+import { FileStack } from "lucide-react";
 
 const validate = values => {
   const errors = {};
@@ -47,6 +49,15 @@ export default function MonthlyReportSearch() {
     <div>
       <FormMonthReport
         formik={formik}
+        afterForm={
+          <div className="mt-2">
+          <a
+            href={`${process.env.REACT_APP_MONTHLY_REPORT_BASE}/monthly-report/saved`}
+            className="btn btn-outline-primary"
+            target="_blank"
+          ><FileStack className="mr-1" size="1rem" /> Saved reports</a>
+          </div>
+        }
       />
       <ModalLoading
         isOpen={busy}
