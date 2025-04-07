@@ -169,7 +169,7 @@ export default function RecommendationInput({
           onClick={() => {
             dispatch(
               updateReportProp({
-                attr: `${entity}.notes[${values.length}]`,
+                attr: `${entity}.notes[${values?.length || 0}]`,
                 value: {
                   key: "",
                   data: [""],
