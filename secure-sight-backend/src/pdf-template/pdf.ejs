@@ -314,9 +314,11 @@
             <% }); %>
           </div>
         <% } %>
+        <% if(data.risk_metrics.notes?.length> 0) { %>
         <div>
           <%- include('./partials/recommendations', { notes: data.risk_metrics.notes }) %>
         </div>
+        <% } %>
     </div>
 
     <!-- Threat intel summary -->
@@ -401,9 +403,11 @@
           </table>
           <% } %>
       </div>
+      <% if(data.threat_intel_summary.notes?.length> 0) { %>
       <div>
         <%- include('./partials/recommendations', { notes: data.threat_intel_summary.notes }) %>
       </div>
+      <% } %>
     </div>
 
     <!-- Overall incident summary -->
@@ -1162,9 +1166,11 @@
             </tbody>
           </table>
         </div>
+        <% if(data.email_quarantine_summary_cas.notes?.length> 0) { %>
         <div>
           <%- include('./partials/recommendations', { notes: data.email_quarantine_summary_cas.notes }) %>
         </div>
+        <% } %>
     </div>
     <% } %>
 
@@ -1307,9 +1313,11 @@
               </tbody>
               </table>
           </div>
+          <% if(data.vulnerability_assessment_report.notes?.length> 0) { %>
           <div>
             <%- include('./partials/recommendations', { notes: data.vulnerability_assessment_report.notes }) %>
           </div>
+          <% } %>
       </div>
     </div>
 
@@ -1428,9 +1436,11 @@
           </table>
         </div>
       </div>
+      <% if(data.system_configuration_report.notes?.length> 0) { %>
       <div>
         <%- include('./partials/recommendations', { notes: data.system_configuration_report.notes }) %>
       </div>
+      <% } %>
     </div>
     
     <!-- top vulnerabilities -->
@@ -1444,9 +1454,11 @@
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts7"></canvas>
             </div>
+            <% if(data.top_vulnerabilities_detected.notes?.length> 0) { %>
             <div>
               <%- include('./partials/recommendations', { notes: data.top_vulnerabilities_detected.notes }) %>
             </div>
+            <% } %>
         </div>
     </div>
 
@@ -1461,9 +1473,11 @@
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts8"></canvas>
             </div>
+            <% if(data.top_risk_device.notes?.length> 0) { %>
             <div>
               <%- include('./partials/recommendations', { notes: data.top_risk_device.notes }) %>
             </div>
+            <% } %>
         </div>
     </div>
     <% } %>
@@ -1479,9 +1493,11 @@
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts9"></canvas>
             </div>
+            <% if(data.top_risk_users.notes?.length> 0) { %>
             <div>
               <%- include('./partials/recommendations', { notes: data.top_risk_users.notes }) %>
             </div>
+            <% } %>
         </div>
     </div>
     <% } %>
@@ -1527,9 +1543,11 @@
               </tbody>
             </table>
           </div>
+          <% if(data.account_compromise_events.notes?.length> 0) { %>
           <div>
             <%- include('./partials/recommendations', { notes: data.account_compromise_events.notes }) %>
           </div>
+          <% } %>
         </div>
       </div>          
     </div>
@@ -1625,7 +1643,7 @@
               </div>
             </div>
             <% } %>
-            <% if(data.product_assessment_report.notes.length > 0) { %>
+            <% if(data.product_assessment_report.notes?.length > 0) { %>
               <%- include('./partials/recommendations', { notes: data.product_assessment_report.notes }) %>
             <% } %>
         </div> 
@@ -1641,9 +1659,11 @@
           <!-- horizontal bar chart -->
           <canvas style="margin-top: 10px;" id="horizontalBarCharts10"></canvas>
         </div>
+        <% if(data.endpoint_feature_compliance.notes?.length> 0) { %>
         <div>
           <%- include('./partials/recommendations', { notes: data.endpoint_feature_compliance.notes }) %>
         </div>
+        <% } %>
       </div>
     </div>
 
@@ -1692,9 +1712,11 @@
                 </div>
               </div> -->
             </div>
+            <% if(data.key_feature_adoption_apex_one.notes?.length> 0) { %>
             <div>
               <%- include('./partials/recommendations', { notes: data.key_feature_adoption_apex_one.notes }) %>
             </div>
+            <% } %>
         </div>
     </div>
     <% } %>
@@ -1744,9 +1766,11 @@
                   </div>
                 </div> -->
               </div>
+              <% if(data.key_feature_adoption_server_workload.notes?.length> 0) { %>
               <div>
                 <%- include('./partials/recommendations', { notes: data.key_feature_adoption_server_workload.notes }) %>
               </div>
+              <% } %>
           </div>
       </div>
       <% } %>
@@ -1770,9 +1794,11 @@
               <canvas style="margin-top: 10px" id="KFADP"></canvas>
             </div>
           </div>
+          <% if(data.key_feature_adoption_deep_security.notes?.length> 0) { %>
           <div>
             <%- include('./partials/recommendations', { notes: data.key_feature_adoption_deep_security.notes }) %>
           </div>
+          <% } %>
       </div>
     </div>
     <% } %>
@@ -1836,9 +1862,11 @@
           </div>
       </div>
       <% } %>
+      <% if(data.agent_versions_summary.notes?.length> 0) { %>
       <div>
         <%- include('./partials/recommendations', { notes: data.agent_versions_summary.notes }) %>
       </div>
+      <% } %>
     </div>
   </div>
 
