@@ -12,13 +12,9 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
-  addEPFRSN,
-  removeEPFRSN,
   updateEPFChartColor,
   updateEPFChartData,
   updateEPFChartKey,
-  updateEPFRSN,
-  updateEPFRSNKey,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import { MuiColorInput } from "mui-color-input";
 import RecommendationInput from "@@/components/RecommendationInput";
@@ -42,21 +38,6 @@ const EndpointFeatureForm = () => {
     dispatch(updateEPFChartColor(color));
   };
 
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateEPFRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addEPFRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeEPFRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateEPFRSNKey(value));
-  };
   return (
     <Grid container spacing={3} p={3}>
       <Grid container item xs={12} spacing={2}>

@@ -21,10 +21,6 @@ import {
   updateTRDChartKey,
   updateTRDChartData,
   updateTRDChartColor,
-  addTRDRSN,
-  removeTRDRSN,
-  updateTRDRSN,
-  updateTRDRSNKey,
   updateTRDvisibility,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import RecommendationInput from "@@/components/RecommendationInput";
@@ -51,22 +47,6 @@ const TopRiskDeviceForm = () => {
 
   const handleRemoveBar = (index: number) => {
     dispatch(removeTRDChartBar(index));
-  };
-
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateTRDRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addTRDRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeTRDRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateTRDRSNKey(value));
   };
 
   const handleVisibilityChange = (value: boolean) => {

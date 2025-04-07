@@ -1,11 +1,5 @@
 import { updateNestedField } from "@@/helper/helper";
-import {
-  addVARRSN,
-  removeVARRSN,
-  updateVARRSN,
-  updateVARRSNKey,
-  vulnerabilityAssessmentReport,
-} from "@@/lib/features/monthly-report/monthlySlice";
+import { vulnerabilityAssessmentReport } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import {
   Button,
@@ -32,22 +26,6 @@ const VulnAssessmentReportForm = () => {
   const handleChange = (field: string, value: string) => {
     const updatedData = updateNestedField(data, field, value);
     dispatch(vulnerabilityAssessmentReport(updatedData));
-  };
-
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateVARRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addVARRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeVARRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateVARRSNKey(value));
   };
 
   return (

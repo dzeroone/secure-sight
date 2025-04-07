@@ -1027,20 +1027,6 @@ export const monthlyReportSlice = createSlice({
         toggleTopRiskVisibility(state, action: PayloadAction<boolean>) {
             state.risk_metrics.top_risk_incidents.visible = action.payload;
         },
-        updateRMSRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.risk_metrics.rsn.data[index] = value;
-        },
-        addRMSRSN: (state) => {
-            state.risk_metrics.rsn.data.push('');
-        },
-        removeRMSRSN: (state, action: PayloadAction<number>) => {
-            state.risk_metrics.rsn.data.splice(action.payload, 1);
-        },
-        updateRMSRSNKey: (state, action: PayloadAction<string>) => {
-            state.risk_metrics.rsn.key = action.payload;
-        },
-
         //Threat Inter Summary
         updateTISIOCSweep(state, action: PayloadAction<number>) {
             state.threat_intel_summary.total_ioc_sweep = action.payload
@@ -1082,19 +1068,6 @@ export const monthlyReportSlice = createSlice({
         },
         removeTISIOCInvestigation: (state, action: PayloadAction<number>) => {
             state.threat_intel_summary.ioc_investigation.data.splice(action.payload, 1);
-        },
-        updateTISRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.threat_intel_summary.rsn.data[index] = value;
-        },
-        addTISRSN: (state) => {
-            state.threat_intel_summary.rsn.data.push('');
-        },
-        removeTISRSN: (state, action: PayloadAction<number>) => {
-            state.threat_intel_summary.rsn.data.splice(action.payload, 1);
-        },
-        updateTISRSNKey: (state, action: PayloadAction<string>) => {
-            state.threat_intel_summary.rsn.key = action.payload;
         },
         updateTISChartData: (state, action: PayloadAction<{ datasetIndex: number; dataIndex: number; value: number }>) => {
             const { datasetIndex, dataIndex, value } = action.payload;
@@ -1310,20 +1283,6 @@ export const monthlyReportSlice = createSlice({
         updateEQSThreatType: (state, action: PayloadAction<{ field: keyof EmailThreatType; value: number }>) => {
             state.email_quarantine_summary_cas.threat_type[action.payload.field] = action.payload.value;
         },
-        addEQSRSN: (state) => {
-            state.email_quarantine_summary_cas.rsn.data.push('');
-        },
-        updateEQSRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.email_quarantine_summary_cas.rsn.data[index] = value;
-        },
-        removeEQSRSN: (state, action: PayloadAction<number>) => {
-            state.email_quarantine_summary_cas.rsn.data.splice(action.payload, 1);
-        },
-        updateEQSRSNKey: (state, action: PayloadAction<string>) => {
-            state.email_quarantine_summary_cas.rsn.key = action.payload;
-        },
-
         // top vulnerabilities detected
         updateTVDChartKey: (state, action: PayloadAction<{ index: number; value: string }>) => {
             state.top_vulnerabilities_detected.impact_chart.key[action.payload.index] = action.payload.value;
@@ -1333,19 +1292,6 @@ export const monthlyReportSlice = createSlice({
         },
         updateTVDChartColor: (state, action: PayloadAction<{ datasetIndex: number; color: string }>) => {
             state.top_vulnerabilities_detected.impact_chart.datasets[action.payload.datasetIndex].backgroundColor = action.payload.color;
-        },
-        addTVDRSN: (state) => {
-            state.top_vulnerabilities_detected.rsn.data.push('');
-        },
-        updateTVDRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.top_vulnerabilities_detected.rsn.data[index] = value;
-        },
-        removeTVDRSN: (state, action: PayloadAction<number>) => {
-            state.top_vulnerabilities_detected.rsn.data.splice(action.payload, 1);
-        },
-        updateTVDRSNKey: (state, action: PayloadAction<string>) => {
-            state.top_vulnerabilities_detected.rsn.key = action.payload;
         },
         addTVDChartBar: (state) => {
             state.top_vulnerabilities_detected.impact_chart.key.push('');
@@ -1380,19 +1326,6 @@ export const monthlyReportSlice = createSlice({
             state.top_risk_device.risk_score_chart.key.splice(action.payload, 1);
             state.top_risk_device.risk_score_chart.datasets[0].data.splice(action.payload, 1);
         },
-        addTRDRSN: (state) => {
-            state.top_risk_device.rsn.data.push('');
-        },
-        updateTRDRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.top_risk_device.rsn.data[index] = value;
-        },
-        removeTRDRSN: (state, action: PayloadAction<number>) => {
-            state.top_risk_device.rsn.data.splice(action.payload, 1);
-        },
-        updateTRDRSNKey: (state, action: PayloadAction<string>) => {
-            state.top_risk_device.rsn.key = action.payload;
-        },
         updateTRDvisibility: (state, action: PayloadAction<boolean>) => {
             state.top_risk_device.visible = action.payload;
         },
@@ -1413,19 +1346,6 @@ export const monthlyReportSlice = createSlice({
         removeTRUChartBar: (state, action: PayloadAction<number>) => {
             state.top_risk_users.risk_score_chart.key.splice(action.payload, 1);
             state.top_risk_users.risk_score_chart.datasets[0].data.splice(action.payload, 1);
-        },
-        addTRURSN: (state) => {
-            state.top_risk_users.rsn.data.push('');
-        },
-        updateTRURSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.top_risk_users.rsn.data[index] = value;
-        },
-        removeTRURSN: (state, action: PayloadAction<number>) => {
-            state.top_risk_users.rsn.data.splice(action.payload, 1);
-        },
-        updateTRURSNKey: (state, action: PayloadAction<string>) => {
-            state.top_risk_users.rsn.key = action.payload;
         },
         updateTRUvisibility: (state, action: PayloadAction<boolean>) => {
             state.top_risk_users.visible = action.payload;
@@ -1500,19 +1420,6 @@ export const monthlyReportSlice = createSlice({
         updateEPFChartColor: (state, action: PayloadAction<string>) => {
             state.endpoint_feature_compliance.compliance_chart.datasets[0].backgroundColor = action.payload;
         },
-        addEPFRSN: (state) => {
-            state.endpoint_feature_compliance.rsn.data.push('');
-        },
-        updateEPFRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.endpoint_feature_compliance.rsn.data[index] = value;
-        },
-        removeEPFRSN: (state, action: PayloadAction<number>) => {
-            state.endpoint_feature_compliance.rsn.data.splice(action.payload, 1);
-        },
-        updateEPFRSNKey: (state, action: PayloadAction<string>) => {
-            state.endpoint_feature_compliance.rsn.key = action.payload;
-        },
 
 
 
@@ -1525,18 +1432,6 @@ export const monthlyReportSlice = createSlice({
         },
         updateKFAAPEXChartColor: (state, action: PayloadAction<{ datasetIndex: number; color: string }>) => {
             state.key_feature_adoption_apex_one.apex_one_chart.datasets[action.payload.datasetIndex].backgroundColor = action.payload.color;
-        },
-        addKFAAPEXRSN: (state) => {
-            state.key_feature_adoption_apex_one.rsn.data.push('');
-        },
-        updateKFAAPEXRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            state.key_feature_adoption_apex_one.rsn.data[action.payload.index] = action.payload.value;
-        },
-        removeKFAAPEXRSN: (state, action: PayloadAction<number>) => {
-            state.key_feature_adoption_apex_one.rsn.data.splice(action.payload, 1);
-        },
-        updateKFAAPEXRSNKey: (state, action: PayloadAction<string>) => {
-            state.key_feature_adoption_apex_one.rsn.key = action.payload;
         },
         updateKFAAPEXvisibility: (state, action: PayloadAction<boolean>) => {
             state.key_feature_adoption_apex_one.visible = action.payload;
@@ -1577,25 +1472,6 @@ export const monthlyReportSlice = createSlice({
             state.key_feature_adoption_server_workload.workload_security_chart.datasets[
                 action.payload.datasetIndex
             ].backgroundColor = action.payload.color;
-        },
-        addKFAWLSRSN: (state) => {
-            state.key_feature_adoption_server_workload.rsn.data.push('');
-        },
-        updateKFAWLSRSN: (
-            state,
-            action: PayloadAction<{ index: number; value: string }>
-        ) => {
-            const { index, value } = action.payload;
-            state.key_feature_adoption_server_workload.rsn.data[index] = value;
-        },
-        removeKFAWLSRSN: (state, action: PayloadAction<number>) => {
-            state.key_feature_adoption_server_workload.rsn.data.splice(
-                action.payload,
-                1
-            );
-        },
-        updateKFAWLSRSNKey: (state, action: PayloadAction<string>) => {
-            state.key_feature_adoption_server_workload.rsn.key = action.payload;
         },
         updateKFWLSvisibility: (
             state,
@@ -1648,19 +1524,6 @@ export const monthlyReportSlice = createSlice({
             state.key_feature_adoption_deep_security.deep_security_chart.datasets[0].data.splice(action.payload, 1); // Remove from Total
             state.key_feature_adoption_deep_security.deep_security_chart.datasets[1].data.splice(action.payload, 1); // Remove from Count
         },
-        addKFADPRSN: (state) => {
-            state.key_feature_adoption_deep_security.rsn.data.push('');
-        },
-        updateKFADPRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.key_feature_adoption_deep_security.rsn.data[index] = value;
-        },
-        removeKFADPRSN: (state, action: PayloadAction<number>) => {
-            state.key_feature_adoption_deep_security.rsn.data.splice(action.payload, 1);
-        },
-        updateKFADPRSNKey: (state, action: PayloadAction<string>) => {
-            state.key_feature_adoption_deep_security.rsn.key = action.payload;
-        },
 
 
 
@@ -1695,19 +1558,6 @@ export const monthlyReportSlice = createSlice({
                 throw new Error(`Selected chart does not have a datasets property.`);
             }
         },
-        addAVSRSN: (state) => {
-            state.agent_versions_summary.rsn.data.push('');
-        },
-        updateAVSRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.agent_versions_summary.rsn.data[index] = value;
-        },
-        removeAVSRSN: (state, action: PayloadAction<number>) => {
-            state.agent_versions_summary.rsn.data.splice(action.payload, 1);
-        },
-        updateAVSRSNKey: (state, action: PayloadAction<string>) => {
-            state.agent_versions_summary.rsn.key = action.payload;
-        },
         updateAVSSCvisibility: (state, action: PayloadAction<boolean>) => {
             state.agent_versions_summary.agent_version_chart.visible = action.payload;
         },
@@ -1726,36 +1576,10 @@ export const monthlyReportSlice = createSlice({
         vulnerabilityAssessmentReport(state, action: PayloadAction<VulnerabilityAssessmentReportType>) {
             state.vulnerability_assessment_report = action.payload
         },
-        addVARRSN: (state) => {
-            state.vulnerability_assessment_report.rsn.data.push('');
-        },
-        updateVARRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.vulnerability_assessment_report.rsn.data[index] = value;
-        },
-        removeVARRSN: (state, action: PayloadAction<number>) => {
-            state.vulnerability_assessment_report.rsn.data.splice(action.payload, 1);
-        },
-        updateVARRSNKey: (state, action: PayloadAction<string>) => {
-            state.vulnerability_assessment_report.rsn.key = action.payload;
-        },
 
         // System configuration report
         systemConfigurationReport(state, action: PayloadAction<SystemConfigurationReportType>) {
             state.system_configuration_report = action.payload
-        },
-        addSCRRSN: (state) => {
-            state.system_configuration_report.rsn.data.push('');
-        },
-        updateSCRRSN: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            const { index, value } = action.payload;
-            state.system_configuration_report.rsn.data[index] = value;
-        },
-        removeSCRRSN: (state, action: PayloadAction<number>) => {
-            state.system_configuration_report.rsn.data.splice(action.payload, 1);
-        },
-        updateSCRRSNKey: (state, action: PayloadAction<string>) => {
-            state.system_configuration_report.rsn.key = action.payload;
         },
 
         // _____________
@@ -1807,10 +1631,6 @@ export const {
     updateLastRiskScoreChart,
     updateTopRiskIndicator,
     toggleTopRiskVisibility,
-    updateRMSRSN,
-    addRMSRSN,
-    removeRMSRSN,
-    updateRMSRSNKey,
     // Threat intel summary
     updateTISIOCSweep,
     updateTISIOCMatchDetail,
@@ -1820,10 +1640,6 @@ export const {
     updateTISInvestigationSummary,
     addTISIOCInvestigation,
     removeTISIOCInvestigation,
-    updateTISRSN,
-    addTISRSN,
-    removeTISRSN,
-    updateTISRSNKey,
     updateTISChartData,
     updateTISChartColor,
     updateTISAdvisoryChartData,
@@ -1861,30 +1677,14 @@ export const {
     updateEQSChartColor,
     updateEQSSenderReceipts,
     updateEQSThreatType,
-    addEQSRSN,
-    updateEQSRSN,
-    removeEQSRSN,
-    updateEQSRSNKey,
     // vulnerability assessment
     vulnerabilityAssessmentReport,
-    addVARRSN,
-    updateVARRSN,
-    removeVARRSN,
-    updateVARRSNKey,
     // system configuration
     systemConfigurationReport,
-    addSCRRSN,
-    updateSCRRSN,
-    removeSCRRSN,
-    updateSCRRSNKey,
     // top vulnerabilities detected
     updateTVDChartKey,
     updateTVDChartData,
     updateTVDChartColor,
-    addTVDRSN,
-    updateTVDRSN,
-    removeTVDRSN,
-    updateTVDRSNKey,
     addTVDChartBar,
     removeTVDChartBar,
     // top risk device
@@ -1893,10 +1693,6 @@ export const {
     updateTRDChartColor,
     addTRDChartBar,
     removeTRDChartBar,
-    addTRDRSN,
-    updateTRDRSN,
-    removeTRDRSN,
-    updateTRDRSNKey,
     updateTRDvisibility,
     // top risk users
     updateTRUChartKey,
@@ -1904,10 +1700,6 @@ export const {
     updateTRUChartColor,
     addTRUChartBar,
     removeTRUChartBar,
-    addTRURSN,
-    updateTRURSN,
-    removeTRURSN,
-    updateTRURSNKey,
     updateTRUvisibility,
     // account compromise events
     updateACERiskVisibility,
@@ -1925,29 +1717,17 @@ export const {
     updateEPFChartKey,
     updateEPFChartData,
     updateEPFChartColor,
-    addEPFRSN,
-    updateEPFRSN,
-    removeEPFRSN,
-    updateEPFRSNKey,
     // Key feature adoption rate apex one
     updateKFAAPEXChartKey,
     updateKFAAPEXChartData,
     updateKFAAPEXChartColor,
-    addKFAAPEXRSN,
-    updateKFAAPEXRSN,
-    removeKFAAPEXRSN,
-    updateKFAAPEXRSNKey,
     updateKFAAPEXvisibility,
     addKFAAPEXChartBar,
     removeKFAAPEXChartBar,
     // key feature adoption work load security
-    addKFAWLSRSN,
-    removeKFAWLSRSN,
     updateKFAWLSChartColor,
     updateKFAWLSChartData,
     updateKFAWLSChartKey,
-    updateKFAWLSRSN,
-    updateKFAWLSRSNKey,
     updateKFWLSvisibility,
     addBar,
     removeBar,
@@ -1956,20 +1736,12 @@ export const {
     updateKFADPChartKey,
     updateKFADPChartData,
     updateKFADPChartColor,
-    addKFADPRSN,
-    updateKFADPRSN,
-    removeKFADPRSN,
-    updateKFADPRSNKey,
     addKFADPChartBar,
     removeKFADPChartBar,
     // agent version summary
     updateAVSChartKey,
     updateAVSChartData,
     updateAVSChartColor,
-    addAVSRSN,
-    updateAVSRSN,
-    removeAVSRSN,
-    updateAVSRSNKey,
     updateAVSSCvisibility,
     updateAVSWPCCvisibility,
     updateAVSSEPCvisibility,

@@ -12,13 +12,9 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
-  addTVDRSN,
-  removeTVDRSN,
   updateTVDChartColor,
   updateTVDChartData,
   updateTVDChartKey,
-  updateTVDRSN,
-  updateTVDRSNKey,
   addTVDChartBar,
   removeTVDChartBar,
 } from "@@/lib/features/monthly-report/monthlySlice";
@@ -46,22 +42,6 @@ const TopVulnerabilitiesForm = () => {
 
   const handleColorChange = (datasetIndex: number, color: string) => {
     dispatch(updateTVDChartColor({ datasetIndex, color }));
-  };
-
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateTVDRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addTVDRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeTVDRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateTVDRSNKey(value));
   };
 
   const handleAddChartBar = () => {

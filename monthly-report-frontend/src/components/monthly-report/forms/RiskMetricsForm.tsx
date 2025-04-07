@@ -1,11 +1,7 @@
 import {
-  addRMSRSN,
-  removeRMSRSN,
   toggleTopRiskVisibility,
   updateLastRiskScoreChart,
   updateRMDate,
-  updateRMSRSN,
-  updateRMSRSNKey,
   updateTopRiskIndicator,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
@@ -55,22 +51,6 @@ const RiskMetricsForm = () => {
 
   const handleToggleVisibility = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(toggleTopRiskVisibility(e.target.checked));
-  };
-
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateRMSRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addRMSRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeRMSRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateRMSRSNKey(value));
   };
 
   return (

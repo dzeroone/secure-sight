@@ -16,13 +16,9 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
-  addKFAWLSRSN,
-  removeKFAWLSRSN,
   updateKFAWLSChartColor,
   updateKFAWLSChartData,
   updateKFAWLSChartKey,
-  updateKFAWLSRSN,
-  updateKFAWLSRSNKey,
   updateKFWLSvisibility,
   addBar,
   removeBar,
@@ -51,22 +47,6 @@ const KFAWorkloadForm = () => {
 
   const handleColorChange = (datasetIndex: number, color: string) => {
     dispatch(updateKFAWLSChartColor({ datasetIndex, color }));
-  };
-
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateKFAWLSRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addKFAWLSRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeKFAWLSRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateKFAWLSRSNKey(value));
   };
 
   const handleVisibilityChange = (value: boolean) => {

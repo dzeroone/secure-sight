@@ -16,13 +16,9 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import { AgentVersionsSummary } from "@@/types/types";
 import {
-  addAVSRSN,
-  removeAVSRSN,
   updateAVSChartColor,
   updateAVSChartData,
   updateAVSChartKey,
-  updateAVSRSN,
-  updateAVSRSNKey,
   updateAVSSCvisibility,
   updateAVSSEPCvisibility,
   updateAVSWPCCvisibility,
@@ -60,22 +56,6 @@ const AgentVersionForm = () => {
     color: string
   ) => {
     dispatch(updateAVSChartColor({ chart, datasetIndex, color }));
-  };
-
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateAVSRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addAVSRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeAVSRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateAVSRSNKey(value));
   };
 
   const handleSCVisibilityChange = (value: boolean) => {

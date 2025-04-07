@@ -50,7 +50,7 @@ export type VulnerabilityAssessmentReportType = {
         vulnerable_host: number,
         cve_density: number
     },
-    rsn: RsnType
+    notes: RecommendationNote[]
 }
 
 export type SystemConfigurationReportType = {
@@ -68,7 +68,7 @@ export type SystemConfigurationReportType = {
         total: number
 
     },
-    rsn: RsnType
+    notes: RecommendationNote[]
 }
 
 export type RiskEvenItem = {

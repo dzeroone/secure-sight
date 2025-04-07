@@ -16,13 +16,9 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
-  addKFAAPEXRSN,
-  removeKFAAPEXRSN,
   updateKFAAPEXChartColor,
   updateKFAAPEXChartData,
   updateKFAAPEXChartKey,
-  updateKFAAPEXRSN,
-  updateKFAAPEXRSNKey,
   updateKFAAPEXvisibility,
   addKFAAPEXChartBar,
   removeKFAAPEXChartBar,
@@ -50,22 +46,6 @@ const KFAApexOneForm = () => {
 
   const handleColorChange = (datasetIndex: number, color: string) => {
     dispatch(updateKFAAPEXChartColor({ datasetIndex, color }));
-  };
-
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateKFAAPEXRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addKFAAPEXRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeKFAAPEXRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateKFAAPEXRSNKey(value));
   };
 
   const handleVisibilityChange = (value: boolean) => {

@@ -22,10 +22,6 @@ import {
   updateTRUChartData,
   updateTRUChartColor,
   updateTRUvisibility,
-  updateTRURSN,
-  addTRURSN,
-  removeTRURSN,
-  updateTRURSNKey,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import RecommendationInput from "@@/components/RecommendationInput";
 
@@ -55,21 +51,6 @@ const TopRiskUsersForm = () => {
 
   const handleVisibilityChange = (value: boolean) => {
     dispatch(updateTRUvisibility(value));
-  };
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateTRURSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addTRURSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeTRURSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateTRURSNKey(value));
   };
 
   return (

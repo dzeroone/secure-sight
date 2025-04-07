@@ -15,12 +15,8 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
-  addEQSRSN,
-  removeEQSRSN,
   updateEQSChartColor,
   updateEQSChartData,
-  updateEQSRSN,
-  updateEQSRSNKey,
   updateEQSSenderReceipts,
   updateEQSThreatType,
   updateEQSVisibility,
@@ -58,21 +54,6 @@ const EmailQuarantineSummaryForm = () => {
     value: string
   ) => {
     dispatch(updateEQSThreatType({ field, value: Number(value) }));
-  };
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateEQSRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addEQSRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeEQSRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateEQSRSNKey(value));
   };
 
   const handleVisibilityChange = (value: boolean) => {

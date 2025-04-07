@@ -17,14 +17,10 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { MuiColorInput } from "mui-color-input";
 import {
   addKFADPChartBar,
-  addKFADPRSN,
   removeKFADPChartBar,
-  removeKFADPRSN,
   updateKFADPChartColor,
   updateKFADPChartData,
   updateKFADPChartKey,
-  updateKFADPRSN,
-  updateKFADPRSNKey,
   updateKFADPvisibility,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import RecommendationInput from "@@/components/RecommendationInput";
@@ -62,22 +58,6 @@ const KFADeepSecurityForm = () => {
 
   const handleRemoveBar = (index: number) => {
     dispatch(removeKFADPChartBar(index));
-  };
-
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateKFADPRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addKFADPRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeKFADPRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateKFADPRSNKey(value));
   };
 
   return (

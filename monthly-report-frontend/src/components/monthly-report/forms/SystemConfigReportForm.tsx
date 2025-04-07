@@ -1,11 +1,5 @@
 import { updateNestedField } from "@@/helper/helper";
-import {
-  addSCRRSN,
-  removeSCRRSN,
-  systemConfigurationReport,
-  updateSCRRSN,
-  updateSCRRSNKey,
-} from "@@/lib/features/monthly-report/monthlySlice";
+import { systemConfigurationReport } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import {
   Button,
@@ -32,21 +26,7 @@ const SystemConfigReportForm: React.FC = () => {
     const updatedData = updateNestedField(data, field, value);
     dispatch(systemConfigurationReport(updatedData));
   };
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateSCRRSN({ index, value }));
-  };
 
-  const handleAddRSN = () => {
-    dispatch(addSCRRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeSCRRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateSCRRSNKey(value));
-  };
   return (
     <Grid container xs={12} rowSpacing={3} p={2}>
       <Grid item xs={12}>

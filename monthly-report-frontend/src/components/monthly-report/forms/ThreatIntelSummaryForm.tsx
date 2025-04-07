@@ -14,10 +14,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 import {
   addTISIOCInvestigation,
   addTISIOCMatchDetail,
-  addTISRSN,
   removeTISIOCInvestigation,
   removeTISIOCMatchDetail,
-  removeTISRSN,
   updateTISAdvisoryChartColor,
   updateTISAdvisoryChartData,
   updateTISChartColor,
@@ -26,8 +24,6 @@ import {
   updateTISIOCMatchDetail,
   updateTISIOCSweep,
   updateTISInvestigationSummary,
-  updateTISRSN,
-  updateTISRSNKey,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import { MuiColorInput } from "mui-color-input";
 import RecommendationInput from "@@/components/RecommendationInput";
@@ -77,22 +73,6 @@ const ThreatIntelSummaryForm = () => {
 
   const handleRemoveIOCInvestigation = (index: number) => {
     dispatch(removeTISIOCInvestigation(index));
-  };
-
-  const handleRSNChange = (index: number, value: string) => {
-    dispatch(updateTISRSN({ index, value }));
-  };
-
-  const handleAddRSN = () => {
-    dispatch(addTISRSN());
-  };
-
-  const handleRemoveRSN = (index: number) => {
-    dispatch(removeTISRSN(index));
-  };
-
-  const handleRSNKeyChange = (value: string) => {
-    dispatch(updateTISRSNKey(value));
   };
 
   const handleChartDataChange = (
