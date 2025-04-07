@@ -1625,6 +1625,9 @@
               </div>
             </div>
             <% } %>
+            <% if(data.product_assessment_report.notes.length > 0) { %>
+              <%- include('./partials/recommendations', { notes: data.product_assessment_report.notes }) %>
+            <% } %>
         </div> 
     </div>
 

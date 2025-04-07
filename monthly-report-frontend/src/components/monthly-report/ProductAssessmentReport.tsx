@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppSelector } from "@@/lib/hooks";
+import RecommendationNotes from "../RecommendationNotes";
 
 const ProductAssessmentReport = () => {
   const data = useAppSelector(
@@ -123,6 +124,7 @@ const ProductAssessmentReport = () => {
           </div>
         </div>
       )}
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

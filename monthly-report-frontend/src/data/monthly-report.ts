@@ -1040,7 +1040,13 @@ export const monthlyReportInitialValue = {
                 "id_log_status": "",
                 "data_consumption": ""
             }
-        ]
+        ],
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "endpoint_feature_compliance": {
         "id": "endpoint_feature_compliance",

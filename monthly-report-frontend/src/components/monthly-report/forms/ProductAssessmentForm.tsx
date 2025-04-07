@@ -10,6 +10,7 @@ import {
   updatePARIntegration,
   updatePARTMProduct,
 } from "@@/lib/features/monthly-report/monthlySlice";
+import RecommendationInput from "@@/components/RecommendationInput";
 
 const ProductAssessmentForm = () => {
   const data = useAppSelector(
@@ -207,6 +208,12 @@ const ProductAssessmentForm = () => {
         >
           Add
         </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <RecommendationInput
+          values={data.notes}
+          entity="product_assessment_report"
+        />
       </Grid>
     </Grid>
   );
