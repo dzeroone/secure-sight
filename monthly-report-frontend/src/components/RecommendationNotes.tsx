@@ -10,7 +10,7 @@ export default function RecommendationNotes({
 }: RecommendationNotesProps) {
   return (
     <div>
-      {notes.map((note, i) => (
+      {notes?.map((note, i) => (
         <div key={i}>
           <p
             style={{

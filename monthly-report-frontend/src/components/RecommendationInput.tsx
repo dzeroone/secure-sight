@@ -57,7 +57,7 @@ export default function RecommendationInput({
       </Grid>
       <Grid item xs={12}>
         <Stack direction={"column"} gap={3}>
-          {values.map((v, i) => {
+          {values?.map((v, i) => {
             return (
               <Grid container spacing={1} key={i}>
                 <Grid item xs={12}>
