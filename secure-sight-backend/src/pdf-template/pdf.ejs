@@ -1489,7 +1489,7 @@
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Risk Users
             </p>
-            <div style="width: 80%; height: 1000px; margin: auto;">
+            <div style="width: 80%; height: 150px; margin: auto;">
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts9"></canvas>
             </div>
@@ -1790,7 +1790,7 @@
           Key Feature Adoption Rate of Deep Security
           </p>
           <div style="display: flex; justify-content: center;">
-            <div style="width: 80%; height: 1000px; margin: auto">
+            <div style="width: 80%; height: 150px; margin: auto">
               <canvas style="margin-top: 10px" id="KFADP"></canvas>
             </div>
           </div>
@@ -1877,6 +1877,10 @@
 
 
   <script type="text/javascript">
+    Chart.defaults.color = "#292929";
+    Chart.defaults.font.size = 14;
+    Chart.defaults.scales.linear.grace = "5%";
+
     <% if(data.risk_metrics.top_risk_incidents.indicators.length > 0) { %>
       const indicators = <%- JSON.stringify(data.risk_metrics.top_risk_incidents.indicators) %>;
 

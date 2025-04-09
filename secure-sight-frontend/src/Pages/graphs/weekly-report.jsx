@@ -8,6 +8,7 @@ import { getWeeklyReportIndex } from "../../helpers/form_helper";
 import { getErrorMessage } from "../../helpers/utils";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 
 const validate = values => {
   const errors = {};
@@ -53,8 +54,11 @@ export default function WeeklyReportGraphPage() {
 
   return (
     <div className="page-content">
+      <BreadcrumbWithTitle title="Weekly report graphs" />
+
       <FormWeekReport
         formik={formik}
+        btnText='View graphs'
       />
       {reportData.length ? (
         <WeeklyReportGraphs data={reportData[0]._source} />

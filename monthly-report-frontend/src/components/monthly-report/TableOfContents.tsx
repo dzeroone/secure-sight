@@ -20,7 +20,11 @@ const TableOfContents = () => {
       <div style={{ padding: 0, margin: 0, marginTop: 40 }}>
         {data.map((item, i) => (
           <div
-            style={{ display: "flex", justifyContent: "space-between" }}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
             key={i}
           >
             <p
@@ -28,9 +32,17 @@ const TableOfContents = () => {
                 textDecoration: "none",
                 color: "#000",
                 fontSize: "1.6rem",
+                display: "flex",
+                alignItems: "flex-start",
               }}
             >
-              {i + 1}. <a href={`#${item.link}`}>{item.title}</a>
+              {i + 1}.{" "}
+              <a
+                href={`#${item.link}`}
+                style={{ display: "inline-flex", marginLeft: "0.4rem" }}
+              >
+                {item.title}
+              </a>
             </p>
             <p
               style={{

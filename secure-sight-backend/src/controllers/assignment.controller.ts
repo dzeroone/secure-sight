@@ -129,8 +129,14 @@ class AssignmentController {
       tCode: 1
     }).lean()
 
+    const savedReports = await assignmentReportController.getLatest({
+      indices: assignments.map(a => a.index),
+      reporterId: user._id
+    })
+
     return assignments.map(assignment => {
       assignment.customer = customers.find(c => c._id.toString() == assignment.cId)
+      assignment.savedReport = savedReports.find(sr => sr.index == assignment.index)
       return assignment
     })
   }

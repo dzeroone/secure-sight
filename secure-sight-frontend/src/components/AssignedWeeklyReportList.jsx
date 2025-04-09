@@ -31,8 +31,11 @@ export default function AssignedWeeklyReportList() {
   }, [])
 
   const viewReport = (assignment) => {
-    if(assignment.reportId)
+    if(assignment.reportId){
       window.open(`${process.env.REACT_APP_WEEKLY_REPORT_BASE}?id=${assignment.reportId}`, "_blank")
+    }else if(assignment.savedReport){
+      window.open(`${process.env.REACT_APP_WEEKLY_REPORT_BASE}?id=${assignment.savedReport._id}`, "_blank")
+    }
     else
       window.open(`${process.env.REACT_APP_WEEKLY_REPORT_BASE}?index=${assignment.index}`, "_blank")
   }

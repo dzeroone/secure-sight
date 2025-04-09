@@ -33,7 +33,10 @@ export default function AssignedMonthlyReportList() {
   const viewReport = (assignment) => {
     if(assignment.reportId) {
       window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}/monthly-report?id=${assignment.reportId}`, "_blank")
-    }else{
+    }else if(assignment.savedReport){
+      window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}/monthly-report?id=${assignment.savedReport._id}`, "_blank")
+    }
+    else{
       window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}/monthly-report?index=${assignment.index}`, "_blank")
     }
   }

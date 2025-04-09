@@ -1,13 +1,14 @@
-import { format, getYear } from "date-fns";
 import { useFormik } from "formik";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import FormMonthReport from "../../components/FormMonthReport";
 import ModalLoading from "../../components/ModalLoading";
 import MonthlyReportGraphs from "../../components/MonthlyReportGraphs";
+import { getMonthlyReportIndex } from "../../helpers/form_helper";
+import { getErrorMessage } from "../../helpers/utils";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
-import { getErrorMessage } from "../../helpers/utils";
-import { toast } from "react-toastify";
 
 const validate = values => {
   const errors = {};
@@ -37,12 +38,9 @@ export default function MonthlyReportGraphPage() {
       try {
         setReportData([])
         setBusy(true);
-        const month = format(values.selectedDate, 'MMMM').toLowerCase()
-        const year = getYear(values.selectedDate)
-        const tenant = values.tenant.toLowerCase()
 
         let payload = {
-          index: `${month}_${year}_${tenant}_report`,
+          index: getMonthlyReportIndex(values.selectedDate, values.tenant),
           column: []
         }
         const data = await ApiServices('post', payload, ApiEndPoints.SearchData)
@@ -60,8 +58,11 @@ export default function MonthlyReportGraphPage() {
 
   return (
     <div className="page-content">
+      <BreadcrumbWithTitle title="Monthly report graphs" />
+
       <FormMonthReport
         formik={formik}
+        btnText='View graphs'
       />
       {reportData.length ? (
         <MonthlyReportGraphs data={reportData[0]._source} />

@@ -162,14 +162,6 @@ const Navbar = ({
               <ListItemText primary="Weekly Report" />
             </ListItemButton>
           </Link> */}
-          <Link href={MONTHLY_REPORT}>
-            <ListItemButton>
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Monthly Report" />
-            </ListItemButton>
-          </Link>
           <Link href={`${MONTHLY_REPORT}/saved`}>
             <ListItemButton>
               <ListItemIcon>

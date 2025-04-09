@@ -21,7 +21,7 @@ const KFADeepSecurity = () => {
       >
         Key Feature Adoption Rate of Deep Security
       </p>
-      <div style={{ width: "auto", height: 900, margin: "auto" }}>
+      <div style={{ width: "auto", height: 150, margin: "auto" }}>
         <GroupedBarChartHorizontal data={data.deep_security_chart} />
       </div>
       <RecommendationNotes notes={data.notes} />

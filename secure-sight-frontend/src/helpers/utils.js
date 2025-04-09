@@ -9,6 +9,9 @@ export const getRoleTitle = (role) => {
   return ROLES[role] || role
 }
 
+export const pluralize = (count, noun, suffix = 's') =>
+  `${count} ${noun}${count > 1 ? suffix : ''}`;
+
 export const getAssignmentStatusTitle = (status) => {
   switch (status) {
     case -1:

@@ -111,11 +111,7 @@ const MonthlyReportPage = () => {
           dispatch(setCanSubmitReport(responseData.canSubmitReport || false));
         }
       } else {
-        dispatch(resetMonthlyReportState(null));
-        dispatch(setStatusFromServer(0));
-        dispatch(setStatus(0));
-        dispatch(setAuditStatus(-999));
-        dispatch(setCanSubmitReport(false));
+        router.push("monthly-report/saved");
       }
     } catch (e: any) {
       const msg = getErrorMessage(e);

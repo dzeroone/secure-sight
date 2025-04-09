@@ -10,47 +10,48 @@ import path from "path"
 class AssignmentReportController {
   async getPaginated(query: any, user: Express.User, reportType: ReportType) {
     const pageNumber = Number(query.page) || 1
-    let filterQuery: any = {}
+    let filterQuery: any = {
+      reporterId: user._id,
+    }
+    if (query.index) {
+      filterQuery.index = query.index
+    }
+
+    const search = query.search || ''
 
     switch (reportType) {
       case 'monthly':
-        filterQuery = {
-          reporterId: user._id,
-          $or: [
-            {
-              'data.monthly_report.doc_title': new RegExp(`^${query.search}`, "si")
-            },
-            {
-              'data.monthly_report.client_name': new RegExp(`${query.search}`, "si")
-            },
-            {
-              'data.monthly_report.customer_name': new RegExp(`${query.search}`, "si")
-            },
-            {
-              'data.monthly_report.date': new RegExp(`${query.search}`, "si")
-            }
-          ]
-        }
+        filterQuery['$or'] = [
+          {
+            'data.monthly_report.doc_title': new RegExp(`^${search}`, "si")
+          },
+          {
+            'data.monthly_report.client_name': new RegExp(`${search}`, "si")
+          },
+          {
+            'data.monthly_report.customer_name': new RegExp(`${search}`, "si")
+          },
+          {
+            'data.monthly_report.date': new RegExp(`${search}`, "si")
+          }
+        ]
         break;
       case 'weekly':
-        filterQuery = {
-          reporterId: user._id,
-          $or: [
-            {
-              'data.formData.client.clientName': new RegExp(`^${query.search}`, "si")
-            },
-            {
-              'data.reportData.WEEKLY_REPORT.start_date': new RegExp(`${query.search}`, "si")
-            },
-            {
-              'data.reportData.WEEKLY_REPORT.end_date': new RegExp(`${query.search}`, "si")
-            }
-          ]
-        }
+        filterQuery['$or'] = [
+          {
+            'data.formData.client.clientName': new RegExp(`^${search}`, "si")
+          },
+          {
+            'data.reportData.WEEKLY_REPORT.start_date': new RegExp(`${search}`, "si")
+          },
+          {
+            'data.reportData.WEEKLY_REPORT.end_date': new RegExp(`${search}`, "si")
+          }
+        ]
         break;
     }
     const count = await assignmentReportModel.countDocuments(filterQuery)
-    const data = await assignmentReportModel.find(filterQuery).sort({ cAt: -1 }).limit(20).skip((pageNumber - 1) * 20).lean()
+    const data = await assignmentReportModel.find(filterQuery).sort({ uAt: -1, cAt: -1 }).limit(20).skip((pageNumber - 1) * 20).lean()
     return { count, data }
   }
 
@@ -146,6 +147,32 @@ class AssignmentReportController {
         uAt: new Date()
       }
     })
+  }
+
+  async getLatest({
+    indices,
+    reporterId
+  }: { indices: string[], reporterId: string }) {
+    return assignmentReportModel.aggregate([
+      {
+        $match: { index: { $in: indices }, reporterId }
+      },
+      {
+        $group: {
+          _id: "$index",
+          mUAt: {
+            $max: '$uAt'
+          },
+          reportId: { $first: "$_id" }
+        }
+      },
+      {
+        $project: {
+          _id: "$reportId",
+          index: "$_id"
+        }
+      }
+    ])
   }
 
   async getById(id: string) {

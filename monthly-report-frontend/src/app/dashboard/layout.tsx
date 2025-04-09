@@ -42,6 +42,9 @@ export default function DashboardLayout({
     Legend,
     ChartDataLabels
   );
+  Chart.defaults.color = "#292929";
+  Chart.defaults.font.size = 14;
+  Chart.defaults.scales.linear.grace = "5%";
 
   useEffect(() => {
     if (loading) return;

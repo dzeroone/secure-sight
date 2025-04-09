@@ -1,11 +1,14 @@
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
+import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Form, FormFeedback, FormGroup, Input, Label, Row } from "reactstrap";
 import ApiEndPoints from "../Network_call/ApiEndPoints";
 import ApiServices from "../Network_call/apiservices";
+import { getMonthlyReportIndex } from "../helpers/form_helper";
+import { getErrorMessage, pluralize } from "../helpers/utils";
 
-export default function FormMonthReport({ formik, afterForm }) {
+export default function FormMonthReport({ formik, btnText, afterForm }) {
   const [busy, setBusy] = useState(false)
   const [customers, setCustomers] = useState([])
 
@@ -38,7 +41,7 @@ export default function FormMonthReport({ formik, afterForm }) {
   return (
     <Card>
       <CardBody>
-        <Form onSubmit={formik.handleSubmit}>
+        <Form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-2">
           <Row>
             <Col xs="auto">
               <FormGroup>
@@ -84,7 +87,11 @@ export default function FormMonthReport({ formik, afterForm }) {
               ) : null}
             </Col>
           </Row>
-          <Button type="submit">Find</Button>
+          <Row>
+            <Col>
+              <Button type="submit" color="primary" disabled={busy}>{btnText ? btnText : 'Create new report'}</Button>
+            </Col>
+          </Row>
         </Form>
         {afterForm}
       </CardBody>
