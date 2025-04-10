@@ -22,7 +22,7 @@ const TopRiskUsers = () => {
       <div
         style={{
           width: "80%",
-          height: Math.min(75 + data.risk_score_chart.key.length * 90, 1000),
+          height: Math.min(75 + data.risk_score_chart.key.length * 70, 1000),
           margin: "auto",
         }}
       >

@@ -332,7 +332,7 @@
         <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
         Count of Advisory for entire Month:
         </p>
-        <div style="width: 80%; height: <%- Math.min( 75 + data.threat_intel_summary.count_of_advisory_chart.key.length * 90, 1000) %>px; margin: 0 auto;">
+        <div style="width: 80%; height: <%- Math.min( 75 + data.threat_intel_summary.count_of_advisory_chart.key.length * 70, 1000) %>px; margin: 0 auto;">
           <!-- chart -->
           <canvas style="margin-top: 10px;" id="TISHorizontalBar1"></canvas>
         </div>
@@ -342,7 +342,7 @@
         <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
           Indicators of Compromise (IOC) Match against Sweep
         </p>
-      <div style="width: 80%; height: <%- Math.min( 75 + data.threat_intel_summary.ioc_chart.key.length * 90, 1000) %>px; margin: 0 auto;">
+      <div style="width: 80%; height: <%- Math.min( 75 + data.threat_intel_summary.ioc_chart.key.length * 70, 1000) %>px; margin: 0 auto;">
         <!-- chart -->
         <canvas style="margin-top: 10px;" id="horizontalBarCharts"></canvas>
       </div>
@@ -417,7 +417,7 @@
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b; margin: 0;">
             Overall Incidents Summary
         </p>
-        <div style="width: 700px; height: <%- Math.min( 75 + data.overall_incident_summary.incidents_chart.key.length * 90, 1000) %>px; margin: auto">
+        <div style="width: 700px; height: <%- Math.min( 75 + data.overall_incident_summary.incidents_chart.key.length * 70, 1000) %>px; margin: auto">
             <canvas style="margin-top: 10px" id="horizontalBarCharts2"></canvas>
         </div>
         <!-- p1 -->
@@ -1000,7 +1000,7 @@
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
           SLO Summary
         </p>
-        <div style="width: 80%; height: <%- Math.min( 75 + data.slo_summary.slo_chart.key.length * 90, 1000) %>px; margin: 0 auto;">
+        <div style="width: 80%; height: <%- Math.min( 75 + data.slo_summary.slo_chart.key.length * 70, 1000) %>px; margin: 0 auto;">
             <canvas style="margin-top: 10px" id="horizontalBarCharts3"></canvas>
           </div>
         <div>
@@ -1040,7 +1040,7 @@
               <p style="font-size: 26px; font-weight: bold; color: #090c9b;">
                 Virus / Malware and Spyware / Grayware
               </p>
-              <div style="width: 80%; height: <%- Math.min( 75 + data.detection_summary_apex_one.detection_chart.key.length * 90, 1000) %>px; margin: 0 auto;">
+              <div style="width: 80%; height: <%- Math.min( 75 + data.detection_summary_apex_one.detection_chart.key.length * 70, 1000) %>px; margin: 0 auto;">
                 <canvas style="margin-top: 10px" id="horizontalBarCharts4"></canvas>
               </div>
             </div>
@@ -1048,7 +1048,7 @@
               <p style="font-size: 26px; font-weight: bold; color: #090c9b;">
                 C &amp; C Connections and Intrusion attempts Blocked
               </p>
-              <div style="width: 70%; height: <%- Math.min( 75 + data.detection_summary_apex_one.attempts_blocked_chart.key.length * 90, 1000) %>px; margin: 0 auto;">
+              <div style="width: 70%; height: <%- Math.min( 75 + data.detection_summary_apex_one.attempts_blocked_chart.key.length * 70, 1000) %>px; margin: 0 auto;">
                 <canvas style="margin-top: 10px" id="horizontalBarCharts5"></canvas>
               </div>
             </div>
@@ -1113,7 +1113,7 @@
           Email Quarantine <br />
           Summary from CAS
         </p>
-        <div style="width: 80%; height: <%- Math.min( 75 + data.email_quarantine_summary_cas.status_chart.key.length * 90, 1000) %>px; margin: auto;">
+        <div style="width: 80%; height: <%- Math.min( 75 + data.email_quarantine_summary_cas.status_chart.key.length * 70, 1000) %>px; margin: auto;">
             <canvas style="margin-top: 10px;" id="horizontalBarCharts6"></canvas>
         </div>
         <div style="margin-top: 40px;">
@@ -1452,7 +1452,7 @@
               Top Vulnerabilities <br />
               Detected
             </p>
-            <div style="width: 80%; height: <%- Math.min( 75 + data.top_vulnerabilities_detected.impact_chart.key.length * 90, 1000) %>px; margin: 0 auto;">
+            <div style="width: 80%; height: <%- Math.min( 75 + data.top_vulnerabilities_detected.impact_chart.key.length * 70, 1000) %>px; margin: 0 auto;">
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts7"></canvas>
             </div>
@@ -1471,7 +1471,7 @@
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Risk Device
             </p>
-            <div style="width: 80%; height: <%- Math.min( 75 + data.top_risk_device.risk_score_chart.key.length * 90, 1000) %>px; margin: 0 auto;">
+            <div style="width: 80%; height: <%- Math.min( 75 + data.top_risk_device.risk_score_chart.key.length * 70, 1000) %>px; margin: 0 auto;">
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts8"></canvas>
             </div>
@@ -1491,7 +1491,7 @@
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Risk Users
             </p>
-            <div style="width: 80%; height: <%- Math.min( 75 + data.top_risk_users.risk_score_chart.key.length * 90, 1000) %>px; margin: auto;">
+            <div style="width: 80%; height: <%- Math.min( 75 + data.top_risk_users.risk_score_chart.key.length * 70, 1000) %>px; margin: auto;">
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts9"></canvas>
             </div>
@@ -1657,7 +1657,7 @@
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
           Endpoint Feature Compliance
         </p>
-        <div style="width: 800px; height: <%- Math.min( 75 + data.endpoint_feature_compliance.compliance_chart.key.length * 90, 1000) %>px; margin: 0 auto;">
+        <div style="width: 800px; height: <%- Math.min( 75 + data.endpoint_feature_compliance.compliance_chart.key.length * 70, 1000) %>px; margin: 0 auto;">
           <!-- horizontal bar chart -->
           <canvas style="margin-top: 10px;" id="horizontalBarCharts10"></canvas>
         </div>
@@ -1684,7 +1684,7 @@
               Key Feature Adoption Rate of Apex one as Service / Std Endpoint Protection
             </p>
             <div style="display: flex; justify-content: center;">
-              <div style="width: 80%; height: <%- Math.min( 75 + data.key_feature_adoption_apex_one.apex_one_chart.key.length * 90, 1000) %>px; margin: auto">
+              <div style="width: 80%; height: <%- Math.min( 75 + data.key_feature_adoption_apex_one.apex_one_chart.key.length * 70, 1000) %>px; margin: auto">
                 <canvas style="margin-top: 10px" id="myChart"></canvas>
               </div>
               <!-- <div style="width: 25%; margin-top: 24px">
@@ -1738,7 +1738,7 @@
               Key feature adoption rate of C1WS / server & workload security / protection
               </p>
               <div style="display: flex; justify-content: center;">
-                <div style="width: 80%; height: <%- Math.min( 75 + data.key_feature_adoption_server_workload.workload_security_chart.key.length * 90, 1000) %>px; margin: 0 auto">
+                <div style="width: 80%; height: <%- Math.min( 75 + data.key_feature_adoption_server_workload.workload_security_chart.key.length * 70, 1000) %>px; margin: 0 auto">
                   <canvas style="margin-top: 10px" id="myChart2"></canvas>
                 </div>
                 <!-- <div style="width: 25%; margin-top: 24px">
@@ -1792,7 +1792,7 @@
           Key Feature Adoption Rate of Deep Security
           </p>
           <div style="display: flex; justify-content: center;">
-            <div style="width: 80%; height: <%- Math.min( 75 + data.key_feature_adoption_deep_security.deep_security_chart.key.length * 90, 1000) %>px; margin: auto">
+            <div style="width: 80%; height: <%- Math.min( 75 + data.key_feature_adoption_deep_security.deep_security_chart.key.length * 70, 1000) %>px; margin: auto">
               <canvas style="margin-top: 10px" id="KFADP"></canvas>
             </div>
           </div>
@@ -1842,7 +1842,7 @@
         >
         <%= data.agent_versions_summary.server_workload_protection_chart.title %>
       </p>
-      <div style="width: 750px; height: <%- Math.min( 75 + data.agent_versions_summary.server_workload_protection_chart.key.length * 90, 1000) %>px; margin: auto">
+      <div style="width: 750px; height: <%- Math.min( 75 + data.agent_versions_summary.server_workload_protection_chart.key.length * 70, 1000) %>px; margin: auto">
           <canvas style="margin-top: 10px" id="horizontalBarCharts22"></canvas>
         </div>
       </div>
@@ -1859,7 +1859,7 @@
           >
             <%= data.agent_versions_summary.standard_endpoint_protection_chart.title %>
           </p>
-          <div style="width: 750px; height: <%- Math.min( 75 + data.agent_versions_summary.standard_endpoint_protection_chart.key.length * 90, 1000) %>px; margin: auto">
+          <div style="width: 750px; height: <%- Math.min( 75 + data.agent_versions_summary.standard_endpoint_protection_chart.key.length * 70, 1000) %>px; margin: auto">
             <canvas style="margin-top: 10px;" id="horizontalBarCharts23"></canvas>
           </div>
       </div>

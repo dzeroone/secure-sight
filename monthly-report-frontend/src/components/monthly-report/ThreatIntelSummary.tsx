@@ -36,7 +36,7 @@ export const ThreatIntelSummary = () => {
           style={{
             width: "60%",
             height: Math.min(
-              75 + data.count_of_advisory_chart.key.length * 90,
+              75 + data.count_of_advisory_chart.key.length * 70,
               1000
             ),
             margin: "auto",
@@ -67,7 +67,7 @@ export const ThreatIntelSummary = () => {
         <div
           style={{
             width: "60%",
-            height: Math.min(75 + data.ioc_chart.key.length * 90, 1000),
+            height: Math.min(75 + data.ioc_chart.key.length * 70, 1000),
             margin: "auto",
           }}
         >

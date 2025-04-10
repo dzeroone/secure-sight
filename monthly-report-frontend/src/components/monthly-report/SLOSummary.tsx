@@ -20,7 +20,7 @@ const SLOSummary = () => {
       <div
         style={{
           width: "80%",
-          height: Math.min(75 + data.slo_chart.key.length * 90, 1000),
+          height: Math.min(75 + data.slo_chart.key.length * 70, 1000),
           margin: "0 auto",
           display: "grid",
           placeItems: "center",

@@ -25,7 +25,7 @@ const KFAApexOne = () => {
       <div
         style={{
           width: "auto",
-          height: Math.min(75 + data.apex_one_chart.key.length * 90, 1000),
+          height: Math.min(75 + data.apex_one_chart.key.length * 70, 1000),
           margin: "auto",
         }}
       >

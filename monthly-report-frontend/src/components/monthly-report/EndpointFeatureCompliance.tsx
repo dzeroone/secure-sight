@@ -18,7 +18,7 @@ const EndpointFeatureCompliance = () => {
       <div
         style={{
           width: 800,
-          height: Math.min(75 + data.compliance_chart.key.length * 90, 1000),
+          height: Math.min(75 + data.compliance_chart.key.length * 70, 1000),
           margin: "auto",
         }}
       >

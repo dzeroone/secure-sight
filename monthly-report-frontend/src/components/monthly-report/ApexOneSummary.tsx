@@ -27,7 +27,7 @@ const ApexOneSummary = () => {
           <div
             style={{
               width: "60%",
-              height: Math.min(75 + data.detection_chart.key.length * 90, 1000),
+              height: Math.min(75 + data.detection_chart.key.length * 70, 1000),
               margin: "auto",
             }}
           >
@@ -42,7 +42,7 @@ const ApexOneSummary = () => {
             style={{
               width: "60%",
               height: Math.min(
-                75 + data.attempts_blocked_chart.key.length * 90,
+                75 + data.attempts_blocked_chart.key.length * 70,
                 1000
               ),
               margin: "auto",

@@ -26,7 +26,7 @@ const KFAWorkloadSecurity = () => {
         style={{
           width: "auto",
           height: Math.min(
-            75 + data.workload_security_chart.key.length * 90,
+            75 + data.workload_security_chart.key.length * 70,
             1000
           ),
           margin: "auto",
