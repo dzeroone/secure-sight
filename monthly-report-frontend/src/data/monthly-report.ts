@@ -478,7 +478,7 @@ export const monthlyReportInitialValue = {
         "count_of_advisory_chart": {
             "type": "grouped_horizontal_bar",
             "key": [
-                "IOC-Based Advisors (Ransomware/APT/Malware)",
+                "IOC-Based Advisories (Ransomware/APT/Malware)",
                 "Vulnerability Advisories"
             ],
             "datasets": [
