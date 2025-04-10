@@ -22,7 +22,16 @@ const KFAWorkloadSecurity = () => {
         Key feature adoption rate of C1WS / server &amp; workload security /
         protection
       </p>
-      <div style={{ width: "auto", height: 1000, margin: "auto" }}>
+      <div
+        style={{
+          width: "auto",
+          height: Math.min(
+            75 + data.workload_security_chart.key.length * 90,
+            1000
+          ),
+          margin: "auto",
+        }}
+      >
         {/* <canvas style={{ marginTop: 10 }} id="myChart2" /> */}
         <GroupedBarChartHorizontal data={data.workload_security_chart} />
       </div>

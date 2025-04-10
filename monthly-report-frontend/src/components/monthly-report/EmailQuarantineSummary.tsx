@@ -22,7 +22,13 @@ const EmailQuarantineSummary = () => {
         Email Quarantine <br />
         Summary from CAS
       </p>
-      <div style={{ width: "60%", height: "150px", margin: "auto" }}>
+      <div
+        style={{
+          width: "60%",
+          height: Math.min(75 + data.status_chart.key.length * 90, 1000),
+          margin: "auto",
+        }}
+      >
         <BarChartHorizontal data={data.status_chart} />
       </div>
       <div style={{ marginTop: 40 }}>

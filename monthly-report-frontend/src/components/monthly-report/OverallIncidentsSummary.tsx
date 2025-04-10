@@ -21,7 +21,13 @@ const OverallIncidentsSummary = () => {
       >
         Overall Incidents Summary
       </p>
-      <div style={{ width: "80%", height: "300px", margin: "auto" }}>
+      <div
+        style={{
+          width: "80%",
+          height: Math.min(75 + data.incidents_chart.key.length * 90, 1000),
+          margin: "auto",
+        }}
+      >
         <BarChartHorizontal data={data.incidents_chart} />
       </div>
       <div>

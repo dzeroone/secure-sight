@@ -22,7 +22,13 @@ const KFAApexOne = () => {
         Key Feature Adoption Rate of Apex one as Service / Std Endpoint
         Protection
       </p>
-      <div style={{ width: "auto", height: 1000, margin: "auto" }}>
+      <div
+        style={{
+          width: "auto",
+          height: Math.min(75 + data.apex_one_chart.key.length * 90, 1000),
+          margin: "auto",
+        }}
+      >
         <GroupedBarChartHorizontal data={data.apex_one_chart} />
       </div>
       <RecommendationNotes notes={data.notes} />

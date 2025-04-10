@@ -25,10 +25,7 @@ const TopVulnerabilitiesDetected = () => {
       <div
         style={{
           width: "80%",
-          height:
-            data.impact_chart.key.length > 5
-              ? 1000
-              : data.impact_chart.key.length * 100,
+          height: Math.min(75 + data.impact_chart.key.length * 90, 1000),
           margin: "auto",
         }}
       >

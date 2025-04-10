@@ -56,6 +56,8 @@ export default function DashboardLayout({
   Chart.defaults.color = "#292929";
   Chart.defaults.font.size = 14;
   Chart.defaults.scales.linear.grace = "5%";
+  Chart.defaults.responsive = true;
+  Chart.defaults.maintainAspectRatio = false;
 
   useEffect(() => {
     if (loading) return;

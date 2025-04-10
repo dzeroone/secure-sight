@@ -32,7 +32,16 @@ export const ThreatIntelSummary = () => {
         >
           Advisory Count for the Month:
         </p>
-        <div style={{ width: "60%", height: "200px", margin: "auto" }}>
+        <div
+          style={{
+            width: "60%",
+            height: Math.min(
+              75 + data.count_of_advisory_chart.key.length * 90,
+              1000
+            ),
+            margin: "auto",
+          }}
+        >
           <GroupedBarChartHorizontal data={data.count_of_advisory_chart} />
         </div>
         <p
@@ -55,7 +64,13 @@ export const ThreatIntelSummary = () => {
         >
           Indicators of Compromise (IOC) Match against Sweep
         </p>
-        <div style={{ width: "60%", height: "400px", margin: "auto" }}>
+        <div
+          style={{
+            width: "60%",
+            height: Math.min(75 + data.ioc_chart.key.length * 90, 1000),
+            margin: "auto",
+          }}
+        >
           <GroupedBarChartHorizontal data={data.ioc_chart} />
         </div>
       </div>

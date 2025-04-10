@@ -24,7 +24,13 @@ const ApexOneSummary = () => {
           <p style={{ fontSize: 26, fontWeight: "bold", color: "#090c9b" }}>
             Virus / Malware and Spyware / Grayware
           </p>
-          <div style={{ width: "60%", height: "300px", margin: "auto" }}>
+          <div
+            style={{
+              width: "60%",
+              height: Math.min(75 + data.detection_chart.key.length * 90, 1000),
+              margin: "auto",
+            }}
+          >
             <BarChartHorizontal data={data.detection_chart} />
           </div>
         </div>
@@ -32,7 +38,16 @@ const ApexOneSummary = () => {
           <p style={{ fontSize: 26, fontWeight: "bold", color: "#090c9b" }}>
             C &amp; C Connections and Intrusion attempts Blocked
           </p>
-          <div style={{ width: "60%", height: "200px", margin: "auto" }}>
+          <div
+            style={{
+              width: "60%",
+              height: Math.min(
+                75 + data.attempts_blocked_chart.key.length * 90,
+                1000
+              ),
+              margin: "auto",
+            }}
+          >
             {/* <canvas style={{ marginTop: 10 }} id="horizontalBarCharts5" /> */}
             <BarChartHorizontal data={data.attempts_blocked_chart} />
           </div>

@@ -15,7 +15,13 @@ const EndpointFeatureCompliance = () => {
         Endpoint Feature <br />
         Compliance
       </p>
-      <div style={{ width: 800, height: 300, margin: "auto" }}>
+      <div
+        style={{
+          width: 800,
+          height: Math.min(75 + data.compliance_chart.key.length * 90, 1000),
+          margin: "auto",
+        }}
+      >
         {/* <canvas style={{ marginTop: 10 }} id="horizontalBarCharts10" /> */}
         <BarChartHorizontal data={data.compliance_chart} />
       </div>

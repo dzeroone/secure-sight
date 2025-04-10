@@ -30,7 +30,7 @@ const AgentVersionSummary = () => {
             textAlign: "center",
           }}
         >
-          <div style={{ width: "60%", height: 300, margin: "auto" }}>
+          <div style={{ width: "80%", height: 300, margin: "auto" }}>
             <PieChart data={data.agent_version_chart} />
           </div>
         </div>
@@ -47,7 +47,16 @@ const AgentVersionSummary = () => {
           >
             {data.server_workload_protection_chart.title}
           </p>
-          <div style={{ width: 600, height: 400, margin: "auto" }}>
+          <div
+            style={{
+              width: 600,
+              height: Math.min(
+                75 + data.server_workload_protection_chart.key.length * 90,
+                1000
+              ),
+              margin: "auto",
+            }}
+          >
             <BarChartHorizontal data={data.server_workload_protection_chart} />
           </div>
         </div>
@@ -64,7 +73,16 @@ const AgentVersionSummary = () => {
           >
             {data.standard_endpoint_protection_chart.title}
           </p>
-          <div style={{ width: 600, height: 400, margin: "auto" }}>
+          <div
+            style={{
+              width: 600,
+              height: Math.min(
+                data.standard_endpoint_protection_chart.key.length * 90,
+                1000
+              ),
+              margin: "auto",
+            }}
+          >
             <BarChartHorizontal
               data={data.standard_endpoint_protection_chart}
             />
