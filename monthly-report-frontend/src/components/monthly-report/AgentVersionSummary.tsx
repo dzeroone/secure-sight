@@ -50,10 +50,7 @@ const AgentVersionSummary = () => {
           <div
             style={{
               width: 600,
-              height: Math.min(
-                75 + data.server_workload_protection_chart.key.length * 70,
-                1000
-              ),
+              height: 400,
               margin: "auto",
             }}
           >
@@ -76,10 +73,7 @@ const AgentVersionSummary = () => {
           <div
             style={{
               width: 600,
-              height: Math.min(
-                data.standard_endpoint_protection_chart.key.length * 70,
-                1000
-              ),
+              height: 400,
               margin: "auto",
             }}
           >

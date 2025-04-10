@@ -1,6 +1,5 @@
 import { Bar } from "react-chartjs-2";
 const VerticalBarChart = ({ data }: any) => {
-  console.log("vvccc", data);
   const chartData = {
     labels: [...data.datasets[0].label],
     datasets: data.datasets,
