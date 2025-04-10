@@ -21,6 +21,7 @@ const SLOSummary = () => {
         style={{
           width: "80%",
           height: "300px",
+          margin: "0 auto",
           display: "grid",
           placeItems: "center",
         }}

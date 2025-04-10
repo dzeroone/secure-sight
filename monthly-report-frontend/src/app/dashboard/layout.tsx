@@ -1,5 +1,6 @@
 "use client";
 import Navbar from "@@/components/common/Navbar";
+import { gracefulStringWrap } from "@@/helper/helper";
 import { AppStore, makeStore } from "@@/lib/store";
 import { useAuth } from "@@/providers/AuthProvider";
 import {
@@ -42,6 +43,16 @@ export default function DashboardLayout({
     Legend,
     ChartDataLabels
   );
+  Chart.register({
+    id: "LabelSplit",
+    beforeLayout: function (chart) {
+      chart.data?.labels?.forEach(function (label, i, labelArr) {
+        if (typeof label == "string" && label.length > 10) {
+          labelArr[i] = gracefulStringWrap(label, 10);
+        }
+      });
+    },
+  });
   Chart.defaults.color = "#292929";
   Chart.defaults.font.size = 14;
   Chart.defaults.scales.linear.grace = "5%";

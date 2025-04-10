@@ -27,6 +27,23 @@ export function updateNestedField(obj: any, path: string, value: any): any {
 export const pluralize = (count: number, noun: string, suffix = 's') =>
     `${count} ${noun}${count > 1 ? suffix : ''}`;
 
+export const gracefulStringWrap = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text
+
+    let parts: string[] = []
+
+    let startIndex = 0
+    while (true) {
+        let i = text.indexOf(" ", startIndex + maxLength)
+        if (i === -1) {
+            parts.push(text.substring(startIndex, text.length))
+            return parts
+        }
+        parts.push(text.substring(startIndex, i))
+        startIndex = i + 1
+    }
+}
+
 export const getErrorMessage = (error: any) => {
     if (error?.response?.data?.message) {
         return error.response.data.message

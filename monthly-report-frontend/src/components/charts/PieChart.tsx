@@ -2,7 +2,7 @@ import { Pie } from "react-chartjs-2";
 
 const PieChart = ({ data }: any) => {
   const chartData = {
-    labels: data?.key,
+    labels: [...data?.key],
     datasets: data.datasets,
   };
   return (

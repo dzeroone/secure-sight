@@ -330,7 +330,7 @@
         <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
         Count of Advisory for entire Month:
         </p>
-        <div style="width: 80%; height: 250px;">
+        <div style="width: 80%; height: 250px; margin: 0 auto;">
           <!-- chart -->
           <canvas style="margin-top: 10px;" id="TISHorizontalBar1"></canvas>
         </div>
@@ -340,7 +340,7 @@
         <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
           Indicators of Compromise (IOC) Match against Sweep
         </p>
-      <div style="width: 80%; height: 450px;">
+      <div style="width: 80%; height: 450px; margin: 0 auto;">
         <!-- chart -->
         <canvas style="margin-top: 10px;" id="horizontalBarCharts"></canvas>
       </div>
@@ -998,7 +998,7 @@
         <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
           SLO Summary
         </p>
-        <div style="width: auto; height: auto; margin: auto">
+        <div style="width: auto; height: auto; margin: auto;">
             <canvas style="margin-top: 10px" id="horizontalBarCharts3"></canvas>
           </div>
         <div>
@@ -1038,7 +1038,7 @@
               <p style="font-size: 26px; font-weight: bold; color: #090c9b;">
                 Virus / Malware and Spyware / Grayware
               </p>
-              <div style="width: 80%; height: 300px; margin: auto;">
+              <div style="width: 80%; height: 300px; margin: 0 auto;">
                 <canvas style="margin-top: 10px" id="horizontalBarCharts4"></canvas>
               </div>
             </div>
@@ -1823,7 +1823,7 @@
           text-align: center;
         "
       >
-        <div style="width: 50%; height: auto; margin: auto">
+        <div style="width: 80%; height: auto; margin: auto">
           <canvas style="margin-top: 20px" id="pieChart"></canvas>
         </div>
       </div>
@@ -1877,9 +1877,36 @@
 
 
   <script type="text/javascript">
+    const gracefulStringWrap = (text, maxLength) => {
+      if (text.length <= maxLength) return text
+
+      let parts = []
+
+      let startIndex = 0
+      while (true) {
+        let i = text.indexOf(" ", startIndex + maxLength)
+        if (i === -1) {
+          parts.push(text.substring(startIndex, text.length))
+          return parts
+        }
+        parts.push(text.substring(startIndex, i))
+        startIndex = i + 1
+      }
+    }
     Chart.defaults.color = "#292929";
     Chart.defaults.font.size = 14;
     Chart.defaults.scales.linear.grace = "5%";
+
+    Chart.register({
+      id: "LabelSplit",
+      beforeLayout: function (chart) {
+        chart.data?.labels?.forEach(function (label, i, labelArr) {
+          if (typeof label == "string" && label.length > 10) {
+            labelArr[i] = gracefulStringWrap(label, 10);
+          }
+        });
+      },
+    });
 
     <% if(data.risk_metrics.top_risk_incidents.indicators.length > 0) { %>
       const indicators = <%- JSON.stringify(data.risk_metrics.top_risk_incidents.indicators) %>;

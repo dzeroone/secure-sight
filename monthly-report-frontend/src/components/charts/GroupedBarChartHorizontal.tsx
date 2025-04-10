@@ -2,7 +2,7 @@ import { Bar } from "react-chartjs-2";
 
 const GroupedBarChartHorizontal = ({ data }: any) => {
   const chartData = {
-    labels: data?.key,
+    labels: [...data?.key],
     datasets: data.datasets ? data.datasets : [],
   };
 
@@ -31,7 +31,7 @@ const GroupedBarChartHorizontal = ({ data }: any) => {
         plugins: {
           datalabels: {
             anchor: "end", // Data label positioned at the end of bars
-            align: "end",  // Aligns data labels to the end of the bar
+            align: "end", // Aligns data labels to the end of the bar
             offset: -1,
             formatter: (value, context) => {
               return value !== 0 ? value : ""; // Display only non-zero values
@@ -48,7 +48,7 @@ const GroupedBarChartHorizontal = ({ data }: any) => {
         layout: {
           padding: {
             right: 30, // Extra space on the right
-            left: 10,  // Extra space on the left
+            left: 10, // Extra space on the left
           },
         },
         maintainAspectRatio: false,

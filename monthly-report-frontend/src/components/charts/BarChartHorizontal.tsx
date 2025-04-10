@@ -2,7 +2,7 @@ import { Bar } from "react-chartjs-2";
 
 const BarChartHorizontal = ({ data }: any) => {
   const chartData = {
-    labels: data.key,
+    labels: [...data.key],
     datasets: data.datasets,
   };
 
