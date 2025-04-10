@@ -19,7 +19,16 @@ const TopRiskUsers = () => {
       >
         Top Risk Users
       </p>
-      <div style={{ width: "80%", height: 150, margin: "auto" }}>
+      <div
+        style={{
+          width: "80%",
+          height:
+            data.risk_score_chart.key.length > 5
+              ? 1000
+              : data.risk_score_chart.key.length * 100,
+          margin: "auto",
+        }}
+      >
         <BarChartHorizontal data={data.risk_score_chart} />
       </div>
       <RecommendationNotes notes={data.notes} />

@@ -1450,7 +1450,7 @@
               Top Vulnerabilities <br />
               Detected
             </p>
-            <div style="width: 80%; height: 1000px; margin: auto;">
+            <div style="width: 80%; height: <%- data.top_vulnerabilities_detected.impact_chart.key.length > 5 ? 1000 : data.top_vulnerabilities_detected.impact_chart.key.length * 100 %>px; margin: 0 auto;">
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts7"></canvas>
             </div>
@@ -1469,7 +1469,7 @@
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Risk Device
             </p>
-            <div style="width: 80%; height: 1000px; margin: auto;">
+            <div style="width: 80%; height: <%- data.top_risk_device.risk_score_chart.key.length > 5 ? 1000 : data.top_risk_device.risk_score_chart.key.length * 100 %>px; margin: 0 auto;">
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts8"></canvas>
             </div>
@@ -1489,7 +1489,7 @@
             <p style="margin-top: 40px; font-size: 4rem; font-weight: 700; color: #090c9b;">
               Top Risk Users
             </p>
-            <div style="width: 80%; height: 150px; margin: auto;">
+            <div style="width: 80%; height: <%- data.top_risk_users.risk_score_chart.key.length > 5 ? 1000 : data.top_risk_users.risk_score_chart.key.length * 100 %>px; margin: auto;">
               <!-- horizontal bar chart -->
               <canvas style="margin-top: 10px;" id="horizontalBarCharts9"></canvas>
             </div>

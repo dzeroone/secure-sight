@@ -22,7 +22,16 @@ const TopVulnerabilitiesDetected = () => {
         Top Vulnerabilities <br />
         Detected
       </p>
-      <div style={{ width: "80%", height: 1000, margin: "auto" }}>
+      <div
+        style={{
+          width: "80%",
+          height:
+            data.impact_chart.key.length > 5
+              ? 1000
+              : data.impact_chart.key.length * 100,
+          margin: "auto",
+        }}
+      >
         <GroupedBarChartHorizontal data={data.impact_chart} />
       </div>
       <RecommendationNotes notes={data.notes} />
