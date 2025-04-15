@@ -9,7 +9,19 @@ const PieChart = ({ data }: any) => {
     <Pie
       data={chartData}
       options={{
+        layout: {
+          padding: {
+            top: 30,
+            bottom: 30,
+          },
+        },
         plugins: {
+          datalabels: {
+            // anchor: "end",
+            // align: "end",
+            textStrokeColor: "#fff",
+            textStrokeWidth: 10,
+          },
           legend: {
             position: "right",
             labels: {

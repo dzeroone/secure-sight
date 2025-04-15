@@ -3,6 +3,7 @@
 import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
+import { CHART_EXTRAS } from "@@/constants";
 
 const KFAApexOne = () => {
   const data = useAppSelector(
@@ -25,7 +26,11 @@ const KFAApexOne = () => {
       <div
         style={{
           width: "auto",
-          height: Math.min(75 + data.apex_one_chart.key.length * 70, 1000),
+          height: Math.min(
+            CHART_EXTRAS.LEGEND_HEIGHT +
+              data.apex_one_chart.key.length * CHART_EXTRAS.HEIGHT_PER_KEY,
+            1000
+          ),
           margin: "auto",
         }}
       >

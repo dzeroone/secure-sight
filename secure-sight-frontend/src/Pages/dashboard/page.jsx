@@ -46,7 +46,7 @@ export default function DashboardPage() {
   return (
     <div className="page-content">
       <BreadcrumbWithTitle title="Dashboard" />
-      <div>
+      {/* <div>
         <div className="w-50 border border-info border-opacity-25 p-2 rounded" style={{ minHeight: '10rem'}}>
           <div>Summary</div>
           <hr />
@@ -56,7 +56,7 @@ export default function DashboardPage() {
           <ListDLChanges data={dashboardData.dlChanges} />
           <ListPendingAssignmentReviews data={dashboardData.submissions} />
         </div>
-      </div>
+      </div> */}
       <ModalLoading
         isOpen={busy}
         onClose={() => setBusy(false)}

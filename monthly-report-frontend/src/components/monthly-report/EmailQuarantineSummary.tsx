@@ -3,6 +3,7 @@
 import { useAppSelector } from "@@/lib/hooks";
 import BarChartHorizontal from "../charts/BarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
+import { CHART_EXTRAS } from "@@/constants";
 
 const EmailQuarantineSummary = () => {
   const data = useAppSelector(
@@ -25,7 +26,11 @@ const EmailQuarantineSummary = () => {
       <div
         style={{
           width: "60%",
-          height: Math.min(75 + data.status_chart.key.length * 70, 1000),
+          height: Math.min(
+            CHART_EXTRAS.LEGEND_HEIGHT +
+              data.status_chart.key.length * CHART_EXTRAS.HEIGHT_PER_KEY,
+            1000
+          ),
           margin: "auto",
         }}
       >

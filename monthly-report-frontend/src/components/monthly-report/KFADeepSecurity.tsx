@@ -3,6 +3,7 @@
 import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
+import { CHART_EXTRAS } from "@@/constants";
 
 const KFADeepSecurity = () => {
   const data = useAppSelector(
@@ -24,7 +25,11 @@ const KFADeepSecurity = () => {
       <div
         style={{
           width: "auto",
-          height: Math.min(75 + data.deep_security_chart.key.length * 70, 1000),
+          height: Math.min(
+            CHART_EXTRAS.LEGEND_HEIGHT +
+              data.deep_security_chart.key.length * CHART_EXTRAS.HEIGHT_PER_KEY,
+            1000
+          ),
           margin: "auto",
         }}
       >

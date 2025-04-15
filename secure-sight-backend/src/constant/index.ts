@@ -56,4 +56,9 @@ export const REPORT_AUDIT_STATUS = {
     APPROVED: 2
 }
 
+export const CHART_EXTRAS = {
+    LEGEND_HEIGHT: 75,
+    HEIGHT_PER_KEY: 75
+}
+
 export const REPORT_DIR = path.resolve(process.cwd(), 'pdf_reports')

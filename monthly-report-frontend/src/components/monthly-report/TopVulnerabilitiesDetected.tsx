@@ -3,6 +3,7 @@
 import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
+import { CHART_EXTRAS } from "@@/constants";
 
 const TopVulnerabilitiesDetected = () => {
   const data = useAppSelector(
@@ -25,7 +26,11 @@ const TopVulnerabilitiesDetected = () => {
       <div
         style={{
           width: "80%",
-          height: Math.min(75 + data.impact_chart.key.length * 70, 1000),
+          height: Math.min(
+            CHART_EXTRAS.LEGEND_HEIGHT +
+              data.impact_chart.key.length * CHART_EXTRAS.HEIGHT_PER_KEY,
+            1000
+          ),
           margin: "auto",
         }}
       >

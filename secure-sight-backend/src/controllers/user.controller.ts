@@ -5,6 +5,7 @@ import { Document } from "mongoose";
 import assignmentController from "./assignment.controller";
 import assignmentReportController from "./assignment-report.controller";
 import customerController from "./customer.controller";
+import teamController from "./team.controller";
 
 class UserController {
   async addUser(data: any) {
@@ -54,16 +55,25 @@ class UserController {
 
   async listUsers() {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
-    return userModel.find()
+    const users = await userModel.find().lean()
+    for (let user of users) {
+      const team = await teamController.getById(user.team)
+      user.team = team
+    }
+    return users
   }
 
   async listUsersByRole(roles: string[]) {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
-    return userModel.find({
+    const users = await userModel.find({
       role: {
         $in: roles
       }
-    })
+    }).lean()
+    for (let user of users) {
+      user.team = await teamController.getById(user.team)
+    }
+    return users
   }
 
   async getUserById(id: string) {
@@ -92,6 +102,14 @@ class UserController {
     if (user.role == ROLES.ADMIN) {
       delete data.role
     }
+    data.email = data.email.toLowerCase().trim()
+
+    if (user.email != data.email) {
+      const exists = await this.findOneByEmail(data.email)
+      if (exists) {
+        throw new Error("User with email already exists!")
+      }
+    }
     return user.updateOne({
       $set: data
     })
@@ -119,11 +137,29 @@ class UserController {
     return user.delete()
   }
 
+  async findOneByEmail(email: string) {
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    return userModel.findOne({ email })
+  }
+
   async getDashboardDataForUser(user: Express.User) {
     return {
       submissions: await assignmentController.getPendingReviewsForUser(user),
       dlChanges: user.role == ROLES.ADMIN ? await customerController.getDLChangeProposals() : []
     }
+  }
+
+  async assignTeam(data: any) {
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    return userModel.updateMany({
+      _id: {
+        $in: data.users
+      }
+    }, {
+      $set: {
+        team: data.team
+      }
+    })
   }
 
   async removeAll() {

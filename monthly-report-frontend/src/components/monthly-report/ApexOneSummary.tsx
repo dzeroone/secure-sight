@@ -2,6 +2,7 @@
 
 import { useAppSelector } from "@@/lib/hooks";
 import BarChartHorizontal from "../charts/BarChartHorizontal";
+import { CHART_EXTRAS } from "@@/constants";
 
 const ApexOneSummary = () => {
   const data = useAppSelector(
@@ -27,7 +28,11 @@ const ApexOneSummary = () => {
           <div
             style={{
               width: "60%",
-              height: Math.min(75 + data.detection_chart.key.length * 70, 1000),
+              height: Math.min(
+                CHART_EXTRAS.LEGEND_HEIGHT +
+                  data.detection_chart.key.length * CHART_EXTRAS.HEIGHT_PER_KEY,
+                1000
+              ),
               margin: "auto",
             }}
           >
@@ -42,7 +47,9 @@ const ApexOneSummary = () => {
             style={{
               width: "60%",
               height: Math.min(
-                75 + data.attempts_blocked_chart.key.length * 70,
+                CHART_EXTRAS.LEGEND_HEIGHT +
+                  data.attempts_blocked_chart.key.length *
+                    CHART_EXTRAS.HEIGHT_PER_KEY,
                 1000
               ),
               margin: "auto",

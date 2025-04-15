@@ -3,6 +3,7 @@
 import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
+import { CHART_EXTRAS } from "@@/constants";
 
 export const ThreatIntelSummary = () => {
   const data = useAppSelector(
@@ -36,7 +37,9 @@ export const ThreatIntelSummary = () => {
           style={{
             width: "60%",
             height: Math.min(
-              75 + data.count_of_advisory_chart.key.length * 70,
+              CHART_EXTRAS.LEGEND_HEIGHT +
+                data.count_of_advisory_chart.key.length *
+                  CHART_EXTRAS.HEIGHT_PER_KEY,
               1000
             ),
             margin: "auto",
@@ -67,7 +70,11 @@ export const ThreatIntelSummary = () => {
         <div
           style={{
             width: "60%",
-            height: Math.min(75 + data.ioc_chart.key.length * 70, 1000),
+            height: Math.min(
+              CHART_EXTRAS.LEGEND_HEIGHT +
+                data.ioc_chart.key.length * CHART_EXTRAS.HEIGHT_PER_KEY,
+              1000
+            ),
             margin: "auto",
           }}
         >

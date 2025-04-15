@@ -9,27 +9,27 @@ const SidebarData = [
 		bgcolor: "bg-primary",
 		isMainMenu: true
 	},
-	{
-		roles: [ROLES.ADMIN],
-		label: "Report Graphs",
-		icon: "ri-line-chart-fill",
-		url: "/graphs",
-		// issubMenubadge: true,
-		bgcolor: "bg-primary",
-		// badgeValue: "3",
-		subItem: [
-			{
-				roles: ['admin'],
-				sublabel: "Monthly report",
-				link: "/graphs/monthly-report",
-			},
-			{
-				roles: ['admin'],
-				sublabel: "Weekly report ",
-				link: "/graphs/weekly-report",
-			},
-		],
-	},
+	// {
+	// 	roles: [ROLES.ADMIN],
+	// 	label: "Report Graphs",
+	// 	icon: "ri-line-chart-fill",
+	// 	url: "/graphs",
+	// 	// issubMenubadge: true,
+	// 	bgcolor: "bg-primary",
+	// 	// badgeValue: "3",
+	// 	subItem: [
+	// 		{
+	// 			roles: ['admin'],
+	// 			sublabel: "Monthly report",
+	// 			link: "/graphs/monthly-report",
+	// 		},
+	// 		{
+	// 			roles: ['admin'],
+	// 			sublabel: "Weekly report ",
+	// 			link: "/graphs/weekly-report",
+	// 		},
+	// 	],
+	// },
 	{
 		roles: [ROLES.ADMIN, ROLES.LEVEL3],
 		label: "Users",
@@ -136,6 +136,14 @@ const SidebarData = [
 		label: "Common Data",
 		icon: 'ri-database-line',
 		url: "/common-data",
+		bgcolor: "bg-primary",
+		isMainMenu: true
+	},
+	{
+		roles: [ROLES.ADMIN],
+		label: "Teams",
+		icon: 'ri-database-line',
+		url: "/teams",
 		bgcolor: "bg-primary",
 		isMainMenu: true
 	}

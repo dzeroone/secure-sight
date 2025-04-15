@@ -63,6 +63,21 @@ router.get('/search',
   }
 )
 
+router.patch('/team-assign',
+  auth,
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
+  async (req, res) => {
+    try {
+      await userController.assignTeam(req.body)
+      res.sendStatus(200)
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
 router.get('/:id',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3]),

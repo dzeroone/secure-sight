@@ -19,6 +19,7 @@ const ApiEndPoints = {
   MasterList: createEndpoint("/master/list"),
   ConnectorList: createEndpoint("/connector/connector-list"),
   TenantList: createEndpoint("/tenant/user-list"),
+  Teams: createEndpoint("/teams"),
   UserAddUpdate: createEndpoint("/tenant/add-update-user"),
   UserDelete: createEndpoint("/tenant/delete-user"),
   InstallConnector: createEndpoint("/upload-connector"),

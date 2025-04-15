@@ -2,6 +2,7 @@
 
 import { useAppSelector } from "@@/lib/hooks";
 import BarChartHorizontal from "../charts/BarChartHorizontal";
+import { CHART_EXTRAS } from "@@/constants";
 
 const OverallIncidentsSummary = () => {
   const data = useAppSelector(
@@ -24,7 +25,11 @@ const OverallIncidentsSummary = () => {
       <div
         style={{
           width: "80%",
-          height: Math.min(75 + data.incidents_chart.key.length * 70, 1000),
+          height: Math.min(
+            CHART_EXTRAS.LEGEND_HEIGHT +
+              data.incidents_chart.key.length * CHART_EXTRAS.HEIGHT_PER_KEY,
+            1000
+          ),
           margin: "auto",
         }}
       >

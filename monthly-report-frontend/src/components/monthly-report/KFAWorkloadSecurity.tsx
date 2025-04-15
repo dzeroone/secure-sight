@@ -3,6 +3,7 @@
 import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
+import { CHART_EXTRAS } from "@@/constants";
 
 const KFAWorkloadSecurity = () => {
   const data = useAppSelector(
@@ -26,7 +27,9 @@ const KFAWorkloadSecurity = () => {
         style={{
           width: "auto",
           height: Math.min(
-            75 + data.workload_security_chart.key.length * 70,
+            CHART_EXTRAS.LEGEND_HEIGHT +
+              data.workload_security_chart.key.length *
+                CHART_EXTRAS.HEIGHT_PER_KEY,
             1000
           ),
           margin: "auto",

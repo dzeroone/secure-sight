@@ -21,3 +21,8 @@ export const REPORT_AUDIT_STATUS_LABEL: any = {
   "1": "PENDING APPROVAL",
   "2": "APPROVED",
 }
+
+export const CHART_EXTRAS = {
+  LEGEND_HEIGHT: 75,
+  HEIGHT_PER_KEY: 75
+}

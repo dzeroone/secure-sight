@@ -16,6 +16,7 @@ import assignmentRouter from './assignments'
 import assignmentReportRouter from './assignment-report'
 import pdfRouter from './pdf'
 import commonDataRouter from './common-data'
+import teamRouter from './team.route'
 
 
 
@@ -30,6 +31,7 @@ router.use('/dashboard', dashboard)
 router.use('/report', report)
 router.use('/assignment-reports', assignmentReportRouter)
 router.use('/schedule', mailScheduler)
+router.use("/teams", teamRouter)
 router.use('/notifications', notificationRouter)
 router.use('/users', userRouter)
 router.use('/customers', customerRouter)

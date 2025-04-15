@@ -3,6 +3,7 @@
 import { useAppSelector } from "@@/lib/hooks";
 import BarChartHorizontal from "../charts/BarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
+import { CHART_EXTRAS } from "@@/constants";
 
 const TopRiskDevice = () => {
   const data = useAppSelector((state) => state.monthlyReport.top_risk_device);
@@ -22,7 +23,11 @@ const TopRiskDevice = () => {
       <div
         style={{
           width: "80%",
-          height: Math.min(75 + data.risk_score_chart.key.length * 70, 1000),
+          height: Math.min(
+            CHART_EXTRAS.LEGEND_HEIGHT +
+              data.risk_score_chart.key.length * CHART_EXTRAS.HEIGHT_PER_KEY,
+            1000
+          ),
           margin: "auto",
         }}
       >
