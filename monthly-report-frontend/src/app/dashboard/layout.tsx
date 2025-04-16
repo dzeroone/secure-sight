@@ -58,6 +58,11 @@ export default function DashboardLayout({
   Chart.defaults.scales.linear.grace = "5%";
   Chart.defaults.responsive = true;
   Chart.defaults.maintainAspectRatio = false;
+  Chart.defaults.plugins.tooltip.callbacks.title = function (tooltipItems) {
+    const item = tooltipItems[0];
+    const label = item.chart.config.data.labels?.[item.dataIndex];
+    return Array.isArray(label) ? label.join(" ") : (label as string) || "";
+  };
 
   useEffect(() => {
     if (loading) return;

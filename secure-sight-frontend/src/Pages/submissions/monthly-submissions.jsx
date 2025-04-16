@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import ApiServices from "../../Network_call/apiservices"
 import ApiEndPoints from "../../Network_call/ApiEndPoints"
 import { getAssignmentStatusTitle, getErrorMessage, getRoleTitle } from "../../helpers/utils"
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle"
-import { Button, Table } from "reactstrap"
+import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader, Table } from "reactstrap"
 import { formatMonthlyReportSession } from "../../helpers/form_helper"
 import { EyeIcon, MessageSquareIcon } from "lucide-react"
 import swal from "sweetalert"
@@ -11,10 +11,17 @@ import { REPORT_AUDIT_STATUS, ROLES } from "../../data/app"
 import { useProfile } from "../../Hooks/UserHooks"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+import ModalLoading from "../../components/ModalLoading"
 
 export default function MonthlySubmissionsPage() {
   const [busy, setBusy] = useState(false)
   const [assignments, setAssignments] = useState([])
+  
+  const [selectReporterShown, setSelectReporterShown] = useState(false);
+  const [reporters, setReporters] = useState([]);
+  const [selectedReporter, setSelectedReporter] = useState("");
+
+  const currentAssignmentRef = useRef('')
 
   const {userProfile} = useProfile()
   const navigate = useNavigate()
@@ -35,6 +42,19 @@ export default function MonthlySubmissionsPage() {
       setBusy(false)
     }
   }, [])
+
+  const loadReporters = useCallback(async () => {
+    if (!selectReporterShown) return;
+    try {
+      const res = await ApiServices(
+        'get',
+        null,
+        `${ApiEndPoints.Assignments}/${currentAssignmentRef.current.upperAssignment._id}/suggest-reporters`
+      );
+      setReporters(res);
+    } catch (e) {
+    }
+  }, [selectReporterShown]);
 
   const viewReport = (assignment) => {
     window.open(`${process.env.REACT_APP_MONTHLY_REPORT_BASE}/monthly-report?id=${assignment.reportId}`, "_blank")
@@ -57,6 +77,7 @@ export default function MonthlySubmissionsPage() {
           null,
           `${ApiEndPoints.Assignments}/submissions/${assignment.reportId}/reaudit`
         )
+        toast.success("Successfully re-assigned.")
         loadSubmissions()
       }
     }catch(e) {
@@ -70,6 +91,27 @@ export default function MonthlySubmissionsPage() {
 
   const approveAssignment = async (assignment) => {
     try {
+      setBusy(true)
+      const res = await ApiServices(
+        "post",
+        {
+          submittedTo: selectedReporter
+        },
+        `${ApiEndPoints.Assignments}/submissions/${assignment.reportId}/approve`
+      )
+      toast.success('Submitted successfully')
+      loadSubmissions()
+    }catch(e) {
+      const msg = getErrorMessage(e)
+      toast.error(msg)
+    }finally{
+      setBusy(false)
+    }
+
+  }
+
+  const onApproveAssignment = async (assignment) => {
+    try {
       const confirmed = await swal({
         title: "Are you sure?",
         text: assignment.isRoot ? "You are about to approve this assignment" : "You are about send approval request for this assignment",
@@ -79,14 +121,12 @@ export default function MonthlySubmissionsPage() {
         },
       })
       if(confirmed) {
-        setBusy(true)
-        const res = await ApiServices(
-          "post",
-          null,
-          `${ApiEndPoints.Assignments}/submissions/${assignment.reportId}/approve`
-        )
-        toast.success('Submitted successfully')
-        loadSubmissions()
+        if(assignment.isRoot) {
+          approveAssignment(assignment)
+        }else{
+          currentAssignmentRef.current = assignment
+          setSelectReporterShown(true)
+        }
       }
     }catch(e) {
       const msg = getErrorMessage(e)
@@ -117,6 +157,10 @@ export default function MonthlySubmissionsPage() {
   useEffect(() => {
     loadSubmissions()
   }, [loadSubmissions])
+
+  useEffect(() => {
+    loadReporters()
+  }, [loadReporters])
 
   return (
     <div className="page-content">
@@ -155,7 +199,7 @@ export default function MonthlySubmissionsPage() {
                         <Button size="sm" onClick={() => sendReassign(assignment)} color="danger">
                           Reassign
                         </Button>
-                        <Button size="sm" onClick={() => approveAssignment(assignment)} color="success">
+                        <Button size="sm" onClick={() => onApproveAssignment(assignment)} color="success">
                           {assignment.isRoot ? 'Approve' : 'Submit for approval'}
                         </Button>
                       </>
@@ -167,6 +211,33 @@ export default function MonthlySubmissionsPage() {
           })}
         </tbody>
       </Table>
+      <Modal isOpen={selectReporterShown} toggle={() => setSelectReporterShown(!selectReporterShown)}>
+        <ModalHeader>Select reporter</ModalHeader>
+        <ModalBody>
+          <Input
+            type="select"
+            value={selectedReporter}
+            onChange={(e) => {
+              setSelectedReporter(e.target.value)
+            }}
+          >
+            <option value='' disabled>None</option>
+            {reporters.map(r => {
+              return <option value={r._id} key={r._id}>{r.fullname}</option>
+            })}
+          </Input>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={() => {
+            setSelectReporterShown(false)
+            approveAssignment(currentAssignmentRef.current)
+          }}>Submit</Button>
+        </ModalFooter>
+      </Modal>
+      <ModalLoading
+        isOpen={busy}
+        onClose={() => setBusy(false)}
+      />
     </div>
   )
 }

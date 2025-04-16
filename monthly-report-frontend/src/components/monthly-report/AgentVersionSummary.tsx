@@ -2,7 +2,7 @@
 
 import { useAppSelector } from "@@/lib/hooks";
 import BarChartHorizontal from "../charts/BarChartHorizontal";
-import PieChart from "../charts/PieChart";
+import VerticalBarChart2 from "../charts/VerticalBarChart2";
 import RecommendationNotes from "../RecommendationNotes";
 
 const AgentVersionSummary = () => {
@@ -31,7 +31,8 @@ const AgentVersionSummary = () => {
           }}
         >
           <div style={{ width: "80%", height: 300, margin: "auto" }}>
-            <PieChart data={data.agent_version_chart} />
+            <VerticalBarChart2 data={data.agent_version_chart} />
+            {/* <PieChart data={data.agent_version_chart} /> */}
           </div>
         </div>
       )}

@@ -8,6 +8,7 @@ const monthlyPageStateSlice = createSlice({
     statusFromServer: 0,
     status: 0,
     reporterId: '',
+    assignmentId: '',
     canSubmitReport: false
   },
   reducers: {
@@ -27,6 +28,9 @@ const monthlyPageStateSlice = createSlice({
     setReporterId(state, action: PayloadAction<string>) {
       state.reporterId = action.payload
     },
+    setAssignmentId(state, action: PayloadAction<string>) {
+      state.assignmentId = action.payload
+    },
     setCanSubmitReport(state, action: PayloadAction<boolean>) {
       state.canSubmitReport = action.payload
     }
@@ -39,6 +43,7 @@ export const {
   setStatus,
   setStatusFromServer,
   setReporterId,
+  setAssignmentId,
   setCanSubmitReport
 } = monthlyPageStateSlice.actions
 

@@ -22,11 +22,16 @@ import {
   Alert,
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
   MobileStepper,
+  Modal,
   Paper,
   Select,
   Stack,
@@ -34,7 +39,7 @@ import {
 } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AboutThisReportForm from "./monthly-report/forms/AboutThisReport";
 import AccountCompromiseEventsForm from "./monthly-report/forms/AccountCompromiseEventsForm";
@@ -218,6 +223,10 @@ const MonthlyReportForm = () => {
 
   const [pdfPath, setPdfPath] = useState("");
 
+  const [selectReporterShown, setSelectReporterShown] = useState(false);
+  const [reporters, setReporters] = useState<any[]>([]);
+  const [selectedReporter, setSelectedReporter] = useState("");
+
   const maxSteps = steps.length;
 
   const handleNext = () => {
@@ -227,6 +236,16 @@ const MonthlyReportForm = () => {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
+  const loadReporters = useCallback(async () => {
+    if (!selectReporterShown) return;
+    try {
+      const res = await axiosApi.get(
+        `/assignments/${pageState.assignmentId}/suggest-reporters`
+      );
+      setReporters(res.data);
+    } catch (e) {}
+  }, [selectReporterShown]);
 
   const saveMonthlyReport = async () => {
     try {
@@ -240,6 +259,7 @@ const MonthlyReportForm = () => {
       const toSubmit: any = {
         report: data,
         status: pageState.status,
+        submittedTo: selectedReporter,
       };
       if (elasticIndex) {
         toSubmit.index = elasticIndex;
@@ -266,6 +286,14 @@ const MonthlyReportForm = () => {
       });
     } finally {
       dispatch(setProcessing(false));
+    }
+  };
+
+  const onSaveMonthlyReport = () => {
+    if (pageState.status == 1) {
+      setSelectReporterShown(true);
+    } else {
+      saveMonthlyReport();
     }
   };
 
@@ -336,6 +364,10 @@ const MonthlyReportForm = () => {
     }
   }, [activeStep]);
 
+  useEffect(() => {
+    loadReporters();
+  }, [loadReporters]);
+
   return (
     <div className="form-wrapper">
       <Grid container spacing={2} justifyContent="flex-end" p={2}>
@@ -398,7 +430,7 @@ const MonthlyReportForm = () => {
                     ].includes(pageState.auditStatus)))
               }
               loading={pageState.processing}
-              onClick={saveMonthlyReport}
+              onClick={onSaveMonthlyReport}
             >
               {pageState.status == 0 ? "Save" : "Submit"}
             </LoadingButton>
@@ -449,6 +481,48 @@ const MonthlyReportForm = () => {
             setActiveStep(Number(e.target.value));
           }}
         />
+        <Dialog
+          open={selectReporterShown}
+          onClose={() => setSelectReporterShown(false)}
+        >
+          <DialogTitle>Select reporter</DialogTitle>
+          <DialogContent>
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel id="reporter-label">Reporter</InputLabel>
+              <Select
+                labelId="reporter-label"
+                id="reporter"
+                value={selectedReporter}
+                label="Reporter"
+                onChange={(e) => {
+                  setSelectedReporter(e.target.value);
+                }}
+              >
+                <MenuItem value="" disabled>
+                  None
+                </MenuItem>
+                {reporters.map((r: any) => {
+                  return (
+                    <MenuItem value={r._id} key={r._id}>
+                      {r.fullname}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setSelectReporterShown(false);
+                saveMonthlyReport();
+              }}
+              disabled={!selectedReporter}
+            >
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </div>
   );

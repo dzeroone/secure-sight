@@ -30,8 +30,9 @@ import WorkbenchIncidentsSummary from "@@/components/monthly-report/WorkbenchInc
 import axiosApi from "@@/config/axios";
 import { formatMonthlyReportSession, getErrorMessage } from "@@/helper/helper";
 import {
-  setCanSubmitReport,
+  setAssignmentId,
   setAuditStatus,
+  setCanSubmitReport,
   setProcessing,
   setReporterId,
   setStatus,
@@ -79,6 +80,7 @@ const MonthlyReportPage = () => {
         dispatch(setStatus(reportDoc.status));
         dispatch(setAuditStatus(reportDoc.auditStatus));
         dispatch(setReporterId(reportDoc.reporterId));
+        dispatch(setAssignmentId(responseData.assignmentId));
         dispatch(setCanSubmitReport(responseData.canSubmitReport));
       } else if (elasticIndex) {
         dispatch(setProcessing(true));
@@ -107,6 +109,9 @@ const MonthlyReportPage = () => {
           }
           if (responseData.commonData) {
             dispatch(setCommonData(responseData.commonData));
+          }
+          if (responseData.assignmentId) {
+            dispatch(setAssignmentId(responseData.assignmentId));
           }
           dispatch(setCanSubmitReport(responseData.canSubmitReport || false));
         }
