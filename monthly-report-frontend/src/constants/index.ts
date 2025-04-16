@@ -23,6 +23,6 @@ export const REPORT_AUDIT_STATUS_LABEL: any = {
 }
 
 export const CHART_EXTRAS = {
-  LEGEND_HEIGHT: 75,
-  HEIGHT_PER_KEY: 75
+  LEGEND_HEIGHT: 60,
+  HEIGHT_PER_KEY: 70
 }

@@ -47,8 +47,8 @@ export default function DashboardLayout({
     id: "LabelSplit",
     beforeLayout: function (chart) {
       chart.data?.labels?.forEach(function (label, i, labelArr) {
-        if (typeof label == "string" && label.length > 10) {
-          labelArr[i] = gracefulStringWrap(label, 10);
+        if (typeof label == "string" && label.length > 15) {
+          labelArr[i] = gracefulStringWrap(label, 15);
         }
       });
     },

@@ -30,7 +30,7 @@ const AgentVersionSummary = () => {
             textAlign: "center",
           }}
         >
-          <div style={{ width: "80%", height: 300, margin: "auto" }}>
+          <div style={{ width: "80%", height: 400, margin: "auto" }}>
             <VerticalBarChart2 data={data.agent_version_chart} />
             {/* <PieChart data={data.agent_version_chart} /> */}
           </div>
