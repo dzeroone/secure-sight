@@ -15,6 +15,14 @@ const assignmentSchema = new Schema({
     type: String,
     index: true
   },
+  sTo: { // submitted to
+    type: String,
+    index: true
+  },
+  sBy: {
+    type: String,
+    index: true
+  },
   reporterId: {
     type: String,
     index: true

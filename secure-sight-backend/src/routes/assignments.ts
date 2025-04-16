@@ -84,6 +84,24 @@ router.post('/:id/messages',
   }
 )
 
+router.get('/:id/suggest-reporters',
+  auth,
+  async (req, res) => {
+    try {
+      const assignment = await assignmentController.getById(req.params.id)
+      if (!assignment) {
+        throw new Error("Assignment not found!")
+      }
+      const users = await userController.getSameLevelUsers(assignment.aBy!)
+      res.send(users)
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
 router.get('/:reportType(monthly|weekly)',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
@@ -164,7 +182,7 @@ router.post('/submissions/:id/reaudit',
   async (req, res) => {
     try {
       const reportType = req.params.reportType as ReportType
-      const assignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, req.user!._id)
+      const assignment = await assignmentController.getAssignmentByReportIdForAuditer(req.params.id, req.user!._id)
       if (!assignment) {
         throw new Error("Assignment not found")
       }
@@ -183,7 +201,7 @@ router.post('/submissions/:id/reaudit',
 
       // if has leaf reporter who assigned this report to some other person then
       // don't flag report to DRAFT mode, because draft mode disables assignees to view the report
-      const lAssignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, assignment.reporterId!)
+      const lAssignment = await assignmentController.getAssignmentByReportIdForAuditer(req.params.id, assignment.sBy!)
       if (lAssignment) {
         await assignmentController.updateById(lAssignment._id.toString(), {
           status: REPORT_AUDIT_STATUS.AUDIT,
@@ -208,7 +226,7 @@ router.post('/submissions/:id/approve',
   auth,
   async (req, res) => {
     try {
-      const assignment = await assignmentController.getAssignmentByReportIdForAssignee(req.params.id, req.user!._id)
+      const assignment = await assignmentController.getAssignmentByReportIdForAuditer(req.params.id, req.user!._id)
       if (!assignment) {
         throw new Error("Assignment not found")
       }
@@ -222,13 +240,16 @@ router.post('/submissions/:id/approve',
       }
 
       // get upper assignment if exists
-      const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, req.user!._id)
+      const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, assignment.aBy!)
       if (uAssignment) {
+        if (!req.body.submittedTo) {
+          throw new Error("Report is submitted to none.")
+        }
         await assignmentController.updateById(assignment._id.toString(), {
           status: REPORT_AUDIT_STATUS.PENDING,
           sCBy: req.user!._id
         })
-        await assignmentController.reportSubmitted(uAssignment, report._id.toString(), req.user!._id)
+        await assignmentController.reportSubmitted(uAssignment, report._id.toString(), req.user!._id, req.body.submittedTo)
       } else {
         // most top level user approved the report, so approve all leaf reporter's reports
         await assignmentController.reportApproved(assignment, report._id.toString(), req.user!)

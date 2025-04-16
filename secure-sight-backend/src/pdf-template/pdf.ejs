@@ -1825,7 +1825,7 @@
           text-align: center;
         "
       >
-        <div style="width: 80%; height: auto; margin: auto">
+        <div style="width: 80%; height: 400px; margin: 0 auto;">
           <canvas style="margin-top: 20px" id="pieChart"></canvas>
         </div>
       </div>
@@ -1842,7 +1842,7 @@
         >
         <%= data.agent_versions_summary.server_workload_protection_chart.title %>
       </p>
-      <div style="width: 750px; height: 400px; margin: auto">
+      <div style="width: 750px; height: 350px; margin: auto">
           <canvas style="margin-top: 10px" id="horizontalBarCharts22"></canvas>
         </div>
       </div>
@@ -1859,7 +1859,7 @@
           >
             <%= data.agent_versions_summary.standard_endpoint_protection_chart.title %>
           </p>
-          <div style="width: 750px; height: 400px; margin: auto">
+          <div style="width: 750px; height: 350px; margin: auto">
             <canvas style="margin-top: 10px;" id="horizontalBarCharts23"></canvas>
           </div>
       </div>
@@ -2784,36 +2784,34 @@
       const ctx21 = document.getElementById('pieChart').getContext('2d');
 
       const pieChart = new Chart(ctx21, {
-        type: 'pie',
+        type: 'bar',
         data: {
           labels: <%- JSON.stringify(data.agent_versions_summary.agent_version_chart.key) %>,
           datasets: <%- JSON.stringify(data.agent_versions_summary.agent_version_chart.datasets) %>
         },
         options: {
-        maintainAspectRatio: false,
+          scales: {
+            x: {
+              grid: {
+                display: false,
+              },
+            },
+            y: {
+              grid: {
+                display: false,
+              },
+            },
+          },
+          maintainAspectRatio: false,
           plugins: {
-            legend: {
-              display: true,
-              position: "right"
-            },
             datalabels: {
-              anchor: "center",
-              align: "center",
-              formatter: (value) => value,
-              color: '#000000',
-              font: {
-                weight: 'bold',
-                size: 14
-              }
+              anchor: "end",
+              align: "end",
             },
-            tooltip: {
-                callbacks: {
-                    label: function (tooltipItem) {
-                        return `${tooltipItem.label}: ${tooltipItem.raw}`;
-                    }
-                }
-            }
-          }
+            legend: {
+              display: false,
+            },
+          },
         },
         plugins: [ChartDataLabels]
       });

@@ -36,7 +36,11 @@ router.post('/:reportType(monthly|weekly)',
         const isLastReporter = await assignmentController.isLastReporter(doc.index!, req.user!._id)
         if (!isLastReporter) throw new Error("You are not allowed to submit the report!")
 
-        await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id)
+        if (!req.body.submittedTo) {
+          throw new Error("Report is submitted to none!")
+        }
+
+        await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id, req.body.submittedTo)
       }
       res.send(doc)
     } catch (e: any) {
@@ -67,10 +71,15 @@ router.get('/:reportType(monthly|weekly)/:id',
         }
       }
 
-      const canSubmitReport = await assignmentController.isLastReporter(doc.index!, req.user!._id)
+      let canSubmitReport = false
+      const assignment = await assignmentController.getAssignmentByIndexForReporter(doc.index!, req.user!._id)
+      if (assignment) {
+        canSubmitReport = await assignmentController.isLastReporter(doc.index!, req.user!._id)
+      }
 
       res.send({
         canSubmitReport,
+        assignmentId: assignment?._id,
         data: doc
       })
     } catch (e: any) {
@@ -105,7 +114,11 @@ router.patch('/:reportType(monthly|weekly)/:id',
         const isLastReporter = await assignmentController.isLastReporter(doc.index!, req.user!._id)
         if (!isLastReporter) throw new Error("You are not allowed to submit the report!")
 
-        await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id)
+        if (!req.body.submittedTo) {
+          throw new Error("Report is submitted to none.")
+        }
+
+        await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id, req.body.submittedTo)
       }
       await assignmentReportController.update(doc, data, reportType)
 

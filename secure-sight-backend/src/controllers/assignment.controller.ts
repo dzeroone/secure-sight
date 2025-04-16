@@ -252,6 +252,14 @@ class AssignmentController {
     return assignment
   }
 
+  async getAssignmentByIndexForAuditer(index: string, reporterId: string) {
+    const assignment = await assignmentModel.findOne({
+      index,
+      sTo: reporterId
+    })
+    return assignment
+  }
+
   async getAssigneesByIndex(index: string, reportType: ReportType) {
     const assignments = await assignmentModel.find({
       rType: reportType,
@@ -262,11 +270,28 @@ class AssignmentController {
     return assignments.map(a => a.aBy)
   }
 
-  async reportSubmitted(assignment: AssignmentDocumentType, reportId: string, submitterId: string) {
+  async getPermittedViewersByIndex(index: string, reportType: ReportType) {
+    const assignments = await assignmentModel.find({
+      rType: reportType,
+      index,
+    }, {
+      aBy: 1
+    })
+    const viewers: string[] = []
+    assignments.forEach(a => {
+      viewers.push(a.aBy!, a.sBy!, a.sTo!)
+    })
+
+    return viewers
+  }
+
+  async reportSubmitted(assignment: AssignmentDocumentType, reportId: string, submitterId: string, submittedTo: string) {
     const res = await assignment.updateOne({
       $set: {
         reportId,
         status: REPORT_AUDIT_STATUS.SUBMITTED,
+        sTo: submittedTo,
+        sBy: submitterId,
         sCBy: submitterId,
         uAt: new Date()
       },
@@ -304,10 +329,10 @@ class AssignmentController {
     await assignmentReportController.reportApproved(reportId, assignment.rType as ReportType, submitter)
   }
 
-  async getSubmissions(assignee: Express.User, reportType: ReportType) {
+  async getSubmissions(user: Express.User, reportType: ReportType) {
     const assignments = await assignmentModel.find({
       rType: reportType,
-      aBy: assignee._id,
+      sTo: user._id,
       status: {
         $exists: true
       }
@@ -332,8 +357,9 @@ class AssignmentController {
         fullname: 1,
         role: 1
       })
+      assignment.reporter = reporter
 
-      const uAssignment = await this.getAssignmentByIndexForReporter(assignment.index!, assignee._id)
+      const uAssignment = await this.getAssignmentByIndexForReporter(assignment.index!, assignment.aBy)
       assignment.isRoot = !uAssignment
 
       if (uAssignment) {
@@ -348,8 +374,6 @@ class AssignmentController {
           assignedBy: assignee
         }
       }
-
-      assignment.reporter = reporter
     }
     return assignments
   }
@@ -405,6 +429,13 @@ class AssignmentController {
     return assignmentModel.findOne({
       reportId,
       aBy: assignedBy
+    })
+  }
+
+  async getAssignmentByReportIdForAuditer(reportId: string, auditerId: string) {
+    return assignmentModel.findOne({
+      reportId,
+      sTo: auditerId
     })
   }
 
