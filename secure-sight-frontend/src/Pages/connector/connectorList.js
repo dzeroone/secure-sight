@@ -147,7 +147,6 @@ const ConnectorList = () => {
                   <tr>
                     <th>#</th>
                     <th>Connector Name</th>
-                    <th>Category</th>
                     <th>Installed On</th>
                     <th>Log File</th>
                     <th>Status</th>
@@ -186,7 +185,6 @@ const ConnectorList = () => {
                               })
                             ) : ''}
                           </td>
-                          <td>{item.category}</td>
                           <td>{item.created_at}</td>
                           <td>
                             <Link

@@ -45,7 +45,7 @@ router.get('/:id/messages',
           lastSeen: data.aBy == req.user?._id ? data.aMLS : data.rMLS,
           customer: await assignmentController.getCustomerInfo(data.cId!),
           assignee: await assignmentController.getUserInfo(data.aBy!),
-          reporter: await assignmentController.getUserInfo(data.reporterId!)
+          reporter: await assignmentController.getUserInfo(data.sBy!)
         },
         messages: await assignmentController.getMessages(req.params.id)
       }

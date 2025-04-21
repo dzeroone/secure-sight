@@ -57,8 +57,10 @@ class UserController {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
     const users = await userModel.find().lean()
     for (let user of users) {
-      const team = await teamController.getById(user.team)
-      user.team = team
+      if (user.team) {
+        const team = await teamController.getById(user.team)
+        user.team = team
+      }
     }
     return users
   }
@@ -162,6 +164,17 @@ class UserController {
     })
   }
 
+  async unassignTeam(teamId: string) {
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    return userModel.updateMany({
+      team: teamId
+    }, {
+      $set: {
+        team: ''
+      }
+    })
+  }
+
   async getSameLevelUsers(userId: string) {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
     const user = await userModel.findById(userId)
@@ -172,6 +185,24 @@ class UserController {
     }, {
       fullname: 1
     }).lean()
+  }
+
+  async transferAdmin(fromUser: string, toUser: string) {
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    await userModel.updateOne({
+      _id: fromUser
+    }, {
+      $set: {
+        role: ''
+      }
+    })
+    await userModel.updateOne({
+      _id: toUser
+    }, {
+      $set: {
+        role: ROLES.ADMIN
+      }
+    })
   }
 
   async removeAll() {

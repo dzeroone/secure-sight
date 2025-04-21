@@ -42,7 +42,20 @@ const SidebarData = [
 				sublabel: "List of users",
 				link: "/users",
 			},
+			{
+				roles: [ROLES.ADMIN],
+				sublabel: "Transfer admin",
+				link: "/users/transfer-admin",
+			},
 		],
+	},
+	{
+		roles: [ROLES.ADMIN],
+		label: "Teams",
+		icon: 'ri-group-2-line',
+		url: "/teams",
+		bgcolor: "bg-primary",
+		isMainMenu: true
 	},
 	{
 		roles: [ROLES.ADMIN, ROLES.LEVEL3],
@@ -55,6 +68,11 @@ const SidebarData = [
 				roles: [ROLES.ADMIN, ROLES.LEVEL3],
 				sublabel: "List of customers",
 				link: "/customers",
+			},
+			{
+				roles: [ROLES.ADMIN],
+				sublabel: "Deleted customers",
+				link: "/customers/deleted",
 			},
 		],
 	},
@@ -136,14 +154,6 @@ const SidebarData = [
 		label: "Common Data",
 		icon: 'ri-database-line',
 		url: "/common-data",
-		bgcolor: "bg-primary",
-		isMainMenu: true
-	},
-	{
-		roles: [ROLES.ADMIN],
-		label: "Teams",
-		icon: 'ri-database-line',
-		url: "/teams",
 		bgcolor: "bg-primary",
 		isMainMenu: true
 	}

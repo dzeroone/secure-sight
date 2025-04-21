@@ -30,6 +30,7 @@ const assignmentSchema = new Schema({
   reportId: {
     type: String
   },
+  instruction: String,
   status: Number,
   sCBy: String, // status changed by
   aMLS: Date, // assignee message last seen

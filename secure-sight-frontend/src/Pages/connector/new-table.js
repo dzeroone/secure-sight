@@ -230,11 +230,6 @@ const ConnectorListTwo = () => {
 			key: "connectorName"
 		},
 		{
-			title: "Category",
-			dataIndex: "category",
-			key: "category",
-		},
-		{
 			title: "Installed On",
 			dataIndex: "created_at",
 			key: "created_at",
@@ -279,7 +274,6 @@ const ConnectorListTwo = () => {
 						{formatCapilize(allReplace(item.display_name, { _: " ", "-": " " }))}
 					</Link>
 				),
-				category: item.category,
 				created_at: item.created_at,
 				logFile: (
 					<Link to={"/connector-log/" + item.display_name} state={{ display_name: item.display_name }}>

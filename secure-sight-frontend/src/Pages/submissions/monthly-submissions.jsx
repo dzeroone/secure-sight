@@ -78,6 +78,10 @@ export default function MonthlySubmissionsPage() {
           `${ApiEndPoints.Assignments}/submissions/${assignment.reportId}/reaudit`
         )
         toast.success("Successfully re-assigned.")
+        if(userProfile.role === ROLES.LEVEL2) {
+          gotoMessagingScreen(assignment)
+          return
+        }
         loadSubmissions()
       }
     }catch(e) {
@@ -182,13 +186,13 @@ export default function MonthlySubmissionsPage() {
           {assignments.map(assignment => {
             return (
               <tr key={assignment._id}>
-                <td>{assignment.customer.name}</td>
+                <td>{assignment.customer?.name}</td>
                 <td>{formatMonthlyReportSession(assignment.date)}</td>
-                <td>{assignment.reporter.fullname} - {getRoleTitle(assignment.reporter.role)} <Button size="sm" onClick={() => gotoMessagingScreen(assignment)}><MessageSquareIcon size="1em" /></Button></td>
+                <td>{assignment.reporter.fullname} - {getRoleTitle(assignment.reporter.role)}</td>
                 {[ROLES.LEVEL2, ROLES.LEVEL1].includes(userProfile.role) ? (
-                  <td>{assignment.upperAssignment?.assignedBy?.fullname} - {getRoleTitle(assignment.upperAssignment?.assignedBy?.role)} <Button size="sm" onClick={() => gotoMessagingScreen(assignment.upperAssignment)}><MessageSquareIcon size="1em" /></Button></td>
+                  <td>{assignment.upperAssignment?.assignedBy?.fullname} - {getRoleTitle(assignment.upperAssignment?.assignedBy?.role)}</td>
                 ): null}
-                <td>{getAssignmentStatusTitle(assignment.status)} changed by {getSubmitterInfo(assignment)}</td>
+                <td>{getAssignmentStatusTitle(assignment.status)} by {getSubmitterInfo(assignment)}</td>
                 <td>
                   <div className="d-flex gap-1">
                     <Button size="sm" onClick={() => viewReport(assignment)}>

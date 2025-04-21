@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useState } from "react"
+import { Fragment, useCallback, useEffect, useState } from "react"
 import ModalLoading from "./ModalLoading"
 import ApiServices from '../Network_call/apiservices'
 import ApiEndPoints from "../Network_call/ApiEndPoints"
-import { Button, Table } from "reactstrap"
+import { Alert, Button, Table } from "reactstrap"
 import { EyeIcon, FileStack, MessageSquareIcon } from "lucide-react"
 import { format } from "date-fns"
 import { formatMonthlyReportSession } from "../helpers/form_helper"
 import { useNavigate } from "react-router-dom"
+import { REPORT_AUDIT_STATUS } from "../data/app"
 
 export default function AssignedMonthlyReportList() {
   const [busy, setBusy] = useState(false)
@@ -72,19 +73,30 @@ export default function AssignedMonthlyReportList() {
         <tbody>
           {assignments.map(assignment => {
             return (
-              <tr key={assignment._id}>
-                <th>{assignment.customer.name}</th>
-                <td>{formatMonthlyReportSession(assignment.date)}</td>
-                <td>{format(assignment.cAt, 'PP')}</td>
-                <td>
-                  <Button size="sm" onClick={() => viewReport(assignment)} className="me-1">
-                    <EyeIcon />
-                  </Button>
-                  <Button size="sm" onClick={() => gotoMessagePage(assignment)}>
-                    <MessageSquareIcon />
-                  </Button>
-                </td>
-              </tr>
+              <Fragment key={assignment._id}>
+                <tr>
+                  <th className={assignment.instruction ? "border-0" : ""}>{assignment.customer?.name}</th>
+                  <td className={assignment.instruction ? "border-0" : ""}>{formatMonthlyReportSession(assignment.date)}</td>
+                  <td className={assignment.instruction ? "border-0" : ""}>{format(assignment.cAt, 'PP')}</td>
+                  <td rowSpan={assignment.instruction ? 2 : 1}>
+                    <Button size="sm" onClick={() => viewReport(assignment)} className="me-1">
+                      <EyeIcon />
+                    </Button>
+                    {assignment.sBy && assignment.status !== REPORT_AUDIT_STATUS.APPROVED ? (
+                      <Button size="sm" onClick={() => gotoMessagePage(assignment)}>
+                        <MessageSquareIcon />
+                      </Button>
+                    ) : null}
+                  </td>
+                </tr>
+                {assignment.instruction ? (
+                  <tr>
+                    <td colSpan={3}>
+                      <Alert color="info"><div><strong>Instruction:</strong></div><div>{assignment.instruction}</div></Alert>
+                    </td>
+                  </tr>
+                ) : null}
+              </Fragment>
             )
           })}
         </tbody>

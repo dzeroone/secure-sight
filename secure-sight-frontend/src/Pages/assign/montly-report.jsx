@@ -148,9 +148,6 @@ export default function AssignMonthlyReportPage() {
                           <Button onClick={() => removeAssignment(customer, assignment)} outline>
                             <XIcon size='1em' />
                           </Button>
-                          <Button onClick={() => gotoMessagingScreen(assignment)} outline>
-                            <MessageSquareIcon size='1em' />
-                          </Button>
                         </ButtonGroup>
                       )
                     })}

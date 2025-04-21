@@ -5,22 +5,98 @@ import { CustomerCreateValidationValues } from "../validators/customer-create.va
 import customerDLChangeModel, { CustomerDLChangeDocumentType } from "../models/customerDLChangeModel";
 import { DLChangeValidationValues } from "../validators/dl-change-proposal.validator";
 import userController from "./user.controller";
+import customerConnectorConfigController from "./customer-connector-config.controller";
 
 class CustomerController {
   async addCustomer(data: CustomerCreateValidationValues) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
-    const customer = new CustomerModel(data)
-    return customer.save()
+    const customer = new CustomerModel({
+      ...data,
+      status: 1
+    })
+    const cData = await customer.save()
+    await customerConnectorConfigController.updateConnectorConfig({
+      previousConnectors: [],
+      tCode: data.tCode,
+      connectorIds: data.connectors,
+      configData: data.apiConfig
+    })
+
+    return cData
   }
 
-  async listCustomers() {
+  async updateCustomer(user: Document, data: any) {
+    delete data.status
+    const cData = await user.updateOne({
+      $set: data
+    })
+    // @ts-ignore
+    const previousConnectors = user.connectors;
+
+    await customerConnectorConfigController.updateConnectorConfig({
+      previousConnectors,
+      tCode: data.tCode,
+      connectorIds: data.connectors,
+      configData: data.apiConfig
+    })
+  }
+
+  async deleteCustomer(customer: any) {
+    const cData = await customer.update({
+      $set: {
+        status: -1
+      }
+    })
+    await customerConnectorConfigController.updateConnectorConfig({
+      previousConnectors: customer.connectors,
+      tCode: customer.tCode,
+      connectorIds: [],
+      configData: customer.apiConfig
+    })
+    return cData
+  }
+
+  async deleteCustomerPermanently(customer: Document) {
+    return customer.delete()
+  }
+
+  async restore(customer: any) {
+    const cData = await customer.update({
+      $set: {
+        status: 1
+      }
+    })
+    await customerConnectorConfigController.updateConnectorConfig({
+      previousConnectors: [],
+      tCode: customer.tCode,
+      connectorIds: customer.connectors,
+      configData: customer.apiConfig
+    })
+
+    return cData
+  }
+
+  async listCustomers(status: string | null = null) {
+    const query = typeof status == 'string' ? {
+      status: parseInt(status)
+    } : {
+      $or: [{
+        status: 1,
+      }, { status: null }]
+    }
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
-    return CustomerModel.find().lean()
+    return CustomerModel.find(query).lean()
   }
 
   async getAllCodes() {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
-    return CustomerModel.find({}, { tCode: 1, name: 1 }).lean()
+    return CustomerModel.find({
+      $or: [{
+        status: 1,
+      }, {
+        status: null
+      }]
+    }, { tCode: 1, name: 1 }).lean()
   }
 
   async getCodesByIds(cIds: string[]) {
@@ -92,12 +168,6 @@ class CustomerController {
       })
     }
     return data
-  }
-
-  async updateCustomer(user: Document, data: any) {
-    return user.updateOne({
-      $set: data
-    })
   }
 
   async addDLProposal(customerId: string, userId: string, data: DLChangeValidationValues) {

@@ -83,7 +83,7 @@ export default function AssignmentMessagePage() {
 
   return (
     <div className="page-content h-100 pb-0 d-flex flex-column">
-      <BreadcrumbWithTitle title="Feedbacks" />
+      <BreadcrumbWithTitle title="Instructions" />
       <div className="px-2 py-1" style={{ background: "var(--bs-pitch-black)"}}>
         <div className="d-flex gap-5">
           <div>
@@ -111,7 +111,7 @@ export default function AssignmentMessagePage() {
       </div>
       <hr className="m-0 mb-2" />
       <div className="d-flex gap-1">
-        <div>
+        {/* <div>
           <Label>Page</Label>
           <Input
             type="select"
@@ -128,11 +128,11 @@ export default function AssignmentMessagePage() {
               )
             })}
           </Input>
-        </div>
+        </div> */}
         <Input
           type="textarea"
           value={message}
-          placeholder="Write your feedback ..."
+          placeholder="Write instructions ..."
           rows={2}
           style={{ resize: 'none' }}
           onChange={(e) => {

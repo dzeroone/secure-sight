@@ -63,6 +63,25 @@ router.get('/search',
   }
 )
 
+router.post('/transfer-admin',
+  auth,
+  hasRole([ROLES.ADMIN]),
+  async (req, res) => {
+    try {
+      if (!req.body.userId || (req.body.userId == req.user?._id)) {
+        throw new Error('Incorrect parameter')
+      }
+
+      await userController.transferAdmin(req.user!._id, req.body.userId)
+      res.sendStatus(200)
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
 router.patch('/team-assign',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3]),

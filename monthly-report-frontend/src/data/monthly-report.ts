@@ -1,6 +1,6 @@
 export const monthlyReportInitialValue = {
     "monthly_report": {
-        "doc_title": "",
+        "doc_title": "Digital Defense in Depth",
         "client_name": "",
         "date": "",
         "customer_name": "",

@@ -15,12 +15,6 @@ router.post('/',
     try {
       const vData = await customerCreateValidationSchema.validate(req.body)
       await customerController.addCustomer(vData)
-      await customerConnectorConfigController.updateConnectorConfig({
-        previousConnectors: [],
-        tCode: vData.tCode,
-        connectorIds: vData.connectors,
-        configData: vData.apiConfig
-      })
 
       res.send({
         success: true
@@ -39,7 +33,7 @@ router.get('/',
   hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
   async (req: Request, res: Response) => {
     try {
-      let data = await customerController.listCustomers()
+      let data = await customerController.listCustomers(req.query.status as string)
       res.send(data)
     } catch (e: any) {
       res.status(400).send({
@@ -104,17 +98,91 @@ router.patch('/:id',
         throw err
       }
       const vData = await customerCreateValidationSchema.validate(req.body)
-
-      const previousConnectors = user.connectors;
-
       await customerController.updateCustomer(user, vData)
 
-      await customerConnectorConfigController.updateConnectorConfig({
-        previousConnectors,
-        tCode: vData.tCode,
-        connectorIds: vData.connectors,
-        configData: vData.apiConfig
+      res.send({
+        success: true
       })
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        success: false,
+        message: e.message
+      })
+    }
+  }
+)
+
+router.delete('/:id',
+  auth,
+  hasRole(ROLES.ADMIN),
+  async (req: Request, res: Response) => {
+    try {
+      let user = await customerController.getCustomerById(req.params.id)
+      if (!user) {
+        const err: any = new Error("Info not found!")
+        err.status = 404
+        throw err
+      }
+
+      await customerController.deleteCustomer(user)
+
+      res.send({
+        success: true
+      })
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        success: false,
+        message: e.message
+      })
+    }
+  }
+)
+
+router.delete('/:id/permanent',
+  auth,
+  hasRole(ROLES.ADMIN),
+  async (req: Request, res: Response) => {
+    try {
+      let user = await customerController.getCustomerById(req.params.id)
+      if (!user) {
+        const err: any = new Error("Info not found!")
+        err.status = 404
+        throw err
+      }
+
+      if (user.status != -1) {
+        throw new Error('This customer is not prepared for deletion!')
+      }
+      await customerController.deleteCustomerPermanently(user)
+
+      res.send({
+        success: true
+      })
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        success: false,
+        message: e.message
+      })
+    }
+  }
+)
+
+router.post('/:id/restore',
+  auth,
+  hasRole(ROLES.ADMIN),
+  async (req: Request, res: Response) => {
+    try {
+      let user = await customerController.getCustomerById(req.params.id)
+      if (!user) {
+        const err: any = new Error("Info not found!")
+        err.status = 404
+        throw err
+      }
+
+      if (user.status != -1) {
+        throw new Error('This customer is not prepared for deletion!')
+      }
+      await customerController.restore(user)
 
       res.send({
         success: true

@@ -71,4 +71,23 @@ router.patch("/:id",
   }
 )
 
+router.delete("/:id",
+  auth,
+  hasRole(ROLES.ADMIN),
+  async (req, res) => {
+    try {
+      const data = await teamController.getById(req.params.id)
+      if (!data) {
+        throw new Error('Not found!')
+      }
+      await teamController.delete(data)
+      res.sendStatus(200)
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
 export default router

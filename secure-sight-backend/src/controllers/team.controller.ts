@@ -1,4 +1,5 @@
 import teamModel, { TeamDocumentType } from "../models/team.model"
+import userController from "./user.controller"
 
 class TeamController {
   async add(name: string) {
@@ -16,6 +17,11 @@ class TeamController {
         uAt: new Date()
       }
     })
+  }
+
+  async delete(team: TeamDocumentType) {
+    await userController.unassignTeam(team._id.toString())
+    return team.delete()
   }
 
   async getById(id: string) {

@@ -8,7 +8,8 @@ export const reportAssignmentValidationSchema = yup.object({
     return isValid(p)
   }),
   customerId: yup.string().required(),
-  reporterId: yup.string().required()
+  reporterId: yup.string().required(),
+  message: yup.string().optional()
 })
 
 export type ReportAssignmentValidationValues = yup.InferType<typeof reportAssignmentValidationSchema>

@@ -31,7 +31,7 @@ export default function EditUserPage(props) {
     },
     validationSchema: Yup.object({
       fullname: Yup.string().required("Please enter full name"),
-      team: Yup.string().required("Please enter team"),
+      team: Yup.string().optional("Please enter team"),
       position: Yup.string().required("Please enter position"),
       email: Yup.string().required("Please enter email"),
       role: Yup.string().required("Please select a role"),

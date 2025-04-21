@@ -153,6 +153,7 @@ class AssignmentController {
       cId: data.customerId,
       aBy: assignedBy,
       reporterId: data.reporterId,
+      instruction: data.message,
       cAt: new Date(),
       uAt: new Date()
     })
@@ -352,7 +353,7 @@ class AssignmentController {
       assignment.customer = customer
 
       const reporter = await UserModel.findOne({
-        _id: assignment.reporterId
+        _id: assignment.sBy
       }, {
         fullname: 1,
         role: 1

@@ -102,7 +102,9 @@ const MonthlyReportPage = () => {
               firstPage({
                 ...report.monthly_report,
                 client_name: responseData.customer.name,
-                date: formatMonthlyReportSession(responseData.date),
+                date: `${formatMonthlyReportSession(
+                  responseData.date
+                )} Metrics`,
                 customer_name: responseData.customer.tCode.toUpperCase(),
               })
             );

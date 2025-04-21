@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Spinner } from "reactstrap";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "reactstrap";
 import ApiEndPoints from "../Network_call/ApiEndPoints";
 import ApiServices from "../Network_call/apiservices";
 import { CheckIcon } from "lucide-react";
@@ -20,7 +20,10 @@ export default function DropdownReportAssignment({
   const [users, setUsers] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [instructionMessage, setInstructionMessage] = useState('')
+  const instructionModalOnCompleteRef = useRef(null)
   const [affectedUserId, setAffectedUserId] = useState(false) // holds which userid is currently in operation of assignment or unassignment
+  const [instructionInputModalShown, setInstructionInputModalShown] = useState(false)
 
   // find user timeout ref
   const fuTimeoutRef = useRef(null)
@@ -58,6 +61,7 @@ export default function DropdownReportAssignment({
 
   const assign = useCallback(async (user) => {
     try {
+      const message = await getInstructionMessage()
       setBusy(true)
       setAffectedUserId(user._id)
 
@@ -67,7 +71,8 @@ export default function DropdownReportAssignment({
           index,
           date: format(date, 'yyyy-MM-dd'),
           customerId,
-          reporterId: user._id
+          reporterId: user._id,
+          message
         },
         `${ApiEndPoints.Assignments}/${reportType}/assign`
       )
@@ -108,6 +113,16 @@ export default function DropdownReportAssignment({
       setAffectedUserId(null)
     }
   }, [])
+
+  const getInstructionMessage = async () => {
+    instructionModalOnCompleteRef.current = null
+    const p = new Promise((resolve, _) => {
+      instructionModalOnCompleteRef.current = resolve
+      setInstructionInputModalShown(true)
+    })
+
+    return p
+  }
 
   useEffect(() => {
     if(fuTimeoutRef.current) {
@@ -195,6 +210,28 @@ export default function DropdownReportAssignment({
         ) : null}
         </div>
       </DropdownMenu>
+      <Modal isOpen={instructionInputModalShown} onClosed={() => {
+        setInstructionInputModalShown(false)
+        instructionModalOnCompleteRef.current(instructionMessage)
+      }}>
+        <ModalHeader>Instruction for reporter</ModalHeader>
+        <ModalBody>
+          <Input
+            type="text"
+            placeholder="Write instructions ..."
+            value={instructionMessage}
+            onChange={(e) => {
+              setInstructionMessage(e.target.value)
+            }}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={() => {
+            setInstructionInputModalShown(false)
+            instructionModalOnCompleteRef.current(instructionMessage)
+          }}>Done</Button>
+        </ModalFooter>
+      </Modal>
     </Dropdown>
   )
 }

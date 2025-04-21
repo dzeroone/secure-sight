@@ -19,11 +19,13 @@ class CustomerConnectorConfigController {
     }
   ) {
     for (let connectorId of tenantConfig.connectorIds) {
-      await this._updateIniConfig(
-        connectorId,
-        tenantConfig.tCode,
-        tenantConfig.configData
-      )
+      try {
+        await this._updateIniConfig(
+          connectorId,
+          tenantConfig.tCode,
+          tenantConfig.configData
+        )
+      } catch (e) { }
     }
 
     const deleteConnectors = tenantConfig.previousConnectors.filter(pc => !tenantConfig.connectorIds.includes(pc))

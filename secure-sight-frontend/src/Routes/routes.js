@@ -42,6 +42,8 @@ import CommonDataPage from "../Pages/common-data";
 import TeamIndex from "../Pages/team";
 import TeamNew from "../Pages/team/new";
 import TeamEdit from "../Pages/team/edit";
+import DeletedCustomersPage from "../Pages/customers/deleted";
+import TransferAdminPage from "../Pages/users/transfer-admin";
 
 export const history = createBrowserHistory({ window });
 
@@ -68,6 +70,10 @@ const authProtectedRoutes = [
     path: "/users/new", component: <NewUserPage />
   },
   {
+    roles: [ROLES.ADMIN],
+    path: "/users/transfer-admin", component: <TransferAdminPage />
+  },
+  {
     roles: [ROLES.ADMIN, ROLES.LEVEL3],
     path: "/users/:id", component: <EditUserPage />
   },
@@ -79,6 +85,10 @@ const authProtectedRoutes = [
   {
     roles: [ROLES.ADMIN],
     path: "/customers/new", component: <NewCustomerPage />
+  },
+  {
+    roles: [ROLES.ADMIN],
+    path: "/customers/deleted", component: <DeletedCustomersPage />
   },
   {
     roles: [ROLES.ADMIN, ROLES.LEVEL3],
