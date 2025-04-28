@@ -44,6 +44,7 @@ import TeamNew from "../Pages/team/new";
 import TeamEdit from "../Pages/team/edit";
 import DeletedCustomersPage from "../Pages/customers/deleted";
 import TransferAdminPage from "../Pages/users/transfer-admin";
+import DeletedUserIndexPage from "../Pages/users/deleted";
 
 export const history = createBrowserHistory({ window });
 
@@ -68,6 +69,10 @@ const authProtectedRoutes = [
   {
     roles: [ROLES.ADMIN, ROLES.LEVEL3],
     path: "/users/new", component: <NewUserPage />
+  },
+  {
+    roles: [ROLES.ADMIN],
+    path: "/users/deleted", component: <DeletedUserIndexPage />
   },
   {
     roles: [ROLES.ADMIN],

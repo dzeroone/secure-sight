@@ -44,6 +44,11 @@ const SidebarData = [
 			},
 			{
 				roles: [ROLES.ADMIN],
+				sublabel: "Deleted users",
+				link: "/users/deleted",
+			},
+			{
+				roles: [ROLES.ADMIN],
 				sublabel: "Transfer admin",
 				link: "/users/transfer-admin",
 			},
@@ -123,6 +128,11 @@ const SidebarData = [
 				link: "/reports/monthly-report",
 			},
 			{
+				roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2],
+				sublabel: "Monthly report common data",
+				link: "/common-data",
+			},
+			{
 				roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1],
 				sublabel: "Weekly report",
 				link: "/reports/weekly-report",
@@ -148,14 +158,6 @@ const SidebarData = [
 				link: "/connector-schedule"
 			},
 		],
-	},
-	{
-		roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2],
-		label: "Common Data",
-		icon: 'ri-database-line',
-		url: "/common-data",
-		bgcolor: "bg-primary",
-		isMainMenu: true
 	}
 ];
 export default SidebarData;

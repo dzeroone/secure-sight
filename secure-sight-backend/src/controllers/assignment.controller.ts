@@ -239,6 +239,26 @@ class AssignmentController {
     })
   }
 
+  async getPendingAssignmentsForUser(userId: string) {
+    return assignmentModel.find({
+      status: { $ne: REPORT_AUDIT_STATUS.APPROVED },
+      $or: [
+        {
+          aBy: userId,
+        },
+        {
+          reporterId: userId
+        },
+        {
+          sBy: userId
+        },
+        {
+          sTo: userId
+        }
+      ]
+    })
+  }
+
   async getAssignmentByIndex(index: string) {
     return assignmentModel.findOne({
       index,

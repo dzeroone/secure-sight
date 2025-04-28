@@ -97,7 +97,7 @@ export default function TransferAdminPage() {
             >
               <option value='' disabled>No user is selected</option>
               {users.map(u => {
-                return <option value={u._id} key={u._id}>{u.fullname}</option>
+                return <option value={u._id} key={u._id} disabled={userProfile.id === u._id}>{u.fullname}</option>
               })}
             </Input>
           </div>

@@ -39,6 +39,7 @@ class UserController {
       role: {
         $nin: skippedRoles
       },
+      status: { $ne: -1 },
       $or: [
         {
           email: new RegExp(search, "si")
@@ -55,7 +56,23 @@ class UserController {
 
   async listUsers() {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
-    const users = await userModel.find().lean()
+    const users = await userModel.find({
+      status: { $ne: -1 }
+    }).lean()
+    for (let user of users) {
+      if (user.team) {
+        const team = await teamController.getById(user.team)
+        user.team = team
+      }
+    }
+    return users
+  }
+
+  async listDeletedUsers() {
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    const users = await userModel.find({
+      status: -1
+    }).lean()
     for (let user of users) {
       if (user.team) {
         const team = await teamController.getById(user.team)
@@ -112,31 +129,54 @@ class UserController {
         throw new Error("User with email already exists!")
       }
     }
+
+    if (data.role && user.role !== data.role) {
+      const pending = await assignmentController.getPendingAssignmentsForUser(user._id)
+      if (pending.length) {
+        throw new Error(`You can't change the role. This user has pending task to complete.`)
+      }
+    }
     return user.updateOne({
       $set: data
     })
   }
 
   async deleteUser(user: any) {
-    {
-      const assignments = await assignmentController.getAssignmentsForAssigneeId(user._id)
-      for (let assignment of assignments) {
-        await assignmentController.delete(assignment)
-      }
+    // {
+    //   const assignments = await assignmentController.getAssignmentsForAssigneeId(user._id)
+    //   for (let assignment of assignments) {
+    //     await assignmentController.delete(assignment)
+    //   }
+    // }
+    // {
+    //   const assignments = await assignmentController.getAssignmentsForReporterId(user._id)
+    //   for (let assignment of assignments) {
+    //     await assignmentController.delete(assignment)
+    //   }
+    // }
+    // {
+    //   const reports = await assignmentReportController.getAllByReporterId(user._id)
+    //   for (let report of reports) {
+    //     await assignmentReportController.deleteById(report._id.toString())
+    //   }
+    // }
+    const pending = await assignmentController.getPendingAssignmentsForUser(user._id)
+    if (pending.length) {
+      throw new Error(`You can't delete the user. This user has pending task to complete.`)
     }
-    {
-      const assignments = await assignmentController.getAssignmentsForReporterId(user._id)
-      for (let assignment of assignments) {
-        await assignmentController.delete(assignment)
+    return user.update({
+      $set: {
+        status: -1
       }
-    }
-    {
-      const reports = await assignmentReportController.getAllByReporterId(user._id)
-      for (let report of reports) {
-        await assignmentReportController.deleteById(report._id.toString())
+    })
+  }
+
+  async restoreUser(user: any) {
+    return user.update({
+      $set: {
+        status: 1
       }
-    }
-    return user.delete()
+    })
   }
 
   async findOneByEmail(email: string) {
@@ -189,6 +229,13 @@ class UserController {
 
   async transferAdmin(fromUser: string, toUser: string) {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+
+    // check if toUser has any kind of pending task
+    const pending = await assignmentController.getPendingAssignmentsForUser(toUser)
+    if (pending.length > 0) {
+      throw new Error("User have pending tasks, can't change role. Please contact administrator for details.")
+    }
+
     await userModel.updateOne({
       _id: fromUser
     }, {

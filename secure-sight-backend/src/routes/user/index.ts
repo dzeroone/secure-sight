@@ -47,6 +47,22 @@ router.get('/',
   }
 )
 
+router.get('/deleted',
+  auth,
+  hasRole([ROLES.ADMIN]),
+  async (req: Request, res: Response) => {
+    try {
+      let data = await userController.listDeletedUsers()
+      res.send(data)
+    } catch (e: any) {
+      res.status(400).send({
+        success: false,
+        message: e.message
+      })
+    }
+  }
+)
+
 router.get('/search',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
@@ -167,6 +183,29 @@ router.delete('/:id',
         err.status = 404
       }
       await userController.deleteUser(user!)
+      res.send({
+        success: true
+      })
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        success: false,
+        message: e.message
+      })
+    }
+  }
+)
+
+router.post('/:id/restore',
+  auth,
+  hasRole([ROLES.ADMIN]),
+  async (req: Request, res: Response) => {
+    try {
+      let user = await userController.getUserById(req.params.id)
+      if (!user) {
+        const err: any = new Error("Info not found!")
+        err.status = 404
+      }
+      await userController.restoreUser(user!)
       res.send({
         success: true
       })

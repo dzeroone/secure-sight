@@ -32,6 +32,9 @@ class AuthController {
       user = new UserModel(userParams)
       await user.save()
     }
+    if (user.status === -1) {
+      throw new Error('You are not allowed to sign in, please contact administrator for more information.')
+    }
     const token = signAuthToken({ email })
     return {
       token,
