@@ -34,7 +34,7 @@ router.get('/:id/messages',
         err.status = 404
         throw err
       }
-      if (data.aBy != req.user?._id && data.reporterId != req.user?._id) {
+      if (![data.sTo, data.aBy, data.reporterId].includes(req.user?._id)) {
         const err: any = new Error("You are not authorized!")
         throw err
       }

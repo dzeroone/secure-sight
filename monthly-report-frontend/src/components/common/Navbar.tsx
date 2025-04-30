@@ -22,7 +22,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { DASHBOARD, MONTHLY_REPORT, WEEKLY_REPORT } from "@@/constants/routes";
 import BrandLogo from "@@/assets/images/logo.png";
-import { LibraryBooks } from "@mui/icons-material";
+import { Home, LibraryBooks } from "@mui/icons-material";
 import { useAuth } from "@@/providers/AuthProvider";
 
 const drawerWidth: number = 240;
@@ -162,6 +162,12 @@ const Navbar = ({
               <ListItemText primary="Weekly Report" />
             </ListItemButton>
           </Link> */}
+          <ListItemButton LinkComponent={'a'} href={`/reports/monthly-report`}>
+            <ListItemIcon>
+              <Home />
+            </ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItemButton>
           <Link href={`${MONTHLY_REPORT}/saved`}>
             <ListItemButton>
               <ListItemIcon>

@@ -1,16 +1,28 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+type InitialState = {
+  processing: boolean,
+  auditStatus: number,
+  statusFromServer: number,
+  status: number,
+  reporterId: string,
+  assignment: any,
+  canSubmitReport: boolean
+}
+
+const initialState: InitialState = {
+  processing: false,
+  auditStatus: -999,
+  statusFromServer: 0,
+  status: 0,
+  reporterId: '',
+  assignment: null,
+  canSubmitReport: false
+}
+
 const monthlyPageStateSlice = createSlice({
   name: "monthlyPageState",
-  initialState: {
-    processing: false,
-    auditStatus: -999,
-    statusFromServer: 0,
-    status: 0,
-    reporterId: '',
-    assignmentId: '',
-    canSubmitReport: false
-  },
+  initialState,
   reducers: {
     setProcessing(state, action: PayloadAction<boolean>) {
       state.processing = action.payload
@@ -28,8 +40,8 @@ const monthlyPageStateSlice = createSlice({
     setReporterId(state, action: PayloadAction<string>) {
       state.reporterId = action.payload
     },
-    setAssignmentId(state, action: PayloadAction<string>) {
-      state.assignmentId = action.payload
+    setAssignment(state, action: PayloadAction<any>) {
+      state.assignment = action.payload
     },
     setCanSubmitReport(state, action: PayloadAction<boolean>) {
       state.canSubmitReport = action.payload
@@ -43,7 +55,7 @@ export const {
   setStatus,
   setStatusFromServer,
   setReporterId,
-  setAssignmentId,
+  setAssignment,
   setCanSubmitReport
 } = monthlyPageStateSlice.actions
 

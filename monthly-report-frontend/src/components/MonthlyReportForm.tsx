@@ -241,7 +241,7 @@ const MonthlyReportForm = () => {
     if (!selectReporterShown) return;
     try {
       const res = await axiosApi.get(
-        `/assignments/${pageState.assignmentId}/suggest-reporters`
+        `/assignments/${pageState.assignment?._id}/suggest-reporters`
       );
       setReporters(res.data);
     } catch (e) {}
@@ -290,7 +290,7 @@ const MonthlyReportForm = () => {
   };
 
   const onSaveMonthlyReport = () => {
-    if (pageState.status == 1) {
+    if (!pageState.assignment?.sTo && pageState.canSubmitReport) {
       setSelectReporterShown(true);
     } else {
       saveMonthlyReport();

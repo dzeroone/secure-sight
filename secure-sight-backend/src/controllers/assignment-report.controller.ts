@@ -112,6 +112,34 @@ class AssignmentReportController {
     }
   }
 
+  async reportSubmitted(doc: AssignmentReportDocumentType, data: MonthlyReportEditValidationValues | WeeklyReportEditValidationValues, reportType: ReportType) {
+    if (reportType == 'monthly') {
+      data = data as MonthlyReportEditValidationValues
+      return doc.updateOne({
+        $set: {
+          data: data.report,
+          status: data.status,
+          uAt: new Date()
+        },
+        $unset: {
+          auditStatus: ""
+        }
+      })
+    } else {
+      data = data as WeeklyReportEditValidationValues
+      return doc.updateOne({
+        $set: {
+          data: { formData: data.formData, reportData: data.reportData },
+          status: data.status,
+          uAt: new Date()
+        },
+        $unset: {
+          auditStatus: ""
+        }
+      })
+    }
+  }
+
   async reportApproved(id: string, reportType: ReportType, user: Express.User) {
     const reportData = await this.getById(id)
     if (!reportData) throw new Error("Report not found!")

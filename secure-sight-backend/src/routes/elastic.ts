@@ -76,7 +76,7 @@ router.post("/data/search",
           throw err
         }
 
-        dataToSend.assignmentId = assignment._id
+        dataToSend.assignment = assignment
 
         // check if he assgined this report to anyother
         dataToSend.canSubmitReport = await assignmentController.isLastReporter(req.body.index, req.user._id)

@@ -296,7 +296,9 @@ class AssignmentController {
       rType: reportType,
       index,
     }, {
-      aBy: 1
+      aBy: 1,
+      sBy: 1,
+      sTo: 1
     })
     const viewers: string[] = []
     assignments.forEach(a => {
@@ -306,16 +308,19 @@ class AssignmentController {
     return viewers
   }
 
-  async reportSubmitted(assignment: AssignmentDocumentType, reportId: string, submitterId: string, submittedTo: string) {
+  async reportSubmitted(assignment: AssignmentDocumentType, reportId: string, submitterId: string, submittedTo?: string) {
+    const updateData: any = {
+      reportId,
+      status: REPORT_AUDIT_STATUS.SUBMITTED,
+      sBy: submitterId,
+      sCBy: submitterId,
+      uAt: new Date()
+    }
+    if(submittedTo) {
+      updateData.sTo = submittedTo;
+    }
     const res = await assignment.updateOne({
-      $set: {
-        reportId,
-        status: REPORT_AUDIT_STATUS.SUBMITTED,
-        sTo: submittedTo,
-        sBy: submitterId,
-        sCBy: submitterId,
-        uAt: new Date()
-      },
+      $set: updateData,
       $unset: {
         auditStatus: ""
       }
@@ -329,6 +334,18 @@ class AssignmentController {
       title: "Report submission",
       message
     })
+    if(assignment.sTo) {
+      await notificationController.notifyUser(assignment.sTo, {
+        title: "Report submission",
+        message
+      })
+    }else if(submittedTo) {
+      await notificationController.notifyUser(submittedTo, {
+        title: "Report submission",
+        message
+      })
+    }
+    
     return res
   }
 

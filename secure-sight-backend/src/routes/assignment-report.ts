@@ -62,8 +62,8 @@ router.get('/:reportType(monthly|weekly)/:id',
 
       if (doc.reporterId != req.user?._id.toString()) {
         if (doc.status == REPORT_STATUS.SUBMIT) {
-          const assignees = await assignmentController.getAssigneesByIndex(doc.index!, reportType)
-          if (!assignees.includes(req.user?._id)) {
+          const viewers = await assignmentController.getPermittedViewersByIndex(doc.index!, reportType)
+          if (!viewers.includes(req.user!._id)) {
             throw new Error("You are not appropriate reporter")
           }
         } else {
@@ -79,7 +79,7 @@ router.get('/:reportType(monthly|weekly)/:id',
 
       res.send({
         canSubmitReport,
-        assignmentId: assignment?._id,
+        assignment: assignment,
         data: doc
       })
     } catch (e: any) {
@@ -114,13 +114,15 @@ router.patch('/:reportType(monthly|weekly)/:id',
         const isLastReporter = await assignmentController.isLastReporter(doc.index!, req.user!._id)
         if (!isLastReporter) throw new Error("You are not allowed to submit the report!")
 
-        if (!req.body.submittedTo) {
+        if (!assignment.sTo && !req.body.submittedTo) {
           throw new Error("Report is submitted to none.")
         }
 
         await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id, req.body.submittedTo)
+        await assignmentReportController.reportSubmitted(doc, data, reportType)
+      }else{
+        await assignmentReportController.update(doc, data, reportType)
       }
-      await assignmentReportController.update(doc, data, reportType)
 
       res.send(doc)
     } catch (e: any) {
