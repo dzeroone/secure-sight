@@ -76,6 +76,8 @@ export default function AssignWeeklyReportPage() {
     try {
       const confirmed = await swal({
         title: 'Are you sure?',
+        text: 'Your action will remove this assignment.',
+        icon: 'warning',
         buttons: {
           cancel: true,
           confirm: true

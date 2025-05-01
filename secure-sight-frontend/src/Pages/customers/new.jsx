@@ -13,6 +13,7 @@ export default function NewCustomerPage(props) {
     return {
       name: "",
       tCode: "",
+      tType: "",
       msDate: "",
       meDate: "",
       emails: {

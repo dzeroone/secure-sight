@@ -7,6 +7,7 @@ import yup from "../helpers/yup.extras"
 const validationSchema = yup.object({
   name: yup.string().required("Please enter customer name"),
   tCode: yup.string().required("Please enter tenant code"),
+  tType: yup.string().optional(),
   msDate: yup.date().required('Monitoring start date is required'),
   meDate: yup.date().required('Monitoring end date is required'),
   emails: yup.object({
@@ -66,17 +67,29 @@ export function FormCustomer({
             return <Form onSubmit={formik.handleSubmit}>
               <Container fluid>
                 <Row className="g-2">
-                  <Col sm={6}>
+                  <Col sm={4}>
                     <InputField
                       label='Name'
                       name='name'
                     />
                   </Col>
-                  <Col sm={6}>
+                  <Col sm={4}>
                     <InputField
                       label='Tenant code'
                       name='tCode'
                     />
+                  </Col>
+                  <Col sm={4}>
+                    <InputField
+                      type="select"
+                      label='Tenant type'
+                      name='tType'
+                    >
+                      <option value="" disabled>None</option>
+                      <option value="IN">IN</option>
+                      <option value="SG">SG</option>
+                      <option value="INS">INS</option>
+                    </InputField>
                   </Col>
                   <Col sm={6}>
                     <DateField

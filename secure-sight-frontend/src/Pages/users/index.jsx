@@ -27,8 +27,8 @@ export default function UserIndexPage() {
       );
       setUsers(response)
     }catch(e){
-      console.log(e)
-      alert(e.message)
+      const msg = getErrorMessage(e)
+      toast.error(msg)
     }finally{
       setBusy(false)
     }
@@ -38,6 +38,8 @@ export default function UserIndexPage() {
     try {
       const confirmed = await swal({
         title: 'Are you sure?',
+        text: 'Your action will remove this user.',
+        icon: 'warning',
         buttons: {
           cancel: true,
           confirm: true
@@ -50,10 +52,11 @@ export default function UserIndexPage() {
         null,
         `${ApiEndPoints.Users}/${user._id}`,
       );
+      toast.success("User is deleted.")
       getUsers()
     }catch(e) {
       const msg = getErrorMessage(e)
-      alert(msg)
+      toast.error(msg)
     }finally{
       setBusy(false)
     }

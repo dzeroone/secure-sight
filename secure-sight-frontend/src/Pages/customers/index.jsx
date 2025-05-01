@@ -96,6 +96,7 @@ export default function CustomerIndexPage() {
           <tr>
             <th>Name</th>
             <th>Tenant Code</th>
+            <th>Tenant type</th>
             <th>Monitoring start date</th>
             <th>Monitoring end date</th>
             <th></th>
@@ -107,6 +108,7 @@ export default function CustomerIndexPage() {
               <tr key={customer._id}>
                 <th>{customer.name}</th>
                 <td>{customer.tCode}</td>
+                <td>{customer.tType}</td>
                 <td>{formatDate(customer.msDate)}</td>
                 <td>{formatDate(customer.meDate)}</td>
                 <td>
