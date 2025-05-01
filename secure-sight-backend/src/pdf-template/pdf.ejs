@@ -1092,10 +1092,10 @@
                   <% data.detection_summary_apex_one.tables.table2.forEach((item, i) => { %>
                   <tr style="font-size: 20px;" key="<%= i %>">
                     <td>
-                      (<%= item.attempts_blocked.endpoint %> / <%= item.attempts_blocked.blocked %>)
+                      <%= item.attempts_blocked.endpoint %> (<%= item.attempts_blocked.blocked %>)
                     </td>
                     <td>
-                      (<%= item.connection_endpoint.endpoint %> / <%= item.connection_endpoint.blocked %>)
+                      <%= item.connection_endpoint.endpoint %> (<%= item.connection_endpoint.blocked %>)
                     </td>
                   </tr>
                   <% }); %>

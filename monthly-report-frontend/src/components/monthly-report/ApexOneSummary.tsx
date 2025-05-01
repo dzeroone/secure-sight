@@ -139,10 +139,10 @@ const ApexOneSummary = () => {
                     key={l}
                   >
                     <td>
-                      ({k.attempts_blocked.endpoint} / {k.attempts_blocked.blocked})
+                      {k.attempts_blocked.endpoint} ({k.attempts_blocked.blocked})
                     </td>
                     <td>
-                      ({k.connection_endpoint.endpoint} / {k.connection_endpoint.blocked})
+                      {k.connection_endpoint.endpoint} ({k.connection_endpoint.blocked})
                     </td>
                   </tr>
                 ))}
