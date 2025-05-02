@@ -1,10 +1,11 @@
 import { COLLECTIONS, MASTER_ADMIN_DB, REPORT_AUDIT_STATUS } from "../constant"
-import { formatReportSession, getMontlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
+import { extractInfoFromIndex, formatReportSession, getMontlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
 import assignmentMessageModel from "../models/assignmentMessageModel"
 import assignmentModel, { AssignmentDocumentType } from "../models/assignmentModel"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { ReportAssignmentValidationValues } from "../validators/report-assignment.validator"
 import assignmentReportController from "./assignment-report.controller"
+import customerController from "./customer.controller"
 import notificationController from "./notification.controller"
 
 export type ReportType = 'monthly' | 'weekly'
@@ -470,7 +471,7 @@ class AssignmentController {
     })
   }
 
-  async getAssignmentByReportIdForAuditer(reportId: string, auditerId: string) {
+  async getAssignmentByReportIdForReviewer(reportId: string, auditerId: string) {
     return assignmentModel.findOne({
       reportId,
       sTo: auditerId
@@ -506,6 +507,101 @@ class AssignmentController {
       return false
     }
     return true
+  }
+
+  async updateAssignee(assignment: AssignmentDocumentType, userId: string) {
+    const customer = await customerController.getCustomerById(assignment.cId!)
+    if(!customer) throw new Error("Customer not found!")
+
+    await assignment.updateOne({
+      $set: {
+        aBy: userId
+      }
+    })
+
+    const info = extractInfoFromIndex(assignment.index!)
+
+    await notificationController.notifyUser(userId, {
+      title: 'Report transfer',
+      message: `A ${assignment.rType} report for ${customer.name}, session ( ${formatReportSession(assignment.rType as ReportType, info.date)} ) has been transfered to you.`
+    })
+  }
+
+  async updateReporter(assignment: AssignmentDocumentType, userId: string) {
+    const customer = await customerController.getCustomerById(assignment.cId!)
+    if(!customer) throw new Error("Customer not found!")
+
+    await assignment.updateOne({
+      $set: {
+        reporterId: userId
+      }
+    })
+
+    const info = extractInfoFromIndex(assignment.index!)
+
+    await notificationController.notifyUser(userId, {
+      title: 'Report transfer',
+      message: `You have been assigned as reporter of ${assignment.rType} report for ${customer.name}, session ( ${formatReportSession(assignment.rType as ReportType, info.date)} ).`
+    })
+  }
+
+  async updateReviewer(assignment: AssignmentDocumentType, userId: string) {
+    const customer = await customerController.getCustomerById(assignment.cId!)
+    if(!customer) throw new Error("Customer not found!")
+
+    if(assignment.aBy == assignment.sTo) {
+      await assignment.updateOne({
+        $set: {
+          aBy: userId,
+          sTo: userId
+        }
+      }) 
+    }else{ 
+      await assignment.updateOne({
+        $set: {
+          sTo: userId
+        }
+      })
+    }
+
+    const info = extractInfoFromIndex(assignment.index!)
+
+    await notificationController.notifyUser(userId, {
+      title: 'Report transfer',
+      message: `You have been assigned as reviewer of ${assignment.rType} report for ${customer.name}, session ( ${formatReportSession(assignment.rType as ReportType, info.date)} ).`
+    })
+  }
+
+  async updateReportCreator(assignment: AssignmentDocumentType, userId: string) {
+    const customer = await customerController.getCustomerById(assignment.cId!)
+    if(!customer) throw new Error("Customer not found!")
+
+    const report = await assignmentReportController.getOneByIndexForReporter(assignment.index!, userId)
+    if(!report) throw new Error("Report not found!")
+
+    if(assignment.reporterId == assignment.sBy) {
+      await assignment.updateOne({
+        $set: {
+          reporterId: userId,
+          sBy: userId
+        }
+      }) 
+    }else{ 
+      await assignment.updateOne({
+        $set: {
+          sBy: userId
+        }
+      })
+    }
+
+    await assignmentReportController.updateReporter(report._id.toString(), userId)
+
+    const info = extractInfoFromIndex(assignment.index!)
+
+    await notificationController.notifyUser(userId, {
+      title: 'Report transfer',
+      message: `You have been assigned as report creator of ${assignment.rType} report for ${customer.name}, session ( ${formatReportSession(assignment.rType as ReportType, info.date)} ).`
+    })
   }
 
   private async _populateAssignmentsForCustomerForDate(customer: any, date: string, assignedBy: string, reportType: 'monthly' | 'weekly' = 'monthly') {

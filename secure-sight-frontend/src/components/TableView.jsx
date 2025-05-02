@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Table } from "reactstrap";
 
 export default function TableView({
@@ -28,4 +29,13 @@ export default function TableView({
       </tbody>
     </Table>
   )
+}
+
+TableView.propTypes = {
+  columns: PropTypes.arrayOf(PropTypes.shape({
+    key: PropTypes.string,
+    title: PropTypes.string,
+    onRenderRow: PropTypes.func
+  })),
+  data: PropTypes.array.isRequired
 }

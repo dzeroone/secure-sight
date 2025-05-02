@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { REPORT_AUDIT_STATUS, REPORT_STATUS, ROLES } from "../constant";
+import { REPORT_AUDIT_STATUS, REPORT_STATUS, responsibilities, ROLES } from "../constant";
 import assignmentReportController from "../controllers/assignment-report.controller";
 import assignmentController, { ReportType } from "../controllers/assignment.controller";
 import userController from "../controllers/user.controller";
@@ -102,6 +102,48 @@ router.get('/:id/suggest-reporters',
   }
 )
 
+router.post('/:id/transfer-tasks',
+  auth,
+  async (req, res) => {
+    try {
+      const assignment = await assignmentController.getById(req.params.id)
+      if (!assignment) {
+        throw new Error("Assignment not found!")
+      }
+      if(!req.body.fromUserId || !req.body.toUserId || !req.body.task) {
+        throw new Error("Invalid argument")
+      }
+      const fromUser = await userController.getUserById(req.body.fromUserId)
+      if(!fromUser) {
+        throw new Error("From user not found!")
+      }
+      const toUser = await userController.getUserById(req.body.toUserId) as any
+      if(!toUser) {
+        throw new Error("To user not found!")
+      }
+      if(fromUser.role != toUser.role) {
+        throw new Error("Invalid user selection")
+      }
+      if(req.body.task == responsibilities.ASSIGNEE) {
+        await assignmentController.updateAssignee(assignment, toUser._id.toString())
+      }else if(req.body.task == responsibilities.REPORTER) {
+        await assignmentController.updateReporter(assignment, toUser._id.toString())
+      }else if(req.body.task == responsibilities.REVIEWER) {
+        await assignmentController.updateReviewer(assignment, toUser._id.toString())
+      }else if(req.body.task == responsibilities.REPORT_CREATOR) {
+        await assignmentController.updateReportCreator(assignment, toUser._id.toString())
+      }else{
+        throw new Error("Invalid task")
+      }
+      res.sendStatus(200)
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
 router.get('/:reportType(monthly|weekly)',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
@@ -182,7 +224,7 @@ router.post('/submissions/:id/reaudit',
   async (req, res) => {
     try {
       const reportType = req.params.reportType as ReportType
-      const assignment = await assignmentController.getAssignmentByReportIdForAuditer(req.params.id, req.user!._id)
+      const assignment = await assignmentController.getAssignmentByReportIdForReviewer(req.params.id, req.user!._id)
       if (!assignment) {
         throw new Error("Assignment not found")
       }
@@ -201,7 +243,7 @@ router.post('/submissions/:id/reaudit',
 
       // if has leaf reporter who assigned this report to some other person then
       // don't flag report to DRAFT mode, because draft mode disables assignees to view the report
-      const lAssignment = await assignmentController.getAssignmentByReportIdForAuditer(req.params.id, assignment.sBy!)
+      const lAssignment = await assignmentController.getAssignmentByReportIdForReviewer(req.params.id, assignment.sBy!)
       if (lAssignment) {
         await assignmentController.updateById(lAssignment._id.toString(), {
           status: REPORT_AUDIT_STATUS.AUDIT,
@@ -226,7 +268,7 @@ router.post('/submissions/:id/approve',
   auth,
   async (req, res) => {
     try {
-      const assignment = await assignmentController.getAssignmentByReportIdForAuditer(req.params.id, req.user!._id)
+      const assignment = await assignmentController.getAssignmentByReportIdForReviewer(req.params.id, req.user!._id)
       if (!assignment) {
         throw new Error("Assignment not found")
       }
@@ -242,7 +284,7 @@ router.post('/submissions/:id/approve',
       // get upper assignment if exists
       const uAssignment = await assignmentController.getAssignmentByIndexForReporter(assignment.index!, assignment.aBy!)
       if (uAssignment) {
-        if (!req.body.submittedTo) {
+        if (! uAssignment.sTo && !req.body.submittedTo) {
           throw new Error("Report is submitted to none.")
         }
         await assignmentController.updateById(assignment._id.toString(), {

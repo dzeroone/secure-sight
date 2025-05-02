@@ -252,6 +252,18 @@ class UserController {
     })
   }
 
+  async getTransferSuggestions(userId: string) {
+    const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    const user = await userModel.findById(userId)
+    if(!user) throw new Error("user not found")
+    return userModel.find({
+      _id: {$ne: userId},
+      role: user.role
+    }, {
+      fullname: 1
+    })
+  }
+
   async removeAll() {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
     await userModel.deleteMany({})

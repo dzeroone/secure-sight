@@ -4,6 +4,7 @@ import { auth, hasRole } from '../../utils/auth-util';
 import userController from '../../controllers/user.controller';
 import { ROLES } from '../../constant';
 import meRouter from './me'
+import assignmentController from '../../controllers/assignment.controller';
 
 router.post('/',
   auth,
@@ -188,6 +189,38 @@ router.delete('/:id',
       })
     } catch (e: any) {
       res.status(e.status || 400).send({
+        success: false,
+        message: e.message
+      })
+    }
+  }
+)
+
+router.get('/:id/pending-assignments',
+  auth,
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
+  async (req: Request, res: Response) => {
+    try {
+      let data = await assignmentController.getPendingAssignmentsForUser(req.params.id)
+      res.send(data)
+    } catch (e: any) {
+      res.status(400).send({
+        success: false,
+        message: e.message
+      })
+    }
+  }
+)
+
+router.get('/:id/transfer-suggestions',
+  auth,
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
+  async (req: Request, res: Response) => {
+    try {
+      let data = await userController.getTransferSuggestions(req.params.id)
+      res.send(data)
+    } catch (e: any) {
+      res.status(400).send({
         success: false,
         message: e.message
       })

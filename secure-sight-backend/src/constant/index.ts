@@ -62,3 +62,10 @@ export const CHART_EXTRAS = {
 }
 
 export const REPORT_DIR = path.resolve(process.cwd(), 'pdf_reports')
+
+export const responsibilities = Object.freeze({
+    ASSIGNEE: 'Assignee',
+    REPORTER: 'Reporter',
+    REVIEWER: 'Reviewer',
+    REPORT_CREATOR: 'Report creator'
+  })

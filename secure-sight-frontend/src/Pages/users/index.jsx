@@ -1,4 +1,4 @@
-import { Edit2Icon, Search, TrashIcon, UserPlus2Icon } from "lucide-react";
+import { Edit2Icon, GitPullRequestArrowIcon, Search, TrashIcon, UserPlus2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Input, Table, UncontrolledTooltip } from "reactstrap";
@@ -187,6 +187,9 @@ export default function UserIndexPage() {
                     <Button size="sm" color="danger" id={`ddu-${user._id}`} onClick={() => deleteUser(user)}>
                       <TrashIcon size="1em" />
                     </Button>
+                    <Link className="btn btn-info btn-sm" id={`edut-${user._id}`} to={`/users/${user._id}/transfer-tasks`}>
+                      <GitPullRequestArrowIcon size="1em" />
+                    </Link>
                   </div>
                   <UncontrolledTooltip
                     placement="left"
@@ -199,6 +202,12 @@ export default function UserIndexPage() {
                     target={`ddu-${user._id}`}
                   >
                     Delete user
+                  </UncontrolledTooltip>
+                  <UncontrolledTooltip
+                    placement="left"
+                    target={`edut-${user._id}`}
+                  >
+                    Transfer tasks
                   </UncontrolledTooltip>
                 </td>
               </tr>

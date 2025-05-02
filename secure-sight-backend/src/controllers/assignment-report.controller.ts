@@ -61,6 +61,13 @@ class AssignmentReportController {
     })
   }
 
+  async getOneByIndexForReporter(index: string, reporterId: string) {
+    return assignmentReportModel.findOne({
+      index,
+      reporterId
+    })
+  }
+
   async save(data: MonthlyReportValidationValues | WeeklyReportValidationValues, user: Express.User, reportType: ReportType) {
     if (reportType == 'monthly') {
       data = data as MonthlyReportValidationValues
@@ -163,6 +170,17 @@ class AssignmentReportController {
     return this.updateById(id, {
       auditStatus: REPORT_AUDIT_STATUS.APPROVED,
       fileName
+    })
+  }
+
+  async updateReporter(id: string, reporterId: string) {
+    return assignmentReportModel.updateOne({
+      _id: id
+    }, {
+      $set: {
+        reporterId,
+        uAt: new Date()
+      }
     })
   }
 
