@@ -235,7 +235,7 @@ export default function TransferReportsPage() {
               return (
                 <>
                   <div className="d-flex gap-1">
-                    <Button id={`adi-${data._id}`} size="sm" color="info" onClick={() => onClickArchive(data)}>
+                    <Button id={`adi-${data._id}`} size="sm" color="info" onClick={() => onClickArchive(data)} disabled={!data.reportId}>
                       <ArchiveIcon size='1rem' />
                     </Button>
                     <Button id={`adt-${data._id}`} size="sm" color="danger" onClick={() => onClickRemove(data)}>
