@@ -187,7 +187,7 @@ export default function UserIndexPage() {
                     <Button size="sm" color="danger" id={`ddu-${user._id}`} onClick={() => deleteUser(user)}>
                       <TrashIcon size="1em" />
                     </Button>
-                    <Link className="btn btn-info btn-sm" id={`edut-${user._id}`} to={`/users/${user._id}/transfer-tasks`}>
+                    <Link className="btn btn-info btn-sm" id={`edut-${user._id}`} to={`/users/${user._id}/transfer-reports`}>
                       <GitPullRequestArrowIcon size="1em" />
                     </Link>
                   </div>
@@ -207,7 +207,7 @@ export default function UserIndexPage() {
                     placement="left"
                     target={`edut-${user._id}`}
                   >
-                    Transfer tasks
+                    Transfer reports
                   </UncontrolledTooltip>
                 </td>
               </tr>

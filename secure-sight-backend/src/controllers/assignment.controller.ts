@@ -353,6 +353,7 @@ class AssignmentController {
   async reportApproved(assignment: AssignmentDocumentType, reportId: string, submitter: Express.User) {
     await this.updateById(assignment._id.toString(), {
       status: REPORT_AUDIT_STATUS.APPROVED,
+      reportId,
       sCBy: submitter._id
     })
 
@@ -360,6 +361,7 @@ class AssignmentController {
     while (lAssignment) {
       await this.updateById(lAssignment._id.toString(), {
         status: REPORT_AUDIT_STATUS.APPROVED,
+        reportId,
         sCBy: submitter._id
       })
       lAssignment = await this.getAssignmentByReportIdForAssignee(reportId, lAssignment.reporterId!)
@@ -490,6 +492,20 @@ class AssignmentController {
       index
     }, { reporterId: 1 })
     return docs.map(d => d.reporterId)
+  }
+
+  async getRootAssignment(assignment: AssignmentDocumentType) {
+    let uAssignment = await this.getAssignmentByIndexForReporter(assignment.index!, assignment.aBy!)
+    if(!uAssignment) return assignment;
+    while(uAssignment) {
+      // @ts-ignore
+      const rAssignment = await this.getAssignmentByIndexForReporter(uAssignment.index!, uAssignment.aBy!)
+      if(rAssignment) {
+        uAssignment = rAssignment
+      }else{
+        return uAssignment
+      }
+    }
   }
 
   async isReporterAssignedForIndex(reporterId: string, index: string) {

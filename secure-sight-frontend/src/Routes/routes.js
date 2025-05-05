@@ -45,7 +45,7 @@ import TeamEdit from "../Pages/team/edit";
 import DeletedCustomersPage from "../Pages/customers/deleted";
 import TransferAdminPage from "../Pages/users/transfer-admin";
 import DeletedUserIndexPage from "../Pages/users/deleted";
-import TransferTasksPage from "../Pages/users/transfer-tasks";
+import TransferReportsPage from "../Pages/users/transfer-reports";
 
 export const history = createBrowserHistory({ window });
 
@@ -85,7 +85,7 @@ const authProtectedRoutes = [
   },
   {
     roles: [ROLES.ADMIN, ROLES.LEVEL3],
-    path: "/users/:id/transfer-tasks", component: <TransferTasksPage />
+    path: "/users/:id/transfer-reports", component: <TransferReportsPage />
   },
   // Customers
   {

@@ -119,11 +119,11 @@ router.get('/:id',
   hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
   async (req: Request, res: Response) => {
     try {
-      if (req.user?.role == ROLES.LEVEL3) {
-        let data = await userController.getUserByIdAndRole(req.params.id, [ROLES.LEVEL2, ROLES.LEVEL1])
-        res.send(data)
-        return
-      }
+      // if (req.user?.role == ROLES.LEVEL3) {
+      //   let data = await userController.getUserByIdAndRole(req.params.id, [ROLES.LEVEL2, ROLES.LEVEL1])
+      //   res.send(data)
+      //   return
+      // }
       let data = await userController.getUserById(req.params.id)
       res.send(data)
     } catch (e: any) {

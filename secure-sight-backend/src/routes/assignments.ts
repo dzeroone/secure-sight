@@ -104,6 +104,7 @@ router.get('/:id/suggest-reporters',
 
 router.post('/:id/transfer-tasks',
   auth,
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
   async (req, res) => {
     try {
       const assignment = await assignmentController.getById(req.params.id)
@@ -135,6 +136,49 @@ router.post('/:id/transfer-tasks',
       }else{
         throw new Error("Invalid task")
       }
+      res.sendStatus(200)
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.post('/:id/archive',
+  auth,
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
+  async (req, res) => {
+    try {
+      const assignment = await assignmentController.getById(req.params.id)
+      if (!assignment) {
+        throw new Error("Assignment not found.")
+      }
+      if(!assignment.reportId) {
+        throw new Error("No report has been submitted for this assignment.")
+      }
+      const rootAssingment = await assignmentController.getRootAssignment(assignment)
+      await assignmentController.reportApproved(rootAssingment!, assignment.reportId, req.user!)
+      res.sendStatus(200)
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.post('/:id/force-remove',
+  auth,
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
+  async (req, res) => {
+    try {
+      const assignment = await assignmentController.getById(req.params.id)
+      if (!assignment) {
+        throw new Error("Assignment not found.")
+      }
+      const rootAssingment = await assignmentController.getRootAssignment(assignment)
+      await assignmentController.delete(rootAssingment!)
       res.sendStatus(200)
     } catch (e: any) {
       res.status(e.status || 400).send({
