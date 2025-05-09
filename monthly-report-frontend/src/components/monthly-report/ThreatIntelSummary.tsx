@@ -4,6 +4,7 @@ import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
 import { CHART_EXTRAS } from "@@/constants";
+import { Typography } from "@mui/material";
 
 export const ThreatIntelSummary = () => {
   const data = useAppSelector(
@@ -116,7 +117,7 @@ export const ThreatIntelSummary = () => {
                     <td>{k + 1}.</td>
                     <td>{j.advisory_name}</td>
                     <td>{j.ioc_type}</td>
-                    <td>{j.detail}</td>
+                    <Typography component='td' variant="inherit" sx={{ wordBreak: 'break-all'}}>{j.detail}</Typography>
                     <td>{j.endpoint_name}</td>
                   </tr>
                 ))}
