@@ -23,6 +23,7 @@ import {
   incidentSummaryReducer,
   matchSummaryReducer,
   clientReducer,
+  tableOfContentsReducer,
 } from "../features/weekly/weeklySlice";
 import sloReducer from "../features/weekly/sloSlice";
 
@@ -51,6 +52,7 @@ const combinedReducer = combineReducers({
   incidentSummary: incidentSummaryReducer,
   matchSummary: matchSummaryReducer,
   client: clientReducer,
+  tableOfContents: tableOfContentsReducer
 });
 
 export type RootState = ReturnType<typeof combinedReducer>;

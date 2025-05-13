@@ -54,7 +54,7 @@ const FirstPage = () => {
             gap: 500,
           }}
         >
-          <p style={{ margin: 0, fontSize: "1.8rem" }}>{data.date} Metrics</p>
+          <p style={{ margin: 0, fontSize: "1.8rem" }}>{data.date}</p>
           <p style={{ margin: 0, fontSize: "1.8rem" }}>{data.client_name}</p>
         </div>
       </div>

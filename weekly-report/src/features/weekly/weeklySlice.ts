@@ -2,12 +2,22 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // --- Data Slice for Licenses and Products ---
 
-interface ClientState {
+export interface ClientState {
   clientName: string;
+  tenantCode: string;
+  subtitle: string;
+  title: string;
+  dateFrom: string;
+  dateTo: string;
 }
 
 const initialClientState: ClientState = {
   clientName: "",
+  tenantCode: "",
+  subtitle: "SOCaaS",
+  title: "WEEKLY REPORT",
+  dateFrom: "",
+  dateTo: ""
 };
 
 const clientSlice = createSlice({
@@ -23,13 +33,85 @@ const clientSlice = createSlice({
     deleteClientName: (state) => {
       state.clientName = "";
     },
+    updateClientState(state, action: PayloadAction<{field: keyof ClientState, value: string}>) {
+      state[action.payload.field] = action.payload.value
+    }
   },
 });
 
 // Export actions and reducer
-export const { updateClientName, clearClientName, deleteClientName } =
+export const { updateClientName, clearClientName, deleteClientName, updateClientState } =
   clientSlice.actions;
 export const clientReducer = clientSlice.reducer;
+
+// Table of Contents
+export interface TableIndexInfo {
+  title: string
+  page: number
+}
+
+const initialTableOfContentsState: TableIndexInfo[] = [{
+  title: 'Executive Summary',
+  page: 1
+}, {
+  title: 'Threat Intel Summary',
+  page: 3
+}, {
+  title: 'Indicators of Compromise (IOC) Match Summary',
+  page: 3
+}, {
+  title: 'Incident Summary by Severity',
+  page: 4
+}, {
+  title: 'Incident Summary by Status',
+  page: 4
+}, {
+  title: 'Incidents Summary by Priority',
+  page: 5
+}, {
+  title: 'Top 10 Incidents Summary by Category',
+  page: 5
+}, {
+  title: 'Pending Incident Summary',
+  page: 6
+}, {
+  title: 'SLO Summary',
+  page: 7
+}, {
+  title: 'Endpoint Inventory',
+  page: 8
+}, {
+  title: 'Connected Products and License Information',
+  page: 8
+}, {
+  title: 'Key feature adoption rate of Apex One',
+  page: 9
+}, {
+  title: 'Key feature adoption rate of Cloud One Workload Security',
+  page: 10
+}];
+
+const tableOfContentsSlice = createSlice({
+  name: "tableOfContents",
+  initialState: initialTableOfContentsState,
+  reducers: {
+    updateTableOfContents(state, action: PayloadAction<{index: number, field: keyof TableIndexInfo, value: string | number}>) {
+      return state.map((s, i) => {
+        if(i == action.payload.index) {
+          return {
+            ...s,
+            [action.payload.field]: action.payload.value
+          }
+        }
+        return s
+      })
+    }
+  },
+});
+export const { updateTableOfContents } =
+tableOfContentsSlice.actions;
+export const tableOfContentsReducer = tableOfContentsSlice.reducer;
+// End Table of Contents
 
 interface DataState {
   licenses: { Status: string; Product: string }[];

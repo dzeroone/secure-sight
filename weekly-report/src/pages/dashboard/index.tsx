@@ -1,3 +1,4 @@
+import moment from "moment";
 import { enqueueSnackbar } from "notistack";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { GrFormPrevious } from "react-icons/gr";
@@ -17,13 +18,15 @@ import EndpointProtectionForm from "../../components/form/EndpointProtectionForm
 import EpiForm from "../../components/form/EpiForm";
 import { LicenseForm, ProductForm } from "../../components/form/EpiTableForm";
 import FirstPageForm from "../../components/form/FirstPageForm";
+import SelectInput from "../../components/form/Inputs";
 import KfaForm from "../../components/form/KfaForm";
 import KfdForm from "../../components/form/KfdForm";
 import KfwForm from "../../components/form/KfwForm";
+import Label from "../../components/form/Label";
 import PisForm from "../../components/form/PisForm";
 import SloForm from "../../components/form/SloFrom";
+import TableOfContentsForm from "../../components/form/TableOfContentsForm";
 import TisForm from "../../components/form/TisForm";
-import InputLabel from "../../components/InputLabel";
 import Navbar from "../../components/Navbar";
 import EndpointInventory from "../../components/pdf-components/EndpointInventory";
 import ExecutiveSummary from "../../components/pdf-components/ExecutiveSummary";
@@ -35,14 +38,15 @@ import PendingIncidentsSummary from "../../components/pdf-components/PendingInci
 import SloSummary from "../../components/pdf-components/SloSummary";
 import TableOfContents from "../../components/pdf-components/TableOfContents";
 import ThreatIntelSummary from "../../components/pdf-components/ThreatIntelSummary";
-import SelectInput from "../../components/SelectInput";
+import Alert from "../../components/ui/Alert";
 import axiosApi from "../../config/axios";
 import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "../../data/data";
+import { updateClientName, updateClientState, updateTableOfContents } from "../../features/weekly/weeklySlice";
 import { withAuth } from "../../hocs/withAuth";
 import { useAuth } from "../../providers/AuthProvider";
 import store, { RootState } from "../../store/store";
 import { getErrorMessage } from "../../utils/helpers";
-import Alert from "../../components/ui/Alert";
+import ExecutiveSummaryForm from "../../components/form/ExecutiveSummaryForm";
 
 const Dashboard = () => {
   const router = useNavigate();
@@ -159,6 +163,32 @@ const Dashboard = () => {
               canSubmitReport: responseData.canSubmitReport,
             };
           });
+          dispatch(updateClientName(responseData.customer.name));
+          dispatch(updateClientState({
+            field: "tenantCode",
+            value: responseData.customer.tCode.toUpperCase()
+          }))
+          dispatch(updateClientState({
+            field: "dateFrom",
+            value: moment(data.WEEKLY_REPORT?.start_date).format("Do MMMM YYYY")
+          }));
+          dispatch(updateClientState({
+            field: "dateTo",
+            value: moment(data.WEEKLY_REPORT?.end_date).format("Do MMMM YYYY")
+          }));
+
+          data.TABLE_OF_CONTENTS?.date?.TABLE_OF_CONTENTS?.forEach((t: any, i: number) => {
+            dispatch(updateTableOfContents({
+              index: i,
+              field: 'title',
+              value: t.title
+            }))
+            dispatch(updateTableOfContents({
+              index: i,
+              field: 'page',
+              value: t.page_no
+            }))
+          })
         }
       } else {
         dispatch({
@@ -366,7 +396,7 @@ const Dashboard = () => {
     data: incidentSummarySeverity.data[incidentSummarySeverity.key],
   };
 
-  const clientName = useSelector((state: RootState) => state.client.clientName);
+  const client = useSelector((state: RootState) => state.client);
 
   const handleNext = () => {
     sliderRef.current?.slickNext();
@@ -461,9 +491,9 @@ const Dashboard = () => {
                   ) : null}
                   {reportState.canSubmitReport ? (
                     <div>
-                      <InputLabel htmlFor="status-select-label">
+                      <Label htmlFor="status-select-label">
                         Status
-                      </InputLabel>
+                      </Label>
                       <SelectInput
                         id="status-select-label"
                         value={reportState.status}
@@ -502,6 +532,12 @@ const Dashboard = () => {
                   <Slider {...sliderSettings} ref={sliderRef}>
                     <div>
                       <FirstPageForm />
+                    </div>
+                    <div>
+                      <TableOfContentsForm />
+                    </div>
+                    <div>
+                      <ExecutiveSummaryForm />
                     </div>
                     <div>
                       <AlcForm />
@@ -546,13 +582,13 @@ const Dashboard = () => {
               {reportData?.WEEKLY_REPORT && (
                 <FirstPage
                   data={reportData.WEEKLY_REPORT}
-                  clientName={clientName}
+                  client={client}
                 />
               )}
 
               {/* Table of contents */}
               {reportData?.TABLE_OF_CONTENTS && (
-                <TableOfContents data={reportData.TABLE_OF_CONTENTS} />
+                <TableOfContents />
               )}
 
               {/* Executive summary */}

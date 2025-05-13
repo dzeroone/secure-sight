@@ -290,7 +290,7 @@ const MonthlyReportForm = () => {
   };
 
   const onSaveMonthlyReport = () => {
-    if (!pageState.assignment?.sTo && pageState.canSubmitReport) {
+    if (!pageState.assignment?.sTo && pageState.canSubmitReport && pageState.status == 1) {
       setSelectReporterShown(true);
     } else {
       saveMonthlyReport();

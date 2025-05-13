@@ -51,7 +51,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const signout = useCallback(() => {
     setAuth(null);
-    location.replace("/");
+    window.location.replace("/");
   }, [setAuth, router]);
 
   const contextValue = useMemo(

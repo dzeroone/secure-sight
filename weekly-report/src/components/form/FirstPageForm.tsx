@@ -4,12 +4,15 @@ import { RootState } from "../../store/store";
 import {
   updateClientName,
   deleteClientName,
+  updateClientState,
 } from "../../features/weekly/weeklySlice";
 import { FiTrash2 } from "react-icons/fi"; // Import icons
+import Label from "./Label";
+import { TextInput } from "./Inputs";
 
 function FirstPageForm() {
   const dispatch = useDispatch();
-  const clientName = useSelector((state: RootState) => state.client.clientName);
+  const client = useSelector((state: RootState) => state.client);
 
   const handleClientNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -26,39 +29,70 @@ function FirstPageForm() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg border shadow-md">
-      <div className="mb-4">
-        <label
-          htmlFor="client-name"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Client Name
-        </label>
-        <input
-          id="client-name"
-          type="text"
-          value={clientName}
-          onChange={handleClientNameChange}
-          className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          placeholder="Enter client name"
+    <div className="p-6 flex flex-col gap-4 bg-white rounded-lg border shadow-md">
+      <div>
+        <Label>Subtitle</Label>
+        <TextInput
+          value={client.subtitle}
+          onChange={(e) => {
+            dispatch(updateClientState({ field: 'subtitle', value: e.target.value }))
+          }}
         />
       </div>
-      <div className="flex space-x-4">
-        {/* <button
-                    onClick={handleUpdateClientName}
-                    className="p-2 bg-[#2f3848] text-white rounded-md flex items-center"
-                    aria-label="Update Name"
-                >
-                    <IoCheckmarkCircleOutline
-                        size={20} />
-                </button> */}
-        <button
-          onClick={handleDeleteClientName}
-          className="p-2 bg-[#ef4444] text-white rounded-md flex items-center"
-          aria-label="Delete Name"
-        >
-          <FiTrash2 size={20} />
-        </button>
+      <div>
+        <Label>Title</Label>
+        <TextInput
+          value={client.title}
+          onChange={(e) => {
+            dispatch(updateClientState({ field: 'title', value: e.target.value }))
+          }}
+        />
+      </div>
+      <div>
+        <Label htmlFor="client-name">Client Name</Label>
+        <div className="flex space-x-4">
+          <TextInput
+            id="client-name"
+            type="text"
+            value={client.clientName}
+            onChange={handleClientNameChange}
+            placeholder="Enter client name"
+          />
+          <button
+            onClick={handleDeleteClientName}
+            className="p-2 bg-[#ef4444] text-white rounded-md flex items-center"
+            aria-label="Delete Name"
+          >
+            <FiTrash2 size={20} />
+          </button>
+        </div>
+      </div>
+      <div>
+        <Label>Tenant code</Label>
+        <TextInput
+          value={client.tenantCode}
+          onChange={(e) => {
+            dispatch(updateClientState({ field: 'tenantCode', value: e.target.value }))
+          }}
+        />
+      </div>
+      <div>
+        <Label>Date start</Label>
+        <TextInput
+          value={client.dateFrom}
+          onChange={(e) => {
+            dispatch(updateClientState({ field: 'dateFrom', value: e.target.value }))
+          }}
+        />
+      </div>
+      <div>
+        <Label>Date end</Label>
+        <TextInput
+          value={client.dateTo}
+          onChange={(e) => {
+            dispatch(updateClientState({ field: 'dateTo', value: e.target.value }))
+          }}
+        />
       </div>
     </div>
   );

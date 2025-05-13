@@ -3,13 +3,14 @@ import BgMain from "../../assets/images/bg-main.png";
 import Bg from "../../assets/images/bg.png";
 import EventusLogo from "../../assets/images/eventus.png";
 import TrendMicroLogo from "../../assets/images/trend-micro.png";
+import { ClientState } from "../../features/weekly/weeklySlice";
 
 interface Props {
   data: any;
-  clientName: string;
+  client: ClientState;
 }
 
-const FirstPage = ({ data, clientName }: Props) => {
+const FirstPage = ({ data, client }: Props) => {
   return (
     <>
       <div
@@ -25,16 +26,16 @@ const FirstPage = ({ data, clientName }: Props) => {
             <img src={TrendMicroLogo} className="brand-logo" alt="" />
           </div>
           <div className="page-title">
-            <h4>SOCaaS</h4>
+            <h4>{client.subtitle}</h4>
             <h2>
-              WEEKLY <br /> REPORT
+              {client.title}
             </h2>
           </div>
           <div className="client-detail">
-            <h3>{clientName}</h3>
+            <h3>{client.clientName}</h3>
             <p>
-              {moment(data?.start_date).format("Do MMMM YYYY")} to <br />{" "}
-              {moment(data?.end_date).format("Do MMMM YYYY")}
+              {client.dateFrom} to <br />{" "}
+              {client.dateTo}
             </p>
           </div>
         </div>

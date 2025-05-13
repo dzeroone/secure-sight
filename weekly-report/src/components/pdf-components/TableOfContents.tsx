@@ -1,6 +1,11 @@
+import { useSelector } from "react-redux";
 import BgFlipped from "../../assets/images/bg-flipped.png";
+import { RootState } from "../../store/store";
+import { TableIndexInfo } from "../../features/weekly/weeklySlice";
 
-const TableOfContents = ({ data }: any) => {
+const TableOfContents = () => {
+  const data = useSelector((state: RootState) => state.tableOfContents);
+
   return (
     <div
       className="table-of-content"
@@ -13,13 +18,13 @@ const TableOfContents = ({ data }: any) => {
       <div className="px-12">
         <table className="mt-10 w-full mx-auto">
           <tbody>
-            {data?.date.TABLE_OF_CONTENTS.map((item: any, i: number) => (
+            {data.map((item: TableIndexInfo, i: number) => (
               <tr key={i}>
                 <td className="p-2 text-lg">
-                  <a href={`#${item.link}`}>{item.title}</a>
+                  <a href={`#`}>{item.title}</a>
                   {/* {item.title} */}
                 </td>
-                <td className="p-2 text-right text-lg">{item.page_no}</td>
+                <td className="p-2 text-right text-lg">{item.page}</td>
               </tr>
             ))}
           </tbody>
