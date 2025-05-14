@@ -24,10 +24,14 @@ import {
   matchSummaryReducer,
   clientReducer,
   tableOfContentsReducer,
+  executiveSummaryReducer,
+  recommendationReducer,
 } from "../features/weekly/weeklySlice";
 import sloReducer from "../features/weekly/sloSlice";
 
 const combinedReducer = combineReducers({
+  executiveSummary: executiveSummaryReducer,
+  recommendation: recommendationReducer,
   alc: alcReducer,
   tis: tisReducer,
   pis: pisReducer,

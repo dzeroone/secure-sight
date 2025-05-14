@@ -1,63 +1,104 @@
 import DoughnutChat from "../charts/DoughnutChat";
 import PieChart from "../charts/PieChart";
 import moment from "moment";
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { pluralize } from "../../utils/helpers";
+import RecommendationNotes from "../RecommendationNotes";
 
 interface ExecutiveSummaryProps {
   data: any;
   formData: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
+    key: "Recommendations" | "Notes" | "Summary";
     data: string[];
   };
   formData2: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
+    key: "Recommendations" | "Notes" | "Summary";
     data: string[];
   };
   formData3: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
+    key: "Recommendations" | "Notes" | "Summary";
     data: string[];
   };
 }
 
-
-const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, formData2, formData3 }) => {
-
+const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
+  data,
+  formData,
+  formData2,
+  formData3,
+}) => {
   const endpointData = useSelector(
     (state: RootState) => state.endpoint.endpointData
   );
   const apexOne = useSelector((state: RootState) => state.apexOne);
 
+  const executiveSummaryData = useSelector(
+    (s: RootState) => s.executiveSummary
+  );
+  const clientData = useSelector((s: RootState) => s.client);
+  const agentLifeCycleRecommendations = useSelector(
+    (s: RootState) => s.recommendation.agentLifeCycle
+  );
+
   const chartData = {
     title: "apex_one",
     data: [
-      Number(apexOne.latestVersion),
-      Number(apexOne.olderVersion),
-      Number(apexOne.endOfLife),
+      apexOne.allV,
+      apexOne.latestVersion,
+      apexOne.olderVersion,
+      apexOne.nsOS,
+      apexOne.osInc,
+      apexOne.endOfLife,
     ],
     backgroundColor: [
       "rgb(255, 130, 0)",
-      "rgb(105, 105, 105)",
-      "rgb(211, 47, 47)",
+      "rgb(255, 141, 24)",
+      "rgb(255, 154, 52)",
+      "rgb(255, 170, 84)",
+      "rgb(255, 189, 121)",
+      "rgb(255, 234, 211)",
     ],
-    label: ["Latest Version", "Older Version", "End of Life"],
+    label: [
+      "All version",
+      "Latest version",
+      "Older version",
+      "Not supported OS",
+      "OS incompatible",
+      "End of Life",
+    ],
   };
 
-  const workloadSecurity = useSelector((state: RootState) => state.workloadSecurity);
+  const workloadSecurity = useSelector(
+    (state: RootState) => state.workloadSecurity
+  );
 
   const chartData2 = {
     title: "workload_security",
     data: [
-      Number(workloadSecurity.latestVersion),
-      Number(workloadSecurity.olderVersion),
-      Number(workloadSecurity.endOfLife),
+      workloadSecurity.allV,
+      workloadSecurity.latestVersion,
+      workloadSecurity.olderVersion,
+      workloadSecurity.nsOS,
+      workloadSecurity.osInc,
+      workloadSecurity.endOfLife,
     ],
     backgroundColor: [
       "rgb(255, 130, 0)",
-      "rgb(105, 105, 105)",
-      "rgb(211, 47, 47)",
+      "rgb(255, 141, 24)",
+      "rgb(255, 154, 52)",
+      "rgb(255, 170, 84)",
+      "rgb(255, 189, 121)",
+      "rgb(255, 234, 211)",
     ],
-    label: ["Latest Version", "Older Version", "End of Life"],
+    label: [
+      "All version",
+      "Latest version",
+      "Older version",
+      "Not supported OS",
+      "OS incompatible",
+      "End of Life",
+    ],
   };
 
   return (
@@ -68,22 +109,11 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
           <li className="text-sm mb-2">
             A total number of{" "}
             <strong>
-              {data?.date.EXECUTIVE_SUMMARY.total_incidents.total_incidents}{" "}
-              incidents
+              {pluralize(executiveSummaryData.nOfIncidents, "incident")}
             </strong>{" "}
             were observed during the time frame of{" "}
-            <strong>
-              {moment(
-                data?.date.EXECUTIVE_SUMMARY.total_incidents.start_date
-              ).format("Do MMMM YYYY")}
-            </strong>{" "}
-            to{" "}
-            <strong>
-              {moment(
-                data?.date.EXECUTIVE_SUMMARY.total_incidents.end_date
-              ).format("Do MMMM YYYY")}
-            </strong>
-            .
+            <strong>{clientData.dateFrom}</strong> to{" "}
+            <strong>{clientData.dateTo}</strong>.
           </li>
           <li>
             <strong>Risk Index:</strong>
@@ -97,21 +127,26 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
                   <td width="15%" className="p-5">
                     <div className="w-[150px] relative">
                       <DoughnutChat
-                        data={
-                          data?.date.EXECUTIVE_SUMMARY.risk_index.chart || ""
-                        }
+                        data={{
+                          data: [
+                            executiveSummaryData.riskIndex,
+                            100 - executiveSummaryData.riskIndex,
+                          ],
+                          backgroundColor: [
+                            "rgb(255, 130, 0)",
+                            "rgb(105, 105, 105)",
+                          ],
+                        }}
                         label={false}
                       />
                       <p className="absolute top-1/2 left-1/2 m-0 text-2xl font-normal -translate-x-1/2 -translate-y-1/2">
-                        {data?.date.EXECUTIVE_SUMMARY.risk_index.chart.data[0]}%
+                        {executiveSummaryData.riskIndex}%
                       </p>
                     </div>
                   </td>
                   <td className="p-5">
                     <p className="m-0 text-justify italic text-black font-normal">
-                      The Risk Index is a comprehensive score based on the
-                      dynamic assessment of risk factors inclusive of exposure,
-                      attack risk, and security configurations risk.
+                      {executiveSummaryData.riskContent}
                     </p>
                   </td>
                   <td></td>
@@ -121,34 +156,29 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
           </li>
           <li className="text-sm mb-2">
             <strong>
-              {data?.date.EXECUTIVE_SUMMARY.highly_exploitable} Highly
-              exploitable unique CVEs
+              {executiveSummaryData.nOfDVul} Highly exploitable unique CVEs
             </strong>{" "}
             in Endpoints.
           </li>
           <li className="text-sm mb-2">
-            <strong>
-              {data?.date.EXECUTIVE_SUMMARY.Incident_Closed} Incident
-            </strong>{" "}
-            Closed without Customer Acknowledgement.
+            <strong>{executiveSummaryData.nOfICWoAck} Incident</strong> Closed
+            without Customer Acknowledgement.
           </li>
         </ul>
 
         <p>
           <strong>
-            Top {data?.date.EXECUTIVE_SUMMARY.top_incident.no_incidents}{" "}
+            Top{" "}
+            {data?.date.EXECUTIVE_SUMMARY.top_incident.no_incidents > 5
+              ? 5
+              : data?.date.EXECUTIVE_SUMMARY.top_incident.no_incidents}{" "}
             Incidents:
           </strong>
         </p>
         <ul>
           <li className="mb-4 text-sm">
-            Highest({data?.date.EXECUTIVE_SUMMARY.Highest_incidient}) Incidents
-            triggered on{" "}
-            <strong>
-              {moment(
-                data?.date.EXECUTIVE_SUMMARY.Highest_incidient_date
-              ).format("Do MMMM YYYY")}
-            </strong>
+            Highest({executiveSummaryData.nOfTIncidents}) Incidents triggered on{" "}
+            <strong>{executiveSummaryData.iTDate}</strong>
           </li>
         </ul>
         <table
@@ -187,31 +217,21 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
               <td width="35%">
                 <div className="w-[220px] mx-auto">
                   {/* <canvas id="apexOne" /> */}
-                  <PieChart
-                    data={
-                      chartData
-                    }
-                  />
+                  <PieChart data={chartData} />
                   {/* <PieChart
                     data={
                       data?.date.EXECUTIVE_SUMMARY.agent_life_cycle.apex_chart
                     }
                   /> */}
                   <p className="text-xs font-bold mt-3 capitalize">
-                    {data?.date.EXECUTIVE_SUMMARY.agent_life_cycle.apex_chart.title
-                      .split("_")
-                      .join(" ")}
+                    {apexOne.title}
                   </p>
                 </div>
               </td>
               <td width="35%">
                 <div className="w-[220px] mx-auto">
                   {/* <canvas id="workloadSecurity" /> */}
-                  <PieChart
-                    data={
-                      chartData2
-                    }
-                  />
+                  <PieChart data={chartData2} />
                   {/* <PieChart
                     data={
                       data?.date.EXECUTIVE_SUMMARY.agent_life_cycle
@@ -224,21 +244,12 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
                       .join(" ")}/Deep Security
                   </p> */}
                   <p className="text-xs font-bold mt-3 capitalize">
-                    Workload/Deep Security
+                    {workloadSecurity.title}
                   </p>
                 </div>
               </td>
               <td width="30%">
-                <p className="font-bold capitalize">
-                  {formData?.key}
-                </p>
-                <ul className="list-inside text-justify">
-                  {formData?.data.map((item: string, i: number) => (
-                    <li key={i} className="text-sm">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+                <RecommendationNotes notes={agentLifeCycleRecommendations} />
               </td>
             </tr>
             <tr className="h-6"></tr>
@@ -299,12 +310,11 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
             {endpointData.map((item, index) => (
               <tr key={index}>
                 <td className="p-4 font-medium">{item.endpointName}</td>
-                <td className="p-4 font-medium">{item.detectionsWithSeverity}</td>
+                <td className="p-4 font-medium">
+                  {item.detectionsWithSeverity}
+                </td>
                 {index === 0 && (
-                  <td
-                    className="p-4 font-medium"
-                    rowSpan={endpointData.length}
-                  >
+                  <td className="p-4 font-medium" rowSpan={endpointData.length}>
                     {item.actionTakenBySoc}
                   </td>
                 )}
@@ -335,12 +345,13 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
                     <div
                       className="bar-progress"
                       style={{
-                        width: `${(data?.date.EXECUTIVE_SUMMARY.endpoint_protection
-                          .data[0] /
-                          data?.date.EXECUTIVE_SUMMARY.endpoint_protection
-                            .data[1]) *
+                        width: `${
+                          (data?.date.EXECUTIVE_SUMMARY.endpoint_protection
+                            .data[0] /
+                            data?.date.EXECUTIVE_SUMMARY.endpoint_protection
+                              .data[1]) *
                           100
-                          }%`,
+                        }%`,
                       }}
                     ></div>
                   </div>
@@ -356,9 +367,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
         </div>
         <div className="my-4">
           <td width="30%">
-            <p className="font-bold capitalize">
-              {formData2?.key}
-            </p>
+            <p className="font-bold capitalize">{formData2?.key}</p>
             <ul className="list-inside text-justify">
               {formData2?.data.map((item: string, i: number) => (
                 <li key={i} className="text-sm">
@@ -392,12 +401,13 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
                     <div
                       className="bar-progress"
                       style={{
-                        width: `${(data?.date.EXECUTIVE_SUMMARY.endpoint_sensor
-                          .data[0] /
-                          data?.date.EXECUTIVE_SUMMARY.endpoint_sensor
-                            .data[1]) *
+                        width: `${
+                          (data?.date.EXECUTIVE_SUMMARY.endpoint_sensor
+                            .data[0] /
+                            data?.date.EXECUTIVE_SUMMARY.endpoint_sensor
+                              .data[1]) *
                           100
-                          }%`,
+                        }%`,
                       }}
                     ></div>
                   </div>
@@ -413,9 +423,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data, formData, for
         </div>
         <div className="my-4">
           <td width="30%">
-            <p className="font-bold capitalize">
-              {formData3?.key}
-            </p>
+            <p className="font-bold capitalize">{formData3?.key}</p>
             <ul className="list-inside text-justify">
               {formData3?.data.map((item: string, i: number) => (
                 <li key={i} className="text-sm">

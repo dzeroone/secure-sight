@@ -41,7 +41,12 @@ import ThreatIntelSummary from "../../components/pdf-components/ThreatIntelSumma
 import Alert from "../../components/ui/Alert";
 import axiosApi from "../../config/axios";
 import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "../../data/data";
-import { updateClientName, updateClientState, updateTableOfContents } from "../../features/weekly/weeklySlice";
+import {
+  updateClientName,
+  updateClientState,
+  updateExecutiveSummary,
+  updateTableOfContents,
+} from "../../features/weekly/weeklySlice";
 import { withAuth } from "../../hocs/withAuth";
 import { useAuth } from "../../providers/AuthProvider";
 import store, { RootState } from "../../store/store";
@@ -164,31 +169,105 @@ const Dashboard = () => {
             };
           });
           dispatch(updateClientName(responseData.customer.name));
-          dispatch(updateClientState({
-            field: "tenantCode",
-            value: responseData.customer.tCode.toUpperCase()
-          }))
-          dispatch(updateClientState({
-            field: "dateFrom",
-            value: moment(data.WEEKLY_REPORT?.start_date).format("Do MMMM YYYY")
-          }));
-          dispatch(updateClientState({
-            field: "dateTo",
-            value: moment(data.WEEKLY_REPORT?.end_date).format("Do MMMM YYYY")
-          }));
+          dispatch(
+            updateClientState({
+              field: "tenantCode",
+              value: responseData.customer.tCode.toUpperCase(),
+            })
+          );
+          dispatch(
+            updateClientState({
+              field: "dateFrom",
+              value: moment(data.WEEKLY_REPORT?.start_date).format(
+                "Do MMMM YYYY"
+              ),
+            })
+          );
+          dispatch(
+            updateClientState({
+              field: "dateTo",
+              value: moment(data.WEEKLY_REPORT?.end_date).format(
+                "Do MMMM YYYY"
+              ),
+            })
+          );
 
-          data.TABLE_OF_CONTENTS?.date?.TABLE_OF_CONTENTS?.forEach((t: any, i: number) => {
-            dispatch(updateTableOfContents({
-              index: i,
-              field: 'title',
-              value: t.title
-            }))
-            dispatch(updateTableOfContents({
-              index: i,
-              field: 'page',
-              value: t.page_no
-            }))
-          })
+          data.TABLE_OF_CONTENTS?.date?.TABLE_OF_CONTENTS?.forEach(
+            (t: any, i: number) => {
+              dispatch(
+                updateTableOfContents({
+                  index: i,
+                  field: "title",
+                  value: t.title,
+                })
+              );
+              dispatch(
+                updateTableOfContents({
+                  index: i,
+                  field: "page",
+                  value: t.page_no,
+                })
+              );
+            }
+          );
+          dispatch(
+            updateExecutiveSummary({
+              field: "nOfIncidents",
+              value:
+                Number(
+                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY.total_incidents
+                    .total_incidents
+                ) || 0,
+            })
+          );
+          dispatch(
+            updateExecutiveSummary({
+              field: "riskIndex",
+              value:
+                Number(
+                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY.risk_index.chart
+                    .data[0]
+                ) || 0,
+            })
+          );
+          dispatch(
+            updateExecutiveSummary({
+              field: "nOfDVul",
+              value:
+                Number(
+                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY
+                    .highly_exploitable
+                ) || 0,
+            })
+          );
+          dispatch(
+            updateExecutiveSummary({
+              field: "nOfICWoAck",
+              value:
+                Number(
+                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY.Incident_Closed
+                ) || 0,
+            })
+          );
+          dispatch(
+            updateExecutiveSummary({
+              field: "nOfTIncidents",
+              value:
+                Number(
+                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY
+                    .Highest_incidient
+                ) || 0,
+            })
+          );
+          dispatch(
+            updateExecutiveSummary({
+              field: "iTDate",
+              value: moment(
+                data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY
+                  .Highest_incidient_date
+              ).format("Do MMMM YYYY"),
+            })
+          );
         }
       } else {
         dispatch({
@@ -491,9 +570,7 @@ const Dashboard = () => {
                   ) : null}
                   {reportState.canSubmitReport ? (
                     <div>
-                      <Label htmlFor="status-select-label">
-                        Status
-                      </Label>
+                      <Label htmlFor="status-select-label">Status</Label>
                       <SelectInput
                         id="status-select-label"
                         value={reportState.status}
@@ -580,16 +657,11 @@ const Dashboard = () => {
             <div className="print-section">
               {/* First page */}
               {reportData?.WEEKLY_REPORT && (
-                <FirstPage
-                  data={reportData.WEEKLY_REPORT}
-                  client={client}
-                />
+                <FirstPage data={reportData.WEEKLY_REPORT} client={client} />
               )}
 
               {/* Table of contents */}
-              {reportData?.TABLE_OF_CONTENTS && (
-                <TableOfContents />
-              )}
+              {reportData?.TABLE_OF_CONTENTS && <TableOfContents />}
 
               {/* Executive summary */}
               {reportData?.EXECUTIVE_SUMMARY && (

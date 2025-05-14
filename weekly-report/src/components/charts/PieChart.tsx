@@ -6,7 +6,7 @@ const PieChart = ({ data }: any) => {
     datasets: [
       {
         data: data.data,
-        backgroundColor: [
+        backgroundColor: data.backgroundColor ?? [
           "rgb(255, 130, 0)",
           "rgb(255, 169, 80)",
           "rgb(255, 217, 178)",

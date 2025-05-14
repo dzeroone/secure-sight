@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 import {
   setAlcKey,
   addAlcData,
@@ -10,17 +10,27 @@ import {
   editEndpointData,
   removeEndpointData,
   updateApexOneData,
-  updateWorkloadSecurityData
-} from '../../features/weekly/weeklySlice';
-import { MdClose, MdEdit } from 'react-icons/md';
+  updateWorkloadSecurityData,
+  ApexOneState,
+  WorkloadSecurityState,
+} from "../../features/weekly/weeklySlice";
+import { MdClose, MdEdit } from "react-icons/md";
+import Label from "./Label";
+import { TextInput } from "./Inputs";
+import RecommendationInput from "./RecommendationInput";
 
 const AlcForm = () => {
   const dispatch = useDispatch();
   const alc = useSelector((state: RootState) => state.alc);
   const { endpointData } = useSelector((state: RootState) => state.endpoint);
+  const recommendations = useSelector(
+    (s: RootState) => s.recommendation.agentLifeCycle
+  );
 
   const handleAlcKeyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setAlcKey(event.target.value as 'Recommendations' | 'Notes' | 'Summary'));
+    dispatch(
+      setAlcKey(event.target.value as "Recommendations" | "Notes" | "Summary")
+    );
   };
 
   const handleAlcChange = (index: number, value: string) => {
@@ -28,39 +38,43 @@ const AlcForm = () => {
   };
 
   const handleAddAlc = () => {
-    dispatch(addAlcData(''));
+    dispatch(addAlcData(""));
   };
 
   const handleRemoveAlc = (index: number) => {
     dispatch(removeAlcData(index));
   };
 
-  const [endpointName, setEndpointName] = useState('');
-  const [detectionsWithSeverity, setDetectionsWithSeverity] = useState('');
-  const [actionTakenBySoc, setActionTakenBySoc] = useState('');
+  const [endpointName, setEndpointName] = useState("");
+  const [detectionsWithSeverity, setDetectionsWithSeverity] = useState("");
+  const [actionTakenBySoc, setActionTakenBySoc] = useState("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const handleAddOrEditEndpoint = () => {
     if (endpointName && detectionsWithSeverity) {
       if (editIndex !== null) {
-        dispatch(editEndpointData({
-          index: editIndex,
-          updatedData: {
+        dispatch(
+          editEndpointData({
+            index: editIndex,
+            updatedData: {
+              endpointName,
+              detectionsWithSeverity,
+              actionTakenBySoc,
+            },
+          })
+        );
+        setEditIndex(null);
+      } else {
+        dispatch(
+          addEndpointData({
             endpointName,
             detectionsWithSeverity,
             actionTakenBySoc,
-          },
-        }));
-        setEditIndex(null);
-      } else {
-        dispatch(addEndpointData({
-          endpointName,
-          detectionsWithSeverity,
-          actionTakenBySoc,
-        }));
+          })
+        );
       }
-      setEndpointName('');
-      setDetectionsWithSeverity('');
+      setEndpointName("");
+      setDetectionsWithSeverity("");
     }
   };
 
@@ -76,145 +90,208 @@ const AlcForm = () => {
   };
 
   const apexOne = useSelector((state: RootState) => state.apexOne);
-  const workloadSecurity = useSelector((state: RootState) => state.workloadSecurity);
+  const workloadSecurity = useSelector(
+    (state: RootState) => state.workloadSecurity
+  );
 
-  const handleApexOneChange = (field: 'latestVersion' | 'olderVersion' | 'endOfLife', value: string) => {
+  const handleApexOneChange = (field: keyof ApexOneState, value: any) => {
     let updatedData = { ...apexOne };
-    updatedData[field] = Number(value);
-    dispatch(updateApexOneData([updatedData.latestVersion, updatedData.olderVersion, updatedData.endOfLife]));
+    // @ts-ignore
+    updatedData[field] = value;
+    dispatch(updateApexOneData(updatedData));
   };
 
-  const handleWorkloadSecurityChange = (field: 'latestVersion' | 'olderVersion' | 'endOfLife', value: string) => {
+  const handleWorkloadSecurityChange = (
+    field: keyof WorkloadSecurityState,
+    value: any
+  ) => {
     let updatedData = { ...workloadSecurity };
-    updatedData[field] = Number(value);
-    dispatch(updateWorkloadSecurityData([updatedData.latestVersion, updatedData.olderVersion, updatedData.endOfLife]));
+    // @ts-ignore
+    updatedData[field] = value;
+    dispatch(updateWorkloadSecurityData(updatedData));
   };
 
   return (
     <div className="p-6 bg-white rounded-lg border shadow-md">
       <h3 className="text-lg font-semibold mb-4">Agent Life Cycle Form</h3>
       <div className="mb-4">
-        <label htmlFor="alc-key" className="block text-sm font-medium text-gray-700 mb-2">Recommendations/Notes/Summary</label>
-        <select
-          id="alc-key"
-          value={alc.key}
-          onChange={handleAlcKeyChange}
-          className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        >
-          <option value="Recommendations">Recommendations</option>
-          <option value="Notes">Notes</option>
-          <option value="Summary">Summary</option>
-        </select>
+        <RecommendationInput entity="agentLifeCycle" values={recommendations} />
       </div>
-      {alc.key && (
-        <div className="mb-4">
-          <h4 className="text-md font-medium text-gray-800 mb-2">{alc.key}</h4>
-          <p className="text-sm text-gray-600">Here you can add {alc.key.toLowerCase()}.</p>
-        </div>
-      )}
-      {Array.isArray(alc.data[alc.key]) && alc.data[alc.key].map((item, index) => (
-        <div key={index} className="flex items-center mb-4">
-          <textarea
-            value={item}
-            onChange={(e) => handleAlcChange(index, e.target.value)}
-            rows={3}
-            className="flex-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mr-2"
-          />
-          <button
-            onClick={() => handleRemoveAlc(index)}
-            className="flex items-center justify-center p-2 bg-[#0d9488] text-white rounded-md focus:outline-none"
-          >
-            <MdClose size={20} />
-          </button>
-        </div>
-      ))}
-      <button
-        onClick={handleAddAlc}
-        className="w-full px-4 py-2 bg-[#2f3848] text-white rounded-md focus:outline-none"
-      >
-        Add
-      </button>
       <div>
-        <div className='my-4'>
+        <div className="my-4">
           <h3 className="text-lg font-semibold mb-1">Apex One Chart</h3>
-          <div className='flex flex-col gap-2'>
+          <div className="flex flex-col gap-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Latest Version
-              </label>
-              <input
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder='Latest Version'
-                type="text"
+              <Label>Title</Label>
+              <TextInput
+                placeholder="Title"
+                value={apexOne.title}
+                onChange={(e) => handleApexOneChange("title", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>All version</Label>
+              <TextInput
+                placeholder="All version"
+                type="number"
+                value={apexOne.allV}
+                onChange={(e) =>
+                  handleApexOneChange("allV", Number(e.target.value) || 0)
+                }
+              />
+            </div>
+            <div>
+              <Label>Latest version</Label>
+              <TextInput
+                placeholder="Latest Version"
                 value={apexOne.latestVersion}
-                onChange={(e) => handleApexOneChange('latestVersion', e.target.value)}
+                onChange={(e) =>
+                  handleApexOneChange(
+                    "latestVersion",
+                    Number(e.target.value) || 0
+                  )
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Older Version
-              </label>
-              <input
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder='Older Version'
-                type="text"
+              <Label>Older version</Label>
+              <TextInput
+                placeholder="Older version"
                 value={apexOne.olderVersion}
-                onChange={(e) => handleApexOneChange('olderVersion', e.target.value)}
+                onChange={(e) =>
+                  handleApexOneChange(
+                    "olderVersion",
+                    Number(e.target.value) || 0
+                  )
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                End of Life
-              </label>
-              <input
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder='End of Life'
-                type="text"
+              <Label>Not supported OS</Label>
+              <TextInput
+                placeholder="Not supported OS"
+                value={apexOne.nsOS}
+                onChange={(e) =>
+                  handleApexOneChange("nsOS", Number(e.target.value) || 0)
+                }
+              />
+            </div>
+            <div>
+              <Label>OS agent incompatible</Label>
+              <TextInput
+                placeholder="OS agent incompatible"
+                value={apexOne.osInc}
+                onChange={(e) =>
+                  handleApexOneChange("osInc", Number(e.target.value) || 0)
+                }
+              />
+            </div>
+            <div>
+              <Label>End of Life</Label>
+              <TextInput
+                placeholder="End of Life"
                 value={apexOne.endOfLife}
-                onChange={(e) => handleApexOneChange('endOfLife', e.target.value)}
+                onChange={(e) =>
+                  handleApexOneChange("endOfLife", Number(e.target.value) || 0)
+                }
               />
             </div>
           </div>
         </div>
 
         {/* Workload Security Chart Section */}
-        <div className='my-4'>
-          <h3 className="text-lg font-semibold mb-1">Workload Security Chart</h3>
-          <div className='flex flex-col gap-2'>
+        <div className="my-4">
+          <h3 className="text-lg font-semibold mb-1">
+            Workload Security Chart
+          </h3>
+          <div className="flex flex-col gap-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Latest Version
-              </label>
-              <input
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder='Latest Version'
-                type="text"
+              <Label>Title</Label>
+              <TextInput
+                placeholder="Title"
+                value={workloadSecurity.title}
+                onChange={(e) =>
+                  handleWorkloadSecurityChange("title", e.target.value)
+                }
+              />
+            </div>
+            <div>
+              <Label>All version</Label>
+              <TextInput
+                placeholder="All version"
+                type="number"
+                value={workloadSecurity.allV}
+                onChange={(e) =>
+                  handleWorkloadSecurityChange(
+                    "allV",
+                    Number(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div>
+              <Label>Latest version</Label>
+              <TextInput
+                placeholder="Latest Version"
                 value={workloadSecurity.latestVersion}
-                onChange={(e) => handleWorkloadSecurityChange('latestVersion', e.target.value)}
+                onChange={(e) =>
+                  handleWorkloadSecurityChange(
+                    "latestVersion",
+                    Number(e.target.value) || 0
+                  )
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Older Version
-              </label>
-              <input
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder='Older Version'
-                type="text"
+              <Label>Older version</Label>
+              <TextInput
+                placeholder="Older version"
                 value={workloadSecurity.olderVersion}
-                onChange={(e) => handleWorkloadSecurityChange('olderVersion', e.target.value)}
+                onChange={(e) =>
+                  handleWorkloadSecurityChange(
+                    "olderVersion",
+                    Number(e.target.value) || 0
+                  )
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                End of Life
-              </label>
-              <input
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder='End of Life'
-                type="text"
+              <Label>Not supported OS</Label>
+              <TextInput
+                placeholder="Not supported OS"
+                value={workloadSecurity.nsOS}
+                onChange={(e) =>
+                  handleWorkloadSecurityChange(
+                    "nsOS",
+                    Number(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div>
+              <Label>OS agent incompatible</Label>
+              <TextInput
+                placeholder="OS agent incompatible"
+                value={workloadSecurity.osInc}
+                onChange={(e) =>
+                  handleWorkloadSecurityChange(
+                    "osInc",
+                    Number(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div>
+              <Label>End of Life</Label>
+              <TextInput
+                placeholder="End of Life"
                 value={workloadSecurity.endOfLife}
-                onChange={(e) => handleWorkloadSecurityChange('endOfLife', e.target.value)}
+                onChange={(e) =>
+                  handleWorkloadSecurityChange(
+                    "endOfLife",
+                    Number(e.target.value) || 0
+                  )
+                }
               />
             </div>
           </div>
@@ -222,14 +299,24 @@ const AlcForm = () => {
 
         {/* Endpoint Section */}
         <div className="my-4">
-          <h3 className="text-lg font-semibold mb-1">Top 5 Endpoint with Highest Observed Attack Technique</h3>
+          <h3 className="text-lg font-semibold mb-1">
+            Top 5 Endpoint with Highest Observed Attack Technique
+          </h3>
           <div className="mt-2">
             {endpointData.map((endpoint, index) => (
               <div key={index} className="flex items-center mb-4">
                 <div className="flex-1">
-                  <p><strong>Endpoint:</strong> {endpoint.endpointName}</p>
-                  <p><strong>Detections with Severity:</strong> {endpoint.detectionsWithSeverity}</p>
-                  <p><strong>Action Taken by SOC:</strong> {endpoint.actionTakenBySoc}</p>
+                  <p>
+                    <strong>Endpoint:</strong> {endpoint.endpointName}
+                  </p>
+                  <p>
+                    <strong>Detections with Severity:</strong>{" "}
+                    {endpoint.detectionsWithSeverity}
+                  </p>
+                  <p>
+                    <strong>Action Taken by SOC:</strong>{" "}
+                    {endpoint.actionTakenBySoc}
+                  </p>
                 </div>
                 <div className="flex items-center">
                   <button
@@ -249,7 +336,10 @@ const AlcForm = () => {
             ))}
           </div>
           <div className="mb-4">
-            <label htmlFor="endpoint-name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="endpoint-name"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Endpoint Name
             </label>
             <input
@@ -262,7 +352,10 @@ const AlcForm = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="detections-with-severity" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="detections-with-severity"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Detections with Severity
             </label>
             <input
@@ -276,7 +369,10 @@ const AlcForm = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="action-taken-by-soc" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="action-taken-by-soc"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Action Taken by SOC
             </label>
             <input
@@ -293,11 +389,9 @@ const AlcForm = () => {
             onClick={handleAddOrEditEndpoint}
             className="w-full px-4 py-2 bg-[#2f3848] text-white rounded-md focus:outline-none"
           >
-            {editIndex !== null ? 'Update Endpoint' : 'Add Endpoint'}
+            {editIndex !== null ? "Update Endpoint" : "Add Endpoint"}
           </button>
         </div>
-
-
       </div>
     </div>
   );

@@ -1,6 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import _set from 'lodash/set';
+import _get from 'lodash/get';
 
 // --- Data Slice for Licenses and Products ---
+
+export type RecommendationNote = {
+  key: string;
+  data: string[];
+};
 
 export interface ClientState {
   clientName: string;
@@ -33,7 +40,7 @@ const clientSlice = createSlice({
     deleteClientName: (state) => {
       state.clientName = "";
     },
-    updateClientState(state, action: PayloadAction<{field: keyof ClientState, value: string}>) {
+    updateClientState(state, action: PayloadAction<{ field: keyof ClientState, value: string }>) {
       state[action.payload.field] = action.payload.value
     }
   },
@@ -95,9 +102,9 @@ const tableOfContentsSlice = createSlice({
   name: "tableOfContents",
   initialState: initialTableOfContentsState,
   reducers: {
-    updateTableOfContents(state, action: PayloadAction<{index: number, field: keyof TableIndexInfo, value: string | number}>) {
+    updateTableOfContents(state, action: PayloadAction<{ index: number, field: keyof TableIndexInfo, value: string | number }>) {
       return state.map((s, i) => {
-        if(i == action.payload.index) {
+        if (i == action.payload.index) {
           return {
             ...s,
             [action.payload.field]: action.payload.value
@@ -109,9 +116,79 @@ const tableOfContentsSlice = createSlice({
   },
 });
 export const { updateTableOfContents } =
-tableOfContentsSlice.actions;
+  tableOfContentsSlice.actions;
 export const tableOfContentsReducer = tableOfContentsSlice.reducer;
 // End Table of Contents
+
+/**
+ * Executive Summary
+ */
+export interface ExecutiveSummaryState {
+  nOfIncidents: number
+  riskIndex: number,
+  riskContent: string,
+  nOfDVul: number,
+  nOfICWoAck: number // number of incidents closed without ack
+  nOfTIncidents: number, // number of triggered incidents
+  iTDate: string // incident trigger date
+}
+const initialExecutiveSummaryState: ExecutiveSummaryState = {
+  nOfIncidents: 0,
+  riskIndex: 0,
+  riskContent: "The Risk Index is a comprehensive score based on the dynamic assessment of risk factors inclusive of exposure, attack risk, and security configurations risk.",
+  nOfDVul: 0,
+  nOfICWoAck: 0,
+  nOfTIncidents: 0,
+  iTDate: ''
+}
+const executiveSummarySlice = createSlice({
+  name: "executiveSummary",
+  initialState: initialExecutiveSummaryState,
+  reducers: {
+    updateExecutiveSummary(state, action: PayloadAction<{ field: keyof ExecutiveSummaryState, value: any }>) {
+      // @ts-ignore
+      state[action.payload.field] = action.payload.value
+      return state
+    }
+  },
+});
+export const { updateExecutiveSummary } =
+  executiveSummarySlice.actions;
+export const executiveSummaryReducer = executiveSummarySlice.reducer;
+// - End Executive summary
+
+/**
+ * Reommendation
+ */
+export interface RecommendationState {
+  agentLifeCycle: RecommendationNote[]
+}
+
+const initialRecommendationState: RecommendationState = {
+  agentLifeCycle: []
+}
+
+const recommendationSlice = createSlice({
+  name: 'recommendations',
+  initialState: initialRecommendationState,
+  reducers: {
+    updateRecommendationProp(state, action: PayloadAction<{ attr: string, value: any }>) {
+      _set(state, action.payload.attr, action.payload.value)
+    },
+    removeRecommendationPropArr(state, action: PayloadAction<{ attr: string, index: number }>) {
+      const vArr = _get(state, action.payload.attr)
+      if (Array.isArray(vArr)) {
+        vArr.splice(action.payload.index, 1)
+      }
+    }
+  }
+})
+
+export const { updateRecommendationProp, removeRecommendationPropArr } =
+  recommendationSlice.actions;
+export const recommendationReducer = recommendationSlice.reducer;
+
+// - End recommendation
 
 interface DataState {
   licenses: { Status: string; Product: string }[];
@@ -335,52 +412,65 @@ export const matchedIcosReducer = matchedIcosSlice.reducer;
 
 // --- Custom Slice Factory (For Recommendations, Notes, Summary) ---
 
-interface ApexOneState {
+export interface ApexOneState {
+  title: string,
+  nsOS: number, // not supported os
+  osInc: number, // os agent incompatible
   latestVersion: number;
   olderVersion: number;
   endOfLife: number;
+  allV: number;
 }
 
 const initialApexOneState: ApexOneState = {
+  title: 'Apex One',
+  nsOS: 0,
+  osInc: 0,
   latestVersion: 0,
   olderVersion: 0,
   endOfLife: 0,
+  allV: 0
 };
 
 const apexOneSlice = createSlice({
   name: "apexOne",
   initialState: initialApexOneState,
   reducers: {
-    updateApexOneData: (state, action: PayloadAction<number[]>) => {
-      state.latestVersion = action.payload[0];
-      state.olderVersion = action.payload[1];
-      state.endOfLife = action.payload[2];
-    },
+    updateApexOneData: (state, action: PayloadAction<ApexOneState>) => {
+      return action.payload
+    }
   },
 });
 
 export const { updateApexOneData } = apexOneSlice.actions;
 export const apexOneReducer = apexOneSlice.reducer;
-interface WorkloadSecurityState {
+
+export interface WorkloadSecurityState {
+  title: string,
+  nsOS: number, // not supported os
+  osInc: number, // os agent incompatible
   latestVersion: number;
   olderVersion: number;
   endOfLife: number;
+  allV: number;
 }
 
 const initialWorkloadSecurityState: WorkloadSecurityState = {
+  title: 'Workload/Deep Security',
+  nsOS: 0,
+  osInc: 0,
   latestVersion: 0,
   olderVersion: 0,
   endOfLife: 0,
+  allV: 0
 };
 
 const workloadSecuritySlice = createSlice({
   name: "workloadSecurity",
   initialState: initialWorkloadSecurityState,
   reducers: {
-    updateWorkloadSecurityData: (state, action: PayloadAction<number[]>) => {
-      state.latestVersion = action.payload[0];
-      state.olderVersion = action.payload[1];
-      state.endOfLife = action.payload[2];
+    updateWorkloadSecurityData: (state, action: PayloadAction<WorkloadSecurityState>) => {
+      return action.payload
     },
   },
 });
