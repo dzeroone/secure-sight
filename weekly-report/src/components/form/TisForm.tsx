@@ -2,26 +2,6 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import {
-  setTisKey,
-  addTisData,
-  updateTisData,
-  removeTisData,
-  setTopIncidentsKey,
-  addTopIncidentsData,
-  updateTopIncidentsData,
-  removeTopIncidentsData,
-  setIncidentsSummaryKey,
-  addIncidentsSummaryData,
-  updateIncidentsSummaryData,
-  removeIncidentsSummaryData,
-  setIncidentSummaryStatusKey,
-  addIncidentSummaryStatusData,
-  updateIncidentSummaryStatusData,
-  removeIncidentSummaryStatusData,
-  setIncidentSummarySeverityKey,
-  addIncidentSummarySeverityData,
-  updateIncidentSummarySeverityData,
-  removeIncidentSummarySeverityData,
   addMatchedIco,
   editMatchedIco,
   removeMatchedIco,
@@ -32,14 +12,16 @@ import {
   updateLabel
 } from '../../features/weekly/weeklySlice';
 import { MdClose, MdEdit } from 'react-icons/md';
+import RecommendationInput from './RecommendationInput';
 
 const TisForm = () => {
   const dispatch = useDispatch();
-  const tis = useSelector((state: RootState) => state.tis);
-  const topIncidents = useSelector((state: RootState) => state.topIncidents);
-  const incidentsSummary = useSelector((state: RootState) => state.incidentsSummary);
-  const incidentSummaryStatus = useSelector((state: RootState) => state.incidentSummaryStatus);
-  const incidentSummarySeverity = useSelector((state: RootState) => state.incidentSummarySeverity);
+  const iocMatchedRecommendations = useSelector((s: RootState) => s.recommendation.iocMatched);
+  const iSeverityRecommendations = useSelector((s: RootState) => s.recommendation.iSeverity);
+  const iStatusRecommendations = useSelector((s: RootState) => s.recommendation.iStatus);
+  const iPriorityRecommendations = useSelector((s: RootState) => s.recommendation.iPriority);
+  const tIByCategoryRecommendations = useSelector((s: RootState) => s.recommendation.tIByCategory);
+
   const [srNo, setSrNo] = useState<number>(0);
   const [advisoryName, setAdvisoryName] = useState<string>("");
   const [matchedIocType, setMatchedIocType] = useState<string>("");
@@ -47,92 +29,6 @@ const TisForm = () => {
   const [noOfendpoint, setNoOfendpoint] = useState<number>(0);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
-
-
-
-  const handleTisKeyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setTisKey(event.target.value as 'Recommendations' | 'Notes' | 'Summary'));
-  };
-
-  const handleTisChange = (index: number, value: string) => {
-    dispatch(updateTisData({ index, text: value }));
-  };
-
-  const handleAddTis = () => {
-    dispatch(addTisData(''));
-  };
-
-  const handleRemoveTis = (index: number) => {
-    dispatch(removeTisData(index));
-  };
-
-  // Top Incidents Summary by Category Handlers
-  const handleTopIncidentsKeyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setTopIncidentsKey(event.target.value as 'Recommendations' | 'Notes' | 'Summary'));
-  };
-
-  const handleTopIncidentsChange = (index: number, value: string) => {
-    dispatch(updateTopIncidentsData({ index, text: value }));
-  };
-
-  const handleAddTopIncidents = () => {
-    dispatch(addTopIncidentsData(''));
-  };
-
-  const handleRemoveTopIncidents = (index: number) => {
-    dispatch(removeTopIncidentsData(index));
-  };
-
-  // Incidents Summary by Priority Handlers
-  const handleIncidentsSummaryKeyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setIncidentsSummaryKey(event.target.value as 'Recommendations' | 'Notes' | 'Summary'));
-  };
-
-  const handleIncidentsSummaryChange = (index: number, value: string) => {
-    dispatch(updateIncidentsSummaryData({ index, text: value }));
-  };
-
-  const handleAddIncidentsSummary = () => {
-    dispatch(addIncidentsSummaryData(''));
-  };
-
-  const handleRemoveIncidentsSummary = (index: number) => {
-    dispatch(removeIncidentsSummaryData(index));
-  };
-
-  // Incident Summary by Status Handlers
-  const handleIncidentSummaryStatusKeyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setIncidentSummaryStatusKey(event.target.value as 'Recommendations' | 'Notes' | 'Summary'));
-  };
-
-  const handleIncidentSummaryStatusChange = (index: number, value: string) => {
-    dispatch(updateIncidentSummaryStatusData({ index, text: value }));
-  };
-
-  const handleAddIncidentSummaryStatus = () => {
-    dispatch(addIncidentSummaryStatusData(''));
-  };
-
-  const handleRemoveIncidentSummaryStatus = (index: number) => {
-    dispatch(removeIncidentSummaryStatusData(index));
-  };
-
-  // Incident Summary by Severity Handlers
-  const handleIncidentSummarySeverityKeyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setIncidentSummarySeverityKey(event.target.value as 'Recommendations' | 'Notes' | 'Summary'));
-  };
-
-  const handleIncidentSummarySeverityChange = (index: number, value: string) => {
-    dispatch(updateIncidentSummarySeverityData({ index, text: value }));
-  };
-
-  const handleAddIncidentSummarySeverity = () => {
-    dispatch(addIncidentSummarySeverityData(''));
-  };
-
-  const handleRemoveIncidentSummarySeverity = (index: number) => {
-    dispatch(removeIncidentSummarySeverityData(index));
-  };
 
   const matchedIcos = useSelector((state: RootState) => state.matchedIcos.matchedIcosData);
 
@@ -299,46 +195,10 @@ const TisForm = () => {
 
       <div className="my-4">
         <h3 className="text-lg font-semibold mb-4">IOC Match Summary</h3>
-        <label htmlFor="tis-key" className="block text-sm font-medium text-gray-700 mb-2">Recommendations/Notes/Summary</label>
-        <select
-          id="tis-key"
-          value={tis.key}
-          onChange={handleTisKeyChange}
-          className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        >
-          <option value="Recommendations">Recommendations</option>
-          <option value="Notes">Notes</option>
-          <option value="Summary">Summary</option>
-        </select>
       </div>
-      {tis.key && (
-        <div className="mb-4">
-          <h4 className="text-md font-medium text-gray-800 mb-2">{tis.key}</h4>
-          <p className="text-sm text-gray-600">Here you can add {tis.key.toLowerCase()}.</p>
-        </div>
-      )}
-      {Array.isArray(tis.data[tis.key]) && tis.data[tis.key].map((item, index) => (
-        <div key={index} className="flex items-center mb-4">
-          <textarea
-            value={item}
-            onChange={(e) => handleTisChange(index, e.target.value)}
-            rows={3}
-            className="flex-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mr-2"
-          />
-          <button
-            onClick={() => handleRemoveTis(index)}
-            className="flex items-center justify-center p-2 bg-[#0d9488] text-white rounded-md focus:outline-none"
-          >
-            <MdClose size={20} />
-          </button>
-        </div>
-      ))}
-      <button
-        onClick={handleAddTis}
-        className="w-full px-4 py-2 bg-[#2f3848] text-white rounded-md focus:outline-none"
-      >
-        Add
-      </button>
+      <div className="mb-4">
+        <RecommendationInput entity="iocMatched" values={iocMatchedRecommendations} />
+      </div>
 
       <div>
         <h3 className="text-lg font-semibold my-4">Matched IOCs Detailed Summary</h3>
@@ -436,46 +296,8 @@ const TisForm = () => {
       <div>
         <h3 className="text-lg font-semibold mt-8 mb-4">INCIDENTS SUMMARY BY SEVERITY</h3>
         <div className="mb-4">
-          <label htmlFor="incidents-summary-key" className="block text-sm font-medium text-gray-700 mb-2">Recommendations/Notes/Summary</label>
-          <select
-            id="incidents-summary-key"
-            value={incidentSummarySeverity.key}
-            onChange={handleIncidentSummarySeverityKeyChange}
-            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
-            <option value="Recommendations">Recommendations</option>
-            <option value="Notes">Notes</option>
-            <option value="Summary">Summary</option>
-          </select>
+          <RecommendationInput entity="iSeverity" values={iSeverityRecommendations} />
         </div>
-        {incidentSummarySeverity.key && (
-          <div className="mb-4">
-            <h4 className="text-md font-medium text-gray-800 mb-2">{incidentSummarySeverity.key}</h4>
-            <p className="text-sm text-gray-600">Here you can add {incidentSummarySeverity.key.toLowerCase()}.</p>
-          </div>
-        )}
-        {Array.isArray(incidentSummarySeverity.data[incidentSummarySeverity.key]) && incidentSummarySeverity.data[incidentSummarySeverity.key].map((item, index) => (
-          <div key={index} className="flex items-center mb-4">
-            <textarea
-              value={item}
-              onChange={(e) => handleIncidentSummarySeverityChange(index, e.target.value)}
-              rows={3}
-              className="flex-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mr-2"
-            />
-            <button
-              onClick={() => handleRemoveIncidentSummarySeverity(index)}
-              className="flex items-center justify-center p-2 bg-[#0d9488] text-white rounded-md focus:outline-none"
-            >
-              <MdClose size={20} />
-            </button>
-          </div>
-        ))}
-        <button
-          onClick={handleAddIncidentSummarySeverity}
-          className="w-full px-4 py-2 bg-[#2f3848] text-white rounded-md focus:outline-none"
-        >
-          Add
-        </button>
       </div>
 
 
@@ -487,46 +309,8 @@ const TisForm = () => {
       <div>
         <h3 className="text-lg font-semibold mt-8 mb-4">Incident Summary by status</h3>
         <div className="mb-4">
-          <label htmlFor="incidents-summary-key" className="block text-sm font-medium text-gray-700 mb-2">Recommendations/Notes/Summary</label>
-          <select
-            id="incidents-summary-key"
-            value={incidentSummaryStatus.key}
-            onChange={handleIncidentSummaryStatusKeyChange}
-            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
-            <option value="Recommendations">Recommendations</option>
-            <option value="Notes">Notes</option>
-            <option value="Summary">Summary</option>
-          </select>
+          <RecommendationInput entity="iStatus" values={iStatusRecommendations} />
         </div>
-        {incidentSummaryStatus.key && (
-          <div className="mb-4">
-            <h4 className="text-md font-medium text-gray-800 mb-2">{incidentSummaryStatus.key}</h4>
-            <p className="text-sm text-gray-600">Here you can add {incidentSummaryStatus.key.toLowerCase()}.</p>
-          </div>
-        )}
-        {Array.isArray(incidentSummaryStatus.data[incidentSummaryStatus.key]) && incidentSummaryStatus.data[incidentSummaryStatus.key].map((item, index) => (
-          <div key={index} className="flex items-center mb-4">
-            <textarea
-              value={item}
-              onChange={(e) => handleIncidentSummaryStatusChange(index, e.target.value)}
-              rows={3}
-              className="flex-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mr-2"
-            />
-            <button
-              onClick={() => handleRemoveIncidentSummaryStatus(index)}
-              className="flex items-center justify-center p-2 bg-[#0d9488] text-white rounded-md focus:outline-none"
-            >
-              <MdClose size={20} />
-            </button>
-          </div>
-        ))}
-        <button
-          onClick={handleAddIncidentSummaryStatus}
-          className="w-full px-4 py-2 bg-[#2f3848] text-white rounded-md focus:outline-none"
-        >
-          Add
-        </button>
       </div>
 
       <div>
@@ -579,92 +363,16 @@ const TisForm = () => {
       <div>
         <h3 className="text-lg font-semibold mt-8 mb-4">Incidents Summary by Priority</h3>
         <div className="mb-4">
-          <label htmlFor="incidents-summary-key" className="block text-sm font-medium text-gray-700 mb-2">Recommendations/Notes/Summary</label>
-          <select
-            id="incidents-summary-key"
-            value={incidentsSummary.key}
-            onChange={handleIncidentsSummaryKeyChange}
-            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
-            <option value="Recommendations">Recommendations</option>
-            <option value="Notes">Notes</option>
-            <option value="Summary">Summary</option>
-          </select>
+          <RecommendationInput entity="iPriority" values={iPriorityRecommendations} />
         </div>
-        {incidentsSummary.key && (
-          <div className="mb-4">
-            <h4 className="text-md font-medium text-gray-800 mb-2">{incidentsSummary.key}</h4>
-            <p className="text-sm text-gray-600">Here you can add {incidentsSummary.key.toLowerCase()}.</p>
-          </div>
-        )}
-        {Array.isArray(incidentsSummary.data[incidentsSummary.key]) && incidentsSummary.data[incidentsSummary.key].map((item, index) => (
-          <div key={index} className="flex items-center mb-4">
-            <textarea
-              value={item}
-              onChange={(e) => handleIncidentsSummaryChange(index, e.target.value)}
-              rows={3}
-              className="flex-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mr-2"
-            />
-            <button
-              onClick={() => handleRemoveIncidentsSummary(index)}
-              className="flex items-center justify-center p-2 bg-[#0d9488] text-white rounded-md focus:outline-none"
-            >
-              <MdClose size={20} />
-            </button>
-          </div>
-        ))}
-        <button
-          onClick={handleAddIncidentsSummary}
-          className="w-full px-4 py-2 bg-[#2f3848] text-white rounded-md focus:outline-none"
-        >
-          Add
-        </button>
       </div>
 
       {/* Top Incidents Summary by Category Form */}
       <div>
         <h3 className="text-lg font-semibold mt-8 mb-4">Top Incidents Summary by Category</h3>
         <div className="mb-4">
-          <label htmlFor="top-incidents-key" className="block text-sm font-medium text-gray-700 mb-2">Recommendations/Notes/Summary</label>
-          <select
-            id="top-incidents-key"
-            value={topIncidents.key}
-            onChange={handleTopIncidentsKeyChange}
-            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
-            <option value="Recommendations">Recommendations</option>
-            <option value="Notes">Notes</option>
-            <option value="Summary">Summary</option>
-          </select>
+          <RecommendationInput entity="tIByCategory" values={tIByCategoryRecommendations} />
         </div>
-        {topIncidents.key && (
-          <div className="mb-4">
-            <h4 className="text-md font-medium text-gray-800 mb-2">{topIncidents.key}</h4>
-            <p className="text-sm text-gray-600">Here you can add {topIncidents.key.toLowerCase()}.</p>
-          </div>
-        )}
-        {Array.isArray(topIncidents.data[topIncidents.key]) && topIncidents.data[topIncidents.key].map((item, index) => (
-          <div key={index} className="flex items-center mb-4">
-            <textarea
-              value={item}
-              onChange={(e) => handleTopIncidentsChange(index, e.target.value)}
-              rows={3}
-              className="flex-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mr-2"
-            />
-            <button
-              onClick={() => handleRemoveTopIncidents(index)}
-              className="flex items-center justify-center p-2 bg-[#0d9488] text-white rounded-md focus:outline-none"
-            >
-              <MdClose size={20} />
-            </button>
-          </div>
-        ))}
-        <button
-          onClick={handleAddTopIncidents}
-          className="w-full px-4 py-2 bg-[#2f3848] text-white rounded-md focus:outline-none"
-        >
-          Add
-        </button>
       </div>
     </div>
   );

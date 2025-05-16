@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { confirm } from "../../utils/confirm";
 import Label from "./Label";
-import SelectInput, { TextAreaInput, TextInput } from "./Inputs";
+import { SelectInput, TextAreaInput, TextInput } from "./Inputs";
 import { MdAdd, MdClose, MdDelete } from "react-icons/md";
 import Button from "../Button";
 import {

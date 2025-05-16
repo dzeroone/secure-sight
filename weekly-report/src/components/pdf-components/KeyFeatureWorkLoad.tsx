@@ -1,14 +1,15 @@
+import { useSelector } from "react-redux";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
+import { RootState } from "../../store/store";
+import RecommendationNotes from "../RecommendationNotes";
 
 interface KeyFeatureWorkLoadProps {
   data: any;
-  formData: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
 }
 
-const KeyFeatureWorkLoad: React.FC<KeyFeatureWorkLoadProps> = ({ data, formData }: any) => {
+const KeyFeatureWorkLoad: React.FC<KeyFeatureWorkLoadProps> = ({ data }: any) => {
+  const kFWorkloadRecommendations = useSelector((s: RootState) => s.recommendation.kFWorkload);
+
   return (
     <div className="key-feature-workload" id={Object.keys(data.date)[0]}>
       <div className="p-8">
@@ -17,16 +18,9 @@ const KeyFeatureWorkLoad: React.FC<KeyFeatureWorkLoadProps> = ({ data, formData 
         <GroupedBarChartHorizontal
           data={data?.date.Key_feature_adoption_rate_of_Cw?.graph}
         />
-        <p className="font-bold mt-12 capitalize">
-          {formData?.key}
-        </p>
-        <ul className="list-outside">
-          {formData?.data.map((item: string, i: number) => (
-            <li key={i} className="text-sm text-justify">
-              {item}
-            </li>
-          ))}
-        </ul>
+        <div className="mt-12">
+          <RecommendationNotes notes={kFWorkloadRecommendations} />
+        </div>
       </div>
       {/* <div
         className="blank-page"

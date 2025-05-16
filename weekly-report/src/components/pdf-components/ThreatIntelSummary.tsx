@@ -5,37 +5,24 @@ import GroupedBarChart from "../charts/GroupedBarChart";
 import StackedHorizontalBarChart from "../charts/StackedHorizontalBarChart";
 import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key, useMemo } from "react";
 import { RootState } from "../../store/store";
+import RecommendationNotes from "../RecommendationNotes";
 
 interface ThreatIntelSummaryProps {
   data: any;
-  formData: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
-  formData2: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
-  formData3: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
-  formData4: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
-  formData5: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
 }
 
 
-const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data, formData, formData2, formData3, formData4, formData5 }: any) => {
+const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data }: any) => {
   const matchedIcosData = useSelector((state: any) => state.matchedIcos.matchedIcosData);
 
   const incidentSummary = useSelector((state: RootState) => state.incidentSummary);
   const matchSummary = useSelector((state: RootState) => state.matchSummary);
+  const tableOfContents = useSelector((s: RootState) => s.tableOfContents);
+  const iocMatchedRecommendations = useSelector((s: RootState) => s.recommendation.iocMatched);
+  const iSeverityRecommendations = useSelector((s: RootState) => s.recommendation.iSeverity);
+  const iStatusRecommendations = useSelector((s: RootState) => s.recommendation.iStatus);
+  const iPriorityRecommendations = useSelector((s: RootState) => s.recommendation.iPriority);
+  const tIByCategoryRecommendations = useSelector((s: RootState) => s.recommendation.tIByCategory);
 
   const chartData = {
     Key: ['P1', 'P2', 'P3', 'P4'],
@@ -98,12 +85,16 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data, formData,
   return (
     <div className="threat-intel-summary" id={Object.keys(data.date)[0]}>
       <div className="">
-        <p className="title">THREAT INTEL SUMMARY</p>
+        {tableOfContents[1].visible && (
+        <><p className="title">THREAT INTEL SUMMARY</p>
         <p className="font-normal">
           It refers to the process of collecting, analyzing, and disseminating
           information about potential and current cyber threats.
         </p>
-        <p className="title">INDICATORS OF COMPROMISE (IOC) MATCH SUMMARY</p>
+        </>
+        )}
+        {tableOfContents[2].visible && (
+        <><p className="title">INDICATORS OF COMPROMISE (IOC) MATCH SUMMARY</p>
         <div className="w-4/5 mx-auto">
           <GroupedBarChart
             data={matchSummaryData}
@@ -111,16 +102,8 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data, formData,
           />
         </div>
 
-        <p className="font-bold capitalize">
-          {formData?.key}
-        </p>
-        <ul>
-          {formData?.data.map((item: string, i: number) => (
-            <li key={i} className="text-sm">
-              {item}
-            </li>
-          ))}
-        </ul>
+        <RecommendationNotes notes={iocMatchedRecommendations} />
+
         <p className="title">MATCHED IOCs DETAILED SUMMARY</p>
         <table
           className="w-full border-spacing-1 mb-12 border-none border-separate"
@@ -162,6 +145,10 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data, formData,
           </tbody> */}
 
         </table>
+        </>
+        )}
+        {tableOfContents[3].visible && (
+          <>
         <p className="title break-before-page">INCIDENTS SUMMARY BY SEVERITY</p>
         <div className="w-full grid grid-flow-row grid-cols-2 items-center gap-6">
           <div>
@@ -186,18 +173,13 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data, formData,
             </ul>
           </div> */}
           <div className="pl-10">
-            <p className="font-bold capitalize">
-              {formData5.key}
-            </p>
-            <ul className="list-outside text-justify">
-              {formData5?.data.map((item: string, i: number) => (
-                <li key={i} className="text-sm text-justify">
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <RecommendationNotes notes={iSeverityRecommendations} />
           </div>
         </div>
+        </>
+        )}
+        {tableOfContents[4].visible && (
+          <>
         <p className="title">Incident Summary by status</p>
         <div className="w-full grid grid-flow-row grid-cols-2 items-center gap-6">
           <div>
@@ -221,18 +203,13 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data, formData,
             </ul>
           </div> */}
           <div className="pl-10">
-            <p className="font-bold capitalize">
-              {formData4.key}
-            </p>
-            <ul className="list-outside text-justify">
-              {formData4?.data.map((item: string, i: number) => (
-                <li key={i} className="text-sm text-justify">
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <RecommendationNotes notes={iStatusRecommendations} />
           </div>
         </div>
+        </>
+        )}
+        {tableOfContents[5].visible && (
+          <>
         <p className="title break-before-page">INCIDENTS SUMMARY BY PRIORITY</p>
         <div className="w-full flex flex-row items-center">
           <div className="w-3/5">
@@ -260,18 +237,13 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data, formData,
             </ul>
           </div> */}
           <div className="w-2/5 pl-14">
-            <p className="font-bold capitalize">
-              {formData3.key}
-            </p>
-            <ul>
-              {formData3?.data.map((item: string, i: number) => (
-                <li key={i} className="text-sm text-justify">
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <RecommendationNotes notes={iPriorityRecommendations} />
           </div>
         </div>
+        </>
+        )}
+        {tableOfContents[6].visible && (
+          <>
         <p className="title">Top Incidents Summary by Category</p>
         <StackedHorizontalBarChart
           data={data?.date.THREAT_INTEL_SUMMARY.T10IS_by_Category}
@@ -288,16 +260,9 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data, formData,
             )
           )}
         </ul> */}
-        <p className="font-bold capitalize">
-          {formData2?.key}
-        </p>
-        <ul>
-          {formData2?.data.map((item: string, i: number) => (
-            <li key={i} className="text-sm">
-              {item}
-            </li>
-          ))}
-        </ul>
+        <RecommendationNotes notes={tIByCategoryRecommendations} />
+        </>
+        )}
       </div>
       {/* <div
         className="blank-page"

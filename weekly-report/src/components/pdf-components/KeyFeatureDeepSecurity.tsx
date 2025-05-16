@@ -1,14 +1,15 @@
+import { useSelector } from "react-redux";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
+import RecommendationNotes from "../RecommendationNotes";
+import { RootState } from "../../store/store";
 
 interface KeyFeatureWorDeepSecurityProps {
   data: any;
-  formData: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
 }
 
-const KeyFeatureWorDeepSecurity: React.FC<KeyFeatureWorDeepSecurityProps> = ({ data, formData }: any) => {
+const KeyFeatureWorDeepSecurity: React.FC<KeyFeatureWorDeepSecurityProps> = ({ data }: any) => {
+  const kFDeepRecommendations = useSelector((s: RootState) => s.recommendation.kFDeep);
+
   return (
     <div className="key-feature-workload" id={Object.keys(data.date)[0]}>
       <div className="p-8">
@@ -17,16 +18,9 @@ const KeyFeatureWorDeepSecurity: React.FC<KeyFeatureWorDeepSecurityProps> = ({ d
         <GroupedBarChartHorizontal
           data={data?.date.Key_feature_adoption_rate_of_Ds?.graph}
         />
-        <p className="font-bold mt-12 capitalize">
-          {formData?.key}
-        </p>
-        <ul className="list-outside">
-          {formData?.data.map((item: string, i: number) => (
-            <li key={i} className="text-sm text-justify">
-              {item}
-            </li>
-          ))}
-        </ul>
+        <div className="mt-12">
+          <RecommendationNotes notes={kFDeepRecommendations} />
+        </div>
       </div>
       {/* <div
         className="blank-page"

@@ -2,23 +2,23 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import BarChart from '../charts/BarChart';
+import RecommendationNotes from '../RecommendationNotes';
 
 interface EndpointInventoryProps {
   data: any;
-  formData: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
 }
 
 
-const EndpointInventory: React.FC<EndpointInventoryProps> = ({ data, formData }) => {
+const EndpointInventory: React.FC<EndpointInventoryProps> = ({ data }) => {
   const licenses = useSelector((state: RootState) => state.data.licenses);
   const products = useSelector((state: RootState) => state.data.products);
   const licensesVisible = useSelector((state: RootState) => state.data.licensesVisible);
   const productsVisible = useSelector((state: RootState) => state.data.productsVisible);
 
   const chartData = useSelector((state: RootState) => state.chart.chartData);
+  const eInventoryRecommendations = useSelector((s: RootState) => s.recommendation.eInventory);
+
+  const tableOfContents = useSelector((s: RootState) => s.tableOfContents)
 
   const newChartData = useMemo(() => {
     const obj = {
@@ -33,25 +33,24 @@ const EndpointInventory: React.FC<EndpointInventoryProps> = ({ data, formData })
   return (
     <div className="endpoint-inventory" id={Object.keys(data.date)[0]}>
       <div className="">
+        {tableOfContents[9].visible && (
+          <>
         <p className="title">Endpoint Inventory</p>
         <div className="w-full flex flex-row flex-nowrap items-center">
           <div className="w-3/5">
             <BarChart data={newChartData} />
           </div>
           <div className="w-2/5 pl-14">
-            <p className="font-bold capitalize">{formData?.key}</p>
-            <ul className="list-outside text-justify">
-              {formData?.data.map((item: string, i: number) => (
-                <li key={i} className="text-sm text-justify">
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <RecommendationNotes notes={eInventoryRecommendations} />
           </div>
         </div>
+        </>
+        )}
 
         {/* License Information */}
 
+        {tableOfContents[10].visible && (
+          <>
         <p className="title">Connected Products and License Information</p>
         {licensesVisible && (
           <>
@@ -102,6 +101,8 @@ const EndpointInventory: React.FC<EndpointInventoryProps> = ({ data, formData })
               </tbody>
             </table>
           </>
+        )}
+        </>
         )}
       </div>
     </div>

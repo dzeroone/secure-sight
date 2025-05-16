@@ -18,7 +18,6 @@ import EndpointProtectionForm from "../../components/form/EndpointProtectionForm
 import EpiForm from "../../components/form/EpiForm";
 import { LicenseForm, ProductForm } from "../../components/form/EpiTableForm";
 import FirstPageForm from "../../components/form/FirstPageForm";
-import SelectInput from "../../components/form/Inputs";
 import KfaForm from "../../components/form/KfaForm";
 import KfdForm from "../../components/form/KfdForm";
 import KfwForm from "../../components/form/KfwForm";
@@ -52,6 +51,7 @@ import { useAuth } from "../../providers/AuthProvider";
 import store, { RootState } from "../../store/store";
 import { getErrorMessage } from "../../utils/helpers";
 import ExecutiveSummaryForm from "../../components/form/ExecutiveSummaryForm";
+import { SelectInput } from "../../components/form/Inputs";
 
 const Dashboard = () => {
   const router = useNavigate();
@@ -79,36 +79,13 @@ const Dashboard = () => {
   const reportId = searchParams.get("id");
 
   // Get visibility status from Redux
-  const formVisible = useSelector((state: RootState) => state.kfd.visible);
-  const formVisible2 = useSelector((state: RootState) => state.kfw.visible);
-  const formVisible3 = useSelector((state: RootState) => state.kfa.visible);
   const dispatch = useDispatch();
   const sliderRef = useRef<Slider>(null);
 
   const alc = useSelector((state: RootState) => state.alc);
-  const tis = useSelector((state: RootState) => state.tis);
-  const pis = useSelector((state: RootState) => state.pis);
-  const epi = useSelector((state: RootState) => state.epi);
-  const kfa = useSelector((state: RootState) => state.kfa);
-  const kfw = useSelector((state: RootState) => state.kfw);
-  const kfd = useSelector((state: RootState) => state.kfd);
   const slo = useSelector((state: RootState) => state.slo);
-  const endPointProtection = useSelector(
-    (state: RootState) => state.endPointProtection
-  );
-  const endPointSensor = useSelector(
-    (state: RootState) => state.endPointSensor
-  );
-  const topIncidents = useSelector((state: RootState) => state.topIncidents);
-  const incidentsSummary = useSelector(
-    (state: RootState) => state.incidentsSummary
-  );
-  const incidentSummaryStatus = useSelector(
-    (state: RootState) => state.incidentSummaryStatus
-  );
-  const incidentSummarySeverity = useSelector(
-    (state: RootState) => state.incidentSummarySeverity
-  );
+
+  const tableOfContents = useSelector((s: RootState) => s.tableOfContents)
 
   /**
    * get report data from elastic index
@@ -196,16 +173,12 @@ const Dashboard = () => {
             (t: any, i: number) => {
               dispatch(
                 updateTableOfContents({
-                  index: i,
-                  field: "title",
-                  value: t.title,
-                })
-              );
-              dispatch(
-                updateTableOfContents({
-                  index: i,
-                  field: "page",
-                  value: t.page_no,
+                  attr: `[${i}]`,
+                  value: {
+                    title: t.title,
+                    page: Number(t.page_no) || 0,
+                    visible: true
+                  }
                 })
               );
             }
@@ -215,7 +188,7 @@ const Dashboard = () => {
               field: "nOfIncidents",
               value:
                 Number(
-                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY.total_incidents
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.total_incidents
                     .total_incidents
                 ) || 0,
             })
@@ -225,7 +198,7 @@ const Dashboard = () => {
               field: "riskIndex",
               value:
                 Number(
-                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY.risk_index.chart
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.risk_index.chart
                     .data[0]
                 ) || 0,
             })
@@ -235,7 +208,7 @@ const Dashboard = () => {
               field: "nOfDVul",
               value:
                 Number(
-                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY
                     .highly_exploitable
                 ) || 0,
             })
@@ -245,7 +218,7 @@ const Dashboard = () => {
               field: "nOfICWoAck",
               value:
                 Number(
-                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY.Incident_Closed
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.Incident_Closed
                 ) || 0,
             })
           );
@@ -254,7 +227,7 @@ const Dashboard = () => {
               field: "nOfTIncidents",
               value:
                 Number(
-                  data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY
                     .Highest_incidient
                 ) || 0,
             })
@@ -263,7 +236,7 @@ const Dashboard = () => {
             updateExecutiveSummary({
               field: "iTDate",
               value: moment(
-                data.EXECUTIVE_SUMMARY.date.EXECUTIVE_SUMMARY
+                data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY
                   .Highest_incidient_date
               ).format("Do MMMM YYYY"),
             })
@@ -406,73 +379,8 @@ const Dashboard = () => {
     getElasticData();
   }, [getElasticData]);
 
-  const formData = {
-    key: alc.key,
-    data: alc.data[alc.key],
-  };
-
-  const formData2 = {
-    key: tis.key,
-    data: tis.data[tis.key],
-  };
-
-  const formData3 = {
-    key: pis.key,
-    data: pis.data[pis.key],
-  };
-
-  const formData4 = {
-    key: epi.key,
-    data: epi.data[epi.key],
-  };
-
-  const formData9 = {
-    key: endPointProtection.key,
-    data: endPointProtection.data[endPointProtection.key],
-  };
-
-  const formData10 = {
-    key: endPointSensor.key,
-    data: endPointSensor.data[endPointSensor.key],
-  };
-
-  const formData5 = {
-    key: kfa.key,
-    data: kfa.data[kfa.key],
-  };
-
-  const formData6 = {
-    key: kfw.key,
-    data: kfw.data[kfw.key],
-  };
-
-  const formData7 = {
-    key: kfd.key,
-    data: kfd.data[kfd.key],
-  };
-
   const formData8 = {
     key: slo.key,
-  };
-
-  const formData11 = {
-    key: topIncidents.key,
-    data: topIncidents.data[topIncidents.key],
-  };
-
-  const formData12 = {
-    key: incidentsSummary.key,
-    data: incidentsSummary.data[incidentsSummary.key],
-  };
-
-  const formData13 = {
-    key: incidentSummaryStatus.key,
-    data: incidentSummaryStatus.data[incidentSummaryStatus.key],
-  };
-
-  const formData14 = {
-    key: incidentSummarySeverity.key,
-    data: incidentSummarySeverity.data[incidentSummarySeverity.key],
   };
 
   const client = useSelector((state: RootState) => state.client);
@@ -664,37 +572,28 @@ const Dashboard = () => {
               {reportData?.TABLE_OF_CONTENTS && <TableOfContents />}
 
               {/* Executive summary */}
-              {reportData?.EXECUTIVE_SUMMARY && (
+              {reportData?.EXECUTIVE_SUMMARY && tableOfContents[0].visible && (
                 <ExecutiveSummary
                   data={reportData.EXECUTIVE_SUMMARY}
-                  formData={formData}
-                  formData2={formData9}
-                  formData3={formData10}
                 />
               )}
 
               {/* Threat intel summary */}
               {reportData?.THREAT_INTEL_SUMMARY && (
                 <ThreatIntelSummary
-                  formData={formData2}
-                  formData2={formData11}
-                  formData3={formData12}
-                  formData4={formData13}
-                  formData5={formData14}
                   data={reportData.THREAT_INTEL_SUMMARY}
                 />
               )}
 
               {/* Pending incidents summary */}
-              {reportData?.PENDING_INCIDENTS_SUMMARY && (
+              {reportData?.PENDING_INCIDENTS_SUMMARY && tableOfContents[7].visible && (
                 <PendingIncidentsSummary
-                  formData={formData3}
                   data={reportData.PENDING_INCIDENTS_SUMMARY}
                 />
               )}
 
               {/* SLO summary */}
-              {reportData?.SLO_SUMMARY && (
+              {reportData?.SLO_SUMMARY && tableOfContents[8].visible && (
                 <SloSummary
                   formData={formData8}
                   data={reportData.SLO_SUMMARY}
@@ -704,31 +603,27 @@ const Dashboard = () => {
               {/* Endpoint inventory */}
               {reportData?.ENDPOINT_INVENTORY && (
                 <EndpointInventory
-                  formData={{ key: epi.key, data: epi.data[epi.key] }}
                   data={reportData.ENDPOINT_INVENTORY}
                 />
               )}
 
               {/* Key feature apex one */}
-              {reportData?.Key_feature_adoption_rate_of_Ap && formVisible3 && (
+              {reportData?.Key_feature_adoption_rate_of_Ap && tableOfContents[11].visible && (
                 <KeyFeatureApex
-                  formData={formData5}
                   data={reportData.Key_feature_adoption_rate_of_Ap}
                 />
               )}
 
               {/* Key feature workload */}
-              {reportData?.Key_feature_adoption_rate_of_Cw && formVisible2 && (
+              {reportData?.Key_feature_adoption_rate_of_Cw && tableOfContents[12].visible && (
                 <KeyFeatureWorkLoad
-                  formData={formData6}
                   data={reportData.Key_feature_adoption_rate_of_Cw}
                 />
               )}
 
               {/* Key feature deep security */}
-              {reportData?.Key_feature_adoption_rate_of_Ds && formVisible && (
+              {reportData?.Key_feature_adoption_rate_of_Ds && tableOfContents[13]?.visible && (
                 <KeyFeatureDeepSecurity
-                  formData={formData7}
                   data={reportData.Key_feature_adoption_rate_of_Ds}
                 />
               )}

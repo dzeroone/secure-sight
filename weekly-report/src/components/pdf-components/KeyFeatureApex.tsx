@@ -1,13 +1,14 @@
+import { useSelector } from "react-redux";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
+import { RootState } from "../../store/store";
+import RecommendationNotes from "../RecommendationNotes";
 interface KeyFeatureApexProps {
   data: any;
-  formData: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
 }
 
-const KeyFeatureApex: React.FC<KeyFeatureApexProps> = ({ data, formData }: any) => {
+const KeyFeatureApex: React.FC<KeyFeatureApexProps> = ({ data }: any) => {
+  const kFApexRecommendations = useSelector((s: RootState) => s.recommendation.kFApex);
+
   return (
     <div className="key-feature-apex" id={Object.keys(data.date)[0]}>
       <div className="p-8">
@@ -17,16 +18,9 @@ const KeyFeatureApex: React.FC<KeyFeatureApexProps> = ({ data, formData }: any) 
           data={data?.date.Key_feature_adoption_rate_of_Ap.graph}
           height={700}
         />
-        <p className="font-bold mt-12 capitalize">
-          {formData?.key}
-        </p>
-        <ul className="list-outside">
-          {formData?.data.map((item: string, i: number) => (
-            <li key={i} className="text-sm text-justify">
-              {item}
-            </li>
-          ))}
-        </ul>
+        <div className="mt-12">
+          <RecommendationNotes notes={kFApexRecommendations} />
+        </div>
       </div>
       {/* <div
         className="blank-page"

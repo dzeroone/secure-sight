@@ -8,25 +8,10 @@ import RecommendationNotes from "../RecommendationNotes";
 
 interface ExecutiveSummaryProps {
   data: any;
-  formData: {
-    key: "Recommendations" | "Notes" | "Summary";
-    data: string[];
-  };
-  formData2: {
-    key: "Recommendations" | "Notes" | "Summary";
-    data: string[];
-  };
-  formData3: {
-    key: "Recommendations" | "Notes" | "Summary";
-    data: string[];
-  };
 }
 
 const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
-  data,
-  formData,
-  formData2,
-  formData3,
+  data
 }) => {
   const endpointData = useSelector(
     (state: RootState) => state.endpoint.endpointData
@@ -39,6 +24,12 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
   const clientData = useSelector((s: RootState) => s.client);
   const agentLifeCycleRecommendations = useSelector(
     (s: RootState) => s.recommendation.agentLifeCycle
+  );
+  const endPointProtectionRecommendations = useSelector(
+    (s: RootState) => s.recommendation.endPointProtection
+  );
+  const endPointSensorRecommendations = useSelector(
+    (s: RootState) => s.recommendation.endPointSensor
   );
 
   const chartData = {
@@ -366,16 +357,9 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
           </table>
         </div>
         <div className="my-4">
-          <td width="30%">
-            <p className="font-bold capitalize">{formData2?.key}</p>
-            <ul className="list-inside text-justify">
-              {formData2?.data.map((item: string, i: number) => (
-                <li key={i} className="text-sm">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </td>
+          <div className="w-1/3">
+            <RecommendationNotes notes={endPointProtectionRecommendations} />
+          </div>
         </div>
 
         <ul>
@@ -422,16 +406,9 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
           </table>
         </div>
         <div className="my-4">
-          <td width="30%">
-            <p className="font-bold capitalize">{formData3?.key}</p>
-            <ul className="list-inside text-justify">
-              {formData3?.data.map((item: string, i: number) => (
-                <li key={i} className="text-sm">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </td>
+          <div className="w-1/3">
+            <RecommendationNotes notes={endPointSensorRecommendations} />
+          </div>
         </div>
       </div>
       {/* <div

@@ -1,17 +1,16 @@
 import { useSelector } from "react-redux";
 import DoughnutChat from "../charts/DoughnutChat";
 import { RootState } from "../../store/store";
+import RecommendationNotes from "../RecommendationNotes";
 
 interface PendingIncidentsSummaryProps {
   data: any;
-  formData: {
-    key: 'Recommendations' | 'Notes' | 'Summary';
-    data: string[];
-  };
 }
 
-const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({ data, formData }: any) => {
+const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({ data }: any) => {
   const pendingIncidentSummary = useSelector((state: RootState) => state.pendingIncidentSummary);
+  const pIncidentRecommendations = useSelector((s: RootState) => s.recommendation.pIncident);
+
   const chartData = {
     data: [
       pendingIncidentSummary.totalPendingIncidents,
@@ -74,16 +73,7 @@ const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({ data,
             <DoughnutChat data={data?.date.PENDING_INCIDENTS_SUMMARY.Pie_chart} />
           </div> */}
         </div>
-        <p className="font-bold my-8 capitalize">
-          {formData?.key}
-        </p>
-        <ul className="list-outside">
-          {formData?.data.map((item: string, i: number) => (
-            <li key={i} className="text-sm texy-justify">
-              {item}
-            </li>
-          ))}
-        </ul>
+        <RecommendationNotes notes={pIncidentRecommendations} />
       </div>
       {/* <div
         className="blank-page"

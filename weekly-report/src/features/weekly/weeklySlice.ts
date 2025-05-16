@@ -54,64 +54,79 @@ export const clientReducer = clientSlice.reducer;
 // Table of Contents
 export interface TableIndexInfo {
   title: string
-  page: number
+  page: number,
+  visible?: boolean
 }
 
 const initialTableOfContentsState: TableIndexInfo[] = [{
   title: 'Executive Summary',
-  page: 1
+  page: 1,
+  visible: true 
 }, {
   title: 'Threat Intel Summary',
-  page: 3
+  page: 3,
+  visible: true
 }, {
   title: 'Indicators of Compromise (IOC) Match Summary',
-  page: 3
+  page: 3,
+  visible: true
 }, {
   title: 'Incident Summary by Severity',
-  page: 4
+  page: 4,
+  visible: true
 }, {
   title: 'Incident Summary by Status',
-  page: 4
+  page: 4,
+  visible: true
 }, {
   title: 'Incidents Summary by Priority',
-  page: 5
+  page: 5,
+  visible: true
 }, {
   title: 'Top 10 Incidents Summary by Category',
-  page: 5
+  page: 5,
+  visible: true
 }, {
   title: 'Pending Incident Summary',
-  page: 6
+  page: 6,
+  visible: true
 }, {
   title: 'SLO Summary',
-  page: 7
+  page: 7,
+  visible: true
 }, {
   title: 'Endpoint Inventory',
-  page: 8
+  page: 8,
+  visible: true
 }, {
   title: 'Connected Products and License Information',
-  page: 8
+  page: 8,
+  visible: true
 }, {
   title: 'Key feature adoption rate of Apex One',
-  page: 9
+  page: 9,
+  visible: true
 }, {
   title: 'Key feature adoption rate of Cloud One Workload Security',
-  page: 10
+  page: 10,
+  visible: true
 }];
 
 const tableOfContentsSlice = createSlice({
   name: "tableOfContents",
   initialState: initialTableOfContentsState,
   reducers: {
-    updateTableOfContents(state, action: PayloadAction<{ index: number, field: keyof TableIndexInfo, value: string | number }>) {
-      return state.map((s, i) => {
-        if (i == action.payload.index) {
-          return {
-            ...s,
-            [action.payload.field]: action.payload.value
-          }
-        }
-        return s
-      })
+    updateTableOfContents(state, action: PayloadAction<{ attr: string, value: any }>) {
+      _set(state, action.payload.attr, action.payload.value)
+      // return state.map((s, i) => {
+      //   if (i == action.payload.index) {
+      //     return {
+      //       ...s,
+      //       [action.payload.field]: action.payload.value
+      //     }
+      //   }
+      //   return s
+      // })
     }
   },
 });
@@ -161,11 +176,35 @@ export const executiveSummaryReducer = executiveSummarySlice.reducer;
  * Reommendation
  */
 export interface RecommendationState {
-  agentLifeCycle: RecommendationNote[]
+  agentLifeCycle: RecommendationNote[],
+  endPointProtection: RecommendationNote[],
+  endPointSensor: RecommendationNote[],
+  iocMatched: RecommendationNote[],
+  iSeverity: RecommendationNote[],
+  iStatus: RecommendationNote[],
+  iPriority: RecommendationNote[],
+  tIByCategory: RecommendationNote[],
+  pIncident: RecommendationNote[],
+  eInventory: RecommendationNote[],
+  kFApex: RecommendationNote[],
+  kFWorkload: RecommendationNote[],
+  kFDeep: RecommendationNote[]
 }
 
 const initialRecommendationState: RecommendationState = {
-  agentLifeCycle: []
+  agentLifeCycle: [],
+  endPointProtection: [],
+  endPointSensor: [],
+  iocMatched: [],
+  iSeverity: [],
+  iStatus: [],
+  iPriority: [],
+  tIByCategory: [],
+  pIncident: [],
+  eInventory: [],
+  kFApex: [],
+  kFWorkload: [],
+  kFDeep: []
 }
 
 const recommendationSlice = createSlice({
@@ -650,32 +689,10 @@ const createCustomSlice = (name: string) => {
 
 // Create slices for different summaries (without visibility control)
 export const alcSlice = createCustomSlice("alc");
-export const tisSlice = createCustomSlice("tis");
-export const pisSlice = createCustomSlice("pis");
-export const epiSlice = createCustomSlice("epi");
-export const endPointProtectionSlice = createCustomSlice("endPointProtection");
 export const endPointSensorSlice = createCustomSlice("endPointSensor");
-export const topIncidentsSlice = createCustomSlice("topIncidents");
-export const incidentsSummarySlice = createCustomSlice("incidentsSummary");
-export const incidentSummaryStatusSlice = createCustomSlice(
-  "incidentSummaryStatus"
-);
-export const incidentSummarySeveritySlice = createCustomSlice(
-  "incidentSummarySeverity"
-);
 
 // Export actions and reducers for general slice
 export const alcReducer = alcSlice.reducer;
-export const tisReducer = tisSlice.reducer;
-export const pisReducer = pisSlice.reducer;
-export const epiReducer = epiSlice.reducer;
-export const endPointProtectionReducer = endPointProtectionSlice.reducer;
-export const endPointSensorReducer = endPointSensorSlice.reducer;
-export const topIncidentsReducer = topIncidentsSlice.reducer;
-export const incidentsSummaryReducer = incidentsSummarySlice.reducer;
-export const incidentSummaryStatusReducer = incidentSummaryStatusSlice.reducer;
-export const incidentSummarySeverityReducer =
-  incidentSummarySeveritySlice.reducer;
 
 export const {
   setKey: setAlcKey,
@@ -683,31 +700,6 @@ export const {
   updateData: updateAlcData,
   removeData: removeAlcData,
 } = alcSlice.actions;
-export const {
-  setKey: setTisKey,
-  addData: addTisData,
-  updateData: updateTisData,
-  removeData: removeTisData,
-} = tisSlice.actions;
-export const {
-  setKey: setPisKey,
-  addData: addPisData,
-  updateData: updatePisData,
-  removeData: removePisData,
-} = pisSlice.actions;
-export const {
-  setKey: setEpiKey,
-  addData: addEpiData,
-  updateData: updateEpiData,
-  removeData: removeEpiData,
-} = epiSlice.actions;
-
-export const {
-  setKey: setEndPointProtectionKey,
-  addData: addEndPointProtectionData,
-  updateData: updateEndPointProtectionData,
-  removeData: removeEndPointProtectionData,
-} = endPointProtectionSlice.actions;
 
 export const {
   setKey: setEndPointSensorKey,
@@ -715,34 +707,6 @@ export const {
   updateData: updateEndPointSensorData,
   removeData: removeEndPointSensorData,
 } = endPointSensorSlice.actions;
-
-export const {
-  setKey: setTopIncidentsKey,
-  addData: addTopIncidentsData,
-  updateData: updateTopIncidentsData,
-  removeData: removeTopIncidentsData,
-} = topIncidentsSlice.actions;
-
-export const {
-  setKey: setIncidentsSummaryKey,
-  addData: addIncidentsSummaryData,
-  updateData: updateIncidentsSummaryData,
-  removeData: removeIncidentsSummaryData,
-} = incidentsSummarySlice.actions;
-
-export const {
-  setKey: setIncidentSummaryStatusKey,
-  addData: addIncidentSummaryStatusData,
-  updateData: updateIncidentSummaryStatusData,
-  removeData: removeIncidentSummaryStatusData,
-} = incidentSummaryStatusSlice.actions;
-
-export const {
-  setKey: setIncidentSummarySeverityKey,
-  addData: addIncidentSummarySeverityData,
-  updateData: updateIncidentSummarySeverityData,
-  removeData: removeIncidentSummarySeverityData,
-} = incidentSummarySeveritySlice.actions;
 
 // --- Slices with Visibility Control ---
 
@@ -795,37 +759,3 @@ const createVisibilitySlice = (name: string) => {
     },
   });
 };
-
-// Create slices with visibility control for different summaries
-export const kfdSlice = createVisibilitySlice("kfd");
-export const kfwSlice = createVisibilitySlice("kfw");
-export const kfaSlice = createVisibilitySlice("kfa");
-
-// Export actions and reducers for visibility-controlled slices
-export const kfdReducer = kfdSlice.reducer;
-export const kfwReducer = kfwSlice.reducer;
-export const kfaReducer = kfaSlice.reducer;
-
-export const {
-  setKey: setKfdKey,
-  toggleVisibility: toggleKfdVisibility,
-  addData: addKfdData,
-  updateData: updateKfdData,
-  removeData: removeKfdData,
-} = kfdSlice.actions;
-
-export const {
-  setKey: setKfwKey,
-  toggleVisibility: toggleKfwVisibility,
-  addData: addKfwData,
-  updateData: updateKfwData,
-  removeData: removeKfwData,
-} = kfwSlice.actions;
-
-export const {
-  setKey: setKfaKey,
-  toggleVisibility: toggleKfaVisibility,
-  addData: addKfaData,
-  updateData: updateKfaData,
-  removeData: removeKfaData,
-} = kfaSlice.actions;

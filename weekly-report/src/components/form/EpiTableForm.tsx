@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addLicenseData, editLicenseData, removeLicenseData, addProductData, toggleLicenseVisibility, toggleProductVisibility, editProductData, removeProductData } from '../../features/weekly/weeklySlice';
 import { RootState } from '../../store/store';
 import { MdClose, MdEdit } from 'react-icons/md';
+import { SwitchInput } from './Inputs';
 
 const LicenseForm: React.FC = () => {
     const dispatch = useDispatch();
@@ -44,19 +45,10 @@ const LicenseForm: React.FC = () => {
     return (
         <div className="p-6 bg-white rounded-lg border shadow-md">
             <h3 className="text-lg font-semibold mb-4">License Information Table</h3>
-            <label className="flex items-center mb-4 cursor-pointer">
-                <input
-                    type="checkbox"
-                    onChange={handleToggleFormVisibility}
-                    checked={licensesVisible}
-                    className="hidden"
-                />
-                <div className="relative">
-                    <div className={`block w-10 h-6 rounded-full transition ${licensesVisible ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                    <div className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition ${licensesVisible ? 'transform translate-x-full bg-[#0d9488]' : ''}`}></div>
-                </div>
-                <span className="ml-3 text-white">{licensesVisible ? 'Hide' : 'Show'}</span>
-            </label>
+            <div className='mb-4'>
+                <SwitchInput checked={licensesVisible} onChange={handleToggleFormVisibility}/>
+            </div>
+            
             <div className="mt-4">
                 <h4 className="font-semibold">Table Data</h4>
                 <ul>
@@ -145,19 +137,9 @@ const ProductForm: React.FC = () => {
     return (
         <div className="p-6 bg-white rounded-lg border shadow-md">
             <h3 className="text-lg font-semibold mb-4">Connected Product Table</h3>
-            <label className="flex items-center mb-4 cursor-pointer">
-                <input
-                    type="checkbox"
-                    onChange={handleToggleFormVisibility}
-                    checked={productVisible}
-                    className="hidden"
-                />
-                <div className="relative">
-                    <div className={`block w-10 h-6 rounded-full transition ${productVisible ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                    <div className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition ${productVisible ? 'transform translate-x-full bg-[#0d9488]' : ''}`}></div>
-                </div>
-                <span className="ml-3 text-white">{productVisible ? 'Hide' : 'Show'}</span>
-            </label>
+            <div className='mb-4'>
+                <SwitchInput checked={productVisible} onChange={handleToggleFormVisibility}/>
+            </div>
             <div className="mt-4">
                 <h4 className="font-semibold">Table Data</h4>
                 <ul>

@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { TextInput } from "./Inputs";
+import { SwitchInput, TextInput } from "./Inputs";
 import { updateTableOfContents } from "../../features/weekly/weeklySlice";
 
 export default function TableOfContentsForm() {
-  const tableOfContents = useSelector((s: RootState) => s.tableOfContents);
   const dispatch = useDispatch();
+  const tableOfContents = useSelector((s: RootState) => s.tableOfContents);
 
   return (
     <div className="p-6 flex flex-col gap-4 bg-white rounded-lg border shadow-md">
@@ -19,8 +19,7 @@ export default function TableOfContentsForm() {
                 onChange={(e) => {
                   dispatch(
                     updateTableOfContents({
-                      index: i,
-                      field: "title",
+                      attr: `[${i}].title`,
                       value: e.target.value,
                     })
                   );
@@ -32,8 +31,7 @@ export default function TableOfContentsForm() {
                 onChange={(e) => {
                   dispatch(
                     updateTableOfContents({
-                      index: i,
-                      field: "page",
+                      attr: `[${i}].page`,
                       value: Number(e.target.value),
                     })
                   );
@@ -41,6 +39,12 @@ export default function TableOfContentsForm() {
                 className="w-12"
               />
             </div>
+            <div className="text-sm mt-1">Visibility <SwitchInput checked={tc.visible} onChange={(e) => {
+              dispatch(updateTableOfContents({
+                attr: `[${i}].visible`,
+                value: e.target.checked
+              }))
+            }}/></div>
           </div>
         );
       })}

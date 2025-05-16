@@ -18,7 +18,7 @@ const TableOfContents = () => {
       <div className="px-12">
         <table className="mt-10 w-full mx-auto">
           <tbody>
-            {data.map((item: TableIndexInfo, i: number) => (
+            {data.filter(d => d.visible).map((item: TableIndexInfo, i: number) => (
               <tr key={i}>
                 <td className="p-2 text-lg">
                   <a href={`#`}>{item.title}</a>
