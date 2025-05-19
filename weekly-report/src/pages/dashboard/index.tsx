@@ -43,6 +43,7 @@ import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "../../data/data";
 import {
   updateClientName,
   updateClientState,
+  updateDataProp,
   updateExecutiveSummary,
   updateTableOfContents,
 } from "../../features/weekly/weeklySlice";
@@ -241,6 +242,49 @@ const Dashboard = () => {
               ).format("Do MMMM YYYY"),
             })
           );
+          dispatch(
+            updateExecutiveSummary({
+              field: "epTAgents",
+              value: Number(
+                data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_protection.data[1]
+              ) || 0,
+            })
+          );
+          dispatch(
+            updateExecutiveSummary({
+              field: "epDAgents",
+              value: Number(
+                data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_protection.data[0]
+              ) || 0,
+            })
+          );
+          dispatch(
+            updateExecutiveSummary({
+              field: "epTSensors",
+              value: Number(
+                data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_sensor.data[1]
+              ) || 0,
+            })
+          );
+          dispatch(
+            updateExecutiveSummary({
+              field: "epDSensors",
+              value: Number(
+                data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_sensor.data[0]
+              ) || 0,
+            })
+          );
+
+          // threat intel summary
+          dispatch(updateDataProp({
+            attr: 'isSeverity',
+            value: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.Incident_Summary_by_Severity?.data
+          }))
+          dispatch(updateDataProp({
+            attr: 'isStatus',
+            value: [...data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.Incident_Summary_by_status?.data, 0]
+          }))
+
         }
       } else {
         dispatch({

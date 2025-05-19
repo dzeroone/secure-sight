@@ -293,7 +293,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
           <thead>
             <tr className="bg-[#696969] text-white text-left text-sm tracking-wide">
               <th className="w-2/5 p-4">Endpoint Name</th>
-              <th className="w-1/5 p-4">Number of Detection with Severity</th>
+              <th className="w-1/5 p-4">No of OAT with Severity</th>
               <th className="w-2/5 p-4">Action Taken from SOC Team</th>
             </tr>
           </thead>
@@ -337,18 +337,16 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                       className="bar-progress"
                       style={{
                         width: `${
-                          (data?.date.EXECUTIVE_SUMMARY.endpoint_protection
-                            .data[0] /
-                            data?.date.EXECUTIVE_SUMMARY.endpoint_protection
-                              .data[1]) *
+                          (executiveSummaryData.epDAgents /
+                            executiveSummaryData.epTAgents) *
                           100
                         }%`,
                       }}
                     ></div>
                   </div>
                   <p className="text-center font-bold mt-2">
-                    {data?.date.EXECUTIVE_SUMMARY.endpoint_protection.data[0]} /{" "}
-                    {data?.date.EXECUTIVE_SUMMARY.endpoint_protection.data[1]}{" "}
+                    {executiveSummaryData.epDAgents} /{" "}
+                    {executiveSummaryData.epTAgents}{" "}
                     {data?.date.EXECUTIVE_SUMMARY.endpoint_protection.key}
                   </p>
                 </td>
@@ -386,18 +384,16 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                       className="bar-progress"
                       style={{
                         width: `${
-                          (data?.date.EXECUTIVE_SUMMARY.endpoint_sensor
-                            .data[0] /
-                            data?.date.EXECUTIVE_SUMMARY.endpoint_sensor
-                              .data[1]) *
+                          (executiveSummaryData.epDSensors /
+                            executiveSummaryData.epTSensors) *
                           100
                         }%`,
                       }}
                     ></div>
                   </div>
                   <p className="text-center font-bold mt-2">
-                    {data?.date.EXECUTIVE_SUMMARY.endpoint_sensor.data[0]} /{" "}
-                    {data?.date.EXECUTIVE_SUMMARY.endpoint_sensor.data[1]}{" "}
+                    {executiveSummaryData.epDSensors} /{" "}
+                    {executiveSummaryData.epTSensors}{" "}
                     {data?.date.EXECUTIVE_SUMMARY.endpoint_sensor.key}
                   </p>
                 </td>

@@ -146,6 +146,10 @@ export interface ExecutiveSummaryState {
   nOfICWoAck: number // number of incidents closed without ack
   nOfTIncidents: number, // number of triggered incidents
   iTDate: string // incident trigger date
+  epTAgents: number
+  epDAgents: number
+  epTSensors: number
+  epDSensors: number
 }
 const initialExecutiveSummaryState: ExecutiveSummaryState = {
   nOfIncidents: 0,
@@ -154,7 +158,11 @@ const initialExecutiveSummaryState: ExecutiveSummaryState = {
   nOfDVul: 0,
   nOfICWoAck: 0,
   nOfTIncidents: 0,
-  iTDate: ''
+  iTDate: '',
+  epTAgents: 0,
+  epDAgents: 0,
+  epTSensors: 0,
+  epDSensors: 0
 }
 const executiveSummarySlice = createSlice({
   name: "executiveSummary",
@@ -234,6 +242,8 @@ interface DataState {
   products: { Status: string; Product: string }[];
   licensesVisible: boolean;
   productsVisible: boolean;
+  isSeverity: [number, number, number, number] //Incident_Summary_by_Severity,
+  isStatus: [number, number, number] // Incident_Summary_by_Status
 }
 
 const initialDataState: DataState = {
@@ -241,6 +251,8 @@ const initialDataState: DataState = {
   products: [],
   licensesVisible: true,
   productsVisible: true,
+  isSeverity: [0, 0, 0, 0],
+  isStatus: [0, 0, 0]
 };
 
 const dataSlice = createSlice({
@@ -304,6 +316,9 @@ const dataSlice = createSlice({
     toggleProductVisibility: (state) => {
       state.productsVisible = !state.productsVisible;
     },
+    updateDataProp(state, action: PayloadAction<{ attr: string, value: any }>) {
+      _set(state, action.payload.attr, action.payload.value)
+    },
   },
 });
 
@@ -316,6 +331,7 @@ export const {
   removeProductData,
   toggleLicenseVisibility,
   toggleProductVisibility,
+  updateDataProp
 } = dataSlice.actions;
 
 export const dataReducer = dataSlice.reducer;
@@ -551,12 +567,14 @@ export const pendingIncidentSummaryReducer =
 
 interface IncidentSummaryState {
   closed: number[];
+  closedWOAck: number[];
   pendingFromSOC: number[];
   pendingFromCustomer: number[];
 }
 
 const initialIncidentSummaryState: IncidentSummaryState = {
   closed: [0, 0, 0, 0],
+  closedWOAck: [0, 0, 0, 0],
   pendingFromSOC: [0, 0, 0, 0],
   pendingFromCustomer: [0, 0, 0, 0],
 };
@@ -569,12 +587,14 @@ const incidentSummarySlice = createSlice({
       state,
       action: PayloadAction<{
         closed: number[];
+        closedWOAck: number[];
         pendingFromSOC: number[];
         pendingFromCustomer: number[];
       }>
     ) => {
-      const { closed, pendingFromSOC, pendingFromCustomer } = action.payload;
+      const { closed, closedWOAck, pendingFromSOC, pendingFromCustomer } = action.payload;
       state.closed = closed;
+      state.closedWOAck = closedWOAck;
       state.pendingFromSOC = pendingFromSOC;
       state.pendingFromCustomer = pendingFromCustomer;
     },

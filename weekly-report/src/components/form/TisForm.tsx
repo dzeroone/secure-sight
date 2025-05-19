@@ -9,13 +9,19 @@ import {
   updateMatchSummaryData,
   addChartBar,
   removeChartBar,
-  updateLabel
+  updateLabel,
+  updateDataProp
 } from '../../features/weekly/weeklySlice';
 import { MdClose, MdEdit } from 'react-icons/md';
 import RecommendationInput from './RecommendationInput';
+import Label from './Label';
+import { TextInput } from './Inputs';
 
 const TisForm = () => {
   const dispatch = useDispatch();
+  const client = useSelector((state: RootState) => state.client);
+  const isSeverity = useSelector((s: RootState) => s.data.isSeverity);
+  const isStatus = useSelector((s: RootState) => s.data.isStatus);
   const iocMatchedRecommendations = useSelector((s: RootState) => s.recommendation.iocMatched);
   const iSeverityRecommendations = useSelector((s: RootState) => s.recommendation.iSeverity);
   const iStatusRecommendations = useSelector((s: RootState) => s.recommendation.iStatus);
@@ -86,13 +92,14 @@ const TisForm = () => {
 
   const incidentSummary = useSelector((state: RootState) => state.incidentSummary);
 
-  const handleInputChange = (field: 'closed' | 'pendingFromSOC' | 'pendingFromCustomer', index: number, value: string) => {
+  const handleInputChange = (field: 'closed' | 'closedWOAck' | 'pendingFromSOC' | 'pendingFromCustomer', index: number, value: string) => {
     const updatedValues = [...incidentSummary[field]];
     updatedValues[index] = Number(value);
 
     // Dispatch updated data to Redux
     dispatch(updateIncidentSummaryData({
       closed: field === 'closed' ? updatedValues : incidentSummary.closed,
+      closedWOAck: field === 'closedWOAck' ? updatedValues : incidentSummary.closedWOAck,
       pendingFromSOC: field === 'pendingFromSOC' ? updatedValues : incidentSummary.pendingFromSOC,
       pendingFromCustomer: field === 'pendingFromCustomer' ? updatedValues : incidentSummary.pendingFromCustomer,
     }));
@@ -295,6 +302,64 @@ const TisForm = () => {
       {/* INCIDENTS SUMMARY BY SEVERITY */}
       <div>
         <h3 className="text-lg font-semibold mt-8 mb-4">INCIDENTS SUMMARY BY SEVERITY</h3>
+        <div className='mb-4 flex flex-col gap-2'>
+          <div>
+            <Label>Critical</Label>
+            <TextInput
+              placeholder="Critical"
+              type='number'
+              value={isSeverity[0]}
+              onChange={(e) => dispatch(
+                updateDataProp({
+                  attr: "isSeverity[0]",
+                  value: Number(e.target.value) || 0,
+                })
+              )}
+            />
+          </div>
+          <div>
+            <Label>High</Label>
+            <TextInput
+              placeholder="High"
+              type='number'
+              value={isSeverity[1]}
+              onChange={(e) => dispatch(
+                updateDataProp({
+                  attr: "isSeverity[1]",
+                  value: Number(e.target.value) || 0,
+                })
+              )}
+            />
+          </div>
+          <div>
+            <Label>Medium</Label>
+            <TextInput
+              placeholder="Medium"
+              type='number'
+              value={isSeverity[2]}
+              onChange={(e) => dispatch(
+                updateDataProp({
+                  attr: "isSeverity[2]",
+                  value: Number(e.target.value) || 0,
+                })
+              )}
+            />
+          </div>
+          <div>
+            <Label>Low</Label>
+            <TextInput
+              placeholder="Low"
+              type='number'
+              value={isSeverity[3]}
+              onChange={(e) => dispatch(
+                updateDataProp({
+                  attr: "isSeverity[3]",
+                  value: Number(e.target.value) || 0,
+                })
+              )}
+            />
+          </div>
+        </div>
         <div className="mb-4">
           <RecommendationInput entity="iSeverity" values={iSeverityRecommendations} />
         </div>
@@ -308,6 +373,50 @@ const TisForm = () => {
       {/* Incident Summary by status Form */}
       <div>
         <h3 className="text-lg font-semibold mt-8 mb-4">Incident Summary by status</h3>
+        <div className='mb-4 flex flex-col gap-2'>
+          <div>
+            <Label>Closed Incidents</Label>
+            <TextInput
+              placeholder="Closed Incidents"
+              type='number'
+              value={isStatus[0]}
+              onChange={(e) => dispatch(
+                updateDataProp({
+                  attr: "isStatus[0]",
+                  value: Number(e.target.value) || 0,
+                })
+              )}
+            />
+          </div>
+          <div>
+            <Label>Pending Incidents from SOC Team</Label>
+            <TextInput
+              placeholder="Pending Incidents from SOC Team"
+              type='number'
+              value={isStatus[1]}
+              onChange={(e) => dispatch(
+                updateDataProp({
+                  attr: "isStatus[1]",
+                  value: Number(e.target.value) || 0,
+                })
+              )}
+            />
+          </div>
+          <div>
+            <Label>Pending Incidents from {client.tenantCode}</Label>
+            <TextInput
+              placeholder={`Pending Incidents from ${client.tenantCode}`}
+              type='number'
+              value={isStatus[2]}
+              onChange={(e) => dispatch(
+                updateDataProp({
+                  attr: "isStatus[2]",
+                  value: Number(e.target.value) || 0,
+                })
+              )}
+            />
+          </div>
+        </div>
         <div className="mb-4">
           <RecommendationInput entity="iStatus" values={iStatusRecommendations} />
         </div>
@@ -316,15 +425,27 @@ const TisForm = () => {
       <div>
         <h3 className="text-lg font-semibold mt-8 mb-4">Incidents Summary by Priority Chart</h3>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Closed</label>
+          <Label>Closed</Label>
           <div className='grid grid-cols-3 gap-2'>
             {incidentSummary.closed.map((value, index) => (
-              <input
+              <TextInput
                 key={index}
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 type="number"
                 value={value}
                 onChange={(e) => handleInputChange('closed', index, e.target.value)}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="mb-4">
+          <Label>Closed without acknowledgement</Label>
+          <div className='grid grid-cols-3 gap-2'>
+            {incidentSummary.closedWOAck.map((value, index) => (
+              <TextInput
+                key={index}
+                type="number"
+                value={value}
+                onChange={(e) => handleInputChange('closedWOAck', index, e.target.value)}
               />
             ))}
           </div>
@@ -344,7 +465,7 @@ const TisForm = () => {
           </div>
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Pending from Customer</label>
+          <label className="block text-sm font-medium text-gray-700">Pending from {client.tenantCode}</label>
           <div className='grid grid-cols-3 gap-2'>
             {incidentSummary.pendingFromCustomer.map((value, index) => (
               <input

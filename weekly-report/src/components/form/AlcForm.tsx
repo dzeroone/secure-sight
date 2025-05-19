@@ -16,7 +16,7 @@ import {
 } from "../../features/weekly/weeklySlice";
 import { MdClose, MdEdit } from "react-icons/md";
 import Label from "./Label";
-import { TextInput } from "./Inputs";
+import { TextAreaInput, TextInput } from "./Inputs";
 import RecommendationInput from "./RecommendationInput";
 
 const AlcForm = () => {
@@ -47,7 +47,7 @@ const AlcForm = () => {
 
   const [endpointName, setEndpointName] = useState("");
   const [detectionsWithSeverity, setDetectionsWithSeverity] = useState("");
-  const [actionTakenBySoc, setActionTakenBySoc] = useState("");
+  const [actionTakenBySoc, setActionTakenBySoc] = useState("The SOC team is actively developing and testing observed attack methods on the specified endpoint, while also prioritizing their efforts to respond to and communicate with the client.");
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const handleAddOrEditEndpoint = () => {
@@ -336,51 +336,38 @@ const AlcForm = () => {
             ))}
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="endpoint-name"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <Label>
               Endpoint Name
-            </label>
-            <input
+            </Label>
+            <TextInput
               id="endpoint-name"
               type="text"
               value={endpointName}
               onChange={(e) => setEndpointName(e.target.value)}
-              className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter endpoint name"
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="detections-with-severity"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <Label>
               Detections with Severity
-            </label>
-            <input
+            </Label>
+            <TextInput
               id="detections-with-severity"
               type="text"
               value={detectionsWithSeverity}
               onChange={(e) => setDetectionsWithSeverity(e.target.value)}
-              className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter detections with severity"
             />
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="action-taken-by-soc"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <Label>
               Action Taken by SOC
-            </label>
-            <input
+            </Label>
+            <TextAreaInput
               id="action-taken-by-soc"
-              type="text"
               value={actionTakenBySoc}
               onChange={(e) => setActionTakenBySoc(e.target.value)}
-              className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter action taken by SOC"
             />
           </div>

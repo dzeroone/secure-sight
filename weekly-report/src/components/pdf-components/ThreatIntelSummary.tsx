@@ -23,6 +23,8 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data }: any) =>
   const iStatusRecommendations = useSelector((s: RootState) => s.recommendation.iStatus);
   const iPriorityRecommendations = useSelector((s: RootState) => s.recommendation.iPriority);
   const tIByCategoryRecommendations = useSelector((s: RootState) => s.recommendation.tIByCategory);
+  const dataState = useSelector((s: RootState) => s.data);
+  const client = useSelector((s: RootState) => s.client);
 
   const chartData = {
     Key: ['P1', 'P2', 'P3', 'P4'],
@@ -33,14 +35,19 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data }: any) =>
         backgroundColor: "#ff8200"
       },
       {
-        label: "Pending from SOC",
-        data: incidentSummary.pendingFromSOC,
+        label: "Closed without acknowledgement",
+        data: incidentSummary.closedWOAck,
         backgroundColor: "#ffa950"
       },
       {
-        label: "Pending from Customer",
-        data: incidentSummary.pendingFromCustomer,
+        label: "Pending from SOC",
+        data: incidentSummary.pendingFromSOC,
         backgroundColor: "#ffd9b2"
+      },
+      {
+        label: `Pending from ${client.tenantCode}`,
+        data: incidentSummary.pendingFromCustomer,
+        backgroundColor: "#ffe5b2"
       }
     ]
   };
@@ -154,7 +161,22 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data }: any) =>
           <div>
             <DoughnutChat
               data={
-                data?.date.THREAT_INTEL_SUMMARY.Incident_Summary_by_Severity
+                {
+                  data: dataState.isSeverity,
+                  "label": [
+                      "Critical",
+                      "High",
+                      "Medium",
+                      "Low"
+                  ],
+                  "backgroundColor": [
+                      "#ff8200",
+                      "#ffa950",
+                      "#ffd9b2",
+                      "#ffc0cb"
+                  ],
+                  "chart_type": "doughnut"
+                }
               }
             />
           </div>
@@ -184,7 +206,20 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({ data }: any) =>
         <div className="w-full grid grid-flow-row grid-cols-2 items-center gap-6">
           <div>
             <DoughnutChat
-              data={data?.date.THREAT_INTEL_SUMMARY.Incident_Summary_by_status}
+              data={{
+                data: dataState.isStatus,
+                "label": [
+                  "Closed Incidents",
+                  "Pending Incidents from SOC Team",
+                  `Pending Incidents from ${client.tenantCode}`
+                ],
+                "backgroundColor": [
+                  "#ff8200",
+                  "#ffa950",
+                  "#ffe950"
+                ],
+                "chart_type": "doughnut"
+              }}
               legend
             />
           </div>
