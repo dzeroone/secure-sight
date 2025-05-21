@@ -3,19 +3,22 @@ import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import { RootState } from "../../store/store";
 import RecommendationNotes from "../RecommendationNotes";
 interface KeyFeatureApexProps {
-  data: any;
 }
 
-const KeyFeatureApex: React.FC<KeyFeatureApexProps> = ({ data }: any) => {
+const KeyFeatureApex: React.FC<KeyFeatureApexProps> = () => {
   const kFApexRecommendations = useSelector((s: RootState) => s.recommendation.kFApex);
+  const kFARAp = useSelector((s: RootState) => s.data.kFARAp);
 
   return (
-    <div className="key-feature-apex" id={Object.keys(data.date)[0]}>
+    <div className="key-feature-apex">
       <div className="p-8">
         <p className="title">Key Feature Adoption Rate of Apex one as Service / Std Endpoint Protection</p>
         {/* <p className="title">{data?.date.title}</p> */}
         <GroupedBarChartHorizontal
-          data={data?.date.Key_feature_adoption_rate_of_Ap.graph}
+          data={{
+            Key: kFARAp.key,
+            data: kFARAp.data
+          }}
           height={700}
         />
         <div className="mt-12">

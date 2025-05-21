@@ -10,6 +10,7 @@ interface PendingIncidentsSummaryProps {
 const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({ data }: any) => {
   const pendingIncidentSummary = useSelector((state: RootState) => state.pendingIncidentSummary);
   const pIncidentRecommendations = useSelector((s: RootState) => s.recommendation.pIncident);
+  const client = useSelector((state: RootState) => state.client);
 
   const chartData = {
     data: [
@@ -24,7 +25,7 @@ const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({ data 
     ],
     label: [
       "Total Pending Incidents",
-      "Pending Incidents from Customer",
+      `Pending Incidents from ${client.tenantCode}`,
       "Pending Incidents from SOC Team",
     ],
   };
@@ -52,7 +53,7 @@ const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({ data 
             {pendingIncidentSummary.totalPendingIncidents}
           </li>
           <li>
-            Pending Incidents from Customer:{" "}
+            Pending Incidents from {client.tenantCode}:{" "}
             {pendingIncidentSummary.customerPendingIncidents}
           </li>
           <li>

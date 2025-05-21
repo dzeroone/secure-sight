@@ -41,6 +41,7 @@ import Alert from "../../components/ui/Alert";
 import axiosApi from "../../config/axios";
 import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "../../data/data";
 import {
+  updateChartData,
   updateClientName,
   updateClientState,
   updateDataProp,
@@ -53,6 +54,8 @@ import store, { RootState } from "../../store/store";
 import { getErrorMessage } from "../../utils/helpers";
 import ExecutiveSummaryForm from "../../components/form/ExecutiveSummaryForm";
 import { SelectInput } from "../../components/form/Inputs";
+import ClosedIncidentsSummary from "../../components/pdf-components/ClosedIncidentsSummary";
+import CisForm from "../../components/form/CisForm";
 
 const Dashboard = () => {
   const router = useNavigate();
@@ -170,20 +173,20 @@ const Dashboard = () => {
             })
           );
 
-          data.TABLE_OF_CONTENTS?.date?.TABLE_OF_CONTENTS?.forEach(
-            (t: any, i: number) => {
-              dispatch(
-                updateTableOfContents({
-                  attr: `[${i}]`,
-                  value: {
-                    title: t.title,
-                    page: Number(t.page_no) || 0,
-                    visible: true
-                  }
-                })
-              );
-            }
-          );
+          // data.TABLE_OF_CONTENTS?.date?.TABLE_OF_CONTENTS?.forEach(
+          //   (t: any, i: number) => {
+          //     dispatch(
+          //       updateTableOfContents({
+          //         attr: `[${i}]`,
+          //         value: {
+          //           title: t.title,
+          //           page: Number(t.page_no) || 0,
+          //           visible: true
+          //         }
+          //       })
+          //     );
+          //   }
+          // );
           dispatch(
             updateExecutiveSummary({
               field: "nOfIncidents",
@@ -284,7 +287,122 @@ const Dashboard = () => {
             attr: 'isStatus',
             value: [...data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.Incident_Summary_by_status?.data, 0]
           }))
+          if(data.THREAT_INTEL_SUMMARY?.date) {
+            dispatch(updateDataProp({
+              attr: 't10ISCat',
+              value: {
+                Key: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.T10IS_by_Category.Key,
+                data: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.T10IS_by_Category.data.map((d: any) => {
+                  if(d.label == 'Pending from Customer') {
+                    d.label = `Pending from ${responseData.customer.tCode.toUpperCase()}`
+                  }
+                  return d
+                })
+              }
+            }))
+          }
 
+          if(data.SLO_SUMMARY?.date) {
+            dispatch(updateDataProp({
+              attr: 'sloCV.tCI',
+              value: Number(data.SLO_SUMMARY?.date.SLO_SUMMARY.graph.data[0]) || 0
+            }))
+            dispatch(updateDataProp({
+              attr: 'sloCV.sloMet',
+              value: Number(data.SLO_SUMMARY?.date.SLO_SUMMARY.graph.data[1]) || 0
+            }))
+            dispatch(updateDataProp({
+              attr: 'sloCV.sloNMet',
+              value: Number(data.SLO_SUMMARY?.date.SLO_SUMMARY.graph.data[2]) || 0
+            }))
+          }
+          if(data.ENDPOINT_INVENTORY?.date) {
+            data.ENDPOINT_INVENTORY?.date.ENDPOINT_INVENTORY?.Bar_graph?.Key.forEach((k: string, i: number) => {
+              dispatch(updateChartData({
+                index: i,
+                label: k,
+                dataPoint: data.ENDPOINT_INVENTORY?.date.ENDPOINT_INVENTORY?.Bar_graph?.data[i] || 0
+              }))
+            })
+          }
+
+          if(data.Key_feature_adoption_rate_of_Ap?.date) {
+            const graph = data.Key_feature_adoption_rate_of_Ap?.date.Key_feature_adoption_rate_of_Ap?.graph
+            graph?.Key.forEach((k: string, i: number) => {
+              dispatch(updateDataProp({
+                attr: `kFARAp.key[${i}]`,
+                value: k,
+              }))
+            })
+            graph?.data.forEach((d: any, i: number) => {
+              dispatch(updateDataProp({
+                attr: `kFARAp.data[${i}].label`,
+                value: graph.data[i].label,
+              }))
+              dispatch(updateDataProp({
+                attr: `kFARAp.data[${i}].backgroundColor`,
+                value: graph.data[i].backgroundColor,
+              }))
+              graph.data[i].data.forEach((dv: any, j: number) => {
+                dispatch(updateDataProp({
+                  attr: `kFARAp.data[${i}].data[${j}]`,
+                  value: Number(dv) || 0,
+                }))
+              })
+            })
+          }
+
+          if(data.Key_feature_adoption_rate_of_Cw?.date) {
+            const graph = data.Key_feature_adoption_rate_of_Cw?.date.Key_feature_adoption_rate_of_Cw?.graph
+            graph?.Key.forEach((k: string, i: number) => {
+              dispatch(updateDataProp({
+                attr: `kFARWl.key[${i}]`,
+                value: k,
+              }))
+            })
+            graph?.data.forEach((d: any, i: number) => {
+              dispatch(updateDataProp({
+                attr: `kFARWl.data[${i}].label`,
+                value: graph.data[i].label,
+              }))
+              dispatch(updateDataProp({
+                attr: `kFARWl.data[${i}].backgroundColor`,
+                value: graph.data[i].backgroundColor,
+              }))
+              graph.data[i].data.forEach((dv: any, j: number) => {
+                dispatch(updateDataProp({
+                  attr: `kFARWl.data[${i}].data[${j}]`,
+                  value: Number(dv) || 0,
+                }))
+              })
+            })
+          }
+
+          if(data.Key_feature_adoption_rate_of_Ds?.date) {
+            const graph = data.Key_feature_adoption_rate_of_Ds?.date.Key_feature_adoption_rate_of_Ds?.graph
+            graph?.Key.forEach((k: string, i: number) => {
+              dispatch(updateDataProp({
+                attr: `kFARDs.key[${i}]`,
+                value: k,
+              }))
+            })
+            graph?.data.forEach((d: any, i: number) => {
+              dispatch(updateDataProp({
+                attr: `kFARDs.data[${i}].label`,
+                value: graph.data[i].label,
+              }))
+              dispatch(updateDataProp({
+                attr: `kFARDs.data[${i}].backgroundColor`,
+                value: graph.data[i].backgroundColor,
+              }))
+              graph.data[i].data.forEach((dv: any, j: number) => {
+                dispatch(updateDataProp({
+                  attr: `kFARDs.data[${i}].data[${j}]`,
+                  value: Number(dv) || 0,
+                }))
+              })
+            })
+          }
         }
       } else {
         dispatch({
@@ -578,6 +696,9 @@ const Dashboard = () => {
                       <TisForm />
                     </div>
                     <div>
+                      <CisForm />
+                    </div>
+                    <div>
                       <PisForm />
                     </div>
                     <div>
@@ -629,6 +750,9 @@ const Dashboard = () => {
                 />
               )}
 
+              {/* closed incidents summary */}
+              <ClosedIncidentsSummary />
+
               {/* Pending incidents summary */}
               {reportData?.PENDING_INCIDENTS_SUMMARY && tableOfContents[7].visible && (
                 <PendingIncidentsSummary
@@ -653,23 +777,17 @@ const Dashboard = () => {
 
               {/* Key feature apex one */}
               {reportData?.Key_feature_adoption_rate_of_Ap && tableOfContents[11].visible && (
-                <KeyFeatureApex
-                  data={reportData.Key_feature_adoption_rate_of_Ap}
-                />
+                <KeyFeatureApex />
               )}
 
               {/* Key feature workload */}
               {reportData?.Key_feature_adoption_rate_of_Cw && tableOfContents[12].visible && (
-                <KeyFeatureWorkLoad
-                  data={reportData.Key_feature_adoption_rate_of_Cw}
-                />
+                <KeyFeatureWorkLoad />
               )}
 
               {/* Key feature deep security */}
               {reportData?.Key_feature_adoption_rate_of_Ds && tableOfContents[13]?.visible && (
-                <KeyFeatureDeepSecurity
-                  data={reportData.Key_feature_adoption_rate_of_Ds}
-                />
+                <KeyFeatureDeepSecurity />
               )}
             </div>
           </div>

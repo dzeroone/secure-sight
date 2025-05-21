@@ -4,19 +4,22 @@ import { RootState } from "../../store/store";
 import RecommendationNotes from "../RecommendationNotes";
 
 interface KeyFeatureWorkLoadProps {
-  data: any;
 }
 
-const KeyFeatureWorkLoad: React.FC<KeyFeatureWorkLoadProps> = ({ data }: any) => {
+const KeyFeatureWorkLoad: React.FC<KeyFeatureWorkLoadProps> = () => {
   const kFWorkloadRecommendations = useSelector((s: RootState) => s.recommendation.kFWorkload);
+  const kFARWl = useSelector((s: RootState) => s.data.kFARWl);
 
   return (
-    <div className="key-feature-workload" id={Object.keys(data.date)[0]}>
+    <div className="key-feature-workload">
       <div className="p-8">
         <p className="title">Key feature adoption rate of C1WS / server & workload security / protection</p>
         {/* <p className="title">{data?.date.title}</p> */}
         <GroupedBarChartHorizontal
-          data={data?.date.Key_feature_adoption_rate_of_Cw?.graph}
+          data={{
+            Key: kFARWl.key,
+            data: kFARWl.data
+          }}
         />
         <div className="mt-12">
           <RecommendationNotes notes={kFWorkloadRecommendations} />

@@ -4,19 +4,22 @@ import RecommendationNotes from "../RecommendationNotes";
 import { RootState } from "../../store/store";
 
 interface KeyFeatureWorDeepSecurityProps {
-  data: any;
 }
 
-const KeyFeatureWorDeepSecurity: React.FC<KeyFeatureWorDeepSecurityProps> = ({ data }: any) => {
+const KeyFeatureWorDeepSecurity: React.FC<KeyFeatureWorDeepSecurityProps> = () => {
   const kFDeepRecommendations = useSelector((s: RootState) => s.recommendation.kFDeep);
+  const kFARDs = useSelector((s: RootState) => s.data.kFARDs);
 
   return (
-    <div className="key-feature-workload" id={Object.keys(data.date)[0]}>
+    <div className="key-feature-workload">
       <div className="p-8">
         <p className="title">Key Feature Adoption Rate of Deep Security</p>
         {/* <p className="title">{data?.date.title}</p> */}
         <GroupedBarChartHorizontal
-          data={data?.date.Key_feature_adoption_rate_of_Ds?.graph}
+          data={{
+            Key: kFARDs.key,
+            data: kFARDs.data
+          }}
         />
         <div className="mt-12">
           <RecommendationNotes notes={kFDeepRecommendations} />

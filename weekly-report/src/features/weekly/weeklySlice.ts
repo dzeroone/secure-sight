@@ -193,6 +193,7 @@ export interface RecommendationState {
   iPriority: RecommendationNote[],
   tIByCategory: RecommendationNote[],
   pIncident: RecommendationNote[],
+  cIncident: RecommendationNote[], // closed incident summary
   eInventory: RecommendationNote[],
   kFApex: RecommendationNote[],
   kFWorkload: RecommendationNote[],
@@ -209,6 +210,7 @@ const initialRecommendationState: RecommendationState = {
   iPriority: [],
   tIByCategory: [],
   pIncident: [],
+  cIncident: [],
   eInventory: [],
   kFApex: [],
   kFWorkload: [],
@@ -236,6 +238,11 @@ export const { updateRecommendationProp, removeRecommendationPropArr } =
 export const recommendationReducer = recommendationSlice.reducer;
 
 // - End recommendation
+interface GraphData {
+  label: string
+  data: number[],
+  backgroundColor?: string | string[]
+}
 
 interface DataState {
   licenses: { Status: string; Product: string }[];
@@ -244,6 +251,32 @@ interface DataState {
   productsVisible: boolean;
   isSeverity: [number, number, number, number] //Incident_Summary_by_Severity,
   isStatus: [number, number, number] // Incident_Summary_by_Status
+  t10ISCat: { // T10IS_by_Category
+    Key: string[],
+    data: GraphData[],
+    chart_type: string
+  },
+  cIncident: { // T10IS_by_Category
+    key: string[],
+    data: GraphData[]
+  },
+  sloCV: { // SLO closed volume
+    tCI: number, // total closed incidents
+    sloMet: number,
+    sloNMet: number
+  },
+  kFARAp: { // Key_feature_adoption_rate_of_Ap
+    key: string[],
+    data: GraphData[]
+  },
+  kFARWl: { // Key_feature_adoption_rate_of_Wl
+    key: string[],
+    data: GraphData[]
+  },
+  kFARDs: { // Key_feature_adoption_rate_of_Wl
+    key: string[],
+    data: GraphData[]
+  }
 }
 
 const initialDataState: DataState = {
@@ -252,7 +285,37 @@ const initialDataState: DataState = {
   licensesVisible: true,
   productsVisible: true,
   isSeverity: [0, 0, 0, 0],
-  isStatus: [0, 0, 0]
+  isStatus: [0, 0, 0],
+  t10ISCat: {
+    chart_type: 'horizontal_bar',
+    Key: [],
+    data: []
+  },
+  cIncident: {
+    key: ['Closed as true positive', 'Closed as false positive', 'Closed as remeditate', 'Closed as duplicate'],
+    data: [{
+      label: 'Closed incidents summary',
+      data: [0, 0, 0, 0],
+      backgroundColor: ['rgb(255, 130, 0)', 'rgb(255, 230, 0)', 'rgb(255, 230, 130)', 'rgb(255, 230, 230)']
+    }]
+  },
+  sloCV: {
+    tCI: 0,
+    sloMet: 0,
+    sloNMet: 0
+  },
+  kFARAp: {
+    key: [],
+    data: []
+  },
+  kFARWl: {
+    key: [],
+    data: []
+  },
+  kFARDs: {
+    key: [],
+    data: []
+  }
 };
 
 const dataSlice = createSlice({
@@ -319,6 +382,12 @@ const dataSlice = createSlice({
     updateDataProp(state, action: PayloadAction<{ attr: string, value: any }>) {
       _set(state, action.payload.attr, action.payload.value)
     },
+    removeDataPropArr(state, action: PayloadAction<{ attr: string, index: number }>) {
+      const vArr = _get(state, action.payload.attr)
+      if (Array.isArray(vArr)) {
+        vArr.splice(action.payload.index, 1)
+      }
+    }
   },
 });
 
@@ -331,7 +400,8 @@ export const {
   removeProductData,
   toggleLicenseVisibility,
   toggleProductVisibility,
-  updateDataProp
+  updateDataProp,
+  removeDataPropArr
 } = dataSlice.actions;
 
 export const dataReducer = dataSlice.reducer;
@@ -394,9 +464,9 @@ export const endpointReducer = endpointSlice.reducer;
 
 const initialState = {
   chartData: [
-    { label: "", dataPoint: 0, backgroundColor: "rgba(75,192,192,1)" },
-    { label: "", dataPoint: 0, backgroundColor: "rgba(153,102,255,1)" },
-    { label: "", dataPoint: 0, backgroundColor: "rgba(255,159,64,1)" },
+    { label: "XDR feature enabled", dataPoint: 0, backgroundColor: "rgba(75,192,192,1)" },
+    { label: "XDR feature not enabled", dataPoint: 0, backgroundColor: "rgba(153,102,255,1)" },
+    { label: "Action Required", dataPoint: 0, backgroundColor: "rgba(255,159,64,1)" },
   ],
 };
 
@@ -727,55 +797,3 @@ export const {
   updateData: updateEndPointSensorData,
   removeData: removeEndPointSensorData,
 } = endPointSensorSlice.actions;
-
-// --- Slices with Visibility Control ---
-
-interface VisibilitySliceState {
-  key: "Recommendations" | "Notes" | "Summary";
-  visible: boolean;
-  data: {
-    Recommendations: string[];
-    Notes: string[];
-    Summary: string[];
-  };
-}
-
-const createVisibilitySlice = (name: string) => {
-  const initialState: VisibilitySliceState = {
-    key: "Recommendations",
-    visible: true,
-    data: {
-      Recommendations: [],
-      Notes: [],
-      Summary: [],
-    },
-  };
-
-  return createSlice({
-    name,
-    initialState,
-    reducers: {
-      setKey: (
-        state,
-        action: PayloadAction<"Recommendations" | "Notes" | "Summary">
-      ) => {
-        state.key = action.payload;
-      },
-      toggleVisibility: (state) => {
-        state.visible = !state.visible;
-      },
-      addData: (state, action: PayloadAction<string>) => {
-        state.data[state.key].push(action.payload);
-      },
-      updateData: (
-        state,
-        action: PayloadAction<{ index: number; text: string }>
-      ) => {
-        state.data[state.key][action.payload.index] = action.payload.text;
-      },
-      removeData: (state, action: PayloadAction<number>) => {
-        state.data[state.key].splice(action.payload, 1);
-      },
-    },
-  });
-};

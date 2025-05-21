@@ -9,6 +9,7 @@ const PisForm = () => {
   const dispatch = useDispatch();
   const pendingIncidentSummary = useSelector((state: RootState) => state.pendingIncidentSummary);
   const pIncidentRecommendations = useSelector((s: RootState) => s.recommendation.pIncident);
+  const client = useSelector((state: RootState) => state.client);
 
   const handlePendingIncidentChange = (field: 'totalPendingIncidents' | 'customerPendingIncidents' | 'socTeamPendingIncidents', value: string) => {
     let updatedData = { ...pendingIncidentSummary };
@@ -39,7 +40,7 @@ const PisForm = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Pending Incidents from Customer
+              Pending Incidents from {client.tenantCode}
             </label>
             <input
               className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"

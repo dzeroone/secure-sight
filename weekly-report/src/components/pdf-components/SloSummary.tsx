@@ -12,12 +12,29 @@ interface SloSummaryProps {
 }
 const SloSummary: React.FC<SloSummaryProps> = ({ data }) => {
   const sloDetails = useSelector((state: RootState) => state.slo.data);
+  const sloCV = useSelector((state: RootState) => state.data.sloCV);
 
   return (
     <div className="slo-summary">
       <div>
         <p className="title">SLO Summary</p>
-        <BarChart data={data?.date.SLO_SUMMARY.graph} />
+        <BarChart data={
+          {
+            "Key": [
+              "Total Closed Incidents",
+              "SLO Met",
+              "SLO Not Met"
+            ],
+            "data": [
+              sloCV.tCI,
+              sloCV.sloMet,
+              sloCV.sloNMet
+            ],
+            "label": "Case volume",
+            "backgroundColor": "#ff8200",
+            "chart_type": "vertical_bar"
+          }
+        } />
         <p className="title">SLO Details</p>
         <table
           className="w-full border-spacing-1 mb-12 border-none border-separate"
