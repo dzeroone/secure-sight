@@ -10,9 +10,7 @@ interface ExecutiveSummaryProps {
   data: any;
 }
 
-const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
-  data
-}) => {
+const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data }) => {
   const endpointData = useSelector(
     (state: RootState) => state.endpoint.endpointData
   );
@@ -93,7 +91,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
   };
 
   return (
-    <div className="executive-summary" id={Object.keys(data.date)[0]}>
+    <div className="executive-summary" id="executive-summary">
       <div className="">
         <p className="title">EXECUTIVE SUMMARY</p>
         <ul>

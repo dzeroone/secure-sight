@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import {
-  setAlcKey,
-  addAlcData,
-  updateAlcData,
-  removeAlcData,
   addEndpointData,
   editEndpointData,
   removeEndpointData,
@@ -21,33 +17,16 @@ import RecommendationInput from "./RecommendationInput";
 
 const AlcForm = () => {
   const dispatch = useDispatch();
-  const alc = useSelector((state: RootState) => state.alc);
   const { endpointData } = useSelector((state: RootState) => state.endpoint);
   const recommendations = useSelector(
     (s: RootState) => s.recommendation.agentLifeCycle
   );
 
-  const handleAlcKeyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(
-      setAlcKey(event.target.value as "Recommendations" | "Notes" | "Summary")
-    );
-  };
-
-  const handleAlcChange = (index: number, value: string) => {
-    dispatch(updateAlcData({ index, text: value }));
-  };
-
-  const handleAddAlc = () => {
-    dispatch(addAlcData(""));
-  };
-
-  const handleRemoveAlc = (index: number) => {
-    dispatch(removeAlcData(index));
-  };
-
   const [endpointName, setEndpointName] = useState("");
   const [detectionsWithSeverity, setDetectionsWithSeverity] = useState("");
-  const [actionTakenBySoc, setActionTakenBySoc] = useState("The SOC team is actively developing and testing observed attack methods on the specified endpoint, while also prioritizing their efforts to respond to and communicate with the client.");
+  const [actionTakenBySoc, setActionTakenBySoc] = useState(
+    "The SOC team is actively developing and testing observed attack methods on the specified endpoint, while also prioritizing their efforts to respond to and communicate with the client."
+  );
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const handleAddOrEditEndpoint = () => {
@@ -336,9 +315,7 @@ const AlcForm = () => {
             ))}
           </div>
           <div className="mb-4">
-            <Label>
-              Endpoint Name
-            </Label>
+            <Label>Endpoint Name</Label>
             <TextInput
               id="endpoint-name"
               type="text"
@@ -348,9 +325,7 @@ const AlcForm = () => {
             />
           </div>
           <div className="mb-4">
-            <Label>
-              Detections with Severity
-            </Label>
+            <Label>Detections with Severity</Label>
             <TextInput
               id="detections-with-severity"
               type="text"
@@ -361,9 +336,7 @@ const AlcForm = () => {
           </div>
 
           <div className="mb-4">
-            <Label>
-              Action Taken by SOC
-            </Label>
+            <Label>Action Taken by SOC</Label>
             <TextAreaInput
               id="action-taken-by-soc"
               value={actionTakenBySoc}

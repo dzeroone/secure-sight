@@ -1,12 +1,5 @@
 import { REPORT_AUDIT_STATUS_LABEL, REPORT_STATUS_LABEL } from "../data/data"
 
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-
 export const pluralize = (count: number, noun: string, suffix = 's') =>
   `${count} ${noun}${count > 1 ? suffix : ''}`;
 

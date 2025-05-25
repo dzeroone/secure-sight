@@ -8,6 +8,7 @@ const TableOfContents = () => {
 
   return (
     <div
+      id="table-of-contents"
       className="table-of-content"
       style={{ backgroundImage: `url(${BgFlipped})` }}
     >
@@ -18,15 +19,17 @@ const TableOfContents = () => {
       <div className="px-12">
         <table className="mt-10 w-full mx-auto">
           <tbody>
-            {data.filter(d => d.visible).map((item: TableIndexInfo, i: number) => (
-              <tr key={i}>
-                <td className="p-2 text-lg">
-                  <a href={`#`}>{item.title}</a>
-                  {/* {item.title} */}
-                </td>
-                <td className="p-2 text-right text-lg">{item.page}</td>
-              </tr>
-            ))}
+            {data
+              .filter((d) => d.visible)
+              .map((item: TableIndexInfo, i: number) => (
+                <tr key={i}>
+                  <td className="p-2 text-lg">
+                    <a href={`#`}>{item.title}</a>
+                    {/* {item.title} */}
+                  </td>
+                  <td className="p-2 text-right text-lg">{item.page}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

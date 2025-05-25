@@ -39,12 +39,20 @@ export default function TableOfContentsForm() {
                 className="w-12"
               />
             </div>
-            <div className="text-sm mt-1">Visibility <SwitchInput checked={tc.visible} onChange={(e) => {
-              dispatch(updateTableOfContents({
-                attr: `[${i}].visible`,
-                value: e.target.checked
-              }))
-            }}/></div>
+            <div className="text-sm mt-1">
+              Visibility{" "}
+              <SwitchInput
+                checked={tc.visible}
+                onChange={(e) => {
+                  dispatch(
+                    updateTableOfContents({
+                      attr: `[${i}].visible`,
+                      value: e.target.checked,
+                    })
+                  );
+                }}
+              />
+            </div>
           </div>
         );
       })}

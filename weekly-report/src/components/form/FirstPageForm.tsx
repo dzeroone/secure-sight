@@ -35,7 +35,9 @@ function FirstPageForm() {
         <TextInput
           value={client.subtitle}
           onChange={(e) => {
-            dispatch(updateClientState({ field: 'subtitle', value: e.target.value }))
+            dispatch(
+              updateClientState({ field: "subtitle", value: e.target.value })
+            );
           }}
         />
       </div>
@@ -44,7 +46,9 @@ function FirstPageForm() {
         <TextInput
           value={client.title}
           onChange={(e) => {
-            dispatch(updateClientState({ field: 'title', value: e.target.value }))
+            dispatch(
+              updateClientState({ field: "title", value: e.target.value })
+            );
           }}
         />
       </div>
@@ -72,7 +76,9 @@ function FirstPageForm() {
         <TextInput
           value={client.tenantCode}
           onChange={(e) => {
-            dispatch(updateClientState({ field: 'tenantCode', value: e.target.value }))
+            dispatch(
+              updateClientState({ field: "tenantCode", value: e.target.value })
+            );
           }}
         />
       </div>
@@ -81,7 +87,9 @@ function FirstPageForm() {
         <TextInput
           value={client.dateFrom}
           onChange={(e) => {
-            dispatch(updateClientState({ field: 'dateFrom', value: e.target.value }))
+            dispatch(
+              updateClientState({ field: "dateFrom", value: e.target.value })
+            );
           }}
         />
       </div>
@@ -90,7 +98,9 @@ function FirstPageForm() {
         <TextInput
           value={client.dateTo}
           onChange={(e) => {
-            dispatch(updateClientState({ field: 'dateTo', value: e.target.value }))
+            dispatch(
+              updateClientState({ field: "dateTo", value: e.target.value })
+            );
           }}
         />
       </div>

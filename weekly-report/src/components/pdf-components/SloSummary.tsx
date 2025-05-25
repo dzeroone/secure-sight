@@ -1,7 +1,7 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import BarChart from '../charts/BarChart';
+import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import BarChart from "../charts/BarChart";
 
 interface SloSummaryProps {
   data: any;
@@ -15,26 +15,18 @@ const SloSummary: React.FC<SloSummaryProps> = ({ data }) => {
   const sloCV = useSelector((state: RootState) => state.data.sloCV);
 
   return (
-    <div className="slo-summary">
+    <div className="slo-summary" id="slo-summary">
       <div>
         <p className="title">SLO Summary</p>
-        <BarChart data={
-          {
-            "Key": [
-              "Total Closed Incidents",
-              "SLO Met",
-              "SLO Not Met"
-            ],
-            "data": [
-              sloCV.tCI,
-              sloCV.sloMet,
-              sloCV.sloNMet
-            ],
-            "label": "Case volume",
-            "backgroundColor": "#ff8200",
-            "chart_type": "vertical_bar"
-          }
-        } />
+        <BarChart
+          data={{
+            Key: ["Total Closed Incidents", "SLO Met", "SLO Not Met"],
+            data: [sloCV.tCI, sloCV.sloMet, sloCV.sloNMet],
+            label: "Case volume",
+            backgroundColor: "#ff8200",
+            chart_type: "vertical_bar",
+          }}
+        />
         <p className="title">SLO Details</p>
         <table
           className="w-full border-spacing-1 mb-12 border-none border-separate"

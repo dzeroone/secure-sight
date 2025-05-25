@@ -53,60 +53,74 @@ export const clientReducer = clientSlice.reducer;
 
 // Table of Contents
 export interface TableIndexInfo {
+  id: string
   title: string
   page: number,
   visible?: boolean
 }
 
 const initialTableOfContentsState: TableIndexInfo[] = [{
+  id: "executive-summary",
   title: 'Executive Summary',
   page: 1,
-  visible: true 
+  visible: true
 }, {
+  id: "threat-intel",
   title: 'Threat Intel Summary',
   page: 3,
   visible: true
 }, {
+  id: "indicators-of-compromise",
   title: 'Indicators of Compromise (IOC) Match Summary',
   page: 3,
   visible: true
 }, {
+  id: "incident-summary-severity",
   title: 'Incident Summary by Severity',
   page: 4,
   visible: true
 }, {
+  id: "incident-summary-status",
   title: 'Incident Summary by Status',
   page: 4,
   visible: true
 }, {
+  id: "incident-summary-priority",
   title: 'Incidents Summary by Priority',
   page: 5,
   visible: true
 }, {
+  id: "top-incident-summary-status",
   title: 'Top 10 Incidents Summary by Category',
   page: 5,
   visible: true
 }, {
+  id: "pending-incident-status",
   title: 'Pending Incident Summary',
   page: 6,
   visible: true
 }, {
+  id: "slo-summary",
   title: 'SLO Summary',
   page: 7,
   visible: true
 }, {
+  id: "endpoint-inventory",
   title: 'Endpoint Inventory',
   page: 8,
   visible: true
 }, {
+  id: "connected-products",
   title: 'Connected Products and License Information',
   page: 8,
   visible: true
 }, {
+  id: "key-feature-apex",
   title: 'Key feature adoption rate of Apex One',
   page: 9,
   visible: true
 }, {
+  id: "key-feature-cloud-one",
   title: 'Key feature adoption rate of Cloud One Workload Security',
   page: 10,
   visible: true

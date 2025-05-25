@@ -1,23 +1,31 @@
+import Button from "@/components/Button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import moment from "moment";
 import { enqueueSnackbar } from "notistack";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GrFormPrevious } from "react-icons/gr";
-import {
-  MdDownload,
-  MdOutlineNavigateNext,
-  MdSave,
-  MdUpload,
-} from "react-icons/md";
+import { MdDownload, MdOutlineNavigateNext, MdSave } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import AlcForm from "../../components/form/AlcForm";
+import CisForm from "../../components/form/CisForm";
 import EndpointProtectionForm from "../../components/form/EndpointProtectionForm";
 import EpiForm from "../../components/form/EpiForm";
 import { LicenseForm, ProductForm } from "../../components/form/EpiTableForm";
+import ExecutiveSummaryForm from "../../components/form/ExecutiveSummaryForm";
 import FirstPageForm from "../../components/form/FirstPageForm";
+import { SelectInput } from "../../components/form/Inputs";
 import KfaForm from "../../components/form/KfaForm";
 import KfdForm from "../../components/form/KfdForm";
 import KfwForm from "../../components/form/KfwForm";
@@ -26,7 +34,9 @@ import PisForm from "../../components/form/PisForm";
 import SloForm from "../../components/form/SloFrom";
 import TableOfContentsForm from "../../components/form/TableOfContentsForm";
 import TisForm from "../../components/form/TisForm";
+import ThreatIntelSummaryForm from "@/components/form/ThreatIntelSummaryForm";
 import Navbar from "../../components/Navbar";
+import ClosedIncidentsSummary from "../../components/pdf-components/ClosedIncidentsSummary";
 import EndpointInventory from "../../components/pdf-components/EndpointInventory";
 import ExecutiveSummary from "../../components/pdf-components/ExecutiveSummary";
 import FirstPage from "../../components/pdf-components/FirstPage";
@@ -46,16 +56,11 @@ import {
   updateClientState,
   updateDataProp,
   updateExecutiveSummary,
-  updateTableOfContents,
 } from "../../features/weekly/weeklySlice";
 import { withAuth } from "../../hocs/withAuth";
 import { useAuth } from "../../providers/AuthProvider";
 import store, { RootState } from "../../store/store";
 import { getErrorMessage } from "../../utils/helpers";
-import ExecutiveSummaryForm from "../../components/form/ExecutiveSummaryForm";
-import { SelectInput } from "../../components/form/Inputs";
-import ClosedIncidentsSummary from "../../components/pdf-components/ClosedIncidentsSummary";
-import CisForm from "../../components/form/CisForm";
 
 const Dashboard = () => {
   const router = useNavigate();
@@ -71,12 +76,11 @@ const Dashboard = () => {
     canSubmitReport: false,
     reporterId: "",
   });
-  const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
   const [isPreparingPdf, setIsPreparingPdf] = useState<boolean>(
     searchParams.get("print") ? true : false
   );
+  const [selectedPage, setSelectedPage] = useState("0");
   const { currentUser } = useAuth();
 
   const elasticIndex = searchParams.get("index");
@@ -86,10 +90,9 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const sliderRef = useRef<Slider>(null);
 
-  const alc = useSelector((state: RootState) => state.alc);
   const slo = useSelector((state: RootState) => state.slo);
 
-  const tableOfContents = useSelector((s: RootState) => s.tableOfContents)
+  const tableOfContents = useSelector((s: RootState) => s.tableOfContents);
 
   /**
    * get report data from elastic index
@@ -202,8 +205,8 @@ const Dashboard = () => {
               field: "riskIndex",
               value:
                 Number(
-                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.risk_index.chart
-                    .data[0]
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.risk_index
+                    .chart.data[0]
                 ) || 0,
             })
           );
@@ -248,160 +251,228 @@ const Dashboard = () => {
           dispatch(
             updateExecutiveSummary({
               field: "epTAgents",
-              value: Number(
-                data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_protection.data[1]
-              ) || 0,
+              value:
+                Number(
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY
+                    .endpoint_protection.data[1]
+                ) || 0,
             })
           );
           dispatch(
             updateExecutiveSummary({
               field: "epDAgents",
-              value: Number(
-                data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_protection.data[0]
-              ) || 0,
+              value:
+                Number(
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY
+                    .endpoint_protection.data[0]
+                ) || 0,
             })
           );
           dispatch(
             updateExecutiveSummary({
               field: "epTSensors",
-              value: Number(
-                data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_sensor.data[1]
-              ) || 0,
+              value:
+                Number(
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_sensor
+                    .data[1]
+                ) || 0,
             })
           );
           dispatch(
             updateExecutiveSummary({
               field: "epDSensors",
-              value: Number(
-                data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_sensor.data[0]
-              ) || 0,
+              value:
+                Number(
+                  data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_sensor
+                    .data[0]
+                ) || 0,
             })
           );
 
           // threat intel summary
-          dispatch(updateDataProp({
-            attr: 'isSeverity',
-            value: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.Incident_Summary_by_Severity?.data
-          }))
-          dispatch(updateDataProp({
-            attr: 'isStatus',
-            value: [...data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.Incident_Summary_by_status?.data, 0]
-          }))
-          if(data.THREAT_INTEL_SUMMARY?.date) {
-            dispatch(updateDataProp({
-              attr: 't10ISCat',
-              value: {
-                Key: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.T10IS_by_Category.Key,
-                data: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.T10IS_by_Category.data.map((d: any) => {
-                  if(d.label == 'Pending from Customer') {
-                    d.label = `Pending from ${responseData.customer.tCode.toUpperCase()}`
-                  }
-                  return d
-                })
+          dispatch(
+            updateDataProp({
+              attr: "isSeverity",
+              value:
+                data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY
+                  .Incident_Summary_by_Severity?.data,
+            })
+          );
+          dispatch(
+            updateDataProp({
+              attr: "isStatus",
+              value: [
+                ...data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY
+                  .Incident_Summary_by_status?.data,
+                0,
+              ],
+            })
+          );
+          if (data.THREAT_INTEL_SUMMARY?.date) {
+            dispatch(
+              updateDataProp({
+                attr: "t10ISCat",
+                value: {
+                  Key: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY
+                    .T10IS_by_Category.Key,
+                  data: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.T10IS_by_Category.data.map(
+                    (d: any) => {
+                      if (d.label == "Pending from Customer") {
+                        d.label = `Pending from ${responseData.customer.tCode.toUpperCase()}`;
+                      }
+                      return d;
+                    }
+                  ),
+                },
+              })
+            );
+          }
+
+          if (data.SLO_SUMMARY?.date) {
+            dispatch(
+              updateDataProp({
+                attr: "sloCV.tCI",
+                value:
+                  Number(data.SLO_SUMMARY?.date.SLO_SUMMARY.graph.data[0]) || 0,
+              })
+            );
+            dispatch(
+              updateDataProp({
+                attr: "sloCV.sloMet",
+                value:
+                  Number(data.SLO_SUMMARY?.date.SLO_SUMMARY.graph.data[1]) || 0,
+              })
+            );
+            dispatch(
+              updateDataProp({
+                attr: "sloCV.sloNMet",
+                value:
+                  Number(data.SLO_SUMMARY?.date.SLO_SUMMARY.graph.data[2]) || 0,
+              })
+            );
+          }
+          if (data.ENDPOINT_INVENTORY?.date) {
+            data.ENDPOINT_INVENTORY?.date.ENDPOINT_INVENTORY?.Bar_graph?.Key.forEach(
+              (k: string, i: number) => {
+                dispatch(
+                  updateChartData({
+                    index: i,
+                    label: k,
+                    dataPoint:
+                      data.ENDPOINT_INVENTORY?.date.ENDPOINT_INVENTORY
+                        ?.Bar_graph?.data[i] || 0,
+                  })
+                );
               }
-            }))
+            );
           }
 
-          if(data.SLO_SUMMARY?.date) {
-            dispatch(updateDataProp({
-              attr: 'sloCV.tCI',
-              value: Number(data.SLO_SUMMARY?.date.SLO_SUMMARY.graph.data[0]) || 0
-            }))
-            dispatch(updateDataProp({
-              attr: 'sloCV.sloMet',
-              value: Number(data.SLO_SUMMARY?.date.SLO_SUMMARY.graph.data[1]) || 0
-            }))
-            dispatch(updateDataProp({
-              attr: 'sloCV.sloNMet',
-              value: Number(data.SLO_SUMMARY?.date.SLO_SUMMARY.graph.data[2]) || 0
-            }))
-          }
-          if(data.ENDPOINT_INVENTORY?.date) {
-            data.ENDPOINT_INVENTORY?.date.ENDPOINT_INVENTORY?.Bar_graph?.Key.forEach((k: string, i: number) => {
-              dispatch(updateChartData({
-                index: i,
-                label: k,
-                dataPoint: data.ENDPOINT_INVENTORY?.date.ENDPOINT_INVENTORY?.Bar_graph?.data[i] || 0
-              }))
-            })
-          }
-
-          if(data.Key_feature_adoption_rate_of_Ap?.date) {
-            const graph = data.Key_feature_adoption_rate_of_Ap?.date.Key_feature_adoption_rate_of_Ap?.graph
+          if (data.Key_feature_adoption_rate_of_Ap?.date) {
+            const graph =
+              data.Key_feature_adoption_rate_of_Ap?.date
+                .Key_feature_adoption_rate_of_Ap?.graph;
             graph?.Key.forEach((k: string, i: number) => {
-              dispatch(updateDataProp({
-                attr: `kFARAp.key[${i}]`,
-                value: k,
-              }))
-            })
+              dispatch(
+                updateDataProp({
+                  attr: `kFARAp.key[${i}]`,
+                  value: k,
+                })
+              );
+            });
             graph?.data.forEach((d: any, i: number) => {
-              dispatch(updateDataProp({
-                attr: `kFARAp.data[${i}].label`,
-                value: graph.data[i].label,
-              }))
-              dispatch(updateDataProp({
-                attr: `kFARAp.data[${i}].backgroundColor`,
-                value: graph.data[i].backgroundColor,
-              }))
+              dispatch(
+                updateDataProp({
+                  attr: `kFARAp.data[${i}].label`,
+                  value: graph.data[i].label,
+                })
+              );
+              dispatch(
+                updateDataProp({
+                  attr: `kFARAp.data[${i}].backgroundColor`,
+                  value: graph.data[i].backgroundColor,
+                })
+              );
               graph.data[i].data.forEach((dv: any, j: number) => {
-                dispatch(updateDataProp({
-                  attr: `kFARAp.data[${i}].data[${j}]`,
-                  value: Number(dv) || 0,
-                }))
-              })
-            })
+                dispatch(
+                  updateDataProp({
+                    attr: `kFARAp.data[${i}].data[${j}]`,
+                    value: Number(dv) || 0,
+                  })
+                );
+              });
+            });
           }
 
-          if(data.Key_feature_adoption_rate_of_Cw?.date) {
-            const graph = data.Key_feature_adoption_rate_of_Cw?.date.Key_feature_adoption_rate_of_Cw?.graph
+          if (data.Key_feature_adoption_rate_of_Cw?.date) {
+            const graph =
+              data.Key_feature_adoption_rate_of_Cw?.date
+                .Key_feature_adoption_rate_of_Cw?.graph;
             graph?.Key.forEach((k: string, i: number) => {
-              dispatch(updateDataProp({
-                attr: `kFARWl.key[${i}]`,
-                value: k,
-              }))
-            })
+              dispatch(
+                updateDataProp({
+                  attr: `kFARWl.key[${i}]`,
+                  value: k,
+                })
+              );
+            });
             graph?.data.forEach((d: any, i: number) => {
-              dispatch(updateDataProp({
-                attr: `kFARWl.data[${i}].label`,
-                value: graph.data[i].label,
-              }))
-              dispatch(updateDataProp({
-                attr: `kFARWl.data[${i}].backgroundColor`,
-                value: graph.data[i].backgroundColor,
-              }))
+              dispatch(
+                updateDataProp({
+                  attr: `kFARWl.data[${i}].label`,
+                  value: graph.data[i].label,
+                })
+              );
+              dispatch(
+                updateDataProp({
+                  attr: `kFARWl.data[${i}].backgroundColor`,
+                  value: graph.data[i].backgroundColor,
+                })
+              );
               graph.data[i].data.forEach((dv: any, j: number) => {
-                dispatch(updateDataProp({
-                  attr: `kFARWl.data[${i}].data[${j}]`,
-                  value: Number(dv) || 0,
-                }))
-              })
-            })
+                dispatch(
+                  updateDataProp({
+                    attr: `kFARWl.data[${i}].data[${j}]`,
+                    value: Number(dv) || 0,
+                  })
+                );
+              });
+            });
           }
 
-          if(data.Key_feature_adoption_rate_of_Ds?.date) {
-            const graph = data.Key_feature_adoption_rate_of_Ds?.date.Key_feature_adoption_rate_of_Ds?.graph
+          if (data.Key_feature_adoption_rate_of_Ds?.date) {
+            const graph =
+              data.Key_feature_adoption_rate_of_Ds?.date
+                .Key_feature_adoption_rate_of_Ds?.graph;
             graph?.Key.forEach((k: string, i: number) => {
-              dispatch(updateDataProp({
-                attr: `kFARDs.key[${i}]`,
-                value: k,
-              }))
-            })
+              dispatch(
+                updateDataProp({
+                  attr: `kFARDs.key[${i}]`,
+                  value: k,
+                })
+              );
+            });
             graph?.data.forEach((d: any, i: number) => {
-              dispatch(updateDataProp({
-                attr: `kFARDs.data[${i}].label`,
-                value: graph.data[i].label,
-              }))
-              dispatch(updateDataProp({
-                attr: `kFARDs.data[${i}].backgroundColor`,
-                value: graph.data[i].backgroundColor,
-              }))
+              dispatch(
+                updateDataProp({
+                  attr: `kFARDs.data[${i}].label`,
+                  value: graph.data[i].label,
+                })
+              );
+              dispatch(
+                updateDataProp({
+                  attr: `kFARDs.data[${i}].backgroundColor`,
+                  value: graph.data[i].backgroundColor,
+                })
+              );
               graph.data[i].data.forEach((dv: any, j: number) => {
-                dispatch(updateDataProp({
-                  attr: `kFARDs.data[${i}].data[${j}]`,
-                  value: Number(dv) || 0,
-                }))
-              })
-            })
+                dispatch(
+                  updateDataProp({
+                    attr: `kFARDs.data[${i}].data[${j}]`,
+                    value: Number(dv) || 0,
+                  })
+                );
+              });
+            });
           }
         }
       } else {
@@ -461,25 +532,6 @@ const Dashboard = () => {
     // }, 1000);
   };
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-    setFile(selectedFile || null);
-  };
-
-  const handleFileRead = (event: ProgressEvent<FileReader>) => {
-    if (event.target?.result) {
-      try {
-        const json = JSON.parse(event.target.result as string);
-        setReportData(json);
-        setError("");
-      } catch (e) {
-        console.error("JSON parse error: ", e);
-        setError("Failed to parse JSON file. Please check the file format.");
-      }
-      setLoading(false);
-    }
-  };
-
   const saveReport = async () => {
     try {
       setLoading(true);
@@ -523,23 +575,39 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    if (file) {
-      setLoading(true);
-      setError("");
-      const reader = new FileReader();
-      reader.onload = handleFileRead;
-      reader.onerror = () => {
-        setError("Failed to read file.");
-        setLoading(false);
-      };
-      reader.readAsText(file);
-    }
-  }, [file]);
+  const allPageContents = useMemo(() => {
+    return [
+      {
+        id: "first-page",
+        title: "First Page",
+      },
+      {
+        id: "table-of-contents",
+        title: "Table of Contents",
+      },
+      ...tableOfContents,
+    ];
+  }, [tableOfContents]);
 
   useEffect(() => {
     getElasticData();
   }, [getElasticData]);
+
+  const scrollToIndex = (index: number) => {
+    const id = allPageContents[index]?.id;
+    const element = document.getElementById(id);
+
+    element?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest",
+    });
+  };
+
+  useEffect(() => {
+    scrollToIndex(parseInt(selectedPage));
+    sliderRef.current?.slickGoTo(parseInt(selectedPage));
+  }, [allPageContents, selectedPage]);
 
   const formData8 = {
     key: slo.key,
@@ -562,6 +630,9 @@ const Dashboard = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
+    afterChange: (index: number) => {
+      setSelectedPage("" + index);
+    },
   };
 
   return (
@@ -587,22 +658,6 @@ const Dashboard = () => {
             {reportState.status === 0 ? "Save" : "Submit"} report
           </button>
         ) : null}
-        <form>
-          <label
-            htmlFor="file"
-            className="btn-primary rounded-md inline-flex items-center"
-          >
-            <MdUpload className="mr-2" /> Upload JSON file
-            <input
-              type="file"
-              id="file"
-              name="file"
-              accept=".json"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </label>
-        </form>
         {reportData && (
           <button
             className="btn-primary rounded-md inline-flex items-center disabled:cursor-not-allowed disabled:opacity-50"
@@ -623,7 +678,6 @@ const Dashboard = () => {
           </div>
         </div>
       )}
-      {error && <div className="container">{error}</div>}
 
       {reportData && (
         <div className="">
@@ -667,6 +721,31 @@ const Dashboard = () => {
                       <GrFormPrevious />
                       Previous
                     </button>
+                    <div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button>Page {parseInt(selectedPage) + 1}</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56 max-h-96">
+                          <DropdownMenuLabel>Pages</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuRadioGroup
+                            value={selectedPage}
+                            onValueChange={(v) => {
+                              setSelectedPage(v);
+                            }}
+                          >
+                            {allPageContents.map((tc, i) => {
+                              return (
+                                <DropdownMenuRadioItem value={"" + i} key={i}>
+                                  {tc.title}
+                                </DropdownMenuRadioItem>
+                              );
+                            })}
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                     <button
                       onClick={handleNext}
                       className="border border-gray-300 flex items-center justify-center rounded-md p-2 text-sm font-semibold"
@@ -685,6 +764,9 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <ExecutiveSummaryForm />
+                    </div>
+                    <div>
+                      <ThreatIntelSummaryForm />
                     </div>
                     <div>
                       <AlcForm />
@@ -738,27 +820,24 @@ const Dashboard = () => {
 
               {/* Executive summary */}
               {reportData?.EXECUTIVE_SUMMARY && tableOfContents[0].visible && (
-                <ExecutiveSummary
-                  data={reportData.EXECUTIVE_SUMMARY}
-                />
+                <ExecutiveSummary data={reportData.EXECUTIVE_SUMMARY} />
               )}
 
               {/* Threat intel summary */}
               {reportData?.THREAT_INTEL_SUMMARY && (
-                <ThreatIntelSummary
-                  data={reportData.THREAT_INTEL_SUMMARY}
-                />
+                <ThreatIntelSummary data={reportData.THREAT_INTEL_SUMMARY} />
               )}
 
               {/* closed incidents summary */}
               <ClosedIncidentsSummary />
 
               {/* Pending incidents summary */}
-              {reportData?.PENDING_INCIDENTS_SUMMARY && tableOfContents[7].visible && (
-                <PendingIncidentsSummary
-                  data={reportData.PENDING_INCIDENTS_SUMMARY}
-                />
-              )}
+              {reportData?.PENDING_INCIDENTS_SUMMARY &&
+                tableOfContents[7].visible && (
+                  <PendingIncidentsSummary
+                    data={reportData.PENDING_INCIDENTS_SUMMARY}
+                  />
+                )}
 
               {/* SLO summary */}
               {reportData?.SLO_SUMMARY && tableOfContents[8].visible && (
@@ -770,25 +849,20 @@ const Dashboard = () => {
 
               {/* Endpoint inventory */}
               {reportData?.ENDPOINT_INVENTORY && (
-                <EndpointInventory
-                  data={reportData.ENDPOINT_INVENTORY}
-                />
+                <EndpointInventory data={reportData.ENDPOINT_INVENTORY} />
               )}
 
               {/* Key feature apex one */}
-              {reportData?.Key_feature_adoption_rate_of_Ap && tableOfContents[11].visible && (
-                <KeyFeatureApex />
-              )}
+              {reportData?.Key_feature_adoption_rate_of_Ap &&
+                tableOfContents[11].visible && <KeyFeatureApex />}
 
               {/* Key feature workload */}
-              {reportData?.Key_feature_adoption_rate_of_Cw && tableOfContents[12].visible && (
-                <KeyFeatureWorkLoad />
-              )}
+              {reportData?.Key_feature_adoption_rate_of_Cw &&
+                tableOfContents[12].visible && <KeyFeatureWorkLoad />}
 
               {/* Key feature deep security */}
-              {reportData?.Key_feature_adoption_rate_of_Ds && tableOfContents[13]?.visible && (
-                <KeyFeatureDeepSecurity />
-              )}
+              {reportData?.Key_feature_adoption_rate_of_Ds &&
+                tableOfContents[13]?.visible && <KeyFeatureDeepSecurity />}
             </div>
           </div>
         </div>

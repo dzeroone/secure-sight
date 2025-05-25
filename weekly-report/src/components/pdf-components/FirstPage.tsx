@@ -14,6 +14,7 @@ const FirstPage = ({ data, client }: Props) => {
   return (
     <>
       <div
+        id="first-page"
         className="bg-cover bg-center bg-no-repeat relative"
         style={{ backgroundImage: `url(${BgMain})` }}
       >
@@ -27,15 +28,12 @@ const FirstPage = ({ data, client }: Props) => {
           </div>
           <div className="page-title">
             <h4>{client.subtitle}</h4>
-            <h2>
-              {client.title}
-            </h2>
+            <h2>{client.title}</h2>
           </div>
           <div className="client-detail">
             <h3>{client.clientName}</h3>
             <p>
-              {client.dateFrom} to <br />{" "}
-              {client.dateTo}
+              {client.dateFrom} to <br /> {client.dateTo}
             </p>
           </div>
         </div>

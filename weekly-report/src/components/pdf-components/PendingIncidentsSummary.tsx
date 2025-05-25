@@ -7,9 +7,15 @@ interface PendingIncidentsSummaryProps {
   data: any;
 }
 
-const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({ data }: any) => {
-  const pendingIncidentSummary = useSelector((state: RootState) => state.pendingIncidentSummary);
-  const pIncidentRecommendations = useSelector((s: RootState) => s.recommendation.pIncident);
+const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({
+  data,
+}: any) => {
+  const pendingIncidentSummary = useSelector(
+    (state: RootState) => state.pendingIncidentSummary
+  );
+  const pIncidentRecommendations = useSelector(
+    (s: RootState) => s.recommendation.pIncident
+  );
   const client = useSelector((state: RootState) => state.client);
 
   const chartData = {
@@ -18,11 +24,7 @@ const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({ data 
       pendingIncidentSummary.customerPendingIncidents,
       pendingIncidentSummary.socTeamPendingIncidents,
     ],
-    backgroundColor: [
-      "#ff8200",
-      "#ffa950",
-      "#ffd9b2",
-    ],
+    backgroundColor: ["#ff8200", "#ffa950", "#ffd9b2"],
     label: [
       "Total Pending Incidents",
       `Pending Incidents from ${client.tenantCode}`,
@@ -30,7 +32,7 @@ const PendingIncidentsSummary: React.FC<PendingIncidentsSummaryProps> = ({ data 
     ],
   };
   return (
-    <div className="pending-incidents-summary" id={Object.keys(data.date)[0]}>
+    <div className="pending-incidents-summary" id="pending-incident-status">
       <div className="">
         <p className="title">Pending Incidents Summary</p>
         {/* <ul className="font-bold">

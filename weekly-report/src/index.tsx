@@ -5,6 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
+import "./styles/shadcn.css";
 import "./styles/globals.scss";
 import { SnackbarProvider } from "notistack";
 

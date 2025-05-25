@@ -3,22 +3,26 @@ import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import { RootState } from "../../store/store";
 import RecommendationNotes from "../RecommendationNotes";
 
-interface KeyFeatureWorkLoadProps {
-}
+interface KeyFeatureWorkLoadProps {}
 
 const KeyFeatureWorkLoad: React.FC<KeyFeatureWorkLoadProps> = () => {
-  const kFWorkloadRecommendations = useSelector((s: RootState) => s.recommendation.kFWorkload);
+  const kFWorkloadRecommendations = useSelector(
+    (s: RootState) => s.recommendation.kFWorkload
+  );
   const kFARWl = useSelector((s: RootState) => s.data.kFARWl);
 
   return (
-    <div className="key-feature-workload">
+    <div className="key-feature-workload" id="key-feature-cloud-one">
       <div className="p-8">
-        <p className="title">Key feature adoption rate of C1WS / server & workload security / protection</p>
+        <p className="title">
+          Key feature adoption rate of C1WS / server & workload security /
+          protection
+        </p>
         {/* <p className="title">{data?.date.title}</p> */}
         <GroupedBarChartHorizontal
           data={{
             Key: kFARWl.key,
-            data: kFARWl.data
+            data: kFARWl.data,
           }}
         />
         <div className="mt-12">
