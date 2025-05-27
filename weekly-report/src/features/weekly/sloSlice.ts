@@ -18,7 +18,23 @@ interface SloState {
 // Initial state with proper typing
 const initialState: SloState = {
   key: "Priority",
-  data: [],
+  data: [{
+    Priority: 'P1',
+    Description: 'Incidents that have a severe impact on customer operations. This event is a concern, such as attack formations or potential breaches.',
+    Response_Time: '01 Hour'
+  },{
+    Priority: 'P2',
+    Description: 'Incidents that have a significant impact, or the potential to have a severe impact, on operations.',
+    Response_Time: '04 Hour'
+  },{
+    Priority: 'P3',
+    Description: 'Incidents that have a minimal impact with the potential for escalate if not contained causing significant impact on operations.',
+    Response_Time: '24 Hour'
+  },{
+    Priority: 'P4',
+    Description: 'Incidents that do not have direct impact on Customer operations but violate Customer security Baseline.',
+    Response_Time: '48 Hour'
+  }],
 };
 
 const sloSlice = createSlice({

@@ -24,7 +24,7 @@ const TableOfContents = () => {
               .map((item: TableIndexInfo, i: number) => (
                 <tr key={i}>
                   <td className="p-2 text-lg">
-                    <a href={`#`}>{item.title}</a>
+                    <a href={`#${item.id}`}>{item.title}</a>
                     {/* {item.title} */}
                   </td>
                   <td className="p-2 text-right text-lg">{item.page}</td>

@@ -44,7 +44,7 @@ const CisForm = () => {
           }} />
         </div>
         <div>
-          <Label>Closed as duplicate according to priority</Label>
+          <Label>Closed as duplicate</Label>
           <TextInput type="number" value={cIncident.data[0].data[3]} onChange={(e) => {
             dispatch(updateDataProp({
               attr: 'cIncident.data[0].data[3]',

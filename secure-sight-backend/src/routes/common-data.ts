@@ -2,7 +2,7 @@ import { Router } from "express";
 import commonDataController from "../controllers/common-data.controller";
 import { auth, hasRole } from "../utils/auth-util";
 import { ROLES } from "../constant";
-import { commonDataValidationSchema } from "../validators/common-data.validator";
+import { commonDataValidationSchema, weeklyCommonDataValidationSchema } from "../validators/common-data.validator";
 import { ReportType } from "../controllers/assignment.controller";
 
 const router = Router()
@@ -28,7 +28,7 @@ router.post('/:reportType(monthly|weekly)',
   async (req, res) => {
     try {
       const reportType = req.params.reportType as ReportType
-      const data = await commonDataValidationSchema.validate(req.body)
+      const data = reportType == 'monthly' ? await commonDataValidationSchema.validate(req.body) : await weeklyCommonDataValidationSchema.validate(req.body)
       await commonDataController.update(data, reportType, req.user!)
       res.send({
         success: true

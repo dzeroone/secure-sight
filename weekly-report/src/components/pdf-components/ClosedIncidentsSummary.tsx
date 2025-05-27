@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import DoughnutChat from "../charts/DoughnutChat";
 import { RootState } from "../../store/store";
 import RecommendationNotes from "../RecommendationNotes";
 import BarChart from "../charts/BarChart";
@@ -7,12 +6,12 @@ import BarChart from "../charts/BarChart";
 interface ClosedIncidentsSummaryProps {
 }
 
-const ClosedIncidentsSummary: React.FC<ClosedIncidentsSummaryProps> = ({ }: any) => {
+const ClosedIncidentsSummary: React.FC<ClosedIncidentsSummaryProps> = () => {
   const cIncidentRecommendations = useSelector((s: RootState) => s.recommendation.cIncident);
   const cIncident = useSelector((state: RootState) => state.data.cIncident);
 
   return (
-    <div className="closed-incidents-summary text-[#696969]">
+    <div className="closed-incidents-summary text-[#696969]" id="closed-incidents">
       <div className="">
         <p className="title">Closed Incidents Summary</p>
         <div className="mb-4">

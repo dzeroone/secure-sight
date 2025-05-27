@@ -20,7 +20,7 @@ const EndpointProtectionForm = () => {
     );
 
     return (
-        <div className="p-6 bg-white rounded-lg border shadow-md">
+        <div>
             <h3 className="text-lg font-semibold mb-4">Endpoint Protection: Agents Deployed</h3>
             <div className="mb-4">
                 <RecommendationInput entity="endPointProtection" values={endPointProtectionRecommendations} />

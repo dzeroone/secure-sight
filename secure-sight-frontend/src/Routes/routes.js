@@ -46,6 +46,7 @@ import DeletedCustomersPage from "../Pages/customers/deleted";
 import TransferAdminPage from "../Pages/users/transfer-admin";
 import DeletedUserIndexPage from "../Pages/users/deleted";
 import TransferReportsPage from "../Pages/users/transfer-reports";
+import WeeklyCommonDataPage from "../Pages/weekly-common-data";
 
 export const history = createBrowserHistory({ window });
 
@@ -161,6 +162,10 @@ const authProtectedRoutes = [
   {
     roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2],
     path: "/common-data", component: <CommonDataPage />
+  },
+  {
+    roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2],
+    path: "/weekly-common-data", component: <WeeklyCommonDataPage />
   },
   {
     roles: [ROLES.ADMIN],

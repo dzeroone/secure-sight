@@ -552,6 +552,7 @@ export const matchedIcosReducer = matchedIcosSlice.reducer;
 // --- Custom Slice Factory (For Recommendations, Notes, Summary) ---
 
 export interface ApexOneState {
+  visible: boolean,
   title: string,
   nsOS: number, // not supported os
   osInc: number, // os agent incompatible
@@ -562,6 +563,7 @@ export interface ApexOneState {
 }
 
 const initialApexOneState: ApexOneState = {
+  visible: true,
   title: 'Apex One',
   nsOS: 0,
   osInc: 0,
@@ -585,6 +587,7 @@ export const { updateApexOneData } = apexOneSlice.actions;
 export const apexOneReducer = apexOneSlice.reducer;
 
 export interface WorkloadSecurityState {
+  visible: boolean,
   title: string,
   nsOS: number, // not supported os
   osInc: number, // os agent incompatible
@@ -595,7 +598,8 @@ export interface WorkloadSecurityState {
 }
 
 const initialWorkloadSecurityState: WorkloadSecurityState = {
-  title: 'Workload/Deep Security',
+  visible: true,
+  title: 'Workload',
   nsOS: 0,
   osInc: 0,
   latestVersion: 0,
@@ -616,6 +620,44 @@ const workloadSecuritySlice = createSlice({
 
 export const { updateWorkloadSecurityData } = workloadSecuritySlice.actions;
 export const workloadSecurityReducer = workloadSecuritySlice.reducer;
+
+/**
+ * Deep security
+ */
+export interface DeepSecurityState {
+  visible: boolean,
+  title: string,
+  nsOS: number, // not supported os
+  osInc: number, // os agent incompatible
+  latestVersion: number;
+  olderVersion: number;
+  endOfLife: number;
+  allV: number;
+}
+
+const initialDeepSecurityState: DeepSecurityState = {
+  visible: true,
+  title: 'Deep security',
+  nsOS: 0,
+  osInc: 0,
+  latestVersion: 0,
+  olderVersion: 0,
+  endOfLife: 0,
+  allV: 0
+};
+
+const deepSecuritySlice = createSlice({
+  name: "deepSecurity",
+  initialState: initialDeepSecurityState,
+  reducers: {
+    updateDeepSecurityData: (state, action: PayloadAction<DeepSecurityState>) => {
+      return action.payload
+    },
+  },
+});
+
+export const { updateDeepSecurityData } = deepSecuritySlice.actions;
+export const deepSecurityReducer = deepSecuritySlice.reducer;
 
 interface PendingIncidentSummaryState {
   totalPendingIncidents: number;
@@ -697,7 +739,7 @@ interface MatchSummaryState {
 const initialMatchSummaryState: MatchSummaryState = {
   iocSweeped: [0, 0, 0, 0, 0],
   iocMatched: [0, 0, 0, 0, 0],
-  labels: ["", "", "", "", ""], // Initialize with empty labels
+  labels: ["IP", "URL", "DOMAIN", "HASH", "Sender Mail"], // Initialize with empty labels
 };
 
 const matchSummarySlice = createSlice({

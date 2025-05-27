@@ -33,4 +33,17 @@ export const commonDataValidationSchema = yup.object({
   })
 })
 
+export const weeklyCommonDataValidationSchema = yup.object({
+  threat_intel_summary: yup.object({
+    ioc_chart: yup.object({
+      ip: yup.number().default(0),
+      url: yup.number().default(0),
+      domain: yup.number().default(0),
+      hash: yup.number().default(0),
+      sender_email: yup.number().default(0)
+    })
+  })
+})
+
 export type CommonDataValidationValues = yup.InferType<typeof commonDataValidationSchema>
+export type WeeklyCommonDataValidationValues = yup.InferType<typeof weeklyCommonDataValidationSchema>

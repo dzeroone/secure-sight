@@ -1,5 +1,5 @@
 import commonDataModel from "../models/commonDataModel"
-import { CommonDataValidationValues } from "../validators/common-data.validator"
+import { CommonDataValidationValues, WeeklyCommonDataValidationValues } from "../validators/common-data.validator"
 import { ReportType } from "./assignment.controller"
 
 class CommonDataController {
@@ -9,7 +9,7 @@ class CommonDataController {
     })
   }
 
-  async update(data: CommonDataValidationValues, rType: ReportType, user: Express.User) {
+  async update(data: CommonDataValidationValues | WeeklyCommonDataValidationValues, rType: ReportType, user: Express.User) {
     let doc = await this.get(rType)
     if (!doc) {
       doc = new commonDataModel({

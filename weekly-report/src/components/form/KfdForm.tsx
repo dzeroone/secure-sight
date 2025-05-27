@@ -21,7 +21,7 @@ const KfdForm = () => {
   const onClickRemoveKFARDs = async (index: number) => {
     const confirmed = await confirm({
       title: 'Are you sure?',
-      confirmation: 'You are going to remove a key from top 10 incidents summary by cateory'
+      confirmation: 'You are going to remove a feature key from Deep Security'
     })
     if(confirmed) {
       dispatch(removeDataPropArr({

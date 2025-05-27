@@ -136,6 +136,11 @@ const SidebarData = [
 				roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1],
 				sublabel: "Weekly report",
 				link: "/reports/weekly-report",
+			},
+			{
+				roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2],
+				sublabel: "Weekly report common data",
+				link: "/weekly-common-data",
 			}
 		],
 	},

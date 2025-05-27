@@ -23,7 +23,8 @@
   .slo-summary,
   .endpoint-inventory,
   .key-feature-apex,
-  .key-feature-workload {
+  .key-feature-workload,
+  .closed-incidents-summary {
     @apply mx-auto;
     width: calc(794px - 1in);
   }

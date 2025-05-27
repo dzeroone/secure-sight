@@ -14,6 +14,7 @@ import {
   tableOfContentsReducer,
   executiveSummaryReducer,
   recommendationReducer,
+  deepSecurityReducer,
 } from "../features/weekly/weeklySlice";
 import sloReducer from "../features/weekly/sloSlice";
 
@@ -25,6 +26,7 @@ const combinedReducer = combineReducers({
   data: dataReducer,
   apexOne: apexOneReducer,
   workloadSecurity: workloadSecurityReducer,
+  deepSecurity: deepSecurityReducer,
   endpoint: endpointReducer,
   matchedIcos: matchedIcosReducer,
   chart: chartReducer,

@@ -1,4 +1,9 @@
 import Button from "@/components/Button";
+import ISCategoryForm from "@/components/form/ISCategoryForm";
+import ISPriorityForm from "@/components/form/ISPriorityForm";
+import ISSeverityForm from "@/components/form/ISSeverityForm";
+import ISStatusForm from "@/components/form/ISStatusForm";
+import ThreatIntelSummaryForm from "@/components/form/ThreatIntelSummaryForm";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,9 +23,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import AlcForm from "../../components/form/AlcForm";
 import CisForm from "../../components/form/CisForm";
-import EndpointProtectionForm from "../../components/form/EndpointProtectionForm";
 import EpiForm from "../../components/form/EpiForm";
 import { LicenseForm, ProductForm } from "../../components/form/EpiTableForm";
 import ExecutiveSummaryForm from "../../components/form/ExecutiveSummaryForm";
@@ -34,7 +37,6 @@ import PisForm from "../../components/form/PisForm";
 import SloForm from "../../components/form/SloFrom";
 import TableOfContentsForm from "../../components/form/TableOfContentsForm";
 import TisForm from "../../components/form/TisForm";
-import ThreatIntelSummaryForm from "@/components/form/ThreatIntelSummaryForm";
 import Navbar from "../../components/Navbar";
 import ClosedIncidentsSummary from "../../components/pdf-components/ClosedIncidentsSummary";
 import EndpointInventory from "../../components/pdf-components/EndpointInventory";
@@ -56,11 +58,13 @@ import {
   updateClientState,
   updateDataProp,
   updateExecutiveSummary,
+  updateMatchSummaryData,
 } from "../../features/weekly/weeklySlice";
 import { withAuth } from "../../hocs/withAuth";
 import { useAuth } from "../../providers/AuthProvider";
 import store, { RootState } from "../../store/store";
 import { getErrorMessage } from "../../utils/helpers";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Dashboard = () => {
   const router = useNavigate();
@@ -69,11 +73,19 @@ const Dashboard = () => {
   const [searchParams] = useSearchParams();
 
   const [reportData, setReportData] = useState<any>(null);
-  const [reportState, setReportState] = useState({
+  const [reportState, setReportState] = useState<{
+    auditStatus: number,
+    serverStatus: number,
+    status: number,
+    reporterId: string,
+    assignment: any,
+    canSubmitReport: boolean
+  }>({
     serverStatus: 0,
     status: 0,
     auditStatus: -999,
     canSubmitReport: false,
+    assignment: null,
     reporterId: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
@@ -93,6 +105,10 @@ const Dashboard = () => {
   const slo = useSelector((state: RootState) => state.slo);
 
   const tableOfContents = useSelector((s: RootState) => s.tableOfContents);
+  const matchSummary = useSelector((state: RootState) => state.matchSummary);
+  const [selectReporterShown, setSelectReporterShown] = useState(false);
+  const [reporters, setReporters] = useState<any[]>([]);
+  const [selectedReporter, setSelectedReporter] = useState("");
 
   /**
    * get report data from elastic index
@@ -123,6 +139,7 @@ const Dashboard = () => {
             status: reportDoc.status,
             auditStatus: reportDoc.auditStatus,
             reporterId: reportDoc.reporterId,
+            assignment: responseData.assignment,
             canSubmitReport: responseData.canSubmitReport,
           };
         });
@@ -149,6 +166,7 @@ const Dashboard = () => {
               serverStatus: 0,
               status: 0,
               auditStatus: -999,
+              assignment: responseData.assignment,
               canSubmitReport: responseData.canSubmitReport,
             };
           });
@@ -475,6 +493,14 @@ const Dashboard = () => {
             });
           }
         }
+        if(responseData?.commonData) {
+          const chart = responseData.commonData.threat_intel_summary.ioc_chart ?? { ip: 0, url: 0, domain: 0, hash: 0, sender_email: 0}
+          dispatch(updateMatchSummaryData({
+            iocMatched: matchSummary.iocMatched,
+            iocSweeped: [chart.ip, chart.url, chart.domain, chart.hash, chart.sender_email],
+            labels: matchSummary.labels
+          }))
+        }
       } else {
         dispatch({
           type: "RESET",
@@ -505,6 +531,16 @@ const Dashboard = () => {
   }, [elasticIndex, reportId, dispatch]);
 
   // - end
+
+  const loadReporters = useCallback(async () => {
+    if (!selectReporterShown) return;
+    try {
+      const res = await axiosApi.get(
+        `/assignments/${reportState.assignment?._id}/suggest-reporters`
+      );
+      setReporters(res.data);
+    } catch (e) {}
+  }, [selectReporterShown]);
 
   const handlePrint = async () => {
     setIsPreparingPdf(true);
@@ -546,6 +582,7 @@ const Dashboard = () => {
         formData: store.getState(),
         reportData,
         status: reportState.status,
+        submittedTo: selectedReporter,
       };
       if (elasticIndex) {
         toSubmit.index = elasticIndex;
@@ -575,6 +612,14 @@ const Dashboard = () => {
     }
   };
 
+  const onSaveReport = () => {
+    if (!reportState.assignment?.sTo && reportState.canSubmitReport && reportState.status == 1) {
+      setSelectReporterShown(true);
+    } else {
+      saveReport();
+    }
+  };
+
   const allPageContents = useMemo(() => {
     return [
       {
@@ -585,13 +630,22 @@ const Dashboard = () => {
         id: "table-of-contents",
         title: "Table of Contents",
       },
-      ...tableOfContents,
+      ...tableOfContents.slice(0, 7),
+      {
+        id: 'closed-incidents',
+        title: "Closed Incidents summary"
+      },
+      ...tableOfContents.slice(7)
     ];
   }, [tableOfContents]);
 
   useEffect(() => {
     getElasticData();
   }, [getElasticData]);
+
+  useEffect(() => {
+    loadReporters();
+  }, [loadReporters]);
 
   const scrollToIndex = (index: number) => {
     const id = allPageContents[index]?.id;
@@ -652,7 +706,7 @@ const Dashboard = () => {
                     REPORT_AUDIT_STATUS.PENDING,
                   ].includes(reportState.auditStatus)))
             }
-            onClick={saveReport}
+            onClick={onSaveReport}
           >
             <MdSave className="mr-2" />{" "}
             {reportState.status === 0 ? "Save" : "Submit"} report
@@ -769,13 +823,19 @@ const Dashboard = () => {
                       <ThreatIntelSummaryForm />
                     </div>
                     <div>
-                      <AlcForm />
-                    </div>
-                    <div>
-                      <EndpointProtectionForm />
-                    </div>
-                    <div>
                       <TisForm />
+                    </div>
+                    <div>
+                      <ISSeverityForm />
+                    </div>
+                    <div>
+                      <ISStatusForm />
+                    </div>
+                    <div>
+                      <ISPriorityForm />
+                    </div>
+                    <div>
+                      <ISCategoryForm />
                     </div>
                     <div>
                       <CisForm />
@@ -791,8 +851,6 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <LicenseForm />
-                    </div>
-                    <div>
                       <ProductForm />
                     </div>
                     <div>
@@ -867,6 +925,47 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+
+      <Dialog
+        open={selectReporterShown}
+        onOpenChange={(open) => setSelectReporterShown(open)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Select reporter</DialogTitle>
+          </DialogHeader>
+          <Label htmlFor="reporter">Reporter</Label>
+          <SelectInput
+            id="reporter"
+            value={selectedReporter}
+            onChange={(e) => {
+              setSelectedReporter(e.target.value);
+            }}
+          >
+            <option value="" disabled>
+              None
+            </option>
+            {reporters.map((r: any) => {
+              return (
+                <option value={r._id} key={r._id}>
+                  {r.fullname}
+                </option>
+              );
+            })}
+          </SelectInput>
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setSelectReporterShown(false);
+                saveReport();
+              }}
+              disabled={!selectedReporter}
+            >
+              Submit
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

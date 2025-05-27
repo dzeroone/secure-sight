@@ -1,8 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
+import { updateExecutiveSummary } from "../../features/weekly/weeklySlice";
+import { RootState } from "../../store/store";
+import AlcForm from "./AlcForm";
+import EndpointProtectionForm from "./EndpointProtectionForm";
 import { TextAreaInput, TextInput } from "./Inputs";
 import Label from "./Label";
-import { RootState } from "../../store/store";
-import { updateExecutiveSummary } from "../../features/weekly/weeklySlice";
 
 export default function ExecutiveSummaryForm() {
   const dispatch = useDispatch();
@@ -114,6 +116,8 @@ export default function ExecutiveSummaryForm() {
           }}
         />
       </div>
+      <AlcForm />
+      <EndpointProtectionForm />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { pluralize } from "../../utils/helpers";
 import RecommendationNotes from "../RecommendationNotes";
+import { useMemo } from "react";
 
 interface ExecutiveSummaryProps {
   data: any;
@@ -61,6 +62,9 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data }) => {
   const workloadSecurity = useSelector(
     (state: RootState) => state.workloadSecurity
   );
+  const deepSecurity = useSelector(
+    (state: RootState) => state.deepSecurity
+  );
 
   const chartData2 = {
     title: "workload_security",
@@ -89,6 +93,42 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data }) => {
       "End of Life",
     ],
   };
+
+  const deepSecurityChartData = useMemo(() => {
+    return {
+      title: "deep_security",
+      data: [
+        deepSecurity.allV,
+        deepSecurity.latestVersion,
+        deepSecurity.olderVersion,
+        deepSecurity.nsOS,
+        deepSecurity.osInc,
+        deepSecurity.endOfLife,
+      ],
+      backgroundColor: [
+        "rgb(255, 130, 0)",
+        "rgb(255, 141, 24)",
+        "rgb(255, 154, 52)",
+        "rgb(255, 170, 84)",
+        "rgb(255, 189, 121)",
+        "rgb(255, 234, 211)",
+      ],
+      label: [
+        "All version",
+        "Latest version",
+        "Older version",
+        "Not supported OS",
+        "OS incompatible",
+        "End of Life",
+      ],
+    }
+  }, [deepSecurity])
+
+  const visibleChartCount = useMemo(() => {
+    return Number(apexOne.visible) + Number(workloadSecurity.visible) + Number(deepSecurity.visible)
+  }, [apexOne, workloadSecurity, deepSecurity])
+
+  console.log('vvv', visibleChartCount)
 
   return (
     <div className="executive-summary" id="executive-summary">
@@ -200,50 +240,82 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data }) => {
             <strong>Agent Life Cycle</strong>
           </li>
         </ul>
-        <table className="w-full border-none" cellPadding={0} cellSpacing={0}>
-          <tbody>
-            <tr>
-              <td width="35%">
-                <div className="w-[220px] mx-auto">
-                  {/* <canvas id="apexOne" /> */}
-                  <PieChart data={chartData} />
-                  {/* <PieChart
-                    data={
-                      data?.date.EXECUTIVE_SUMMARY.agent_life_cycle.apex_chart
-                    }
-                  /> */}
-                  <p className="text-xs font-bold mt-3 capitalize">
-                    {apexOne.title}
-                  </p>
-                </div>
-              </td>
-              <td width="35%">
-                <div className="w-[220px] mx-auto">
-                  {/* <canvas id="workloadSecurity" /> */}
-                  <PieChart data={chartData2} />
-                  {/* <PieChart
-                    data={
-                      data?.date.EXECUTIVE_SUMMARY.agent_life_cycle
-                        .workload_chart
-                    }
-                  /> */}
-                  {/* <p className="text-xs font-bold mt-3 capitalize">
-                    {data?.date.EXECUTIVE_SUMMARY.agent_life_cycle.workload_chart.title
-                      .split("_")
-                      .join(" ")}/Deep Security
-                  </p> */}
-                  <p className="text-xs font-bold mt-3 capitalize">
-                    {workloadSecurity.title}
-                  </p>
-                </div>
-              </td>
-              <td width="30%">
-                <RecommendationNotes notes={agentLifeCycleRecommendations} />
-              </td>
-            </tr>
-            <tr className="h-6"></tr>
-          </tbody>
-        </table>
+        {visibleChartCount > 0 ? (
+          <table className="w-full border-none" cellPadding={0} cellSpacing={0}>
+            <tbody>
+              <tr>
+                {apexOne.visible ? (
+                  <td width={`${100/visibleChartCount}%`}>
+                    <div className="w-[220px] mx-auto">
+                      {/* <canvas id="apexOne" /> */}
+                      <PieChart data={chartData} />
+                      {/* <PieChart
+                        data={
+                          data?.date.EXECUTIVE_SUMMARY.agent_life_cycle.apex_chart
+                        }
+                      /> */}
+                      <p className="text-xs font-bold mt-3 capitalize">
+                        {apexOne.title}
+                      </p>
+                    </div>
+                  </td>
+                ) : null}
+                {workloadSecurity.visible ? (
+                  <td width={`${100/visibleChartCount}%`}>
+                    <div className="w-[220px] mx-auto">
+                      {/* <canvas id="workloadSecurity" /> */}
+                      <PieChart data={chartData2} />
+                      {/* <PieChart
+                        data={
+                          data?.date.EXECUTIVE_SUMMARY.agent_life_cycle
+                            .workload_chart
+                        }
+                      /> */}
+                      {/* <p className="text-xs font-bold mt-3 capitalize">
+                        {data?.date.EXECUTIVE_SUMMARY.agent_life_cycle.workload_chart.title
+                          .split("_")
+                          .join(" ")}/Deep Security
+                      </p> */}
+                      <p className="text-xs font-bold mt-3 capitalize">
+                        {workloadSecurity.title}
+                      </p>
+                    </div>
+                  </td>
+                ) : null}
+                {deepSecurity.visible ? (
+                  <td width={`${100/visibleChartCount}%`}>
+                    <div className="w-[220px] mx-auto">
+                      {/* <canvas id="workloadSecurity" /> */}
+                      <PieChart data={deepSecurityChartData} />
+                      {/* <PieChart
+                        data={
+                          data?.date.EXECUTIVE_SUMMARY.agent_life_cycle
+                            .workload_chart
+                        }
+                      /> */}
+                      {/* <p className="text-xs font-bold mt-3 capitalize">
+                        {data?.date.EXECUTIVE_SUMMARY.agent_life_cycle.workload_chart.title
+                          .split("_")
+                          .join(" ")}/Deep Security
+                      </p> */}
+                      <p className="text-xs font-bold mt-3 capitalize">
+                        {deepSecurity.title}
+                      </p>
+                    </div>
+                  </td>
+                ) : null}
+              </tr>
+              <tr className="h-6"></tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={visibleChartCount}>
+                  <RecommendationNotes notes={agentLifeCycleRecommendations} />
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        ) : null}
 
         <ul className="pt-8 break-before-page">
           <li>

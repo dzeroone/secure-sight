@@ -9,10 +9,12 @@ import {
   updateWorkloadSecurityData,
   ApexOneState,
   WorkloadSecurityState,
+  DeepSecurityState,
+  updateDeepSecurityData,
 } from "../../features/weekly/weeklySlice";
 import { MdClose, MdEdit } from "react-icons/md";
 import Label from "./Label";
-import { TextAreaInput, TextInput } from "./Inputs";
+import { SwitchInput, TextAreaInput, TextInput } from "./Inputs";
 import RecommendationInput from "./RecommendationInput";
 
 const AlcForm = () => {
@@ -28,6 +30,13 @@ const AlcForm = () => {
     "The SOC team is actively developing and testing observed attack methods on the specified endpoint, while also prioritizing their efforts to respond to and communicate with the client."
   );
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const apexOne = useSelector((state: RootState) => state.apexOne);
+  const workloadSecurity = useSelector(
+    (state: RootState) => state.workloadSecurity
+  );
+  const deepSecurity = useSelector(
+    (state: RootState) => state.deepSecurity
+  );
 
   const handleAddOrEditEndpoint = () => {
     if (endpointName && detectionsWithSeverity) {
@@ -68,11 +77,6 @@ const AlcForm = () => {
     dispatch(removeEndpointData(index));
   };
 
-  const apexOne = useSelector((state: RootState) => state.apexOne);
-  const workloadSecurity = useSelector(
-    (state: RootState) => state.workloadSecurity
-  );
-
   const handleApexOneChange = (field: keyof ApexOneState, value: any) => {
     let updatedData = { ...apexOne };
     // @ts-ignore
@@ -90,8 +94,18 @@ const AlcForm = () => {
     dispatch(updateWorkloadSecurityData(updatedData));
   };
 
+  const handleDeepSecurityChange = (
+    field: keyof DeepSecurityState,
+    value: any
+  ) => {
+    let updatedData = { ...deepSecurity };
+    // @ts-ignore
+    updatedData[field] = value;
+    dispatch(updateDeepSecurityData(updatedData));
+  };
+
   return (
-    <div className="p-6 bg-white rounded-lg border shadow-md">
+    <div>
       <h3 className="text-lg font-semibold mb-4">Agent Life Cycle Form</h3>
       <div className="mb-4">
         <RecommendationInput entity="agentLifeCycle" values={recommendations} />
@@ -99,6 +113,15 @@ const AlcForm = () => {
       <div>
         <div className="my-4">
           <h3 className="text-lg font-semibold mb-1">Apex One Chart</h3>
+          <div className="text-sm mt-1">
+            Visibility{" "}
+            <SwitchInput
+              checked={apexOne.visible}
+              onChange={(e) => {
+                handleApexOneChange("visible", e.target.checked);
+              }}
+            />
+          </div>
           <div className="flex flex-col gap-2">
             <div>
               <Label>Title</Label>
@@ -123,6 +146,7 @@ const AlcForm = () => {
               <Label>Latest version</Label>
               <TextInput
                 placeholder="Latest Version"
+                type="number"
                 value={apexOne.latestVersion}
                 onChange={(e) =>
                   handleApexOneChange(
@@ -136,6 +160,7 @@ const AlcForm = () => {
               <Label>Older version</Label>
               <TextInput
                 placeholder="Older version"
+                type="number"
                 value={apexOne.olderVersion}
                 onChange={(e) =>
                   handleApexOneChange(
@@ -149,6 +174,7 @@ const AlcForm = () => {
               <Label>Not supported OS</Label>
               <TextInput
                 placeholder="Not supported OS"
+                type="number"
                 value={apexOne.nsOS}
                 onChange={(e) =>
                   handleApexOneChange("nsOS", Number(e.target.value) || 0)
@@ -159,6 +185,7 @@ const AlcForm = () => {
               <Label>OS agent incompatible</Label>
               <TextInput
                 placeholder="OS agent incompatible"
+                type="number"
                 value={apexOne.osInc}
                 onChange={(e) =>
                   handleApexOneChange("osInc", Number(e.target.value) || 0)
@@ -169,6 +196,7 @@ const AlcForm = () => {
               <Label>End of Life</Label>
               <TextInput
                 placeholder="End of Life"
+                type="number"
                 value={apexOne.endOfLife}
                 onChange={(e) =>
                   handleApexOneChange("endOfLife", Number(e.target.value) || 0)
@@ -183,6 +211,15 @@ const AlcForm = () => {
           <h3 className="text-lg font-semibold mb-1">
             Workload Security Chart
           </h3>
+          <div className="text-sm mt-1">
+            Visibility{" "}
+            <SwitchInput
+              checked={workloadSecurity.visible}
+              onChange={(e) => {
+                handleWorkloadSecurityChange("visible", e.target.checked);
+              }}
+            />
+          </div>
           <div className="flex flex-col gap-2">
             <div>
               <Label>Title</Label>
@@ -212,6 +249,7 @@ const AlcForm = () => {
               <Label>Latest version</Label>
               <TextInput
                 placeholder="Latest Version"
+                type="number"
                 value={workloadSecurity.latestVersion}
                 onChange={(e) =>
                   handleWorkloadSecurityChange(
@@ -225,6 +263,7 @@ const AlcForm = () => {
               <Label>Older version</Label>
               <TextInput
                 placeholder="Older version"
+                type="number"
                 value={workloadSecurity.olderVersion}
                 onChange={(e) =>
                   handleWorkloadSecurityChange(
@@ -238,6 +277,7 @@ const AlcForm = () => {
               <Label>Not supported OS</Label>
               <TextInput
                 placeholder="Not supported OS"
+                type="number"
                 value={workloadSecurity.nsOS}
                 onChange={(e) =>
                   handleWorkloadSecurityChange(
@@ -251,6 +291,7 @@ const AlcForm = () => {
               <Label>OS agent incompatible</Label>
               <TextInput
                 placeholder="OS agent incompatible"
+                type="number"
                 value={workloadSecurity.osInc}
                 onChange={(e) =>
                   handleWorkloadSecurityChange(
@@ -264,9 +305,122 @@ const AlcForm = () => {
               <Label>End of Life</Label>
               <TextInput
                 placeholder="End of Life"
+                type="number"
                 value={workloadSecurity.endOfLife}
                 onChange={(e) =>
                   handleWorkloadSecurityChange(
+                    "endOfLife",
+                    Number(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Deep Security Chart Section */}
+        <div className="my-4">
+          <h3 className="text-lg font-semibold mb-1">
+            Deep Security Chart
+          </h3>
+          <div className="text-sm mt-1">
+            Visibility{" "}
+            <SwitchInput
+              checked={deepSecurity.visible}
+              onChange={(e) => {
+                handleDeepSecurityChange("visible", e.target.checked);
+              }}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <div>
+              <Label>Title</Label>
+              <TextInput
+                placeholder="Title"
+                value={deepSecurity.title}
+                onChange={(e) =>
+                  handleDeepSecurityChange("title", e.target.value)
+                }
+              />
+            </div>
+            <div>
+              <Label>All version</Label>
+              <TextInput
+                placeholder="All version"
+                type="number"
+                value={deepSecurity.allV}
+                onChange={(e) =>
+                  handleDeepSecurityChange(
+                    "allV",
+                    Number(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div>
+              <Label>Latest version</Label>
+              <TextInput
+                placeholder="Latest Version"
+                type="number"
+                value={deepSecurity.latestVersion}
+                onChange={(e) =>
+                  handleDeepSecurityChange(
+                    "latestVersion",
+                    Number(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div>
+              <Label>Older version</Label>
+              <TextInput
+                placeholder="Older version"
+                type="number"
+                value={deepSecurity.olderVersion}
+                onChange={(e) =>
+                  handleDeepSecurityChange(
+                    "olderVersion",
+                    Number(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div>
+              <Label>Not supported OS</Label>
+              <TextInput
+                placeholder="Not supported OS"
+                type="number"
+                value={deepSecurity.nsOS}
+                onChange={(e) =>
+                  handleDeepSecurityChange(
+                    "nsOS",
+                    Number(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div>
+              <Label>OS agent incompatible</Label>
+              <TextInput
+                placeholder="OS agent incompatible"
+                type="number"
+                value={deepSecurity.osInc}
+                onChange={(e) =>
+                  handleDeepSecurityChange(
+                    "osInc",
+                    Number(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div>
+              <Label>End of Life</Label>
+              <TextInput
+                placeholder="End of Life"
+                type="number"
+                value={deepSecurity.endOfLife}
+                onChange={(e) =>
+                  handleDeepSecurityChange(
                     "endOfLife",
                     Number(e.target.value) || 0
                   )
