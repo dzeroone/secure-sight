@@ -143,7 +143,7 @@ export default function WeeklyCommonDataPage() {
 
   return (
     <div className="page-content">
-      <BreadcrumbWithTitle title="Common Data" />
+      <BreadcrumbWithTitle title="Weekly common data" />
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
