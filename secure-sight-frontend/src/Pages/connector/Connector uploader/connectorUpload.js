@@ -371,19 +371,7 @@ const ConnectorUploader = () => {
 							</Card>
 						</Col>
 						<Col className="col-12 col-md-3">
-							<Dropdown isOpen={dropdownOpen} toggle={toggleDropdown} className="d-inline-block">
-								<DropdownToggle caret>
-									{selectedLanguage || "Select a language"}
-								</DropdownToggle>
-								<DropdownMenu>
-									{languageOptions.map((option) => (
-										<DropdownItem key={option.value} onClick={() => handleLanguageSelect(option.value)}>
-											{option.label}
-										</DropdownItem>
-									))}
-								</DropdownMenu>
-							</Dropdown>
-							<div className="d-line-block mt-4">
+							<div className="d-line-block">
 								<button
 									type="button"
 									disabled={!connectorData.length > 0}

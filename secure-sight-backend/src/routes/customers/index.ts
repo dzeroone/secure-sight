@@ -70,6 +70,34 @@ router.get('/codes',
   }
 )
 
+router.patch('/connectors',
+  auth,
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
+  async (req: Request, res: Response) => {
+    if(!req.body.customers?.length || !req.body.connectors?.length) {
+      throw new Error("Incorrect parameter")
+    }
+    try {
+      for(let customerId of req.body.customers) {
+        let customer = await customerController.getCustomerById(customerId)
+        if(!customer) {
+          throw new Error("Customer not found!")
+        }
+        await customerController.updateCustomer(customer, {
+          connectors: req.body.connectors
+        })
+      }
+      
+      res.sendStatus(200)
+    } catch (e: any) {
+      res.status(400).send({
+        success: false,
+        message: e.message
+      })
+    }
+  }
+)
+
 router.get('/:id',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3]),

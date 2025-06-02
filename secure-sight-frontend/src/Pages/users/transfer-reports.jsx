@@ -1,8 +1,8 @@
-import { ArchiveIcon, GitPullRequestIcon, Trash2Icon, ZapIcon } from "lucide-react";
+import { ArchiveIcon, GitPullRequestIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, ListGroup, ListGroupItem, Popover, PopoverBody, PopoverHeader, UncontrolledTooltip } from "reactstrap";
+import { Button, ListGroup, ListGroupItem, PopoverBody, PopoverHeader, UncontrolledPopover, UncontrolledTooltip } from "reactstrap";
 import swal from "sweetalert";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
@@ -270,8 +270,8 @@ function TransferPopover({assignment, users, reponsibility, onClickTransfer}) {
 
   return (
     <>
-      <Button size="sm" id={'popbtn' + assignment._id + rId} onClick={() => setIsOpen(true)}><GitPullRequestIcon size="1rem" /></Button>
-      <Popover isOpen={isOpen} toggle={() => setIsOpen(false)} target={'popbtn' + assignment._id + rId} placement="left">
+      <Button size="sm" id={'popbtn' + assignment._id + rId}><GitPullRequestIcon size="1rem" /></Button>
+      <UncontrolledPopover target={'popbtn' + assignment._id + rId} trigger="legacy" placement="left">
         <PopoverHeader>
           Transfer to
         </PopoverHeader>
@@ -285,7 +285,7 @@ function TransferPopover({assignment, users, reponsibility, onClickTransfer}) {
             })}
           </ListGroup>
         </PopoverBody>
-      </Popover>
+      </UncontrolledPopover>
       <UncontrolledTooltip target={'popbtn' + assignment._id + rId} placement="top">Transfer report</UncontrolledTooltip>
     </>
   )

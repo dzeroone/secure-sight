@@ -35,9 +35,12 @@ class CustomerController {
 
     await customerConnectorConfigController.updateConnectorConfig({
       previousConnectors,
-      tCode: data.tCode,
-      connectorIds: data.connectors,
-      configData: data.apiConfig
+      // @ts-ignore
+      tCode: data.tCode || user.tCode,
+      // @ts-ignore
+      connectorIds: data.connectors || user.connectors,
+      // @ts-ignore
+      configData: data.apiConfig || user.apiConfig
     })
   }
 
