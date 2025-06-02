@@ -156,8 +156,8 @@ const Dashboard = () => {
           data: payload,
         });
         const responseData = res.data;
-        if (responseData && responseData.data.length > 0) {
-          const data = responseData.data[0]._source;
+        if (responseData && responseData.data) {
+          const data = responseData.data;
 
           setReportData(data);
           setReportState((s) => {

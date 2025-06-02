@@ -722,7 +722,7 @@ router.post("/data/search",
       let response = null
       switch (test) {
         case "filtering":
-          response = await axios.post(`${esUrl}/${req.body.index}/_search?size=10000`, {
+          response = await axios.post(`${esUrl}/${rType == 'monthly' ? 'monthly_reports' : 'weekly_reports'}/_doc/${req.body.index}`, {
             query: {
               bool: {
                 filter: {
@@ -735,10 +735,10 @@ router.post("/data/search",
           });
           break;
         default:
-          response = await axios.get(`${esUrl}/${req.body.index}/_search?size=10000`);
+          response = await axios.get(`${esUrl}/${rType == 'monthly' ? 'monthly_reports' : 'weekly_reports'}/_doc/${req.body.index}`);
           break;
       }
-      response = response.data.hits.hits
+      response = response.data._source
 
       dataToSend.data = response
       res.json(dataToSend);

@@ -16,6 +16,7 @@ import {
 
 import ModalLoading from "../../components/ModalLoading";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
+import { getErrorMessage } from "../../helpers/utils";
 
 const ConnectorListTwo = () => {
 	const [openLoader, setOpenLoader] = useState(false);
@@ -188,8 +189,10 @@ const ConnectorListTwo = () => {
 				null,
 				`${ApiEndPoints.Connector}/${selectedConnector._id}`
 			);
+			toast.success("Connector is queued to run now.")
 		} catch (e) {
-			console.log(e)
+			const msg = getErrorMessage(e)
+			toast.error(msg)
 		} finally {
 			setOpenLoader(false)
 		}
