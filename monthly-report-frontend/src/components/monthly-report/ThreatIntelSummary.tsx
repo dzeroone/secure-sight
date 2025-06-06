@@ -155,7 +155,7 @@ export const ThreatIntelSummary = () => {
                   <td>{m + 1}.</td>
                   <td>{l.advisory_name}</td>
                   <td>{l.about_advisory}</td>
-                  <td style={{ textAlign: "start", paddingLeft: 100 }}>
+                  <td style={{ textAlign: "start", paddingLeft: 100, wordBreak: 'break-all' }}>
                     <strong>
                       Incident No: {l.investigation_summary.incident_no}
                       <br />
