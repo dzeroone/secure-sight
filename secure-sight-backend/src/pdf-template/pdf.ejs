@@ -195,7 +195,7 @@
             A total number of <strong><%= data.detailed_summary.no_of_incidents %></strong> were observed during the month of <strong><%= data.detailed_summary.date %></strong>.
             </p>
         </div>
-        <% if(data.detailed_summary.risk_index_chart.datasets[0].data[0] != 0) { %>
+        <% if(data.detailed_summary.risk_index_chart.datasets.length > 0) { %>
         <div style="display: grid; grid-template-columns: repeat(6, 1fr);             align-items: center; justify-content: center;">
             <div style="grid-column: span 2">
             <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
