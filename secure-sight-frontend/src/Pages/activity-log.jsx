@@ -125,7 +125,7 @@ export default function ActivityLogPage() {
                 return (
                   <tr key={i}>
                     <td>{format(l.date * 1e-6, "PPpp")}</td>
-                    <td>{l.data.body}</td>
+                    <td>{l.data}</td>
                   </tr>
                 )
               })
