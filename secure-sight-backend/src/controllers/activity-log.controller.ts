@@ -25,7 +25,7 @@ class ActivityLogController {
       const result = data.data.result
       let returnData: any[] = [];
 
-      console.log('res', data, data.data, data.data.result[0].stream)
+      // console.log('res', data, data.data, data.data.result[0].stream)
 
       result.forEach((r: any) => {
         returnData.push(...r.values)
