@@ -31,6 +31,14 @@ const SidebarData = [
 	// 	],
 	// },
 	{
+		roles: [ROLES.ADMIN],
+		label: "Activity log",
+		icon: 'ri-file-list-3-line',
+		url: "/activity-log",
+		bgcolor: "bg-primary",
+		isMainMenu: true
+	},
+	{
 		roles: [ROLES.ADMIN, ROLES.LEVEL3],
 		label: "Users",
 		icon: "ri-group-line",

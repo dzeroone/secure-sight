@@ -15,7 +15,7 @@ export const pluralize = (count, noun, suffix = 's') =>
 export const getAssignmentStatusTitle = (status) => {
   switch (status) {
     case -1:
-      return 'REAUDIT';
+      return 'REASSIGN';
     case 0:
       return 'SUBMITTED';
     case 1:

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
-import { Button, Divider, Grid, IconButton, TextField } from "@mui/material";
+import { Button, Checkbox, Divider, FormControlLabel, FormGroup, Grid, IconButton, TextField } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import { MuiColorInput } from "mui-color-input";
 import {
@@ -9,6 +9,7 @@ import {
   updateDSAOChartColor,
   updateDSAOChartLabel,
   updateDSAOTableEntry,
+  updateDSAOVisibility,
 } from "@@/lib/features/monthly-report/monthlySlice";
 
 const ApexOneSummaryForm = () => {
@@ -60,6 +61,10 @@ const ApexOneSummaryForm = () => {
     dispatch(updateDSAOChart({ chart, index, value: numericValue }));
   };
 
+  const handleVisibilityChange = (value: boolean) => {
+    dispatch(updateDSAOVisibility(value));
+  };
+
   const handleUpdateChartColor = (
     chart: "detection_chart" | "attempts_blocked_chart",
     color: string
@@ -71,6 +76,19 @@ const ApexOneSummaryForm = () => {
     <Grid container spacing={3} p={3}>
       {/* Virus / Malware and Spyware / Grayware Chart */}
       <Grid container item xs={12} spacing={2}>
+        <Grid item xs={12}>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={data.visible}
+                  onChange={(e) => handleVisibilityChange(e.target.checked)}
+                />
+              }
+              label="Show/Hide"
+            />
+          </FormGroup>
+        </Grid>
         <Grid item xs={12}>
           <h3>Virus / Malware and Spyware / Grayware</h3>
           <Divider />

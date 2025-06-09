@@ -17,10 +17,12 @@ import assignmentReportRouter from './assignment-report'
 import pdfRouter from './pdf'
 import commonDataRouter from './common-data'
 import teamRouter from './team.route'
+import activityLogs from './activity-logs'
 
 
 
 router.use('/auth', auth)
+router.use('/activity-logs', activityLogs)
 router.use('/master', master)
 router.use('/tenant', tenant)
 router.use('/connector', connector)

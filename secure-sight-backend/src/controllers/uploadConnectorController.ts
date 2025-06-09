@@ -7,7 +7,7 @@ import { COLLECTIONS, MASTER_ADMIN_DB } from '../constant'
 class UploadConnectorController {
 
     async uploadConnector(req: any) {
-        const { name, currentChunkIndex, totalChunks, email, dbName, nameWithoutExtension, display_name, category } = req.query
+        const { name, connectorId, currentChunkIndex, totalChunks, email, dbName, nameWithoutExtension, display_name, category } = req.query
         const localDirPath = path.resolve(process.env.PWD || '', `../secure-sight-scheduler/server`)
         // const localDirPath = path.resolve(process.env.PWD, `../orion-scheduler/server`)
         const firstChunk = parseInt(currentChunkIndex) === 0
@@ -16,7 +16,7 @@ class UploadConnectorController {
         const buffer = Buffer.from(data, 'base64')
 
         // save file to the name of connector base path
-        const connectorBasePath = crypto.createHash('md5').update(email + display_name).digest('hex')
+        const connectorBasePath = connectorId
         const tmpFilename = connectorBasePath + path.extname(name)
         const filePath = `${localDirPath}/${tmpFilename}`
 

@@ -1031,6 +1031,7 @@
     </div>
 
     <!-- detection summary from apexone -->
+     <% if(data.detection_summary_apex_one.visible) { %>
     <div class="print-page" id="<%= data.detection_summary_apex_one.id %>">
         <div>
             <p style="font-size: 4rem; font-weight: 700; color: #090c9b;">
@@ -1105,6 +1106,7 @@
           <% } %>
         </div>                    
     </div>
+    <% } %>
       
     <!-- Email quarantine summary -->
     <% if(data.email_quarantine_summary_cas.visible) { %>
@@ -2363,7 +2365,7 @@
       });
     <% } %>
 
-    <% if(data.detection_summary_apex_one.attempts_blocked_chart.datasets.length > 0) { %>
+    <% if(data.detection_summary_apex_one.visible && data.detection_summary_apex_one.attempts_blocked_chart.datasets.length > 0) { %>
       const ctx13 = document.getElementById('horizontalBarCharts5').getContext('2d');
       const horizontalBarChart5 = new Chart(ctx13, {
           type: 'bar',

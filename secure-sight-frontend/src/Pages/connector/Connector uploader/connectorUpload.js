@@ -48,6 +48,7 @@ const ConnectorUploader = () => {
 		imageInfos: [],
 		files: [],
 		multiConnectorInfo: [],
+		dbData: [],
 		btnLoader: false,
 		currentFileIndex: null,
 		lastUploadedFileIndex: null,
@@ -149,7 +150,7 @@ const ConnectorUploader = () => {
 					info: { email: userData.email, dbName: userData.dbName },
 					data: [state.multiConnectorInfo[state.currentFileIndex]],
 				};
-				const response = ApiServices(
+				const response = await ApiServices(
 					"post",
 					payload,
 					ApiEndPoints.InsertMultiConnector
@@ -159,6 +160,7 @@ const ConnectorUploader = () => {
 						...prevState,
 						btnLoader: true,
 						selectedFileInfo: state.files[state.currentFileIndex],
+						dbData: response.data
 					}));
 					if (state.currentFileIndex !== null) {
 						setState((prevState) => ({ ...prevState, currentChunkIndex: 0 }));
@@ -248,6 +250,7 @@ const ConnectorUploader = () => {
 		params.set("display_name", selectedConnecter.display_name);
 		params.set("category", selectedConnecter.category);
 		params.set("nameWithoutExtension", selectedConnecter.name);
+		params.set("connectorId", state.dbData[state.currentFileIndex]._id);
 
 		const headers = { "Content-Type": "application/octet-stream" };
 
@@ -283,13 +286,6 @@ const ConnectorUploader = () => {
 			}));
 		}
 	};
-
-	const languageOptions = [
-		{ value: "nodejs", label: "Node js" },
-		{ value: "python", label: "Python" },
-		{ value: "rust", label: "Rust" },
-		{ value: "Java", label: "Java" },
-	];
 
 	const toggleDropdown = () => {
 		setDropdownOpen(!dropdownOpen);

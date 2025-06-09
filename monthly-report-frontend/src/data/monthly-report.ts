@@ -782,6 +782,7 @@ export const monthlyReportInitialValue = {
     },
     "detection_summary_apex_one": {
         "id": "detection_summary_from_apex_one",
+        visible: true,
         "detection_chart": {
             "type": "horizontal_bar",
             "key": [

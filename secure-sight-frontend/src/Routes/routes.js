@@ -47,6 +47,7 @@ import TransferAdminPage from "../Pages/users/transfer-admin";
 import DeletedUserIndexPage from "../Pages/users/deleted";
 import TransferReportsPage from "../Pages/users/transfer-reports";
 import WeeklyCommonDataPage from "../Pages/weekly-common-data";
+import ActivityLogPage from "../Pages/activity-log";
 
 export const history = createBrowserHistory({ window });
 
@@ -59,6 +60,10 @@ const authProtectedRoutes = [
   {
     roles: [ROLES.ADMIN],
     path: "/graphs/monthly-report", component: <MonthlyReportGraphPage />
+  },
+  {
+    roles: [ROLES.ADMIN],
+    path: "/activity-log", component: <ActivityLogPage />
   },
   {
     roles: [ROLES.ADMIN],

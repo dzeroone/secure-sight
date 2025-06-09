@@ -3,6 +3,7 @@ import { default as AuthController, default as authController } from '../control
 import { verifyAzureIdToken } from '../helper/token.helper';
 import { UserProps } from '../types/types';
 import { auth } from '../utils/auth-util';
+import logger from '../utils/logger';
 const router = express.Router();
 
 // router.post('/register', async (req: Request<UserProps>, res: Response) => {
@@ -50,8 +51,22 @@ router.post('/azure-ad', async (req, res) => {
       email: decoded.preferred_username,
       name: decoded.name
     })
+    
+    logger.info({
+      msg: `${decoded.preferred_username} has been signed in using azure ad`,
+      data: {
+        id: data.id,
+        email: data.email,
+        fullname: data.fullname,
+        role: data.role
+      },
+    })
+
     res.send(data)
   } catch (e: any) {
+    logger.error({
+      msg: e.message
+    })
     res.status(e.status || 400).send({ message: e.message })
   }
 })

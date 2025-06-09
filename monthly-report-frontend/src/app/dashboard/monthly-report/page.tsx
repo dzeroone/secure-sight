@@ -196,7 +196,7 @@ const MonthlyReportPage = () => {
           {report?.slo_summary && <SLOSummary />}
 
           {/* Apex One summary */}
-          {report?.detection_summary_apex_one && <ApexOneSummary />}
+          {report?.detection_summary_apex_one.visible && <ApexOneSummary />}
 
           {/* Email quarantine summary */}
           {report.email_quarantine_summary_cas.visible && (

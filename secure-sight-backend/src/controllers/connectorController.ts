@@ -44,19 +44,18 @@ class ConnectorController {
 			_date = new Date(),
 			data = params.data.map((p: any) => ({ ...info, ...p, created_at: _date, updated_at: _date })).map(({ tenantCode, ...p }: any) => p)
 		const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR)
+		const insertedInfo = []
 		for (let index in data) {
 			let obj = data[index]
 			// const query = { email: obj.email, name: obj.name, display_name: obj.display_name, category: obj.category }
 			const query = { email: obj.email, name: obj.name, display_name: obj.display_name }
-			const res = await dm.findOne(query).lean()
-			if (!res) {
-				const doc = new dm({ ...obj, type: "default" })
-				await doc.save()
-			} else {
-				await dm.findOneAndUpdate(query, { $set: obj })
-			}
+			const info = await dm.findOneAndUpdate(query, obj, {
+				new: true,
+				upsert: true
+			})
+			insertedInfo.push(info)
 		}
-		return { msg: "successfully created", error: false }
+		return { msg: "successfully created", data: insertedInfo, error: false }
 	}
 
 	async connectorList() {
@@ -107,18 +106,18 @@ class ConnectorController {
 			let response;
 			const { info } = params
 			const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR);
-			const connector = await dm.findOne({ _id: info.connectorId }).lean();
-			const connectorDirName = crypto.createHash('md5').update(connector?.email + connector?.display_name).digest('hex')
+			const ConnectorConfigModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CONNECTOR_CONFIG);
+
+			const connector: any = await dm.findOne({ _id: info.connectorId }).lean();
+			const connectorConfig: any = await ConnectorConfigModel.findOne({ connectorId: connector._id }).lean();
+
+			const connectorDirName = connectorConfig.connectorBasePath;
 			if (connector) {
 				await dm.deleteOne({ _id: info.connectorId });
 
 				await stopTestConnectorScheduler(info.connectorId)
 
-				const cc = dynamicModelWithDBConnection(
-					MASTER_ADMIN_DB,
-					COLLECTIONS.CONNECTOR_CONFIG,
-				)
-				await cc.deleteMany({ "connectorId": connector._id });
+				await ConnectorConfigModel.deleteMany({ "connectorId": connector._id });
 
 				const um = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERCONNECTOR);
 				await um.deleteMany({ "connectorId": connector._id });
@@ -300,7 +299,7 @@ class ConnectorController {
 				if (!connector) throw new Error('connector not found!')
 
 				// forcing connector basepath change
-				data.connectorBasePath = crypto.createHash('md5').update(connector.email + connector.display_name).digest('hex')
+				data.connectorBasePath = connectorId
 
 				const configData = {
 					connectorId: new mongoose.Types.ObjectId(connectorId),

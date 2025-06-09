@@ -9,6 +9,7 @@ const createEndpoint = (path) => `${APPConfig.API_URL}${path}`;
 const ApiEndPoints = {
   Assignments: createEndpoint("/assignments"),
   AssignmentReports: createEndpoint("/assignment-reports"),
+  ActivityLogs: createEndpoint('/activity-logs'),
   Login: createEndpoint("/auth/login"),
   AzureAD: createEndpoint("/auth/azure-ad"),
   Register: createEndpoint('/auth/register'),

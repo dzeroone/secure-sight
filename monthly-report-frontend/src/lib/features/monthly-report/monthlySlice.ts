@@ -1208,6 +1208,9 @@ export const monthlyReportSlice = createSlice({
         },
 
         // detection summary form apex one
+        updateDSAOVisibility: (state, action: PayloadAction<boolean>) => {
+            state.detection_summary_apex_one.visible = action.payload
+        },
         updateDSAOTableEntry: (
             state,
             action: PayloadAction<{ table: 'table1' | 'table2'; index: number; fieldPath: string; value: any }>
@@ -1665,6 +1668,7 @@ export const {
     updateSLOChartData,
     updateSLOChartColor,
     // detections summary from apex one
+    updateDSAOVisibility,
     updateDSAOTableEntry,
     addDSAOTableEntry,
     removeDSAOTableEntry,
