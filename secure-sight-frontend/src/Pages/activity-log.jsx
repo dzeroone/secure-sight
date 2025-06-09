@@ -33,7 +33,7 @@ export default function ActivityLogPage() {
       setLogs(data.map(l => {
         return {
           date: l[0],
-          data: JSON.parse(l[1])
+          data: l[1]
         }
       }))
     }catch(e) {
