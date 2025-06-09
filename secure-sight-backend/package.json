@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=development tsc && node -r dist/trace-implementation.js dist/server.js",
+    "start": "cross-env NODE_ENV=development tsc && node -r ./dist/trace-implementation.js ./dist/server.js",
     "dev": "cross-env NODE_ENV=dev nodemon --watch './**/*.ts' -L --exec 'ts-node' -r ./src/trace-implementation.ts ./src/server.ts",
     "prod": "cross-env NODE_ENV=prod node dist/server.js",
     "build": "tsc -p ."
