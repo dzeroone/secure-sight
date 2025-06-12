@@ -2319,7 +2319,7 @@
       });
     <% } %>
 
-    <% if(data.detection_summary_apex_one.detection_chart.datasets.length > 0) { %>
+    <% if(data.detection_summary_apex_one.visible && data.detection_summary_apex_one.detection_chart.datasets.length > 0) { %>
       const ctx12 = document.getElementById('horizontalBarCharts4').getContext('2d');
       const horizontalBarChart4 = new Chart(ctx12, {
           type: 'bar',
