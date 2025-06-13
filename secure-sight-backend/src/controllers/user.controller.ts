@@ -90,7 +90,9 @@ class UserController {
       }
     }).lean()
     for (let user of users) {
-      user.team = await teamController.getById(user.team)
+      if (user.team) {
+        user.team = await teamController.getById(user.team)
+      }
     }
     return users
   }

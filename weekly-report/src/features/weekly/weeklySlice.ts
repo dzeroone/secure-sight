@@ -270,7 +270,7 @@ interface DataState {
     data: GraphData[],
     chart_type: string
   },
-  cIncident: { // T10IS_by_Category
+  cIncidentSummary: { // closed indicent summary
     key: string[],
     data: GraphData[]
   },
@@ -305,12 +305,24 @@ const initialDataState: DataState = {
     Key: [],
     data: []
   },
-  cIncident: {
-    key: ['Closed as true positive', 'Closed as false positive', 'Closed as remeditate', 'Closed as duplicate'],
+  cIncidentSummary: {
+    key: ["P1", "P2", "P3", "P4"],
     data: [{
-      label: 'Closed incidents summary',
+      label: 'Closed as true positive',
       data: [0, 0, 0, 0],
-      backgroundColor: ['rgb(255, 130, 0)', 'rgb(255, 230, 0)', 'rgb(255, 230, 130)', 'rgb(255, 230, 230)']
+      backgroundColor: 'rgb(255, 130, 0)',
+    }, {
+      label: 'Closed as false positive',
+      data: [0, 0, 0, 0],
+      backgroundColor: 'rgb(255, 230, 0)'
+    }, {
+      label: 'Closed as remeditate',
+      data: [0, 0, 0, 0],
+      backgroundColor: 'rgb(255, 230, 130)'
+    }, {
+      label: 'Closed as duplicate',
+      data: [0, 0, 0, 0],
+      backgroundColor: 'rgb(255, 230, 230)'
     }]
   },
   sloCV: {

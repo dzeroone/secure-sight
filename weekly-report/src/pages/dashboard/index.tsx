@@ -307,6 +307,28 @@ const Dashboard = () => {
             })
           );
 
+          // CLOSED_INCIDENT_SUMMARY
+          if(data.CLOSED_INCIDENT_SUMMARY?.date?.CLOSED_INCIDENT_SUMMARY?.graph) {
+            const gData = data.CLOSED_INCIDENT_SUMMARY?.date?.CLOSED_INCIDENT_SUMMARY?.graph
+            
+            dispatch(updateDataProp({
+              attr: "cIncidentSummary.data[0].data",
+              value: gData.data["True Positive"]
+            }))
+            dispatch(updateDataProp({
+              attr: "cIncidentSummary.data[1].data",
+              value: gData.data["False Positive"]
+            }))
+            dispatch(updateDataProp({
+              attr: "cIncidentSummary.data[2].data",
+              value: gData.data["Remediated"]
+            }))
+            dispatch(updateDataProp({
+              attr: "cIncidentSummary.data[3].data",
+              value: gData.data["Duplicate"]
+            }))
+          }
+
           // threat intel summary
           dispatch(
             updateDataProp({
@@ -869,12 +891,10 @@ const Dashboard = () => {
 
             <div className="print-section">
               {/* First page */}
-              {reportData?.WEEKLY_REPORT && (
-                <FirstPage data={reportData.WEEKLY_REPORT} client={client} />
-              )}
+              <FirstPage data={reportData.WEEKLY_REPORT} client={client} />
 
               {/* Table of contents */}
-              {reportData?.TABLE_OF_CONTENTS && <TableOfContents />}
+              <TableOfContents />
 
               {/* Executive summary */}
               {reportData?.EXECUTIVE_SUMMARY && tableOfContents[0].visible && (

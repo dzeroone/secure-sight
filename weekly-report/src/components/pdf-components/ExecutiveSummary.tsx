@@ -128,8 +128,6 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data }) => {
     return Number(apexOne.visible) + Number(workloadSecurity.visible) + Number(deepSecurity.visible)
   }, [apexOne, workloadSecurity, deepSecurity])
 
-  console.log('vvv', visibleChartCount)
-
   return (
     <div className="executive-summary" id="executive-summary">
       <div className="">

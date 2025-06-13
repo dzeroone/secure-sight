@@ -89,8 +89,8 @@ const SloForm: React.FC = () => {
                 <div className="flex flex-col gap-4">
                     {sloData.map((sd, i) => {
                         return (
-                            <div className="flex items-center gap-2">
-                                <div className="flex flex-col flex-1 gap-2" key={i}>
+                            <div className="flex items-center gap-2" key={i}>
+                                <div className="flex flex-col flex-1 gap-2">
                                     <div>
                                         <Label htmlFor={`priority-${i}`}>Priority</Label>
                                         <TextInput
