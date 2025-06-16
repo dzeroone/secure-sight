@@ -7,6 +7,8 @@ import { ROLES } from '../../constant';
 import assignmentController from '../../controllers/assignment.controller';
 import customerConnectorConfigController from '../../controllers/customer-connector-config.controller';
 import { dlChangeValidationSchema } from '../../validators/dl-change-proposal.validator';
+import logger from '../../utils/logger';
+import connectorController from '../../controllers/connectorController';
 
 router.post('/',
   auth,
@@ -15,7 +17,9 @@ router.post('/',
     try {
       const vData = await customerCreateValidationSchema.validate(req.body)
       await customerController.addCustomer(vData)
-
+      logger.info({
+        msg: `${req.user?.email} has added a customer`
+      })
       res.send({
         success: true
       })
@@ -78,15 +82,24 @@ router.patch('/connectors',
       throw new Error("Incorrect parameter")
     }
     try {
+      const connectors = await connectorController.findById(req.body.connectors)
+      const customerNames = []
       for(let customerId of req.body.customers) {
         let customer = await customerController.getCustomerById(customerId)
+
         if(!customer) {
           throw new Error("Customer not found!")
         }
+        customerNames.push(customer?.name)
+
         await customerController.updateCustomer(customer, {
           connectors: req.body.connectors
         })
       }
+
+      logger.info({
+        msg: `${req.user?.email} has applied ${connectors?.map((c: any) => c.display_name.replaceAll(/_|-/g, " ")).join(', ')} connectors to ${customerNames.join(', ')} customers`
+      })
       
       res.sendStatus(200)
     } catch (e: any) {
@@ -128,6 +141,10 @@ router.patch('/:id',
       const vData = await customerCreateValidationSchema.validate(req.body)
       await customerController.updateCustomer(user, vData)
 
+      logger.info({
+        msg: `${req.user?.email} has updated ${user.name} customer`
+      })
+
       res.send({
         success: true
       })
@@ -153,7 +170,10 @@ router.delete('/:id',
       }
 
       await customerController.deleteCustomer(user)
-
+      
+      logger.info({
+        msg: `${req.user?.email} has deleted ${user.name} customer`
+      })
       res.send({
         success: true
       })
@@ -183,6 +203,9 @@ router.delete('/:id/permanent',
       }
       await customerController.deleteCustomerPermanently(user)
 
+      logger.info({
+        msg: `${req.user?.email} has permanently deleted ${user.name} customer`
+      })
       res.send({
         success: true
       })
@@ -211,6 +234,10 @@ router.post('/:id/restore',
         throw new Error('This customer is not prepared for deletion!')
       }
       await customerController.restore(user)
+
+      logger.info({
+        msg: `${req.user?.email} has restored ${user.name} customer`
+      })
 
       res.send({
         success: true
@@ -258,8 +285,15 @@ router.post('/:id/dl',
 
       if (existing) {
         await customerController.updateDLProposal(existing._id.toString(), data)
+
+        logger.info({
+          msg: `${req.user?.email} has updated dl proposal for ${customer.name} customer`
+        })
       } else {
         await customerController.addDLProposal(req.params.id, req.user!._id, data)
+        logger.info({
+          msg: `${req.user?.email} has added dl proposal for ${customer.name} customer`
+        })
       }
       res.sendStatus(200)
     } catch (e: any) {
@@ -283,6 +317,10 @@ router.post('/:id/dl/:proposalId/accept',
       if (!proposal) throw new Error('Proposal not found!')
 
       await customerController.accepDLChangeProposal(proposal)
+      
+      logger.info({
+        msg: `${req.user?.email} has accepted a dl change proposal for ${customer.name} customer`
+      })
       res.sendStatus(200)
     } catch (e: any) {
       res.status(400).send({

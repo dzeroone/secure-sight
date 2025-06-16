@@ -3,6 +3,7 @@ import path from 'path'
 import crypto from 'crypto'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
 import { COLLECTIONS, MASTER_ADMIN_DB } from '../constant'
+import logger from '../utils/logger'
 
 class UploadConnectorController {
 
@@ -75,6 +76,9 @@ class UploadConnectorController {
                     }
                 }
             }
+            logger.info({
+                msg: `${email} has uploaded ${display_name.replaceAll(/_|-/g, ' ')} connector`
+            })
             return { msg: 'processing', tmpFilename }
         } else {
             return { msg: 'Connector upload failed' }

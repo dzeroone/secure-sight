@@ -6,6 +6,8 @@ import { WeeklyReportEditValidationValues, WeeklyReportValidationValues } from "
 import { ReportType } from "./assignment.controller"
 import pdfController from "./pdf.controller"
 import path from "path"
+import { extractInfoFromIndex } from "../helper/reports.helper"
+import customerController from "./customer.controller"
 
 class AssignmentReportController {
   async getPaginated(query: any, user: Express.User, reportType: ReportType) {
@@ -219,6 +221,39 @@ class AssignmentReportController {
         }
       }
     ])
+  }
+
+  async getApproved(query?: any) {
+    query = query ?? {}
+    const offset = (Math.abs(Number(query.page) || 1) - 1) * 20
+    const count = await assignmentReportModel.countDocuments({
+      auditStatus: REPORT_AUDIT_STATUS.APPROVED
+    })
+
+    const data = await assignmentReportModel.find({
+      auditStatus: REPORT_AUDIT_STATUS.APPROVED
+    }).sort({
+      uAt: -1
+    }).skip(offset).limit(20).lean()
+
+    const reportData = []
+    for(let report of data) {
+      const { date, tCode, rType } = extractInfoFromIndex(report.index!)
+      const customer: any = await customerController.getCustomerByTenantCode(tCode)
+      reportData.push({
+        customer: {
+          name: customer?.name,
+          tCode: customer?.tCode
+        },
+        report_type: rType,
+        report_session: date,
+        report
+      })
+    }
+    return {
+      total: count,
+      items: reportData
+    }
   }
 
   async getById(id: string) {

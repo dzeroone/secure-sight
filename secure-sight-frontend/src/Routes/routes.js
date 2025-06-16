@@ -48,6 +48,7 @@ import DeletedUserIndexPage from "../Pages/users/deleted";
 import TransferReportsPage from "../Pages/users/transfer-reports";
 import WeeklyCommonDataPage from "../Pages/weekly-common-data";
 import ActivityLogPage from "../Pages/activity-log";
+import ArchivedReportsPage from "../Pages/reports/archived-reports";
 
 export const history = createBrowserHistory({ window });
 
@@ -138,6 +139,10 @@ const authProtectedRoutes = [
   },
 
   // Report
+  {
+    roles: [ROLES.LEVEL3],
+    path: "/reports/archived-reports", component: <ArchivedReportsPage />
+  },
   {
     roles: ['admin', 'l1', 'l2', 'l3'],
     path: "/reports/monthly-report", component: <MonthlyReport />

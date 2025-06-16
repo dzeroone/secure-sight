@@ -4,6 +4,7 @@ import { auth, hasRole } from "../utils/auth-util";
 import { ROLES } from "../constant";
 import { commonDataValidationSchema, weeklyCommonDataValidationSchema } from "../validators/common-data.validator";
 import { ReportType } from "../controllers/assignment.controller";
+import logger from "../utils/logger";
 
 const router = Router()
 
@@ -30,6 +31,9 @@ router.post('/:reportType(monthly|weekly)',
       const reportType = req.params.reportType as ReportType
       const data = reportType == 'monthly' ? await commonDataValidationSchema.validate(req.body) : await weeklyCommonDataValidationSchema.validate(req.body)
       await commonDataController.update(data, reportType, req.user!)
+      logger.info({
+        msg: `${req.user?.email} has updated ${reportType} common data`
+      })
       res.send({
         success: true
       })

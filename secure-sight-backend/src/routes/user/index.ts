@@ -5,6 +5,7 @@ import userController from '../../controllers/user.controller';
 import { ROLES } from '../../constant';
 import meRouter from './me'
 import assignmentController from '../../controllers/assignment.controller';
+import logger from '../../utils/logger';
 
 router.post('/',
   auth,
@@ -17,6 +18,9 @@ router.post('/',
         }
       }
       let data = await userController.addUser(req.body)
+      logger.info({
+        msg: `${req.user?.email} has added a user`
+      })
       res.send(data)
     } catch (e: any) {
       res.status(400).send({
@@ -89,7 +93,15 @@ router.post('/transfer-admin',
         throw new Error('Incorrect parameter')
       }
 
+      const userInfo = await userController.getUserById(req.body.userId)
+      if(!userInfo) {
+        throw new Error("User info not found")
+      }
+
       await userController.transferAdmin(req.user!._id, req.body.userId)
+      logger.info({
+        msg: `${req.user?.email} has transfered admin role to ${userInfo.email}`
+      })
       res.sendStatus(200)
     } catch (e: any) {
       res.status(e.status || 400).send({
@@ -105,6 +117,9 @@ router.patch('/team-assign',
   async (req, res) => {
     try {
       await userController.assignTeam(req.body)
+      logger.info({
+        msg: `${req.user?.email} has modified team assignment`
+      })
       res.sendStatus(200)
     } catch (e: any) {
       res.status(e.status || 400).send({
@@ -156,6 +171,9 @@ router.patch('/:id',
         }
       }
       await userController.updateUser(user!, req.body)
+      logger.info({
+        msg: `${req.user?.email} has modified ${user?.email} user's data`
+      })
       res.send({
         success: true
       })
@@ -184,6 +202,9 @@ router.delete('/:id',
         err.status = 404
       }
       await userController.deleteUser(user!)
+      logger.info({
+        msg: `${req.user?.email} has deleted ${user?.email} user's data`
+      })
       res.send({
         success: true
       })
@@ -239,6 +260,9 @@ router.post('/:id/restore',
         err.status = 404
       }
       await userController.restoreUser(user!)
+      logger.info({
+        msg: `${req.user?.email} has restored ${user?.email} user`
+      })
       res.send({
         success: true
       })

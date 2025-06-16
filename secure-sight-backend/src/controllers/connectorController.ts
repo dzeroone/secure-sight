@@ -6,6 +6,7 @@ import crypto from 'crypto'
 import path from 'path'
 import fs from 'fs'
 import mongoose from 'mongoose'
+import logger from '../utils/logger'
 // import { createUpdateClientDb, updateDbName } from '../utils/tenantUtil'
 
 interface ConnectorSchedulerTestDataType {
@@ -99,7 +100,7 @@ class ConnectorController {
 		})
 	}
 
-	async tenantDeleteConnector(params: any) {
+	async tenantDeleteConnector(params: any, user: Express.User) {
 		return new Promise(async (resolve, reject) => {
 			const localDirPath = path.resolve(process.env.PWD || '', `../secure-sight-scheduler/server`)
 
@@ -111,7 +112,7 @@ class ConnectorController {
 			const connector: any = await dm.findOne({ _id: info.connectorId }).lean();
 			const connectorConfig: any = await ConnectorConfigModel.findOne({ connectorId: connector._id }).lean();
 
-			const connectorDirName = connectorConfig.connectorBasePath;
+			const connectorDirName = connectorConfig?.connectorBasePath;
 			if (connector) {
 				await dm.deleteOne({ _id: info.connectorId });
 
@@ -129,6 +130,10 @@ class ConnectorController {
 					})
 					await fs.promises.unlink(connector.filePath)
 					await fs.promises.unlink(path.join(localDirPath, connectorDirName + '.log'))
+
+					logger.info({
+						msg: `${user.email} has deleted ${connector.display_name.replaceAll(/_|-/g, " ")} connector`
+					})
 				} catch (e) {
 					console.log(e)
 				}
@@ -534,6 +539,19 @@ class ConnectorController {
 				COLLECTIONS.CONNECTOR_CONFIG,
 			)
 		})
+	}
+
+	async findById(ids: string[]) {
+		const connectorModel = dynamicModelWithDBConnection(
+			MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR,
+		)
+
+		return connectorModel.findOne({
+			_id: {
+				$in: ids
+			}
+		}).lean()
 	}
 }
 

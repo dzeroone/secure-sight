@@ -1,12 +1,44 @@
 import { Router } from "express";
-import { auth } from "../utils/auth-util";
+import { auth, hasRole } from "../utils/auth-util";
 import assignmentReportController from "../controllers/assignment-report.controller";
 import { monthlyReportEditValidationSchema, monthlyReportValidationSchema } from "../validators/monthly-report.validator";
-import { REPORT_AUDIT_STATUS, REPORT_STATUS, ROLES } from "../constant";
+import { REPORT_AUDIT_STATUS, REPORT_DIR, REPORT_STATUS, ROLES } from "../constant";
 import assignmentController, { ReportType } from "../controllers/assignment.controller";
 import { weeklyReportEditValidationSchema, weeklyReportValidationSchema } from "../validators/weekly-report.validator";
+import path from "path";
+import { promises } from "fs";
+import logger from "../utils/logger";
+import userController from "../controllers/user.controller";
 
 const router = Router()
+
+router.get('/files/:fileName',
+  async (req, res) => {
+    try {
+      await promises.stat(path.resolve(REPORT_DIR, req.params.fileName))
+      res.sendFile(path.resolve(REPORT_DIR, req.params.fileName))
+    }catch(e: any) {
+      res.status(404).send({
+        message: "File not found!"
+      })
+    }
+  }
+)
+
+router.get('/approved',
+  auth,
+  hasRole(ROLES.LEVEL3),
+  async (req, res) => {
+    try {
+      const data = await assignmentReportController.getApproved(req.query)
+      res.json(data)
+    }catch(e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
 
 router.get('/:reportType(monthly|weekly)',
   auth,
@@ -34,13 +66,24 @@ router.post('/:reportType(monthly|weekly)',
         if (!assignment) throw new Error("Assignment information not found")
 
         const isLastReporter = await assignmentController.isLastReporter(doc.index!, req.user!._id)
-        if (!isLastReporter) throw new Error("You are not allowed to submit the report!")
+        if (!isLastReporter) {
+          throw new Error("You are not allowed to submit the report!")
+        }
 
         if (!req.body.submittedTo) {
           throw new Error("Report is submitted to none!")
         }
 
+        const submittedTo = await userController.getUserById(req.body.submittedTo)
+        if (!submittedTo) {
+          throw new Error("Report is submitted to none!")
+        }
+
         await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id, req.body.submittedTo)
+        
+        logger.info({
+          msg: `${req.user?.email} has submitted report_index:${assignment.index} to ${submittedTo?.email}`
+        })
       }
       res.send(doc)
     } catch (e: any) {
@@ -120,8 +163,17 @@ router.patch('/:reportType(monthly|weekly)/:id',
 
         await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id, req.body.submittedTo)
         await assignmentReportController.reportSubmitted(doc, data, reportType)
+
+        const submittedTo = await userController.getUserById(req.body.submittedTo || assignment.sTo)
+
+        logger.info({
+          msg: `${req.user?.email} has submitted report_index:${assignment.index} to ${submittedTo?.email}`
+        })
       }else{
         await assignmentReportController.update(doc, data, reportType)
+        logger.info({
+          msg: `${req.user?.email} has updated report_index:${doc.index} data`
+        })
       }
 
       res.send(doc)

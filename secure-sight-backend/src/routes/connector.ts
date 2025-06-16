@@ -3,6 +3,8 @@ const router = express.Router();
 import connectorController from '../controllers/connectorController'
 import { ConnectorProps } from '../types/types'
 import { upload } from '../helper/fileUpload.helper'
+import { auth, hasRole } from '../utils/auth-util';
+import { ROLES } from '../constant';
 
 router.post('/add-update-connector', async (req: Request<ConnectorProps>, res: Response) => {
     let data = await connectorController.createUpdateConnector(req.body)
@@ -34,10 +36,14 @@ router.post('/delete-connectorByMaster', async (req: Request, res: Response) => 
     res.send(data)
 })
 
-router.post('/delete-connectorByTenant', async (req: Request, res: Response) => {
-    let data = await connectorController.tenantDeleteConnector(req.body)
-    res.send(data)
-})
+router.post('/delete-connectorByTenant',
+    auth,
+    hasRole(ROLES.ADMIN),
+    async (req: Request, res: Response) => {
+        let data = await connectorController.tenantDeleteConnector(req.body, req.user!)
+        res.send(data)
+    }
+)
 
 router.post('/shareConnectorToUser', async (req: Request, res: Response) => {
     let data = await connectorController.asignConnector(req.body)

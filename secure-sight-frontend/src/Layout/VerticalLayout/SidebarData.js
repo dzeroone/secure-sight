@@ -131,6 +131,11 @@ const SidebarData = [
 		icon: "ri-table-2",
 		subItem: [
 			{
+				roles: [ROLES.LEVEL3],
+				sublabel: "Archived reports",
+				link: "/reports/archived-reports",
+			},
+			{
 				roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1],
 				sublabel: "Monthly report",
 				link: "/reports/monthly-report",

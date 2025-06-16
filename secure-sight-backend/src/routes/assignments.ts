@@ -5,6 +5,7 @@ import assignmentController, { ReportType } from "../controllers/assignment.cont
 import userController from "../controllers/user.controller";
 import { auth, hasRole } from "../utils/auth-util";
 import { reportAssignmentValidationSchema } from "../validators/report-assignment.validator";
+import logger from "../utils/logger";
 const router = Router();
 
 router.delete('/:id',
@@ -20,6 +21,9 @@ router.delete('/:id',
     }
 
     await assignmentController.delete(assignment)
+    logger.info({
+      msg: `${req.user?.email} has deleted the assignment:${assignment._id} of report_index:${assignment.index}`
+    })
     res.sendStatus(204)
   }
 )
@@ -127,12 +131,24 @@ router.post('/:id/transfer-tasks',
       }
       if(req.body.task == responsibilities.ASSIGNEE) {
         await assignmentController.updateAssignee(assignment, toUser._id.toString())
+        logger.info({
+          msg: `${req.user?.email} has changed the assignee for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser.email} to ${toUser.email}`
+        })
       }else if(req.body.task == responsibilities.REPORTER) {
         await assignmentController.updateReporter(assignment, toUser._id.toString())
+        logger.info({
+          msg: `${req.user?.email} has changed the reporter for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser.email} to ${toUser.email}`
+        })
       }else if(req.body.task == responsibilities.REVIEWER) {
         await assignmentController.updateReviewer(assignment, toUser._id.toString())
+        logger.info({
+          msg: `${req.user?.email} has changed the reviewer for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser.email} to ${toUser.email}`
+        })
       }else if(req.body.task == responsibilities.REPORT_CREATOR) {
         await assignmentController.updateReportCreator(assignment, toUser._id.toString())
+        logger.info({
+          msg: `${req.user?.email} has changed the report creator for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser.email} to ${toUser.email}`
+        })
       }else{
         throw new Error("Invalid task")
       }
@@ -159,6 +175,9 @@ router.post('/:id/archive',
       }
       const rootAssingment = await assignmentController.getRootAssignment(assignment)
       await assignmentController.reportApproved(rootAssingment!, assignment.reportId, req.user!)
+      logger.info({
+        msg: `${req.user?.email} has approved the report for assignment:${assignment._id} of report_index:${assignment.index}`
+      })
       res.sendStatus(200)
     } catch (e: any) {
       res.status(e.status || 400).send({
@@ -179,6 +198,9 @@ router.post('/:id/force-remove',
       }
       const rootAssingment = await assignmentController.getRootAssignment(assignment)
       await assignmentController.delete(rootAssingment!)
+      logger.info({
+        msg: `${req.user?.email} has deleted the assignment:${assignment._id} of report_index:${assignment.index}`
+      })
       res.sendStatus(200)
     } catch (e: any) {
       res.status(e.status || 400).send({
@@ -223,6 +245,9 @@ router.post('/:reportType(monthly|weekly)/assign',
         }
 
         const data = await assignmentController.assignReport(body, req.user!._id, reportType)
+        logger.info({
+          msg: `${req.user?.email} has assigned report_index:${body.index} to ${reporter.email}`
+        })
         res.send(data)
         return
       } else if (req.user?.role == ROLES.LEVEL3 || req.user?.role == ROLES.LEVEL2) {
@@ -236,6 +261,9 @@ router.post('/:reportType(monthly|weekly)/assign',
         }
 
         const data = await assignmentController.assignReport(body, req.user!._id, reportType)
+        logger.info({
+          msg: `${req.user?.email} has assigned report_index:${body.index} to ${reporter.email}`
+        })
         res.send(data)
         return
       }
@@ -299,6 +327,9 @@ router.post('/submissions/:id/reaudit',
           auditStatus: REPORT_AUDIT_STATUS.AUDIT
         })
       }
+      logger.info({
+        msg: `${req.user?.email} has reassigned report_index:${report.index}`
+      })
       res.sendStatus(201)
     } catch (e: any) {
       res.status(400).send({
@@ -331,14 +362,22 @@ router.post('/submissions/:id/approve',
         if (! uAssignment.sTo && !req.body.submittedTo) {
           throw new Error("Report is submitted to none.")
         }
+        const submittedTo = await userController.getUserById(req.body.submittedTo || uAssignment.sTo)
+
         await assignmentController.updateById(assignment._id.toString(), {
           status: REPORT_AUDIT_STATUS.PENDING,
           sCBy: req.user!._id
         })
         await assignmentController.reportSubmitted(uAssignment, report._id.toString(), req.user!._id, req.body.submittedTo)
+        logger.info({
+          msg: `${req.user?.email} has submitted report_index:${assignment.index} to ${submittedTo?.email}`
+        })
       } else {
         // most top level user approved the report, so approve all leaf reporter's reports
         await assignmentController.reportApproved(assignment, report._id.toString(), req.user!)
+        logger.info({
+          msg: `${req.user?.email} has approved report_index:${assignment.index}`
+        })
       }
       res.sendStatus(201)
     } catch (e: any) {

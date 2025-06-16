@@ -2,6 +2,7 @@ import express from "express";
 import { auth, hasRole } from "../utils/auth-util";
 import { ROLES } from "../constant";
 import teamController from "../controllers/team.controller";
+import logger from "../utils/logger";
 
 const router = express.Router();
 
@@ -11,6 +12,10 @@ router.post("/",
   async (req, res) => {
     try {
       const data = await teamController.add(req.body.name)
+      
+      logger.info({
+        msg: `${req.user?.email} has added a new team`
+      })
       res.sendStatus(200)
     } catch (e: any) {
       res.status(e.status || 400).send({
@@ -62,6 +67,11 @@ router.patch("/:id",
         throw new Error('Not found!')
       }
       await teamController.update(data, req.body.name)
+
+      logger.info({
+        msg: `${req.user?.email} has updated ${data.name} to ${req.body.name}`
+      })
+
       res.sendStatus(200)
     } catch (e: any) {
       res.status(e.status || 400).send({
@@ -81,6 +91,11 @@ router.delete("/:id",
         throw new Error('Not found!')
       }
       await teamController.delete(data)
+
+      logger.info({
+        msg: `${req.user?.email} has deleted ${data.name} team`
+      })
+
       res.sendStatus(200)
     } catch (e: any) {
       res.status(e.status || 400).send({
