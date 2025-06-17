@@ -58,13 +58,22 @@ import {
   updateClientState,
   updateDataProp,
   updateExecutiveSummary,
+  updateIncidentSummaryData,
   updateMatchSummaryData,
+  updatePendingIncidentSummaryData,
 } from "../../features/weekly/weeklySlice";
 import { withAuth } from "../../hocs/withAuth";
 import { useAuth } from "../../providers/AuthProvider";
 import store, { RootState } from "../../store/store";
 import { getErrorMessage } from "../../utils/helpers";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { subDays } from "date-fns";
 
 const Dashboard = () => {
   const router = useNavigate();
@@ -74,12 +83,12 @@ const Dashboard = () => {
 
   const [reportData, setReportData] = useState<any>(null);
   const [reportState, setReportState] = useState<{
-    auditStatus: number,
-    serverStatus: number,
-    status: number,
-    reporterId: string,
-    assignment: any,
-    canSubmitReport: boolean
+    auditStatus: number;
+    serverStatus: number;
+    status: number;
+    reporterId: string;
+    assignment: any;
+    canSubmitReport: boolean;
   }>({
     serverStatus: 0,
     status: 0,
@@ -177,20 +186,20 @@ const Dashboard = () => {
               value: responseData.customer.tCode.toUpperCase(),
             })
           );
+          // const start_date = responseData.date;
+          // const end_date = responseData.date;
+          const start_date = subDays(responseData.date, 7);
+          const end_date = subDays(responseData.date, 1);
           dispatch(
             updateClientState({
               field: "dateFrom",
-              value: moment(data.WEEKLY_REPORT?.start_date).format(
-                "Do MMMM YYYY"
-              ),
+              value: moment(start_date).format("Do MMMM YYYY"),
             })
           );
           dispatch(
             updateClientState({
               field: "dateTo",
-              value: moment(data.WEEKLY_REPORT?.end_date).format(
-                "Do MMMM YYYY"
-              ),
+              value: moment(end_date).format("Do MMMM YYYY"),
             })
           );
 
@@ -308,25 +317,37 @@ const Dashboard = () => {
           );
 
           // CLOSED_INCIDENT_SUMMARY
-          if(data.CLOSED_INCIDENT_SUMMARY?.date?.CLOSED_INCIDENT_SUMMARY?.graph) {
-            const gData = data.CLOSED_INCIDENT_SUMMARY?.date?.CLOSED_INCIDENT_SUMMARY?.graph
-            
-            dispatch(updateDataProp({
-              attr: "cIncidentSummary.data[0].data",
-              value: gData.data["True Positive"]
-            }))
-            dispatch(updateDataProp({
-              attr: "cIncidentSummary.data[1].data",
-              value: gData.data["False Positive"]
-            }))
-            dispatch(updateDataProp({
-              attr: "cIncidentSummary.data[2].data",
-              value: gData.data["Remediated"]
-            }))
-            dispatch(updateDataProp({
-              attr: "cIncidentSummary.data[3].data",
-              value: gData.data["Duplicate"]
-            }))
+          if (
+            data.CLOSED_INCIDENT_SUMMARY?.date?.CLOSED_INCIDENT_SUMMARY?.graph
+          ) {
+            const gData =
+              data.CLOSED_INCIDENT_SUMMARY?.date?.CLOSED_INCIDENT_SUMMARY
+                ?.graph;
+
+            dispatch(
+              updateDataProp({
+                attr: "cIncidentSummary.data[0].data",
+                value: gData.data["True Positive"],
+              })
+            );
+            dispatch(
+              updateDataProp({
+                attr: "cIncidentSummary.data[1].data",
+                value: gData.data["False Positive"],
+              })
+            );
+            dispatch(
+              updateDataProp({
+                attr: "cIncidentSummary.data[2].data",
+                value: gData.data["Remediated"],
+              })
+            );
+            dispatch(
+              updateDataProp({
+                attr: "cIncidentSummary.data[3].data",
+                value: gData.data["Duplicate"],
+              })
+            );
           }
 
           // threat intel summary
@@ -366,6 +387,33 @@ const Dashboard = () => {
                 },
               })
             );
+
+            const isPriority =
+              data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY
+                .Incidents_Summary_by_Priority;
+            dispatch(
+              updateIncidentSummaryData({
+                closed: isPriority.data[0].data,
+                closedWOAck: [0, 0, 0, 0],
+                pendingFromSOC: isPriority.data[1].data,
+                pendingFromCustomer: [0, 0, 0, 0],
+              })
+            );
+          }
+          if (
+            data?.PENDING_INCIDENTS_SUMMARY?.date?.PENDING_INCIDENTS_SUMMARY
+              ?.PieChart
+          ) {
+            const chart =
+              data?.PENDING_INCIDENTS_SUMMARY?.date?.PENDING_INCIDENTS_SUMMARY
+                ?.PieChart;
+            dispatch(
+              updatePendingIncidentSummaryData([
+                Number(chart.data[0]) || 0,
+                Number(chart.data[1]) || 0,
+                Number(chart.data[2]) || 0,
+              ])
+            );
           }
 
           if (data.SLO_SUMMARY?.date) {
@@ -399,8 +447,10 @@ const Dashboard = () => {
                     index: i,
                     label: k,
                     dataPoint:
-                      data.ENDPOINT_INVENTORY?.date.ENDPOINT_INVENTORY
-                        ?.Bar_graph?.data[i] || 0,
+                      Number(
+                        data.ENDPOINT_INVENTORY?.date.ENDPOINT_INVENTORY
+                          ?.Bar_graph?.data[i]
+                      ) || 0,
                   })
                 );
               }
@@ -515,13 +565,28 @@ const Dashboard = () => {
             });
           }
         }
-        if(responseData?.commonData) {
-          const chart = responseData.commonData.threat_intel_summary.ioc_chart ?? { ip: 0, url: 0, domain: 0, hash: 0, sender_email: 0}
-          dispatch(updateMatchSummaryData({
-            iocMatched: matchSummary.iocMatched,
-            iocSweeped: [chart.ip, chart.url, chart.domain, chart.hash, chart.sender_email],
-            labels: matchSummary.labels
-          }))
+        if (responseData?.commonData) {
+          const chart = responseData.commonData.threat_intel_summary
+            .ioc_chart ?? {
+            ip: 0,
+            url: 0,
+            domain: 0,
+            hash: 0,
+            sender_email: 0,
+          };
+          dispatch(
+            updateMatchSummaryData({
+              iocMatched: matchSummary.iocMatched,
+              iocSweeped: [
+                chart.ip,
+                chart.url,
+                chart.domain,
+                chart.hash,
+                chart.sender_email,
+              ],
+              labels: matchSummary.labels,
+            })
+          );
         }
       } else {
         dispatch({
@@ -635,7 +700,11 @@ const Dashboard = () => {
   };
 
   const onSaveReport = () => {
-    if (!reportState.assignment?.sTo && reportState.canSubmitReport && reportState.status == 1) {
+    if (
+      !reportState.assignment?.sTo &&
+      reportState.canSubmitReport &&
+      reportState.status == 1
+    ) {
       setSelectReporterShown(true);
     } else {
       saveReport();
@@ -654,10 +723,10 @@ const Dashboard = () => {
       },
       ...tableOfContents.slice(0, 7),
       {
-        id: 'closed-incidents',
-        title: "Closed Incidents summary"
+        id: "closed-incidents",
+        title: "Closed Incidents summary",
       },
-      ...tableOfContents.slice(7)
+      ...tableOfContents.slice(7),
     ];
   }, [tableOfContents]);
 

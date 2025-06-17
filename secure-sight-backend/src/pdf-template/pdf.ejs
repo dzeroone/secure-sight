@@ -369,7 +369,7 @@
               <td><%= j.advisory_name %></td>
               <td><%= j.ioc_type %></td>
               <td style="word-break: break-all;"><%= j.detail %></td>
-              <td><%= j.endpoint_name %></td>
+              <td style="word-break: break-all;"><%= j.endpoint_name %></td>
               </tr>
               <% }); %>
           </tbody>
@@ -391,7 +391,7 @@
               <td><%= m + 1 %>.</td>
               <td><%= l.advisory_name %></td>
               <td><%= l.about_advisory %></td>
-              <td style="text-align: start; word-break: break-all; padding-left: 100px;">
+              <td style="word-break: break-all;">
                   <strong>
                   Incident No: <%= l.investigation_summary.incident_no %><br />
                   Incident Over View: <%= l.investigation_summary.incident_overview %><br />

@@ -13,10 +13,7 @@ const KeyFeatureApex: React.FC<KeyFeatureApexProps> = () => {
   return (
     <div className="key-feature-apex" id="key-feature-apex">
       <div className="p-8">
-        <p className="title">
-          Key Feature Adoption Rate of Apex one as Service / Std Endpoint
-          Protection
-        </p>
+        <p className="title">Apex One key Feature Adoption Rate</p>
         {/* <p className="title">{data?.date.title}</p> */}
         <GroupedBarChartHorizontal
           data={{

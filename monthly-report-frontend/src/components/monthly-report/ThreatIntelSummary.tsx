@@ -117,8 +117,20 @@ export const ThreatIntelSummary = () => {
                     <td>{k + 1}.</td>
                     <td>{j.advisory_name}</td>
                     <td>{j.ioc_type}</td>
-                    <Typography component='td' variant="inherit" sx={{ wordBreak: 'break-all'}}>{j.detail}</Typography>
-                    <td>{j.endpoint_name}</td>
+                    <Typography
+                      component="td"
+                      variant="inherit"
+                      sx={{ wordBreak: "break-all" }}
+                    >
+                      {j.detail}
+                    </Typography>
+                    <td
+                      style={{
+                        wordBreak: "break-all",
+                      }}
+                    >
+                      {j.endpoint_name}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -155,7 +167,11 @@ export const ThreatIntelSummary = () => {
                   <td>{m + 1}.</td>
                   <td>{l.advisory_name}</td>
                   <td>{l.about_advisory}</td>
-                  <td style={{ textAlign: "start", paddingLeft: 100, wordBreak: 'break-all' }}>
+                  <td
+                    style={{
+                      wordBreak: "break-all",
+                    }}
+                  >
                     <strong>
                       Incident No: {l.investigation_summary.incident_no}
                       <br />
