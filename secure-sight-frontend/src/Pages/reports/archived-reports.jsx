@@ -6,6 +6,7 @@ import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import { Button, Table } from "reactstrap";
 import { PictureAsPdf } from "@mui/icons-material";
+import ReactPaginate from "react-paginate";
 
 export default function ArchivedReportsPage() {
   const [busy, setBusy] = useState(false)
@@ -72,6 +73,37 @@ export default function ArchivedReportsPage() {
               )
             })}
           </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={4}>
+                <ReactPaginate
+                  className="pagination mb-0"
+                  pageClassName="page-item"
+                  activeClassName="active"
+                  pageLinkClassName="page-link"
+                  activeLinkClassName=""
+                  previousClassName="page-item"
+                  nextClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextLinkClassName="page-link"
+                  breakLabel="..."
+                  nextLabel="next >"
+                  onPageChange={(data) => {
+                    setReportData(s => {
+                      return {
+                        ...s,
+                        page: data.selected + 1
+                      }
+                    });
+                  }}
+                  pageRangeDisplayed={5}
+                  pageCount={Math.ceil(reportData.total / 20)}
+                  previousLabel="< previous"
+                  renderOnZeroPageCount={null}
+                />
+              </td>
+            </tr>
+          </tfoot>
         </Table>
       </div>
     </div>
