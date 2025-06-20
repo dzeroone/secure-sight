@@ -5,7 +5,7 @@ import { toast } from "react-toastify"
 import ApiServices from "../Network_call/apiservices"
 import ApiEndPoints from "../Network_call/ApiEndPoints"
 import ModalLoading from "../components/ModalLoading"
-import { Button, FormGroup, Input, Label, Table } from "reactstrap"
+import { Button, FormGroup, Input, Label, Pagination, PaginationItem, PaginationLink, Table } from "reactstrap"
 import { format } from "date-fns"
 
 export default function ActivityLogPage() {
@@ -131,6 +131,20 @@ export default function ActivityLogPage() {
               })
             }
           </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={2}>
+                <Pagination listClassName="mb-0">
+                  <PaginationItem>
+                    <PaginationLink>Previous</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink>Next</PaginationLink>
+                  </PaginationItem>
+                </Pagination>
+              </td>
+            </tr>
+          </tfoot>
         </Table>
       </div>
       <ModalLoading
