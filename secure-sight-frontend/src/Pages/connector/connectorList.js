@@ -291,7 +291,7 @@ const ConnectorList = () => {
         <ModalHeader>Upload connector file</ModalHeader>
         <ModalBody>
           <div>
-            <Input type="file" accept=".py" onChange={(e) => {
+            <Input type="file" accept=".py,.env" onChange={(e) => {
               console.log(e.target.files)
               setConnectorFile(e.target.files)
             }} />
