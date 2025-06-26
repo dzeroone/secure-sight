@@ -1,11 +1,17 @@
 import { CloseOutlined } from "@mui/icons-material";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import {
+  Button,
   Card,
   CardBody,
   CardTitle,
   Col,
+  Input,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
   Row,
   Spinner,
   Table
@@ -18,6 +24,8 @@ import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
 import { allReplace, formatCapilize } from "../ulit/commonFunction";
+import { TrashIcon, UploadIcon } from "lucide-react";
+import { getErrorMessage } from "../../helpers/utils";
 
 const ConnectorList = () => {
   const [openLoader, setOpenLoader] = useState(false);
@@ -28,6 +36,12 @@ const ConnectorList = () => {
     dbName: "",
     user_id: "",
   });
+
+  const [uploadModalShown, setUploadModalShown] = useState(false)
+  const [connectorFile, setConnectorFile] = useState(null)
+
+  const refConnectorOnOperation = useRef(null)
+
   useEffect(() => {
     let userObject = localStorage.getItem("authUser");
     var userInfo = userObject ? JSON.parse(userObject) : "";
@@ -98,6 +112,32 @@ const ConnectorList = () => {
     setOpenLoader(false);
     connectorData(userData.dbName);
   };
+
+  const onClickUpload = (connectorId) => {
+    setUploadModalShown(true)
+    refConnectorOnOperation.current = connectorId
+  }
+
+  const uploadConnectorFile = async () => {
+    if (!connectorFile || !connectorFile.length) return
+    if (!refConnectorOnOperation.current) return
+    try {
+      setOpenLoader(true)
+      const formData = new FormData()
+      formData.append('file', connectorFile[0])
+      await ApiServices(
+        'patch',
+        formData,
+        `${ApiEndPoints.Connector}/${refConnectorOnOperation.current}/file`
+      )
+      toast.success('File updated')
+    } catch (e) {
+      const msg = getErrorMessage(e)
+      toast.error(msg)
+    } finally {
+      setOpenLoader(false)
+    }
+  }
 
   // const handleRowClick = (rowData) => {
   //   setSelectedRow(rowData);
@@ -220,15 +260,24 @@ const ConnectorList = () => {
                             >
                               <i className="mdi mdi-timer"></i>
                             </button> */}
-                            <button
-                              onClick={() => {
-                                DeleteAlert(item._id);
-                              }}
-                              type="button"
-                              className="btn  noti-icon  m-0 p-0"
-                            >
-                              <i className="mdi mdi-delete"></i>
-                            </button>
+                            <div className="d-flex gap-1">
+                              <Button
+                                onClick={() => {
+                                  onClickUpload(item._id);
+                                }}
+                                size="sm"
+                              >
+                                <UploadIcon size="1rem" />
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  DeleteAlert(item._id);
+                                }}
+                                size="sm"
+                              >
+                                <TrashIcon size="1rem" />
+                              </Button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -238,6 +287,20 @@ const ConnectorList = () => {
           </Card>
         </Col>
       </Row>
+      <Modal centered isOpen={uploadModalShown} toggle={() => setUploadModalShown(false)}>
+        <ModalHeader>Upload connector file</ModalHeader>
+        <ModalBody>
+          <div>
+            <Input type="file" accept=".py" onChange={(e) => {
+              console.log(e.target.files)
+              setConnectorFile(e.target.files)
+            }} />
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={uploadConnectorFile}>Upload</Button>
+        </ModalFooter>
+      </Modal>
       {/* </Container> */}
       {/* </div> */}
     </Fragment>

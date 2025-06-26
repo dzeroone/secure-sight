@@ -5,6 +5,7 @@ import { ConnectorProps } from '../types/types'
 import { upload } from '../helper/fileUpload.helper'
 import { auth, hasRole } from '../utils/auth-util';
 import { ROLES } from '../constant';
+import { UploadedFile } from 'express-fileupload';
 
 router.post('/add-update-connector', async (req: Request<ConnectorProps>, res: Response) => {
     let data = await connectorController.createUpdateConnector(req.body)
@@ -65,13 +66,40 @@ router.post('/add-connector-config', upload.single('file'), async (req: Request,
     res.send(data)
 })
 
-router.post('/:id', async (req, res) => {
-    try {
-        const response = await connectorController.invokeConnector(req.params.id)
-        res.json(response)
-    } catch (e) {
-        res.status(400).send(e)
+router.post('/:id',
+    auth,
+    hasRole(ROLES.ADMIN),
+    async (req, res) => {
+        try {
+            const response = await connectorController.invokeConnector(req.params.id)
+            res.json(response)
+        } catch (e) {
+            res.status(400).send(e)
+        }
     }
-})
+)
+
+router.patch('/:id/file',
+    auth,
+    hasRole(ROLES.ADMIN),
+    async (req, res) => {
+        try {
+            // const response = await connectorController.updateFile(req.params.id)
+            if (!req.files?.file) {
+                throw new Error('No file')
+            }
+
+            await connectorController.updateFile(req.params.id, req.files!.file as UploadedFile)
+            res.json({
+                success: true
+            })
+        } catch (e: any) {
+            res.status(400).send({
+                success: false,
+                message: e.message
+            })
+        }
+    }
+)
 
 export default router;

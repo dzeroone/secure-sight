@@ -1,12 +1,13 @@
 import { ConnectorProps } from '../types/types'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { ROLES, COLLECTIONS, MASTER_ADMIN_DB } from '../constant'
+import { ROLES, COLLECTIONS, MASTER_ADMIN_DB, DIRS } from '../constant'
 import { connectorTestScheduler, invokeConnector, stopTestConnectorScheduler } from '../helper/cron.helper'
 import crypto from 'crypto'
 import path from 'path'
-import fs from 'fs'
+import fs, { promises } from 'fs'
 import mongoose from 'mongoose'
 import logger from '../utils/logger'
+import { UploadedFile } from 'express-fileupload'
 // import { createUpdateClientDb, updateDbName } from '../utils/tenantUtil'
 
 interface ConnectorSchedulerTestDataType {
@@ -361,10 +362,6 @@ class ConnectorController {
 	}
 
 	async invokeConnector(connectorId: string) {
-		const connectorConfigModel = dynamicModelWithDBConnection(
-			MASTER_ADMIN_DB,
-			COLLECTIONS.CONNECTOR_CONFIG,
-		)
 		const connectorModel = dynamicModelWithDBConnection(
 			MASTER_ADMIN_DB,
 			COLLECTIONS.CONNECTOR,
@@ -380,6 +377,41 @@ class ConnectorController {
 
 		return invokeConnector(connectorId, config)
 
+	}
+
+	async updateFile(connectorId: string, file: UploadedFile) {
+		const connectorModel = dynamicModelWithDBConnection(
+			MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR,
+		)
+
+		const connectorData = await connectorModel.findOne({
+			_id: connectorId
+		}).lean()
+
+		if (!connectorData) throw new Error('Connector info not found')
+
+		const serverPath = DIRS.CONNECTOR_UPLOAD_DIR
+
+		const connectorConfigModel = dynamicModelWithDBConnection(
+			MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR_CONFIG,
+		)
+		const config_data = await connectorConfigModel
+			.findOne({ connectorId: connectorData._id })
+			.lean()
+
+		let { connectorBasePath }: any =
+			config_data
+
+		const lsInfo = await promises.stat(`${serverPath}/${connectorBasePath}`)
+		if (!lsInfo.isDirectory()) {
+			throw new Error('Connector dir is not available yet!')
+		}
+
+		let filePath = `${serverPath}/${connectorBasePath}/${file.name}`
+
+		return file.mv(filePath)
 	}
 
 	async connectorScheduleTest(params: any) {
@@ -547,7 +579,7 @@ class ConnectorController {
 			COLLECTIONS.CONNECTOR,
 		)
 
-		return connectorModel.findOne({
+		return connectorModel.find({
 			_id: {
 				$in: ids
 			}

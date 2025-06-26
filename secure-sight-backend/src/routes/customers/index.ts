@@ -78,16 +78,16 @@ router.patch('/connectors',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
   async (req: Request, res: Response) => {
-    if(!req.body.customers?.length || !req.body.connectors?.length) {
+    if (!req.body.customers?.length || !req.body.connectors?.length) {
       throw new Error("Incorrect parameter")
     }
     try {
       const connectors = await connectorController.findById(req.body.connectors)
       const customerNames = []
-      for(let customerId of req.body.customers) {
+      for (let customerId of req.body.customers) {
         let customer = await customerController.getCustomerById(customerId)
 
-        if(!customer) {
+        if (!customer) {
           throw new Error("Customer not found!")
         }
         customerNames.push(customer?.name)
@@ -100,9 +100,10 @@ router.patch('/connectors',
       logger.info({
         msg: `${req.user?.email} has applied ${connectors?.map((c: any) => c.display_name.replaceAll(/_|-/g, " ")).join(', ')} connectors to ${customerNames.join(', ')} customers`
       })
-      
+
       res.sendStatus(200)
     } catch (e: any) {
+      // console.error(e)
       res.status(400).send({
         success: false,
         message: e.message
@@ -170,7 +171,7 @@ router.delete('/:id',
       }
 
       await customerController.deleteCustomer(user)
-      
+
       logger.info({
         msg: `${req.user?.email} has deleted ${user.name} customer`
       })
@@ -317,7 +318,7 @@ router.post('/:id/dl/:proposalId/accept',
       if (!proposal) throw new Error('Proposal not found!')
 
       await customerController.accepDLChangeProposal(proposal)
-      
+
       logger.info({
         msg: `${req.user?.email} has accepted a dl change proposal for ${customer.name} customer`
       })

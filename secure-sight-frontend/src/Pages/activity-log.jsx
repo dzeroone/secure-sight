@@ -1,32 +1,35 @@
-import { useCallback, useEffect, useState } from "react"
-import BreadcrumbWithTitle from "../components/Common/BreadcrumbWithTitle"
-import { getErrorMessage } from "../helpers/utils"
-import { toast } from "react-toastify"
-import ApiServices from "../Network_call/apiservices"
-import ApiEndPoints from "../Network_call/ApiEndPoints"
-import ModalLoading from "../components/ModalLoading"
-import { Button, FormGroup, Input, Label, Pagination, PaginationItem, PaginationLink, Table } from "reactstrap"
 import { format } from "date-fns"
+import { DownloadIcon } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
+import { toast } from "react-toastify"
+import { Button, FormGroup, Input, Label, Pagination, PaginationItem, PaginationLink, Table } from "reactstrap"
+import ApiEndPoints from "../Network_call/ApiEndPoints"
+import ApiServices from "../Network_call/apiservices"
+import BreadcrumbWithTitle from "../components/Common/BreadcrumbWithTitle"
+import ModalLoading from "../components/ModalLoading"
+import { getErrorMessage } from "../helpers/utils"
+import { saveAs } from "file-saver"
 
 export default function ActivityLogPage() {
   const [logs, setLogs] = useState([])
   const [busy, setBusy] = useState(false)
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-  const [activeFilter, setActiveFilter] = useState({
-    startDate: '',
-    endDate: ''
-  })
+
+  const [pages, setPages] = useState([])
+
+  const [activePage, setActivePage] = useState(null)
 
   const loadLogs = useCallback(async () => {
     try {
-      if(!activeFilter.startDate || !activeFilter.endDate) return
+      if(activePage === null) return
+      if(activePage >= pages.length) return
       setBusy(true)
       const data = await ApiServices(
         "get",
         {
-          startDate: activeFilter.startDate,
-          endDate: activeFilter.endDate
+          startDate: pages[activePage].startDate,
+          endDate: pages[activePage].endDate
         },
         ApiEndPoints.ActivityLogs
       )
@@ -42,7 +45,39 @@ export default function ActivityLogPage() {
     }finally{
       setBusy(false)
     }
-  }, [activeFilter])
+  }, [pages, activePage])
+
+  const gotoPage = (pageIndex) => {
+    if(pageIndex === pages.length) {
+      setPages([
+        ...pages,
+        {
+          startDate: new Date(startDate).toISOString(),
+          endDate: logs[logs.length - 1].date // new Date(logs[logs.length - 1].date * 1e-6).toISOString()
+        }
+      ])
+    }
+    setActivePage(pageIndex)
+  }
+
+  const startDownloading = async () => {
+    const data = await ApiServices(
+      "get",
+      {
+        startDate: pages[0].startDate,
+        endDate: pages[0].endDate
+      },
+      `${ApiEndPoints.ActivityLogs}/download`,
+      null,
+      false,
+      {
+        responseType: 'arraybuffer'
+      }
+    )
+
+    const blob = new Blob([data], { type: 'application/vnd.ms-excel' }); // Create a Blob from the response data
+    saveAs(blob, 'activity-log.xlsx'); // Use file-saver to trigger the download
+  }
 
   useEffect(() => {
     loadLogs()
@@ -63,10 +98,12 @@ export default function ActivityLogPage() {
     setStartDate(sD)
     setEndDate(eD)
 
-    setActiveFilter({
+    setPages([{
       startDate: new Date(sD).toISOString(),
       endDate: new Date(eD).toISOString()
-    })
+    }])
+
+    setActivePage(0)
   }, [])
 
   return (
@@ -98,7 +135,6 @@ export default function ActivityLogPage() {
                 bsSize="sm"
                 value={endDate}
                 onChange={(e) => {
-                  console.log("SAA", e.target.value, typeof e.target.value, e.target.value instanceof Date)
                   setEndDate(e.target.value)
                 }}
               />
@@ -108,11 +144,20 @@ export default function ActivityLogPage() {
             <FormGroup>
               <Label size="sm">&nbsp;</Label>
               <div><Button size="sm" onClick={() => {
-                setActiveFilter({
+                setPages([{
                   startDate: startDate ? new Date(startDate).toISOString() : '',
                   endDate: endDate ? new Date(endDate).toISOString() : ''
-                })
+                }])
+                setActivePage(0)
               }}>Apply</Button></div>
+            </FormGroup>
+          </div>
+          <div>
+            <FormGroup>
+              <Label size="sm">&nbsp;</Label>
+              <div><Button size="sm" color="primary" disabled={busy} onClick={() => {
+                startDownloading()
+              }}><DownloadIcon size={'1rem'} /> Download</Button></div>
             </FormGroup>
           </div>
         </div>
@@ -135,11 +180,26 @@ export default function ActivityLogPage() {
             <tr>
               <td colSpan={2}>
                 <Pagination listClassName="mb-0">
-                  <PaginationItem>
-                    <PaginationLink>Previous</PaginationLink>
+                  <PaginationItem disabled={activePage === 0}>
+                    <PaginationLink previous onClick={() => {
+                      gotoPage(activePage - 1)
+                    }}>Previous</PaginationLink>
                   </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink>Next</PaginationLink>
+                  {
+                    pages.map((p, i) => {
+                      return (
+                        <PaginationItem disabled={activePage === i} active={activePage === i} key={i}>
+                          <PaginationLink onClick={() => {
+                            gotoPage(i)
+                          }}>{i + 1}</PaginationLink>
+                        </PaginationItem>
+                      )
+                    })
+                  }
+                  <PaginationItem disabled={logs.length < 100}>
+                    <PaginationLink next onClick={() => {
+                      gotoPage(activePage + 1)
+                    }}>Next</PaginationLink>
                   </PaginationItem>
                 </Pagination>
               </td>

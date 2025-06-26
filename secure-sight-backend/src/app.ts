@@ -4,6 +4,8 @@ import express, { Application, ErrorRequestHandler, NextFunction, Request, Respo
 import { graphqlHTTP } from 'express-graphql'
 import mongoose from 'mongoose'
 import passport from 'passport'
+import fileUpload from 'express-fileupload'
+import os from 'os'
 dotenv.config()
 
 import { mkdir } from 'fs/promises'
@@ -23,6 +25,12 @@ const build = async () => {
     app.use(express.urlencoded({ extended: true }))
     app.use(express.json({ limit: '50mb' }))
     app.use(express.raw({ type: 'application/octet-stream', limit: '100mb' }))
+
+    app.use(fileUpload({
+        limits: { fileSize: 50 * 1024 * 1024 },
+        useTempFiles: true,
+        tempFileDir: os.tmpdir()
+    }));
 
     // Passport Config
     app.use(passport.initialize())

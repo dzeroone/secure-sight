@@ -42,12 +42,12 @@ const ApiServices = async (
 	url = '',
 	headers = {},
 	formData = false,
-	redirectRoute = "",
-	isShowMessage = false
+	configExtras = {}
 ) => {
 	const config = {
 		method: method.toLowerCase(),
 		timeout: 1000 * 60 * 2,
+		...configExtras
 	}
 	if (url) {
 		config.url = url
