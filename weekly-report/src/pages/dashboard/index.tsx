@@ -351,25 +351,25 @@ const Dashboard = () => {
           }
 
           // threat intel summary
-          dispatch(
-            updateDataProp({
-              attr: "isSeverity",
-              value:
-                data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY
-                  .Incident_Summary_by_Severity?.data,
-            })
-          );
-          dispatch(
-            updateDataProp({
-              attr: "isStatus",
-              value: [
-                ...data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY
-                  .Incident_Summary_by_status?.data,
-                0,
-              ],
-            })
-          );
           if (data.THREAT_INTEL_SUMMARY?.date) {
+            dispatch(
+              updateDataProp({
+                attr: "isSeverity",
+                value:
+                  data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY
+                    .Incident_Summary_by_Severity?.data,
+              })
+            );
+            dispatch(
+              updateDataProp({
+                attr: "isStatus",
+                value: [
+                  ...data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY
+                    .Incident_Summary_by_status?.data,
+                  0,
+                ],
+              })
+            );
             dispatch(
               updateDataProp({
                 attr: "t10ISCat",

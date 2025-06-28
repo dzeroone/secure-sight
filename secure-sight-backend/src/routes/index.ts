@@ -18,11 +18,13 @@ import pdfRouter from './pdf'
 import commonDataRouter from './common-data'
 import teamRouter from './team.route'
 import activityLogs from './activity-logs'
+import countryRouter from './countries'
 
 
 
 router.use('/auth', auth)
 router.use('/activity-logs', activityLogs)
+router.use('/countries', countryRouter)
 router.use('/master', master)
 router.use('/tenant', tenant)
 router.use('/connector', connector)

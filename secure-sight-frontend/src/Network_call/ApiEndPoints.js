@@ -12,6 +12,7 @@ const ApiEndPoints = {
   ActivityLogs: createEndpoint('/activity-logs'),
   Login: createEndpoint("/auth/login"),
   AzureAD: createEndpoint("/auth/azure-ad"),
+  Countries: createEndpoint("/countries"),
   Register: createEndpoint('/auth/register'),
   Users: createEndpoint('/users'),
   CommonData: createEndpoint('/common-data'),

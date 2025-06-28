@@ -49,6 +49,7 @@ import TransferReportsPage from "../Pages/users/transfer-reports";
 import WeeklyCommonDataPage from "../Pages/weekly-common-data";
 import ActivityLogPage from "../Pages/activity-log";
 import ArchivedReportsPage from "../Pages/reports/archived-reports";
+import CountrySettingsPage from "../settings/countries";
 
 export const history = createBrowserHistory({ window });
 
@@ -58,6 +59,11 @@ const authProtectedRoutes = [
     path: "/dashboard", component: <Dashboard />
   },
   { path: "/logout", component: <Logout /> },
+  // settings
+  {
+    roles: [ROLES.ADMIN],
+    path: "/settings/countries", component: <CountrySettingsPage />
+  },
   {
     roles: [ROLES.ADMIN],
     path: "/graphs/monthly-report", component: <MonthlyReportGraphPage />

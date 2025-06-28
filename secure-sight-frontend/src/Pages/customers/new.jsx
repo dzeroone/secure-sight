@@ -14,6 +14,7 @@ export default function NewCustomerPage(props) {
       name: "",
       tCode: "",
       tType: "",
+      tCon: "",
       msDate: "",
       meDate: "",
       emails: {

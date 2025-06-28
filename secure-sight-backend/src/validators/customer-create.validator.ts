@@ -4,6 +4,7 @@ export const customerCreateValidationSchema = yup.object({
   name: yup.string().required("Please enter customer name"),
   tCode: yup.string().required("Please enter tenant code"),
   tType: yup.string().optional(),
+  tCon: yup.string().optional(),
   msDate: yup.date().required('Monitoring start date is required'),
   meDate: yup.date().required('Monitoring end date is required'),
   emails: yup.object({

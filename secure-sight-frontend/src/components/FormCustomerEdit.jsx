@@ -25,6 +25,8 @@ export default function FormCustomerEdit() {
       );
       response.msDate = new Date(response.msDate)
       response.meDate = new Date(response.meDate)
+      response.tType = response.tType || ''
+      response.tCon = response.tCon || ''
       setDefaultValues(response)
     }catch(e) {
       alert(e.message)

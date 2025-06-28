@@ -3,6 +3,9 @@ import { Button, Card, CardBody, Col, Container, Form, FormFeedback, Label, Row 
 import { CheckboxArrayField, CheckboxField, DateField, InputField } from "./form-fields"
 
 import yup from "../helpers/yup.extras"
+import { useCallback, useEffect, useState } from "react"
+import ApiServices from "../Network_call/apiservices"
+import ApiEndPoints from "../Network_call/ApiEndPoints"
 
 const validationSchema = yup.object({
   name: yup.string().required("Please enter customer name"),
@@ -54,6 +57,25 @@ export function FormCustomer({
   connectors
 }) {
 
+  const [countries, setCountries] = useState([])
+
+  const loadCountries = useCallback(async () => {
+    try {
+      const data = await ApiServices(
+        "get",
+        null,
+        ApiEndPoints.Countries
+      )
+      setCountries(data)
+    }catch(e) {
+
+    }
+  }, [])
+
+  useEffect(() => {
+    loadCountries()
+  }, [loadCountries])
+
   return (
     <Card>
       <CardBody>
@@ -67,19 +89,31 @@ export function FormCustomer({
             return <Form onSubmit={formik.handleSubmit}>
               <Container fluid>
                 <Row className="g-2">
-                  <Col sm={4}>
+                  <Col sm={3}>
                     <InputField
                       label='Name'
                       name='name'
                     />
                   </Col>
-                  <Col sm={4}>
+                  <Col sm={3}>
                     <InputField
                       label='Tenant code'
                       name='tCode'
                     />
                   </Col>
-                  <Col sm={4}>
+                  <Col sm={3}>
+                    <InputField
+                      type="select"
+                      label='Tenant country'
+                      name='tCon'
+                    >
+                      <option value="" disabled>None</option>
+                      {countries.map(c => {
+                        return <option value={c.title} key={c._id}>{c.title}</option>
+                      })}
+                    </InputField>
+                  </Col>
+                  <Col sm={3}>
                     <InputField
                       type="select"
                       label='Tenant type'

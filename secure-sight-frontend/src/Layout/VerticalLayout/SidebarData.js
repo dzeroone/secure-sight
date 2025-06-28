@@ -176,6 +176,18 @@ const SidebarData = [
 				link: "/connector-schedule"
 			},
 		],
+	},
+	{
+		roles: [ROLES.ADMIN],
+		label: "Settings",
+		icon: "ri-settings-line",
+		subItem: [
+			{
+				roles: [ROLES.ADMIN],
+				sublabel: "Countries",
+				link: "/settings/countries",
+			}
+		],
 	}
 ];
 export default SidebarData;
