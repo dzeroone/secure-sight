@@ -32,7 +32,7 @@ router.post('/:reportType(monthly|weekly)',
       const data = reportType == 'monthly' ? await commonDataValidationSchema.validate(req.body) : await weeklyCommonDataValidationSchema.validate(req.body)
       await commonDataController.update(data, reportType, req.user!)
       logger.info({
-        msg: `${req.user?.email} has updated ${reportType} common data`
+        msg: `${req.user?.fullname || req.user?.email} has updated ${reportType} common data`
       })
       res.send({
         success: true

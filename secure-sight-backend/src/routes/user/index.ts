@@ -19,7 +19,7 @@ router.post('/',
       }
       let data = await userController.addUser(req.body)
       logger.info({
-        msg: `${req.user?.email} has added a user`
+        msg: `${req.user?.fullname || req.user?.email} has added a user`
       })
       res.send(data)
     } catch (e: any) {
@@ -100,7 +100,7 @@ router.post('/transfer-admin',
 
       await userController.transferAdmin(req.user!._id, req.body.userId)
       logger.info({
-        msg: `${req.user?.email} has transfered admin role to ${userInfo.email}`
+        msg: `${req.user?.fullname || req.user?.email} has transfered admin role to ${userInfo.email}`
       })
       res.sendStatus(200)
     } catch (e: any) {
@@ -118,7 +118,7 @@ router.patch('/team-assign',
     try {
       await userController.assignTeam(req.body)
       logger.info({
-        msg: `${req.user?.email} has modified team assignment`
+        msg: `${req.user?.fullname || req.user?.email} has modified team assignment`
       })
       res.sendStatus(200)
     } catch (e: any) {
@@ -172,7 +172,7 @@ router.patch('/:id',
       }
       await userController.updateUser(user!, req.body)
       logger.info({
-        msg: `${req.user?.email} has modified ${user?.email} user's data`
+        msg: `${req.user?.fullname || req.user?.email} has modified ${user?.email} user's data`
       })
       res.send({
         success: true
@@ -203,7 +203,7 @@ router.delete('/:id',
       }
       await userController.deleteUser(user!)
       logger.info({
-        msg: `${req.user?.email} has deleted ${user?.email} user's data`
+        msg: `${req.user?.fullname || req.user?.email} has deleted ${user?.email} user's data`
       })
       res.send({
         success: true
@@ -261,7 +261,7 @@ router.post('/:id/restore',
       }
       await userController.restoreUser(user!)
       logger.info({
-        msg: `${req.user?.email} has restored ${user?.email} user`
+        msg: `${req.user?.fullname || req.user?.email} has restored ${user?.email} user`
       })
       res.send({
         success: true

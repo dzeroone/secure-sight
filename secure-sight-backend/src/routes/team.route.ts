@@ -14,7 +14,7 @@ router.post("/",
       const data = await teamController.add(req.body.name)
       
       logger.info({
-        msg: `${req.user?.email} has added a new team`
+        msg: `${req.user?.fullname || req.user?.email} has added a new team`
       })
       res.sendStatus(200)
     } catch (e: any) {
@@ -69,7 +69,7 @@ router.patch("/:id",
       await teamController.update(data, req.body.name)
 
       logger.info({
-        msg: `${req.user?.email} has updated ${data.name} to ${req.body.name}`
+        msg: `${req.user?.fullname || req.user?.email} has updated ${data.name} to ${req.body.name}`
       })
 
       res.sendStatus(200)
@@ -93,7 +93,7 @@ router.delete("/:id",
       await teamController.delete(data)
 
       logger.info({
-        msg: `${req.user?.email} has deleted ${data.name} team`
+        msg: `${req.user?.fullname || req.user?.email} has deleted ${data.name} team`
       })
 
       res.sendStatus(200)

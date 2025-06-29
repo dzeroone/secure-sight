@@ -38,8 +38,16 @@ class UploadConnectorController {
                     MASTER_ADMIN_DB,
                     COLLECTIONS.CONNECTOR,
                 )
+
+                const userModel = dynamicModelWithDBConnection(
+                    MASTER_ADMIN_DB,
+                    COLLECTIONS.USERS,
+                )
                 // const query = { email, name: nameWithoutExtension, display_name, category }
                 const query = { email, name: nameWithoutExtension, display_name }
+                const user = await userModel.findOne({
+                    email: email.toLowerCase()
+                })
                 const obj = await connectorModel.findOne(query)
                 if (obj) {
                     await connectorModel.findOneAndUpdate(query, { $set: { filePath, updated_at: new Date() } })
@@ -75,10 +83,11 @@ class UploadConnectorController {
                         await cConfig.save()
                     }
                 }
+                logger.info({
+                    msg: `${user?.fullname || email} has uploaded ${display_name.replaceAll(/_|-/g, ' ')} connector`
+                })
             }
-            logger.info({
-                msg: `${email} has uploaded ${display_name.replaceAll(/_|-/g, ' ')} connector`
-            })
+            
             return { msg: 'processing', tmpFilename }
         } else {
             return { msg: 'Connector upload failed' }

@@ -53,7 +53,7 @@ router.post('/azure-ad', async (req, res) => {
     })
     
     logger.info({
-      msg: `${decoded.preferred_username} has been signed in using azure ad`,
+      msg: `${data.fullname || data.email} has been signed in using azure ad`,
       data: {
         id: data.id,
         email: data.email,

@@ -18,7 +18,7 @@ router.post('/',
       const vData = await customerCreateValidationSchema.validate(req.body)
       await customerController.addCustomer(vData)
       logger.info({
-        msg: `${req.user?.email} has added a customer`
+        msg: `${req.user?.fullname || req.user?.email} has added a customer`
       })
       res.send({
         success: true
@@ -98,7 +98,7 @@ router.patch('/connectors',
       }
 
       logger.info({
-        msg: `${req.user?.email} has applied ${connectors?.map((c: any) => c.display_name.replaceAll(/_|-/g, " ")).join(', ')} connectors to ${customerNames.join(', ')} customers`
+        msg: `${req.user?.fullname || req.user?.email} has applied ${connectors?.map((c: any) => c.display_name.replaceAll(/_|-/g, " ")).join(', ')} connectors to ${customerNames.join(', ')} customers`
       })
 
       res.sendStatus(200)
@@ -143,7 +143,7 @@ router.patch('/:id',
       await customerController.updateCustomer(user, vData)
 
       logger.info({
-        msg: `${req.user?.email} has updated ${user.name} customer`
+        msg: `${req.user?.fullname || req.user?.email} has updated ${user.name} customer`
       })
 
       res.send({
@@ -173,7 +173,7 @@ router.delete('/:id',
       await customerController.deleteCustomer(user)
 
       logger.info({
-        msg: `${req.user?.email} has deleted ${user.name} customer`
+        msg: `${req.user?.fullname || req.user?.email} has deleted ${user.name} customer`
       })
       res.send({
         success: true
@@ -205,7 +205,7 @@ router.delete('/:id/permanent',
       await customerController.deleteCustomerPermanently(user)
 
       logger.info({
-        msg: `${req.user?.email} has permanently deleted ${user.name} customer`
+        msg: `${req.user?.fullname || req.user?.email} has permanently deleted ${user.name} customer`
       })
       res.send({
         success: true
@@ -237,7 +237,7 @@ router.post('/:id/restore',
       await customerController.restore(user)
 
       logger.info({
-        msg: `${req.user?.email} has restored ${user.name} customer`
+        msg: `${req.user?.fullname || req.user?.email} has restored ${user.name} customer`
       })
 
       res.send({
@@ -288,12 +288,12 @@ router.post('/:id/dl',
         await customerController.updateDLProposal(existing._id.toString(), data)
 
         logger.info({
-          msg: `${req.user?.email} has updated dl proposal for ${customer.name} customer`
+          msg: `${req.user?.fullname || req.user?.email} has updated dl proposal for ${customer.name} customer`
         })
       } else {
         await customerController.addDLProposal(req.params.id, req.user!._id, data)
         logger.info({
-          msg: `${req.user?.email} has added dl proposal for ${customer.name} customer`
+          msg: `${req.user?.fullname || req.user?.email} has added dl proposal for ${customer.name} customer`
         })
       }
       res.sendStatus(200)
@@ -320,7 +320,7 @@ router.post('/:id/dl/:proposalId/accept',
       await customerController.accepDLChangeProposal(proposal)
 
       logger.info({
-        msg: `${req.user?.email} has accepted a dl change proposal for ${customer.name} customer`
+        msg: `${req.user?.fullname || req.user?.email} has accepted a dl change proposal for ${customer.name} customer`
       })
       res.sendStatus(200)
     } catch (e: any) {

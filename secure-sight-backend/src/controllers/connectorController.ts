@@ -133,7 +133,7 @@ class ConnectorController {
 					await fs.promises.unlink(path.join(localDirPath, connectorDirName + '.log'))
 
 					logger.info({
-						msg: `${user.email} has deleted ${connector.display_name.replaceAll(/_|-/g, " ")} connector`
+						msg: `${user.fullname || user.email} has deleted ${connector.display_name.replaceAll(/_|-/g, " ")} connector`
 					})
 				} catch (e) {
 					console.log(e)
