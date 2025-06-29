@@ -701,7 +701,7 @@ const Dashboard = () => {
 
   const onSaveReport = () => {
     if (
-      !reportState.assignment?.sTo &&
+      // !reportState.assignment?.sTo &&
       reportState.canSubmitReport &&
       reportState.status == 1
     ) {
