@@ -60,15 +60,12 @@ const SidebarData = [
 				sublabel: "Transfer admin",
 				link: "/users/transfer-admin",
 			},
+			{
+				roles: [ROLES.ADMIN],
+				sublabel: "Teams",
+				link: "/teams",
+			},
 		],
-	},
-	{
-		roles: [ROLES.ADMIN],
-		label: "Teams",
-		icon: 'ri-group-2-line',
-		url: "/teams",
-		bgcolor: "bg-primary",
-		isMainMenu: true
 	},
 	{
 		roles: [ROLES.ADMIN, ROLES.LEVEL3],
@@ -87,6 +84,11 @@ const SidebarData = [
 				sublabel: "Deleted customers",
 				link: "/customers/deleted",
 			},
+			{
+				roles: [ROLES.ADMIN],
+				sublabel: "Countries",
+				link: "/settings/countries",
+			}
 		],
 	},
 	{
@@ -175,18 +177,6 @@ const SidebarData = [
 				sublabel: "Schedule",
 				link: "/connector-schedule"
 			},
-		],
-	},
-	{
-		roles: [ROLES.ADMIN],
-		label: "Settings",
-		icon: "ri-settings-line",
-		subItem: [
-			{
-				roles: [ROLES.ADMIN],
-				sublabel: "Countries",
-				link: "/settings/countries",
-			}
 		],
 	}
 ];
