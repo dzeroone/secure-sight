@@ -132,22 +132,22 @@ router.post('/:id/transfer-tasks',
       if(req.body.task == responsibilities.ASSIGNEE) {
         await assignmentController.updateAssignee(assignment, toUser._id.toString())
         logger.info({
-          msg: `${req.user?.fullname || req.user?.email} has changed the assignee for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser.email} to ${toUser.email}`
+          msg: `${req.user?.fullname || req.user?.email} has changed the assignee for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser?.fullname || fromUser?.email} to ${toUser?.fullname || toUser?.email}`
         })
       }else if(req.body.task == responsibilities.REPORTER) {
         await assignmentController.updateReporter(assignment, toUser._id.toString())
         logger.info({
-          msg: `${req.user?.fullname || req.user?.email} has changed the reporter for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser.email} to ${toUser.email}`
+          msg: `${req.user?.fullname || req.user?.email} has changed the reporter for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser?.fullname || fromUser?.email} to ${toUser?.fullname || toUser?.email}`
         })
       }else if(req.body.task == responsibilities.REVIEWER) {
         await assignmentController.updateReviewer(assignment, toUser._id.toString())
         logger.info({
-          msg: `${req.user?.fullname || req.user?.email} has changed the reviewer for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser.email} to ${toUser.email}`
+          msg: `${req.user?.fullname || req.user?.email} has changed the reviewer for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser?.fullname || fromUser?.email} to ${toUser?.fullname || toUser?.email}`
         })
       }else if(req.body.task == responsibilities.REPORT_CREATOR) {
         await assignmentController.updateReportCreator(assignment, toUser._id.toString())
         logger.info({
-          msg: `${req.user?.fullname || req.user?.email} has changed the report creator for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser.email} to ${toUser.email}`
+          msg: `${req.user?.fullname || req.user?.email} has changed the report creator for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser?.fullname || fromUser?.email} to ${toUser?.fullname || toUser?.email}`
         })
       }else{
         throw new Error("Invalid task")
@@ -246,7 +246,7 @@ router.post('/:reportType(monthly|weekly)/assign',
 
         const data = await assignmentController.assignReport(body, req.user!._id, reportType)
         logger.info({
-          msg: `${req.user?.fullname || req.user?.email} has assigned report_index:${body.index} to ${reporter.email}`
+          msg: `${req.user?.fullname || req.user?.email} has assigned report_index:${body.index} to ${reporter.fullname || reporter.email}`
         })
         res.send(data)
         return
@@ -262,7 +262,7 @@ router.post('/:reportType(monthly|weekly)/assign',
 
         const data = await assignmentController.assignReport(body, req.user!._id, reportType)
         logger.info({
-          msg: `${req.user?.fullname || req.user?.email} has assigned report_index:${body.index} to ${reporter.email}`
+          msg: `${req.user?.fullname || req.user?.email} has assigned report_index:${body.index} to ${reporter.fullname || reporter.email}`
         })
         res.send(data)
         return
@@ -370,7 +370,7 @@ router.post('/submissions/:id/approve',
         })
         await assignmentController.reportSubmitted(uAssignment, report._id.toString(), req.user!._id, req.body.submittedTo)
         logger.info({
-          msg: `${req.user?.fullname || req.user?.email} has submitted report_index:${assignment.index} to ${submittedTo?.email}`
+          msg: `${req.user?.fullname || req.user?.email} has submitted report_index:${assignment.index} to ${submittedTo?.fullname || submittedTo?.email}`
         })
       } else {
         // most top level user approved the report, so approve all leaf reporter's reports

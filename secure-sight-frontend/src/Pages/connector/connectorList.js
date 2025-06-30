@@ -7,6 +7,8 @@ import {
   CardBody,
   CardTitle,
   Col,
+  FormGroup,
+  FormText,
   Input,
   Modal,
   ModalBody,
@@ -290,12 +292,15 @@ const ConnectorList = () => {
       <Modal centered isOpen={uploadModalShown} toggle={() => setUploadModalShown(false)}>
         <ModalHeader>Upload connector file</ModalHeader>
         <ModalBody>
-          <div>
+          <FormGroup>
             <Input type="file" accept=".py,.env" onChange={(e) => {
               console.log(e.target.files)
               setConnectorFile(e.target.files)
             }} />
-          </div>
+            <FormText>
+              Upload Py file and Env file of Connector
+            </FormText>
+          </FormGroup>
         </ModalBody>
         <ModalFooter>
           <Button onClick={uploadConnectorFile}>Upload</Button>

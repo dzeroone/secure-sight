@@ -82,7 +82,7 @@ router.post('/:reportType(monthly|weekly)',
         await assignmentController.reportSubmitted(assignment, doc._id.toString(), req.user!._id, req.body.submittedTo)
         
         logger.info({
-          msg: `${req.user?.fullname || req.user?.email} has submitted report_index:${assignment.index} to ${submittedTo?.email}`
+          msg: `${req.user?.fullname || req.user?.email} has submitted report_index:${assignment.index} to ${submittedTo?.fullname || submittedTo?.email}`
         })
       }
       res.send(doc)
@@ -167,7 +167,7 @@ router.patch('/:reportType(monthly|weekly)/:id',
         const submittedTo = await userController.getUserById(req.body.submittedTo || assignment.sTo)
 
         logger.info({
-          msg: `${req.user?.fullname || req.user?.email} has submitted report_index:${assignment.index} to ${submittedTo?.email}`
+          msg: `${req.user?.fullname || req.user?.email} has submitted report_index:${assignment.index} to ${submittedTo?.fullname || submittedTo?.email}`
         })
       }else{
         await assignmentReportController.update(doc, data, reportType)
