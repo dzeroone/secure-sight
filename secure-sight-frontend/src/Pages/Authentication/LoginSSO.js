@@ -91,7 +91,7 @@ const LoginSSO = (props) => {
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0. 6)",
                 }}
               >
-                Custom Reports for Eventus Security
+                Custom Reports for Trend Micro
               </h1>
               <p
                 style={{
@@ -102,14 +102,14 @@ const LoginSSO = (props) => {
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
                 }}
               >
-                The Eventus Security SOC Automated Reporting Tool is an advanced solution designed to automate the generation, encryption, and distribution of security reports. It seamlessly integrates with SOAR (Security Orchestration, Automation, and Response) platforms and Trend Micro Vision One to pull critical security data, including alerts, incidents, and threat intelligence. The tool then aggregates, normalizes, and analyzes this data to generate comprehensive weekly and monthly reports that provide valuable insights into the security landscape.
+                The Trend Micro SOC Automated Reporting Tool is an advanced solution designed to automate the generation, encryption, and distribution of security reports. It seamlessly integrates with SOAR (Security Orchestration, Automation, and Response) platforms and Trend Micro Vision One to pull critical security data, including alerts, incidents, and threat intelligence. The tool then aggregates, normalizes, and analyzes this data to generate comprehensive weekly and monthly reports that provide valuable insights into the security landscape.
               </p>
               <p style={{
                 fontSize: "1.1rem",
                 textAlign: "justify",
                 marginBottom: "1.2rem",
               }}>
-                The Eventus Security SOC Automated Reporting Tool boosts security, compliance, and operational efficiency by automating reporting and incorporating strong encryption features. It helps SOC teams reduce manual work, allowing them to concentrate on more valuable tasks, making it an essential tool for handling large amounts of sensitive data.
+                The Trend Micro SOC Automated Reporting Tool boosts security, compliance, and operational efficiency by automating reporting and incorporating strong encryption features. It helps SOC teams reduce manual work, allowing them to concentrate on more valuable tasks, making it an essential tool for handling large amounts of sensitive data.
               </p>
               {/* <div className="text-center">
                 <img
