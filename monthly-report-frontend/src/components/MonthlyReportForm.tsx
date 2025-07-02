@@ -436,7 +436,7 @@ const MonthlyReportForm = () => {
               loading={pageState.processing}
               onClick={onSaveMonthlyReport}
             >
-              {pageState.status == 0 ? "Save" : "Submit"}
+              {pageState.canSubmitReport && pageState.status == 1 ? "Submit" : "Save"}
             </LoadingButton>
           </Stack>
         </Grid>

@@ -800,7 +800,7 @@ const Dashboard = () => {
             onClick={onSaveReport}
           >
             <MdSave className="mr-2" />{" "}
-            {reportState.status === 0 ? "Save" : "Submit"} report
+            {reportState.canSubmitReport && reportState.status === 1 ? "Submit" : "Save"} report
           </button>
         ) : null}
         {reportData && (

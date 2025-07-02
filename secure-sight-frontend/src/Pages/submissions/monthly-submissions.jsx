@@ -3,9 +3,9 @@ import ApiServices from "../../Network_call/apiservices"
 import ApiEndPoints from "../../Network_call/ApiEndPoints"
 import { getAssignmentStatusTitle, getErrorMessage, getRoleTitle } from "../../helpers/utils"
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle"
-import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader, Table } from "reactstrap"
+import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader, Table, UncontrolledTooltip } from "reactstrap"
 import { formatMonthlyReportSession } from "../../helpers/form_helper"
-import { EyeIcon, MessageSquareIcon } from "lucide-react"
+import { ArchiveIcon, EyeIcon, MessageSquareIcon } from "lucide-react"
 import swal from "sweetalert"
 import { REPORT_AUDIT_STATUS, ROLES } from "../../data/app"
 import { useProfile } from "../../Hooks/UserHooks"
@@ -78,7 +78,7 @@ export default function MonthlySubmissionsPage() {
           `${ApiEndPoints.Assignments}/submissions/${assignment.reportId}/reaudit`
         )
         toast.success("Successfully re-assigned.")
-        if(userProfile.role === ROLES.LEVEL2) {
+        if([ROLES.LEVEL3, ROLES.LEVEL2].includes(userProfile.role)) {
           gotoMessagingScreen(assignment)
           return
         }
@@ -139,6 +139,36 @@ export default function MonthlySubmissionsPage() {
       setBusy(false)
     }
 
+  }
+
+  const onClickArchive = async (assignment) => {
+    try {
+      const confirmed = await swal({
+        title: "Are you sure?",
+        text: "You are going to archive this report.",
+        icon: "warning",
+        buttons: {
+          cancel: true,
+          confirm: true
+        }
+      })
+
+      if(confirmed) {
+        setBusy(true)
+        const res = await ApiServices(
+          "post",
+          null,
+          `${ApiEndPoints.Assignments}/${assignment._id}/archive`
+        )
+        toast.success("Report archived.")
+        loadSubmissions()
+      }
+    }catch(e) {
+      const msg = getErrorMessage(e)
+      toast.error(msg)
+    }finally{
+      setBusy(false)
+    }
   }
 
   const getSubmitterInfo = (assignment) => {
@@ -208,6 +238,16 @@ export default function MonthlySubmissionsPage() {
                         </Button>
                       </>
                     ): null}
+                    {userProfile.role == ROLES.LEVEL3 ? (
+                      <>
+                        <Button id={`adi-${assignment._id}`} size="sm" color="info" onClick={() => onClickArchive(assignment)} disabled={!assignment.reportId}>
+                          <ArchiveIcon size='1rem' />
+                        </Button>
+                        <UncontrolledTooltip target={`adi-${assignment._id}`} placement="top">
+                          Archive
+                        </UncontrolledTooltip>
+                      </>
+                    ) : null}
                   </div>
                 </td>
               </tr>
