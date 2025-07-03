@@ -41,9 +41,12 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import Link from "next/link";
 import axiosApi from "@@/config/axios";
 import {
+  getErrorMessage,
   getReportAuditStatusTitle,
   getReportStatusTitle,
 } from "@@/helper/helper";
+import { useAuth } from "@@/providers/AuthProvider";
+import { ROLES } from "@@/constants";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -140,6 +143,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 export default function Page() {
   const confirm = useConfirm();
 
+  const {currentUser} = useAuth()
   const [report, setReport] = useState<{ count: number; data: any[] }>({
     count: 0,
     data: [],
@@ -170,25 +174,25 @@ export default function Page() {
     }
   }, [page, invokeSearch]);
 
-  const handleReportDeletion = async (report: any) => {
+  const handleReportArchive = async (report: any) => {
     try {
       setProcessing(true);
       const { confirmed } = await confirm({
-        title: "Saved report is going to be deleted",
-        description: "Are you sure?",
+        title: "Are you sure?",
+        description: "You are going to archive this report.",
       });
 
       if (confirmed) {
         try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE}/elastic/monthly-report-form/${report._id}`,
+          const res = await axiosApi.patch(
+            `/assignment-reports/monthly/${report._id}/archive`,
             {
-              method: "DELETE",
+              responseType: "json"
             }
           );
 
-          if (res.ok) {
-            enqueueSnackbar("Report has been deleted", {
+          if (res) {
+            enqueueSnackbar("Report has been archived", {
               variant: "success",
             });
             setTimeout(() => {
@@ -196,7 +200,10 @@ export default function Page() {
             }, 1000);
           }
         } catch (e) {
-          console.log(e);
+          const msg = getErrorMessage(e)
+          enqueueSnackbar(msg, {
+            variant: "error",
+          });
         }
       }
     } catch (e: any) {
@@ -291,12 +298,14 @@ export default function Page() {
                       >
                         <Edit />
                       </IconButton>
-                      <IconButton
-                        edge="end"
-                        // onClick={() => handleReportDeletion(report)}
-                      >
-                        <Archive />
-                      </IconButton>
+                      {currentUser?.role == ROLES.LEVEL3 ? (
+                        <IconButton
+                          edge="end"
+                          onClick={() => handleReportArchive(report)}
+                        >
+                          <Archive />
+                        </IconButton>
+                      ) : null}
                     </Stack>
                   </TableCell>
                 </TableRow>

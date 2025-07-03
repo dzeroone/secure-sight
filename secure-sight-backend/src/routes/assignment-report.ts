@@ -185,4 +185,26 @@ router.patch('/:reportType(monthly|weekly)/:id',
   }
 )
 
+router.patch('/:reportType(monthly|weekly)/:id/archive',
+  auth,
+  hasRole(ROLES.LEVEL3),
+  async (req, res) => {
+    try {
+      await assignmentReportController.reportApproved(
+        req.params.id,
+        req.params.reportType as ReportType,
+        req.user!
+      )
+      res.send({
+        success: true
+      })
+    }catch(e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+
 export default router

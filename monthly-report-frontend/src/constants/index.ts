@@ -10,6 +10,14 @@ export const REPORT_AUDIT_STATUS = {
   APPROVED: 2,
 }
 
+export const ROLES = {
+  ADMIN: 'admin',
+  LEVEL3: 'l3',
+  LEVEL2: 'l2',
+  LEVEL1: 'l1',
+}
+
+
 export const REPORT_STATUS_LABEL: any = {
   "0": "DRAFT",
   "1": "SUBMITTED",

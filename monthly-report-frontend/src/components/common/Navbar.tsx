@@ -168,14 +168,14 @@ const Navbar = ({
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItemButton>
-          <Link href={`${MONTHLY_REPORT}/saved`}>
+          {/* <Link href={`${MONTHLY_REPORT}/saved`}>
             <ListItemButton>
               <ListItemIcon>
                 <LibraryBooks />
               </ListItemIcon>
               <ListItemText primary="Saved Monthly Report" />
             </ListItemButton>
-          </Link>
+          </Link> */}
         </List>
       </Drawer>
       <Box

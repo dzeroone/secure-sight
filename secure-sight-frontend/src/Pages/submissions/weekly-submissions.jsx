@@ -98,36 +98,6 @@ export default function WeeklySubmissionsPage() {
 
   }
 
-  const onClickArchive = async (assignment) => {
-    try {
-      const confirmed = await swal({
-        title: "Are you sure?",
-        text: "You are going to archive this report.",
-        icon: "warning",
-        buttons: {
-          cancel: true,
-          confirm: true
-        }
-      })
-
-      if(confirmed) {
-        setBusy(true)
-        const res = await ApiServices(
-          "post",
-          null,
-          `${ApiEndPoints.Assignments}/${assignment._id}/archive`
-        )
-        toast.success("Report archived.")
-        loadSubmissions()
-      }
-    }catch(e) {
-      const msg = getErrorMessage(e)
-      toast.error(msg)
-    }finally{
-      setBusy(false)
-    }
-  }
-
   const getSubmitterInfo = (assignment) => {
     if(!assignment.sCBy) return '-'
     let submitter = 'You'
@@ -189,16 +159,6 @@ export default function WeeklySubmissionsPage() {
                         <Button size="sm" onClick={() => approveAssignment(assignment)} color="success">
                           {assignment.isRoot ? 'Approve' : 'Submit for approval'}
                         </Button>
-                      </>
-                    ) : null}
-                    {userProfile.role == ROLES.LEVEL3 ? (
-                      <>
-                        <Button id={`adi-${assignment._id}`} size="sm" color="info" onClick={() => onClickArchive(assignment)} disabled={!assignment.reportId}>
-                          <ArchiveIcon size='1rem' />
-                        </Button>
-                        <UncontrolledTooltip target={`adi-${assignment._id}`} placement="top">
-                          Archive
-                        </UncontrolledTooltip>
                       </>
                     ) : null}
                   </div>

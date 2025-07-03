@@ -275,9 +275,13 @@ const MonthlyReportForm = () => {
       enqueueSnackbar("Report has been saved", {
         variant: "success",
       });
-      if (elasticIndex)
+      if (elasticIndex) {
         router.replace(`/dashboard/monthly-report?id=${responseData._id}`);
-      else location.reload();
+      } else {
+        setTimeout(() => {
+          location.reload();
+        }, 2000)
+      }
     } catch (e) {
       console.error(e);
       const msg = getErrorMessage(e);
