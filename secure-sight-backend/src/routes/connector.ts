@@ -66,6 +66,55 @@ router.post('/add-connector-config', upload.single('file'), async (req: Request,
     res.send(data)
 })
 
+router.get("/connector-log/:id",
+    auth,
+    hasRole(ROLES.ADMIN),
+    async (req, res) => {
+        try {
+            const data = await connectorController.getLogs(req.params.id)
+            res.send(data)
+        }catch(e: any) {
+            res.status(e.status || 400).send({
+                message: e.message
+            })
+        }
+    }
+)
+
+router.get("/connector-log/:id/:file",
+    auth,
+    hasRole(ROLES.ADMIN),
+    async (req, res) => {
+        try {
+            const data = await connectorController.getLog(req.params.id, req.params.file)
+            res.writeHead(200, {
+                'Content-Type': 'text/plain', // Adjust content type based on file
+                'Content-Disposition': `attachment; filename="${req.params.file}"`
+            });
+            data.pipe(res);
+        }catch(e: any) {
+            res.status(e.status || 400).send({
+                message: e.message
+            })
+        }
+    }
+)
+
+router.delete("/connector-log/:id/:file",
+    auth,
+    hasRole(ROLES.ADMIN),
+    async (req, res) => {
+        try {
+            await connectorController.deleteLog(req.params.id, req.params.file)
+            res.sendStatus(200)
+        }catch(e: any) {
+            res.status(e.status || 400).send({
+                message: e.message
+            })
+        }
+    }
+)
+
 router.post('/:id',
     auth,
     hasRole(ROLES.ADMIN),

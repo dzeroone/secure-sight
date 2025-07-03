@@ -573,6 +573,105 @@ class ConnectorController {
 		})
 	}
 
+	async getLogs(id: string) {
+		const connectorModel = dynamicModelWithDBConnection(
+			MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR,
+		)
+		const connectorData = await connectorModel.findById(id)
+		if(!connectorData) throw new Error("Invalid")
+		
+		const serverPath = DIRS.CONNECTOR_UPLOAD_DIR
+
+		const connectorConfigModel = dynamicModelWithDBConnection(
+			MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR_CONFIG,
+		)
+		const config_data = await connectorConfigModel
+			.findOne({ connectorId: connectorData._id })
+			.lean()
+
+		let { connectorBasePath }: any =
+			config_data
+
+		const lsInfo = await promises.stat(`${serverPath}/${connectorBasePath}`)
+		if (!lsInfo.isDirectory()) {
+			throw new Error('Connector dir is not available yet!')
+		}
+
+		const files = await promises.readdir(`${serverPath}/${connectorBasePath}/logs`)
+
+		const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+    files.sort((a, b) => -1 * collator.compare(a, b));
+
+		return {
+			connector: connectorData,
+			files
+		}
+	}
+
+	async getLog(id: string, file: string) {
+		const connectorModel = dynamicModelWithDBConnection(
+			MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR,
+		)
+		const connectorData = await connectorModel.findById(id)
+		if(!connectorData) throw new Error("Invalid")
+		
+		const serverPath = DIRS.CONNECTOR_UPLOAD_DIR
+
+		const connectorConfigModel = dynamicModelWithDBConnection(
+			MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR_CONFIG,
+		)
+		const config_data = await connectorConfigModel
+			.findOne({ connectorId: connectorData._id })
+			.lean()
+
+		let { connectorBasePath }: any =
+			config_data
+
+		const lsInfo = await promises.stat(`${serverPath}/${connectorBasePath}`)
+		if (!lsInfo.isDirectory()) {
+			throw new Error('Connector dir is not available yet!')
+		}
+
+		await promises.access(`${serverPath}/${connectorBasePath}/logs/${file}`)
+
+		return fs.createReadStream(`${serverPath}/${connectorBasePath}/logs/${file}`)
+	}
+
+	async deleteLog(id: string, file: string) {
+		const connectorModel = dynamicModelWithDBConnection(
+			MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR,
+		)
+		const connectorData = await connectorModel.findById(id)
+		if(!connectorData) throw new Error("Invalid")
+		
+		const serverPath = DIRS.CONNECTOR_UPLOAD_DIR
+
+		const connectorConfigModel = dynamicModelWithDBConnection(
+			MASTER_ADMIN_DB,
+			COLLECTIONS.CONNECTOR_CONFIG,
+		)
+		const config_data = await connectorConfigModel
+			.findOne({ connectorId: connectorData._id })
+			.lean()
+
+		let { connectorBasePath }: any =
+			config_data
+
+		const lsInfo = await promises.stat(`${serverPath}/${connectorBasePath}`)
+		if (!lsInfo.isDirectory()) {
+			throw new Error('Connector dir is not available yet!')
+		}
+
+		await promises.access(`${serverPath}/${connectorBasePath}/logs/${file}`)
+
+		return promises.unlink(`${serverPath}/${connectorBasePath}/logs/${file}`)
+	}
+
 	async findById(ids: string[]) {
 		const connectorModel = dynamicModelWithDBConnection(
 			MASTER_ADMIN_DB,

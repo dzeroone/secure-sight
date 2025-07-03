@@ -16,7 +16,8 @@ import {
   ModalHeader,
   Row,
   Spinner,
-  Table
+  Table,
+  UncontrolledTooltip
 } from "reactstrap";
 import swal from "sweetalert";
 
@@ -26,7 +27,7 @@ import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
 import { allReplace, formatCapilize } from "../ulit/commonFunction";
-import { TrashIcon, UploadIcon } from "lucide-react";
+import { LogsIcon, TrashIcon, UploadIcon } from "lucide-react";
 import { getErrorMessage } from "../../helpers/utils";
 
 const ConnectorList = () => {
@@ -271,6 +272,16 @@ const ConnectorList = () => {
                               >
                                 <UploadIcon size="1rem" />
                               </Button>
+                              <a
+                                id={`log-link-${item._id}`}
+                                className="btn btn-secondary btn-sm"
+                                href={`/connector-logs/${item._id}`}
+                              >
+                                <LogsIcon size="1rem" />
+                              </a>
+                              <UncontrolledTooltip target={`log-link-${item._id}`}>
+                                Logs
+                              </UncontrolledTooltip>
                               <Button
                                 onClick={() => {
                                   DeleteAlert(item._id);

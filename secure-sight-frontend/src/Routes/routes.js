@@ -50,6 +50,7 @@ import WeeklyCommonDataPage from "../Pages/weekly-common-data";
 import ActivityLogPage from "../Pages/activity-log";
 import ArchivedReportsPage from "../Pages/reports/archived-reports";
 import CountrySettingsPage from "../settings/countries";
+import ConnectorLogsIndexPage from "../Pages/connector/logs";
 
 export const history = createBrowserHistory({ window });
 
@@ -99,6 +100,11 @@ const authProtectedRoutes = [
   {
     roles: [ROLES.ADMIN, ROLES.LEVEL3],
     path: "/users/:id/transfer-reports", component: <TransferReportsPage />
+  },
+  // Connector logs
+  {
+    roles: [ROLES.ADMIN],
+    path: "/connector-logs/:id", component: <ConnectorLogsIndexPage />
   },
   // Customers
   {
