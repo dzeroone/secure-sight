@@ -238,11 +238,6 @@ const ConnectorListTwo = () => {
 			key: "created_at",
 		},
 		{
-			title: "Log File",
-			dataIndex: "logFile",
-			key: "logFile",
-		},
-		{
 			title: "Status",
 			dataIndex: "status",
 			key: "status"
@@ -272,17 +267,8 @@ const ConnectorListTwo = () => {
 			return {
 				key: item._id,
 				index: index + 1,
-				connectorName: (
-					<Link to={"/connector-log/" + item.display_name} state={{ display_name: item.display_name }}>
-						{formatCapilize(allReplace(item.display_name, { _: " ", "-": " " }))}
-					</Link>
-				),
+				connectorName: formatCapilize(allReplace(item.display_name, { _: " ", "-": " " })),
 				created_at: item.created_at,
-				logFile: (
-					<Link to={"/connector-log/" + item.display_name} state={{ display_name: item.display_name }}>
-						{formatCapilize(allReplace(item.display_name, { _: " ", "-": " " }))}
-					</Link>
-				),
 				status: (
 					<>
 						{item?.isConnectorScheduled && item?.isConnectorScheduled === true
