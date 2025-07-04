@@ -160,28 +160,28 @@ const ConnectorList = () => {
                 <div>
                   <Breadcrumbsub
                     title={<span>Connector List {openLoader ? <Spinner color="dark" size="sm" /> : null}</span>}
-                    breadcrumbItem={
-                      <div className="input-group">
-                        <button
-                          onClick={() => {
-                            setSearchedVal("");
-                          }}
-                          className="input-group-text"
-                        >
-                          <CloseOutlined />
-                        </button>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="autoSizingInputGroup"
-                          placeholder="Search"
-                          value={searchedVal}
-                          onChange={(e) => {
-                            setSearchedVal(e.target.value);
-                          }}
-                        />
-                      </div>
-                    }
+                    // breadcrumbItem={
+                    //   <div className="input-group">
+                    //     <button
+                    //       onClick={() => {
+                    //         setSearchedVal("");
+                    //       }}
+                    //       className="input-group-text"
+                    //     >
+                    //       <CloseOutlined />
+                    //     </button>
+                    //     <input
+                    //       type="text"
+                    //       className="form-control"
+                    //       id="autoSizingInputGroup"
+                    //       placeholder="Search"
+                    //       value={searchedVal}
+                    //       onChange={(e) => {
+                    //         setSearchedVal(e.target.value);
+                    //       }}
+                    //     />
+                    //   </div>
+                    // }
                   />
                 </div>
               </CardTitle>

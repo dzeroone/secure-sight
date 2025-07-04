@@ -8,6 +8,7 @@ import ApiServices from "../../../Network_call/apiservices";
 import ApiEndPoints from "../../../Network_call/ApiEndPoints";
 import { useParams } from "react-router-dom";
 import { DeleteIcon, DownloadIcon, TrashIcon } from "lucide-react";
+import { allReplace, formatCapilize } from "../../ulit/commonFunction";
 
 export default function ConnectorLogsIndexPage() {
   const params = useParams()
@@ -101,7 +102,12 @@ export default function ConnectorLogsIndexPage() {
 
   return (
     <div className="page-content">
-      <BreadcrumbWithTitle title={`Log: `} />
+      <BreadcrumbWithTitle title={`Log: ${info.connector?.display_name ? formatCapilize(
+                              allReplace(info.connector.display_name, {
+                                _: " ",
+                                "-": " ",
+                              })
+                            ) : ''}`} />
       <div>
         <Table>
           <thead>
