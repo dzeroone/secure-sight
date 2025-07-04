@@ -191,7 +191,6 @@ const ConnectorList = () => {
                     <th>#</th>
                     <th>Connector Name</th>
                     <th>Installed On</th>
-                    <th>Log File</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -229,19 +228,6 @@ const ConnectorList = () => {
                             ) : ''}
                           </td>
                           <td>{item.created_at}</td>
-                          <td>
-                            <Link
-                              to={"/connector-log/" + item.display_name}
-                              state={{ display_name: item.display_name }}
-                            >
-                              {item.display_name ? formatCapilize(
-                                allReplace(item.display_name, {
-                                  _: " ",
-                                  "-": " ",
-                                })
-                              ) : ''}
-                            </Link>
-                          </td>
                           <td>
                             {item?.isConnectorScheduled &&
                               item?.isConnectorScheduled === true
