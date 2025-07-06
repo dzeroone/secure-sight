@@ -79,4 +79,8 @@ const getLoggedinUser = () => {
   }
 };
 
-export { APIClient, setAuthorization, getLoggedinUser };
+const setProfileData = (data) => {
+  localStorage.setItem("authUser", JSON.stringify(data))
+}
+
+export { APIClient, setAuthorization, getLoggedinUser, setProfileData };

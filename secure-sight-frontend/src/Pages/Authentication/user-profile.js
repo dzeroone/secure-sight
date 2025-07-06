@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
   Button,
   Card,
   CardBody,
@@ -10,7 +9,7 @@ import {
   FormFeedback,
   Input,
   Label,
-  Row,
+  Row
 } from "reactstrap";
 
 // Formik Validation
@@ -18,60 +17,83 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 //redux
-import { useDispatch, useSelector } from "react-redux";
 
 import withRouter from "../../components/Common/withRouter";
 
 //Import Breadcrumb
 
-// actions
-import user1 from "../../assets/images/logo/Images/profile.png";
+import { toast } from "react-toastify";
+import { useProfile } from "../../Hooks/UserHooks";
+import ApiEndPoints from "../../Network_call/ApiEndPoints";
+import ApiServices from "../../Network_call/apiservices";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
-import { editProfile, resetProfileFlag } from "../../store/actions";
+import { ROLE_NAMES } from "../../data/app";
+import { setProfileData } from "../../helpers/api_helper";
+import { getErrorMessage } from "../../helpers/utils";
+import ModalLoading from "../../components/ModalLoading";
 
 const UserProfile = () => {
-  const dispatch = useDispatch();
+  const [ user, setUser ] = useState(null);
+  const [busy, setBusy] = useState(false)
+  const { userProfile } = useProfile()
 
-  const [email, setemail] = useState("");
-  const [name, setname] = useState("");
-  const [idx, setidx] = useState(1);
-  const [dbName, setDbName] = useState("");
-
-  const { error, success } = useSelector((state) => ({
-    error: state.profile.error,
-    success: state.profile.success,
-  }));
-
-  useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser"));
-      setname(obj.full_name);
-      setemail(obj.email);
-      setidx(obj._id);
-      setDbName(obj.dbName);
-      setTimeout(() => {
-        dispatch(resetProfileFlag());
-      }, 3000);
-    }
-  }, [dispatch, success]);
-
-  const validation = useFormik({
+  const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      username: name || "",
-      email: email || "",
-      dbName: dbName || "",
-      idx: idx || "",
+      fullname: "",
+      email: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().required("Please Enter Your Username"),
+      fullname: Yup.string().required("Please Enter Your Full name"),
       email: Yup.string().email("Invalid email").required("Please Enter Your Email"),
-      dbName: Yup.string().required("Please Enter Your Database Name"),
     }),
-    onSubmit: (values) => {
-      dispatch(editProfile(values));
+    onSubmit: async (values) => {
+      try {
+        setBusy(true)
+        await ApiServices(
+          "patch",
+          values,
+          ApiEndPoints.Me
+        )
+        setProfileData({
+          ...userProfile,
+          fullname: values.fullname,
+          email: values.email
+        })
+        toast.success("Profile updated.")
+        location.reload()
+      }catch(e) {
+        const msg = getErrorMessage(e)
+        toast.error(msg)
+      }finally{
+        setBusy(false)
+      }
     },
   });
+
+  const loadUser = useCallback(async () => {
+    try {
+      const data = await ApiServices(
+        "get",
+        null,
+        ApiEndPoints.Me
+      )
+      setUser(data)
+      formik.setValues({
+        fullname: data.fullname,
+        email: data.email
+      })
+    }catch(e) {
+      const msg = getErrorMessage(e)
+      toast.error(msg)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadUser()
+  }, [loadUser]);
+
+
 
   return (
     <React.Fragment>
@@ -81,123 +103,76 @@ const UserProfile = () => {
 
           <Row className="justify-content-center">
             <Col lg="8">
-              {error && error ? (
-                <Alert color="danger">
-                  <div>{error}</div>
-                </Alert>
-              ) : null}
-              {success ? (
-                <Alert color="success">
-                  <div>{success}</div>
-                </Alert>
-              ) : null}
-
-              <Card className="shadow-lg border-0" style={{ borderRadius: "12px", background: "linear-gradient(to bottom right, #333, #1a1a1a)" }}>
-                <CardBody className="p-4 text-white">
-                  <Row className="align-items-center">
-                    <Col md={4} className="text-center">
-                      <img
-                        src={user1}
-                        alt="User"
-                        className="avatar-lg rounded-circle img-thumbnail shadow"
-                      />
-                    </Col>
-                    <Col md={8}>
-                      <div className="text-center text-md-start">
-                        <h3 className="text-white fw-bold">{name}</h3>
-                        {/* Updated details to be displayed in white */}
-                        <p className="text-white mb-1">{email}</p>
-                        <p className="text-white">{dbName}</p>
-                        <p className="text-white mb-0">ID: {idx}</p>
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
 
               {/* Edit Profile Form */}
               <Card className="shadow mt-4" style={{ borderRadius: "12px", background: "#2d2d2d" }}>
                 <CardBody>
                   <h4 className="card-title mb-4 text-center text-white">Edit Profile</h4>
-                  <Form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      validation.handleSubmit();
-                      return false;
-                    }}
-                  >
-                    {/* Username Field */}
-                    <div className="form-group mb-3">
-                      <Label className="form-label text-white">Username</Label>
+                  <Form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-2">
+                    <div>
+                      <Label className="form-label">Full name</Label>
                       <Input
-                        name="username"
-                        placeholder="Enter new username"
                         type="text"
-                        className="form-control"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.username || ""}
+                        name="fullname"
+                        value={formik.values.fullname}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         invalid={
-                          validation.touched.username && validation.errors.username
+                          formik.touched.fullname &&
+                          formik.errors.fullname
                             ? true
                             : false
                         }
                       />
-                      {validation.touched.username && validation.errors.username ? (
+                      {formik.touched.fullname &&
+                      formik.errors.fullname ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.username}
+                          {formik.errors.fullname}
                         </FormFeedback>
                       ) : null}
                     </div>
-
-                    {/* Email Field */}
-                    <div className="form-group mb-3">
-                      <Label className="form-label text-white">Email</Label>
-                      <Input
-                        name="email"
-                        placeholder="Enter new email"
-                        type="email"
-                        className="form-control"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.email || ""}
-                        invalid={
-                          validation.touched.email && validation.errors.email ? true : false
-                        }
-                      />
-                      {validation.touched.email && validation.errors.email ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.email}
-                        </FormFeedback>
-                      ) : null}
+                    <div>
+                      <Label className="form-label">Team</Label>
+                      <div className="form-control">
+                        {user?.team?.name || "Not set"}
+                      </div>
                     </div>
-
-                    {/* Database Name Field */}
-                    <div className="form-group mb-3">
-                      <Label className="form-label text-white">Database Name</Label>
+                    <div>
+                      <Label className="form-label">Position</Label>
+                      <div className="form-control">
+                        {user?.position || "Not set"}
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="form-label">Role</Label>
+                      <div className="form-control">
+                        {ROLE_NAMES[user?.role] || "Not set"}
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="form-label">Email</Label>
                       <Input
-                        name="dbName"
-                        placeholder="Enter new database name"
                         type="text"
-                        className="form-control"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.dbName || ""}
+                        name="email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         invalid={
-                          validation.touched.dbName && validation.errors.dbName ? true : false
+                          formik.touched.email &&
+                          formik.errors.email
+                            ? true
+                            : false
                         }
                       />
-                      {validation.touched.dbName && validation.errors.dbName ? (
+                      {formik.touched.email &&
+                      formik.errors.email ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.dbName}
+                          {formik.errors.email}
                         </FormFeedback>
                       ) : null}
                     </div>
-
-                    <div className="text-center">
-                      <Button type="submit" color="primary" className="w-100">
-                        Update Profile
-                      </Button>
+                    <div>
+                      <Button type="submit" color="primary">Save</Button>
                     </div>
                   </Form>
                 </CardBody>
@@ -206,6 +181,12 @@ const UserProfile = () => {
           </Row>
         </Container>
       </div>
+      <ModalLoading
+        isOpen={busy}
+        onClose={() => {
+          setBusy(false)
+        }}
+      />
     </React.Fragment>
   );
 };

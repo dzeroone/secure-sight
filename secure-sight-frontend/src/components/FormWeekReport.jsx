@@ -2,19 +2,22 @@ import { format, getDay, isAfter, isBefore, subDays } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import { Button, Card, CardBody, Col, Form, FormFeedback, FormGroup, Input, Label, Row } from "reactstrap";
-import ApiServices from "../Network_call/apiservices";
 import ApiEndPoints from "../Network_call/ApiEndPoints";
+import ApiServices from "../Network_call/apiservices";
 
 export default function FormWeekReport({ formik, btnText, afterForm }) {
   const [busy, setBusy] = useState(false)
-  const [customers, setCustomers] = useState([])
+  const [info, setInfo] = useState({
+    customers: [],
+    assigned: []
+  })
 
   const filterDate = useCallback((date) => {
     const day = getDay(date);
     return day === 1
   }, [])
 
-  const loadCustomers = useCallback(async () => {
+  const loadInfo = useCallback(async () => {
     if(!formik.values.selectedDate) return
     formik.setFieldValue('tenant', '')
     try {
@@ -27,7 +30,7 @@ export default function FormWeekReport({ formik, btnText, afterForm }) {
         },
         `${ApiEndPoints.Customers}/codes`
       )
-      setCustomers(data)
+      setInfo(data)
     }catch(e){
       console.error(e)
       alert(e.message)
@@ -37,8 +40,8 @@ export default function FormWeekReport({ formik, btnText, afterForm }) {
   }, [formik.values.selectedDate])
 
   useEffect(() => {
-    loadCustomers()
-  }, [loadCustomers])
+    loadInfo()
+  }, [loadInfo])
 
   return (
     <Card>
@@ -79,11 +82,12 @@ export default function FormWeekReport({ formik, btnText, afterForm }) {
                     value={formik.values.tenant}
                     onChange={formik.handleChange}
                     invalid={!!formik.errors.tenant}
+                    disabled={busy}
                   >
                     <option value='' disabled>Select a tenant</option>
-                    {customers?.map(customer => {
+                    {info.customers?.map(customer => {
                       return (
-                        <option value={customer.tCode} key={customer._id}>{customer.name}</option>
+                        <option value={customer.tCode} disabled={info.assigned.some((ac) => customer.tCode == ac.tCode)} key={customer._id}>{customer.name}</option>
                       )
                     })}
                   </Input>

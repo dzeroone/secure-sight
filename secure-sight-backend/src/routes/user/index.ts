@@ -7,6 +7,8 @@ import meRouter from './me'
 import assignmentController from '../../controllers/assignment.controller';
 import logger from '../../utils/logger';
 
+router.use('/me', meRouter)
+
 router.post('/',
   auth,
   hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
@@ -274,7 +276,5 @@ router.post('/:id/restore',
     }
   }
 )
-
-router.use('/me', meRouter)
 
 export default router;

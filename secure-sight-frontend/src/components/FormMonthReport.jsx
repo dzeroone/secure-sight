@@ -5,14 +5,16 @@ import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Form, FormFeedback, FormGroup, Input, Label, Row } from "reactstrap";
 import ApiEndPoints from "../Network_call/ApiEndPoints";
 import ApiServices from "../Network_call/apiservices";
-import { getMonthlyReportIndex } from "../helpers/form_helper";
-import { getErrorMessage, pluralize } from "../helpers/utils";
+import { getErrorMessage } from "../helpers/utils";
 
 export default function FormMonthReport({ formik, btnText, afterForm }) {
   const [busy, setBusy] = useState(false)
-  const [customers, setCustomers] = useState([])
+  const [info, setInfo] = useState({
+    customers: [],
+    assigned: []
+  })
 
-  const loadCustomers = useCallback(async () => {
+  const loadInfo = useCallback(async () => {
     if(!formik.values.selectedDate) return
     formik.setFieldValue('tenant', '')
     try {
@@ -25,18 +27,18 @@ export default function FormMonthReport({ formik, btnText, afterForm }) {
         },
         `${ApiEndPoints.Customers}/codes`
       )
-      setCustomers(data)
+      setInfo(data)
     }catch(e){
-      console.error(e)
-      alert(e.message)
+      const msg = getErrorMessage(e)
+      toast.error(msg)
     }finally{
       setBusy(false)
     }
   }, [formik.values.selectedDate])
 
   useEffect(() => {
-    loadCustomers()
-  }, [loadCustomers])
+    loadInfo()
+  }, [loadInfo])
 
   return (
     <Card>
@@ -74,11 +76,12 @@ export default function FormMonthReport({ formik, btnText, afterForm }) {
                     value={formik.values.tenant}
                     onChange={formik.handleChange}
                     invalid={!!formik.errors.tenant}
+                    disabled={busy}
                   >
                     <option value='' disabled>Select a tenant</option>
-                    {customers?.map(customer => {
+                    {info.customers?.map(customer => {
                       return (
-                        <option value={customer.tCode} key={customer._id}>{customer.name}</option>
+                        <option value={customer.tCode} disabled={info.assigned.some((ac) => customer.tCode == ac.tCode)} key={customer._id}>{customer.name}</option>
                       )
                     })}
                   </Input>

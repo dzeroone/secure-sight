@@ -99,14 +99,18 @@ class CustomerController {
       }, {
         status: null
       }]
-    }, { tCode: 1, name: 1 }).lean()
+    }, { tCode: 1, name: 1 }).sort({
+      name: 1
+    }).lean()
   }
 
   async getCodesByIds(cIds: string[]) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
     return CustomerModel.find({
       _id: { $in: cIds }
-    }, { tCode: 1, name: 1 }).lean()
+    }, { tCode: 1, name: 1 }).sort({
+      name: 1
+    }).lean()
   }
 
   async getCustomerById(id: string) {

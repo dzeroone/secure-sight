@@ -54,7 +54,11 @@ router.get('/codes',
   async (req: Request, res: Response) => {
     try {
       if (req.user?.role == ROLES.ADMIN || req.user?.role == ROLES.LEVEL3) {
-        const data = await customerController.getAllCodes()
+        const aIds = await assignmentController.getAssignedCustomerIds(req.query.date as string, req.query.type as string)
+        const data = {
+          customers: await customerController.getAllCodes(),
+          assigned: await customerController.getCodesByIds(aIds.map(a => a.cId!))
+        }
         res.send(data)
       } else {
         if (!req.query.date) return res.status(400).send({ message: 'Incorrect format' })
@@ -63,7 +67,10 @@ router.get('/codes',
 
         const validCustomers = await assignmentController.getCustomerIdsForUser(req.query.date as string, req.query.type as string, req.user!._id)
         const data = await customerController.getCodesByIds(validCustomers.map(a => a.cId!))
-        res.send(data)
+        res.send({
+          customers: data,
+          assigned: []
+        })
       }
     } catch (e: any) {
       res.status(400).send({

@@ -82,7 +82,9 @@ class AssignmentController {
 
   async getCustomerWithAssignmentsForDate(date: string, assignedBy: string, reportType: ReportType) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
-    const customers = await CustomerModel.find({}, { name: 1, tCode: 1 }).lean()
+    const customers = await CustomerModel.find({}, { name: 1, tCode: 1 }).sort({
+      name: 1
+    }).lean()
     for (let customer of customers) {
       await this._populateAssignmentsForCustomerForDate(customer, date, assignedBy, reportType)
     }
@@ -223,6 +225,15 @@ class AssignmentController {
       rType: type,
       date,
       reporterId: userId
+    }, {
+      cId: 1
+    }).lean()
+  }
+
+  async getAssignedCustomerIds(date: string, type: string) {
+    return assignmentModel.find({
+      rType: type,
+      date,
     }, {
       cId: 1
     }).lean()

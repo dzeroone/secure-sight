@@ -97,7 +97,7 @@ class UserController {
     return users
   }
 
-  async getUserById(id: string) {
+  getUserById(id: string) {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
     return userModel.findById(id, { password: 0 })
   }
