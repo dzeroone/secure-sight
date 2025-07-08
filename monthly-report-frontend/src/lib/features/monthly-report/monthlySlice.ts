@@ -10,8 +10,9 @@ export const monthlyReportSlice = createSlice({
     initialState: monthlyReportInitialValue,
     reducers: {
         resetMonthlyReportState(_, action: PayloadAction<typeof monthlyReportInitialValue | null>) {
+            const defaultValues = structuredClone(monthlyReportInitialValue)
             return {
-                ...monthlyReportInitialValue,
+                ...defaultValues,
                 ...action.payload
             }
         },
@@ -1577,7 +1578,7 @@ export const monthlyReportSlice = createSlice({
         // Deep security
         updateDPSChartKey: (state, action: PayloadAction<{ chart: keyof DeepSecurity; index: number; value: string }>) => {
             const { chart, index, value } = action.payload;
-            const chartData = state.deep_security[chart] as AVSChartData;
+            const chartData = state.deep_security[chart];
             if ('key' in chartData) {
                 chartData.key[index] = value;
             } else {
@@ -1586,7 +1587,7 @@ export const monthlyReportSlice = createSlice({
         },
         updateDPSChartData: (state, action: PayloadAction<{ chart: keyof DeepSecurity; datasetIndex: number; index: number; value: number }>) => {
             const { chart, datasetIndex, index, value } = action.payload;
-            const chartData = state.deep_security[chart] as AVSChartData;
+            const chartData = state.deep_security[chart];
 
             // Check if the datasets property exists on the chartData
             if ('datasets' in chartData) {
@@ -1598,21 +1599,15 @@ export const monthlyReportSlice = createSlice({
         updateDPSChartColor: (state, action: PayloadAction<{ chart: keyof DeepSecurity; datasetIndex: number; color: string }>) => {
             const { chart, datasetIndex, color } = action.payload;
             // state.agent_versions_summary[action.payload.chart].datasets[action.payload.datasetIndex].backgroundColor = action.payload.color;
-            const chartData = state.deep_security[chart] as AVSChartData;
+            const chartData = state.deep_security[chart];
             if ('datasets' in chartData) {
-                chartData.datasets[0].backgroundColor[datasetIndex] = color;
+                chartData.datasets[datasetIndex].backgroundColor = color;
             } else {
                 throw new Error(`Selected chart does not have a datasets property.`);
             }
         },
-        updateDPSSCvisibility: (state, action: PayloadAction<boolean>) => {
-            state.deep_security.deep_security_chart.visible = action.payload;
-        },
         updateDPSWPCCvisibility: (state, action: PayloadAction<boolean>) => {
             state.deep_security.server_workload_protection_chart.visible = action.payload;
-        },
-        updateDPSSEPCvisibility: (state, action: PayloadAction<boolean>) => {
-            state.deep_security.standard_endpoint_protection_chart.visible = action.payload;
         },
 
 
@@ -1798,9 +1793,7 @@ export const {
     updateDPSChartKey,
     updateDPSChartData,
     updateDPSChartColor,
-    updateDPSSCvisibility,
     updateDPSWPCCvisibility,
-    updateDPSSEPCvisibility,
 
     pendingIncidentsSummary,
     updatePendingIncidentsSummary,

@@ -14,7 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import { AgentVersionsSummary } from "@@/types/types";
+import { AgentVersionsSummary, DeepSecurity } from "@@/types/types";
 import {
   updateAVSChartColor,
   updateAVSChartData,
@@ -22,6 +22,9 @@ import {
   updateAVSSCvisibility,
   updateAVSSEPCvisibility,
   updateAVSWPCCvisibility,
+  updateDPSChartData,
+  updateDPSChartKey,
+  updateDPSWPCCvisibility,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import { MuiColorInput } from "mui-color-input";
 import RecommendationInput from "@@/components/RecommendationInput";
@@ -29,6 +32,10 @@ import RecommendationInput from "@@/components/RecommendationInput";
 const AgentVersionForm = () => {
   const data = useAppSelector(
     (state) => state.monthlyReport.agent_versions_summary
+  );
+
+  const dsData = useAppSelector(
+    (state) => state.monthlyReport.deep_security
   );
 
   const dispatch = useAppDispatch();
@@ -41,6 +48,14 @@ const AgentVersionForm = () => {
     dispatch(updateAVSChartKey({ chart, index, value }));
   };
 
+  const handleDSKeyChange = (
+    chart: keyof DeepSecurity,
+    index: number,
+    value: string
+  ) => {
+    dispatch(updateDPSChartKey({ chart, index, value }));
+  };
+
   const handleDataChange = (
     chart: keyof AgentVersionsSummary,
     datasetIndex: number,
@@ -48,6 +63,15 @@ const AgentVersionForm = () => {
     value: number
   ) => {
     dispatch(updateAVSChartData({ chart, datasetIndex, index, value }));
+  };
+
+  const handleDSDataChange = (
+    chart: keyof DeepSecurity,
+    datasetIndex: number,
+    index: number,
+    value: number
+  ) => {
+    dispatch(updateDPSChartData({ chart, datasetIndex, index, value }));
   };
 
   const handleColorChange = (
@@ -63,6 +87,9 @@ const AgentVersionForm = () => {
   };
   const handleWPCCVisibilityChange = (value: boolean) => {
     dispatch(updateAVSWPCCvisibility(value));
+  };
+  const handleDSWPCCVisibilityChange = (value: boolean) => {
+    dispatch(updateDPSWPCCvisibility(value));
   };
   const handleSEPCVisibilityChange = (value: boolean) => {
     dispatch(updateAVSSEPCvisibility(value));
@@ -147,13 +174,94 @@ const AgentVersionForm = () => {
         ))}
       </Grid>
 
-      {/* Server & Workload Protection Chart */}
+      {/* Deep security Server & Workload Protection Chart */}
       <Grid item xs={12}>
         <Divider />
       </Grid>
       <Grid container item xs={12} rowSpacing={2}>
         <Grid item xs={12}>
           <h3>Server & Workload Protection Chart</h3>
+        </Grid>
+        <Grid item xs={12}>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={dsData.server_workload_protection_chart.visible}
+                  onChange={(e) => handleDSWPCCVisibilityChange(e.target.checked)}
+                />
+              }
+              label="Show/Hide"
+            />
+          </FormGroup>
+        </Grid>
+        {dsData.server_workload_protection_chart.key.map((label, index) => (
+          <Grid
+            container
+            item
+            xs={12}
+            spacing={2}
+            key={index}
+            alignItems="center"
+          >
+            <Grid item xs={6}>
+              <TextField
+                label={`Key ${index + 1}`}
+                variant="outlined"
+                value={label}
+                onChange={(e) =>
+                  handleDSKeyChange(
+                    "server_workload_protection_chart",
+                    index,
+                    e.target.value
+                  )
+                }
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label={`Data ${index + 1}`}
+                variant="outlined"
+                value={
+                  dsData.server_workload_protection_chart.datasets[0].data[index]
+                }
+                type="number"
+                onChange={(e) =>
+                  handleDSDataChange(
+                    "server_workload_protection_chart",
+                    0,
+                    index,
+                    Number(e.target.value)
+                  )
+                }
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+        ))}
+        <Grid item xs={12}>
+          <MuiColorInput
+            label="Chart Color"
+            value={
+              data.server_workload_protection_chart.datasets[0]
+                .backgroundColor as string
+            }
+            onChange={(color) =>
+              handleColorChange("server_workload_protection_chart", 0, color)
+            }
+            fullWidth
+          />
+        </Grid>
+      </Grid>
+
+      {/* Server & Workload Protection Chart */}
+      <Grid item xs={12}>
+        <Divider />
+      </Grid>
+      <Grid container item xs={12} rowSpacing={2}>
+        <Grid item xs={12}>
+          <h3>C1WS / server & workload security / protection</h3>
         </Grid>
         <Grid item xs={12}>
           <FormGroup>
@@ -234,7 +342,7 @@ const AgentVersionForm = () => {
       </Grid>
       <Grid container item xs={12} spacing={2}>
         <Grid item xs={12}>
-          <h3>Standard Endpoint Protection Chart</h3>
+          <h3>Apex one as Service / Std Endpoint Protection</h3>
         </Grid>
         <Grid item xs={12}>
           <FormGroup>

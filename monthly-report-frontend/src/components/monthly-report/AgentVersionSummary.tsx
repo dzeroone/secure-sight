@@ -10,6 +10,10 @@ const AgentVersionSummary = () => {
     (state) => state.monthlyReport.agent_versions_summary
   );
 
+  const dsData = useAppSelector(
+    (state) => state.monthlyReport.deep_security
+  );
+
   return (
     <div id={data.id}>
       <p
@@ -36,6 +40,29 @@ const AgentVersionSummary = () => {
           </div>
         </div>
       )}
+      {dsData.server_workload_protection_chart.visible && (
+        <div>
+          <p
+            style={{
+              fontSize: 26,
+              fontWeight: "bold",
+              color: "#090c9b",
+              marginBottom: 0,
+            }}
+          >
+            Server & Workload Protection
+          </p>
+          <div
+            style={{
+              width: 600,
+              height: 400,
+              margin: "auto",
+            }}
+          >
+            <BarChartHorizontal data={dsData.server_workload_protection_chart} />
+          </div>
+        </div>
+      )}
       {data.server_workload_protection_chart.visible && (
         <div>
           <p
@@ -46,7 +73,7 @@ const AgentVersionSummary = () => {
               marginBottom: 0,
             }}
           >
-            {data.server_workload_protection_chart.title}
+            C1WS / server & workload security / protection
           </p>
           <div
             style={{
@@ -69,7 +96,7 @@ const AgentVersionSummary = () => {
               marginBottom: 0,
             }}
           >
-            {data.standard_endpoint_protection_chart.title}
+            Apex one as Service / Std Endpoint Protection
           </p>
           <div
             style={{

@@ -278,10 +278,7 @@ export type AgentVersionsSummary = {
 }
 
 export type DeepSecurity = {
-    id: string,
-    deep_security_chart: AVSChartData,
-    server_workload_protection_chart: AVSChartData,
-    standard_endpoint_protection_chart: AVSChartData,
+    server_workload_protection_chart: AVSChartData
 }
 
 export type RiskIndicatorType = {

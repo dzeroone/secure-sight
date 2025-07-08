@@ -1209,7 +1209,7 @@ export const monthlyReportInitialValue = {
         },
         "server_workload_protection_chart": {
             "visible": true,
-            "title": "Server & Workload Protection",
+            "title": "C1WS / server & workload security / protection",
             "type": "horizontal_bar",
             "key": [
                 "OS not supported",
@@ -1236,7 +1236,7 @@ export const monthlyReportInitialValue = {
         },
         "standard_endpoint_protection_chart": {
             "visible": true,
-            "title": "Standard Endpoint Protection",
+            "title": "Apex one as Service / Std Endpoint Protection",
             "type": "horizontal_bar",
             "key": [
                 "OS not supported",
@@ -1269,39 +1269,6 @@ export const monthlyReportInitialValue = {
         ],
     },
     "deep_security": {
-        "id": "deep_security",
-        "deep_security_chart": {
-            "visible": true,
-            "type": "pie",
-            "key": [
-                "OS not supported (Server + Endpoint)",
-                "Agent End of Life (Server + Endpoint)",
-                "OS and agent incompatible (Server + Endpoint)",
-                "Older supported version (Server + Endpoint)",
-                "Up-to-date version (Server + Endpoint)",
-                "All versions (Server + Endpoint)",
-            ],
-            "datasets": [
-                {
-                    "data": [
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0
-                    ],
-                    "backgroundColor": [
-                        "rgb(255, 247, 231)",
-                        "rgb(250, 219, 187)",
-                        "rgb(250, 203, 153)",
-                        "rgb(252, 174, 90)",
-                        "rgb(250, 143, 29)",
-                        "rgb(255, 130, 0)",
-                    ]
-                }
-            ]
-        },
         "server_workload_protection_chart": {
             "visible": true,
             "title": "Server & Workload Protection",
@@ -1328,39 +1295,6 @@ export const monthlyReportInitialValue = {
                     "backgroundColor": "rgb(255, 130, 0)"
                 }
             ]
-        },
-        "standard_endpoint_protection_chart": {
-            "visible": true,
-            "title": "Standard Endpoint Protection",
-            "type": "horizontal_bar",
-            "key": [
-                "OS not supported",
-                "Agent end-of-life",
-                "OS and agent incompatible",
-                "Older supported version",
-                "Up-to-date version",
-                "All versions",
-            ],
-            "datasets": [
-                {
-                    "label": "",
-                    "data": [
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0
-                    ],
-                    "backgroundColor": "rgb(255, 130, 0)"
-                }
-            ]
-        },
-        "notes": [
-            {
-                "key": "",
-                "data": [""]
-            }
-        ],
+        }
     }
 }

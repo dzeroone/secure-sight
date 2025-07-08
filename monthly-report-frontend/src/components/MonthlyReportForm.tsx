@@ -69,7 +69,6 @@ import TopVulnerabilitiesForm from "./monthly-report/forms/TopVulnerabilitiesFor
 import VulnAssessmentReportForm from "./monthly-report/forms/VulnAssessmentReportForm";
 import WorkbenchIncidentSummaryForm from "./monthly-report/forms/WorkbenchIncidentSummaryForm";
 import MonthlyFormStepper from "./MonthlyFormStepper";
-import DeepSecurityForm from "./monthly-report/forms/DeepSecurityForm";
 const steps = [
   {
     id: "first_page",
@@ -207,11 +206,6 @@ const steps = [
     id: "agent_versions_summary",
     label: "Agent Versions Summary",
     component: <AgentVersionForm />,
-  },
-  {
-    id: "deep_security",
-    label: "Deep security",
-    component: <DeepSecurityForm />,
   }
 ];
 const MonthlyReportForm = () => {

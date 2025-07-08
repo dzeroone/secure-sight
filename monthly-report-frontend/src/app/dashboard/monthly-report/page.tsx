@@ -4,7 +4,6 @@ import AboutReport from "@@/components/monthly-report/AboutReport";
 import AccountCompromiseEvents from "@@/components/monthly-report/AccountCompromiseEvents";
 import AgentVersionSummary from "@@/components/monthly-report/AgentVersionSummary";
 import ApexOneSummary from "@@/components/monthly-report/ApexOneSummary";
-import DeepSecurity from "@@/components/monthly-report/DeepSecurity";
 import DetailedSummary from "@@/components/monthly-report/DetailedSummary";
 import EmailQuarantineSummary from "@@/components/monthly-report/EmailQuarantineSummary";
 import EndpointFeatureCompliance from "@@/components/monthly-report/EndpointFeatureCompliance";
@@ -249,9 +248,6 @@ const MonthlyReportPage = () => {
 
           {/* Agent version summary */}
           {report.agent_versions_summary && <AgentVersionSummary />}
-
-          {/* Deep security */}
-          {report.deep_security && <DeepSecurity />}
         </Box>
       </Grid>
     </Grid>
