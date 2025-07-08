@@ -10,7 +10,10 @@ export const monthlyReportSlice = createSlice({
     initialState: monthlyReportInitialValue,
     reducers: {
         resetMonthlyReportState(_, action: PayloadAction<typeof monthlyReportInitialValue | null>) {
-            return action.payload || monthlyReportInitialValue
+            return {
+                ...monthlyReportInitialValue,
+                ...action.payload
+            }
         },
         updateFromElasticData(state, action: PayloadAction<any>) {
             const data = action.payload;
