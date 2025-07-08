@@ -486,11 +486,11 @@ const MonthlyReportForm = () => {
         </Paper>
         <MonthlyFormStepper
           activeStep={activeStep}
-          totalStep={steps.length}
+          steps={steps}
           handleBack={handleBack}
           handleNext={handleNext}
-          onChangeStep={(e) => {
-            setActiveStep(Number(e.target.value));
+          onChangeStep={(step) => {
+            setActiveStep(Number(step));
           }}
         />
         <Box sx={{ minHeight: 255, width: "100%" }}>
@@ -498,11 +498,11 @@ const MonthlyReportForm = () => {
         </Box>
         <MonthlyFormStepper
           activeStep={activeStep}
-          totalStep={steps.length}
+          steps={steps}
           handleBack={handleBack}
           handleNext={handleNext}
-          onChangeStep={(e) => {
-            setActiveStep(Number(e.target.value));
+          onChangeStep={(step) => {
+            setActiveStep(Number(step));
           }}
         />
         <Dialog

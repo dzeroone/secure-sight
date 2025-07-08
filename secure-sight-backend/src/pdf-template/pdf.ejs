@@ -1867,7 +1867,7 @@
       </div>
       <% } %>
       <% if(data.agent_versions_summary.standard_endpoint_protection_chart.visible) { %>
-      <div style="page-break-before:always;">
+      <div style="<%= (data.agent_versions_summary.server_workload_protection_chart.visible && data.deep_security.server_workload_protection_chart.visible) ? 'page-break-before:always;' : '' %>">
         <p
           style="
             font-size: 26px;

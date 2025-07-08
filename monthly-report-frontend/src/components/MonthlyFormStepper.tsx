@@ -1,30 +1,45 @@
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import { ArrowDropDown, KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import {
   Button,
   FormControl,
+  Menu,
   MenuItem,
   Paper,
   Select,
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, ReactNode, useMemo, useState } from "react";
 
 interface MonthlyFormStepperProps {
   activeStep: number;
-  totalStep: number;
+  steps: {
+    id: string,
+    label: string,
+    component: ReactNode
+  }[];
   handleBack: (e: any) => void;
   handleNext: (e: any) => void;
-  onChangeStep: (e: SelectChangeEvent<number>) => void;
+  onChangeStep: (step: number) => void;
 }
 
 export default function MonthlyFormStepper({
   activeStep,
-  totalStep,
+  steps,
   handleBack,
   handleNext,
   onChangeStep,
 }: MonthlyFormStepperProps) {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const totalStep = useMemo(() => {
+    return steps.length
+  }, [steps])
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Stack
       component={Paper}
@@ -40,15 +55,43 @@ export default function MonthlyFormStepper({
       </Button>
       <Stack direction={"row"} gap={1} alignItems={"center"}>
         <FormControl size="small">
-          <Select value={activeStep} onChange={onChangeStep}>
-            {Array.from({ length: totalStep }).map((_, i: number) => {
+          <Button
+            id="page-list-trigger"
+            aria-haspopup="listbox"
+            aria-controls="page-list-menu"
+            onClick={(e) => {
+              setAnchorEl(e.currentTarget)
+            }}
+            sx={{
+              py: 0,
+              px: 1,
+              minWidth: 0
+            }}
+          >
+            {activeStep + 1} <ArrowDropDown />
+          </Button>
+          <Menu
+            id="page-list-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'page-list-trigger',
+              role: 'listbox',
+            }}
+          >
+            {steps.map((step, i: number) => {
               return (
-                <MenuItem value={i} key={i}>
-                  {i + 1}
+                <MenuItem
+                  selected={i === activeStep}
+                  onClick={(_) => onChangeStep(i)}
+                  key={i}
+                >
+                  {String(i+1).padStart(2, '0')} - {step.label}
                 </MenuItem>
               );
             })}
-          </Select>
+          </Menu>
         </FormControl>{" "}
         / {totalStep}
       </Stack>
