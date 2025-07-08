@@ -180,7 +180,7 @@ const AgentVersionForm = () => {
       </Grid>
       <Grid container item xs={12} rowSpacing={2}>
         <Grid item xs={12}>
-          <h3>Server & Workload Protection Chart</h3>
+          <h3>Deep Security</h3>
         </Grid>
         <Grid item xs={12}>
           <FormGroup>

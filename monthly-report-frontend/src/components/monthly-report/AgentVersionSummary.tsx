@@ -50,7 +50,7 @@ const AgentVersionSummary = () => {
               marginBottom: 0,
             }}
           >
-            Server & Workload Protection
+            Deep Security
           </p>
           <div
             style={{
