@@ -1,6 +1,6 @@
 "use client";
 import axiosApi from "@@/config/axios";
-import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "@@/constants";
+import { REPORT_AUDIT_STATUS, REPORT_STATUS, ROLE_NAMES, ROLES } from "@@/constants";
 import { getErrorMessage } from "@@/helper/helper";
 import {
   setProcessing,
@@ -39,7 +39,7 @@ import {
 } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import AboutThisReportForm from "./monthly-report/forms/AboutThisReport";
 import AccountCompromiseEventsForm from "./monthly-report/forms/AccountCompromiseEventsForm";
@@ -69,6 +69,7 @@ import TopVulnerabilitiesForm from "./monthly-report/forms/TopVulnerabilitiesFor
 import VulnAssessmentReportForm from "./monthly-report/forms/VulnAssessmentReportForm";
 import WorkbenchIncidentSummaryForm from "./monthly-report/forms/WorkbenchIncidentSummaryForm";
 import MonthlyFormStepper from "./MonthlyFormStepper";
+import DeepSecurityForm from "./monthly-report/forms/DeepSecurityForm";
 const steps = [
   {
     id: "first_page",
@@ -207,6 +208,11 @@ const steps = [
     label: "Agent Versions Summary",
     component: <AgentVersionForm />,
   },
+  {
+    id: "deep_security",
+    label: "Deep security",
+    component: <DeepSecurityForm />,
+  }
 ];
 const MonthlyReportForm = () => {
   const [generatingPdf, setGeneratingPdf] = useState(false);
@@ -224,10 +230,25 @@ const MonthlyReportForm = () => {
   const [pdfPath, setPdfPath] = useState("");
 
   const [selectReporterShown, setSelectReporterShown] = useState(false);
+  const [selectedLevel, setSelectedLevel] = useState('')
+
   const [reporters, setReporters] = useState<any[]>([]);
   const [selectedReporter, setSelectedReporter] = useState("");
 
   const maxSteps = steps.length;
+
+  const levels = useMemo(() => {
+    if(currentUser?.role == ROLES.LEVEL1) {
+      setSelectedLevel(ROLES.LEVEL3)
+      return [ROLES.LEVEL3, ROLES.LEVEL2]
+    }
+    if(currentUser?.role == ROLES.LEVEL2) {
+      setSelectedLevel(ROLES.LEVEL3)
+      return [ROLES.LEVEL3]
+    }
+    setSelectedLevel('')
+    return []
+  }, [currentUser?.role])
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -238,14 +259,15 @@ const MonthlyReportForm = () => {
   };
 
   const loadReporters = useCallback(async () => {
-    if (!selectReporterShown) return;
+    if (!selectedLevel || !pageState.assignment?._id) return;
     try {
+      setSelectedReporter('');
       const res = await axiosApi.get(
-        `/assignments/${pageState.assignment?._id}/suggest-reporters`
+        `/assignments/${pageState.assignment?._id}/suggest-reporters?level=${selectedLevel}`
       );
       setReporters(res.data);
     } catch (e) {}
-  }, [selectReporterShown]);
+  }, [selectedLevel, pageState.assignment?._id]);
 
   const saveMonthlyReport = async () => {
     try {
@@ -495,6 +517,29 @@ const MonthlyReportForm = () => {
         >
           <DialogTitle>Select reporter</DialogTitle>
           <DialogContent>
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel id="reporter-level">Level</InputLabel>
+              <Select
+                labelId="reporter-level"
+                id="reporter-level-input"
+                value={selectedLevel}
+                label="Level"
+                onChange={(e) => {
+                  setSelectedLevel(e.target.value);
+                }}
+              >
+                <MenuItem value="" disabled>
+                  None
+                </MenuItem>
+                {levels.map((l: any) => {
+                  return (
+                    <MenuItem value={l} key={l}>
+                      {ROLE_NAMES[l]}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
             <FormControl fullWidth sx={{ mt: 2 }}>
               <InputLabel id="reporter-label">Reporter</InputLabel>
               <Select

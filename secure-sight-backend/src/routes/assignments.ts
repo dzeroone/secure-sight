@@ -96,7 +96,10 @@ router.get('/:id/suggest-reporters',
       if (!assignment) {
         throw new Error("Assignment not found!")
       }
-      const users = await userController.getSameLevelUsers(assignment.aBy!)
+      if(!req.query.level) {
+        throw new Error("Invalid")
+      }
+      const users = await userController.getUsersByRole(req.query.level as string)
       res.send(users)
     } catch (e: any) {
       res.status(e.status || 400).send({

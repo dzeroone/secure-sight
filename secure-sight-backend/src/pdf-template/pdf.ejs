@@ -1432,7 +1432,7 @@
                 >
                   <%= data.system_configuration_report.host_with_insecure_connection.total %><br />
                   <span style="font-weight: normal;">
-                    Total hosts with insecure connection issues
+                    Total connection issues
                   </span>
                 </td>
               </tr>
@@ -1869,6 +1869,72 @@
       <% if(data.agent_versions_summary.notes?.length> 0) { %>
       <div>
         <%- include('./partials/recommendations', { notes: data.agent_versions_summary.notes }) %>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- deep security -->
+    <div class="print-page" id="<%= data.deep_security.id %>">
+      <p
+        style="
+          font-size: 4rem;
+          font-weight: 700;
+          color: #090c9b;
+          margin-bottom: 0px;
+        "
+      >
+        Deep security
+      </p>
+      <% if(data.deep_security.deep_security_chart.visible) { %>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          text-align: center;
+        "
+      >
+        <div style="width: 80%; height: 400px; margin: 0 auto;">
+          <canvas style="margin-top: 20px" id="dpsPieChart"></canvas>
+        </div>
+      </div>
+      <% } %>
+      <% if(data.deep_security.server_workload_protection_chart.visible) { %>
+      <div>
+        <p
+          style="
+            font-size: 26px;
+            font-weight: bold;
+            color: #090c9b;
+            margin-bottom: 0px;
+          "
+        >
+        <%= data.deep_security.server_workload_protection_chart.title %>
+      </p>
+      <div style="width: 750px; height: 350px; margin: auto">
+          <canvas style="margin-top: 10px" id="dpsWPChart"></canvas>
+        </div>
+      </div>
+      <% } %>
+      <% if(data.deep_security.standard_endpoint_protection_chart.visible) { %>
+      <div>
+        <p
+          style="
+            font-size: 26px;
+            font-weight: bold;
+            color: #090c9b;
+            margin-bottom: 0px;
+            "
+          >
+            <%= data.deep_security.standard_endpoint_protection_chart.title %>
+          </p>
+          <div style="width: 750px; height: 350px; margin: auto">
+            <canvas style="margin-top: 10px;" id="dpsSEPChart"></canvas>
+          </div>
+      </div>
+      <% } %>
+      <% if(data.deep_security.notes?.length> 0) { %>
+      <div>
+        <%- include('./partials/recommendations', { notes: data.deep_security.notes }) %>
       </div>
       <% } %>
     </div>
@@ -2874,6 +2940,140 @@
           data: {
               labels: <%- JSON.stringify(data.agent_versions_summary.standard_endpoint_protection_chart.key) %>,
               datasets: <%- JSON.stringify(data.agent_versions_summary.standard_endpoint_protection_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    // deep security
+    <% if(data.deep_security.deep_security_chart.visible && data.deep_security.deep_security_chart.datasets.length > 0) { %>
+      const dpsPieChartCtx = document.getElementById('dpsPieChart').getContext('2d');
+
+      const dpsPieChart = new Chart(dpsPieChartCtx, {
+        type: 'bar',
+        data: {
+          labels: <%- JSON.stringify(data.deep_security.deep_security_chart.key) %>,
+          datasets: <%- JSON.stringify(data.deep_security.deep_security_chart.datasets) %>
+        },
+        options: {
+          scales: {
+            x: {
+              grid: {
+                display: false,
+              },
+            },
+            y: {
+              grid: {
+                display: false,
+              },
+            },
+          },
+          maintainAspectRatio: false,
+          plugins: {
+            datalabels: {
+              anchor: "end",
+              align: "end",
+            },
+            legend: {
+              display: false,
+            },
+          },
+        },
+        plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.deep_security.server_workload_protection_chart.visible && data.deep_security.server_workload_protection_chart.datasets.length > 0 ) { %>
+      const dpsWPChartCtx = document.getElementById('dpsWPChart').getContext('2d');
+      const dpsWPChart = new Chart(dpsWPChartCtx, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.deep_security.server_workload_protection_chart.key) %>,
+              datasets: <%- JSON.stringify(data.deep_security.server_workload_protection_chart.datasets) %>
+          },
+          options: {
+              indexAxis: 'y',
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'end',
+                      formatter: (value) => value,
+                      color: '#090c9b',
+                      font: {
+                          weight: 'bold',
+                          size: 14
+                      }
+                  }
+              },
+              layout: {
+                padding: {
+                  right: 30,
+                  left: 10,
+                },
+              },
+              scales: {
+                  x: {
+                      grid: {
+                          display: true
+                      }
+                  },
+                  y: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+    <% } %>
+
+    <% if(data.deep_security.standard_endpoint_protection_chart.visible && data.deep_security.standard_endpoint_protection_chart.datasets.length > 0) { %>
+      const dpsSEPChartCtx = document.getElementById('dpsSEPChart').getContext('2d');
+      const dpsSEPChart = new Chart(dpsSEPChartCtx, {
+          type: 'bar',
+          data: {
+              labels: <%- JSON.stringify(data.deep_security.standard_endpoint_protection_chart.key) %>,
+              datasets: <%- JSON.stringify(data.deep_security.standard_endpoint_protection_chart.datasets) %>
           },
           options: {
               indexAxis: 'y',

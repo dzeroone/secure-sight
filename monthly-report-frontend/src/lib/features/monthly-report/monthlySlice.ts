@@ -1,6 +1,6 @@
 import { monthlyReportInitialValue } from "@@/data/monthly-report";
 import { updateNestedField } from "@@/helper/helper";
-import { ACERiskEvent, AVSChartData, AboutChart, AgentVersionsSummary, EmailThreatType, FirstPageType, IntegrationSummary, POSItem, POSItemWithIndex, SLOTableType, SystemConfigurationReportType, TMProductSummary, TOCItem, TableOfContentsType, VulnerabilityAssessmentReportType } from "@@/types/types";
+import { ACERiskEvent, AVSChartData, AboutChart, AgentVersionsSummary, DeepSecurity, EmailThreatType, FirstPageType, IntegrationSummary, POSItem, POSItemWithIndex, SLOTableType, SystemConfigurationReportType, TMProductSummary, TOCItem, TableOfContentsType, VulnerabilityAssessmentReportType } from "@@/types/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import _set from 'lodash/set';
 import _get from 'lodash/get';
@@ -1571,6 +1571,47 @@ export const monthlyReportSlice = createSlice({
             state.agent_versions_summary.standard_endpoint_protection_chart.visible = action.payload;
         },
 
+        // Deep security
+        updateDPSChartKey: (state, action: PayloadAction<{ chart: keyof DeepSecurity; index: number; value: string }>) => {
+            const { chart, index, value } = action.payload;
+            const chartData = state.deep_security[chart] as AVSChartData;
+            if ('key' in chartData) {
+                chartData.key[index] = value;
+            } else {
+                throw new Error(`Selected chart does not have a key property.`);
+            }
+        },
+        updateDPSChartData: (state, action: PayloadAction<{ chart: keyof DeepSecurity; datasetIndex: number; index: number; value: number }>) => {
+            const { chart, datasetIndex, index, value } = action.payload;
+            const chartData = state.deep_security[chart] as AVSChartData;
+
+            // Check if the datasets property exists on the chartData
+            if ('datasets' in chartData) {
+                chartData.datasets[datasetIndex].data[index] = value;
+            } else {
+                throw new Error(`Selected chart does not have a datasets property.`);
+            }
+        },
+        updateDPSChartColor: (state, action: PayloadAction<{ chart: keyof DeepSecurity; datasetIndex: number; color: string }>) => {
+            const { chart, datasetIndex, color } = action.payload;
+            // state.agent_versions_summary[action.payload.chart].datasets[action.payload.datasetIndex].backgroundColor = action.payload.color;
+            const chartData = state.deep_security[chart] as AVSChartData;
+            if ('datasets' in chartData) {
+                chartData.datasets[0].backgroundColor[datasetIndex] = color;
+            } else {
+                throw new Error(`Selected chart does not have a datasets property.`);
+            }
+        },
+        updateDPSSCvisibility: (state, action: PayloadAction<boolean>) => {
+            state.deep_security.deep_security_chart.visible = action.payload;
+        },
+        updateDPSWPCCvisibility: (state, action: PayloadAction<boolean>) => {
+            state.deep_security.server_workload_protection_chart.visible = action.payload;
+        },
+        updateDPSSEPCvisibility: (state, action: PayloadAction<boolean>) => {
+            state.deep_security.standard_endpoint_protection_chart.visible = action.payload;
+        },
+
 
 
         // Vulnerability assessment report
@@ -1749,6 +1790,14 @@ export const {
     updateAVSSCvisibility,
     updateAVSWPCCvisibility,
     updateAVSSEPCvisibility,
+
+    // deep security
+    updateDPSChartKey,
+    updateDPSChartData,
+    updateDPSChartColor,
+    updateDPSSCvisibility,
+    updateDPSWPCCvisibility,
+    updateDPSSEPCvisibility,
 
     pendingIncidentsSummary,
     updatePendingIncidentsSummary,

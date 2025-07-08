@@ -236,7 +236,7 @@ const SystemConfigurationReport = () => {
                 {data.host_with_insecure_connection.total}
                 <br />
                 <span style={{ fontWeight: "normal" }}>
-                  Hosts with insecure connection issues
+                  Total connection issues
                 </span>
               </td>
             </tr>

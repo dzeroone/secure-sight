@@ -41,7 +41,7 @@ export default function MonthlyFormStepper({
       <Stack direction={"row"} gap={1} alignItems={"center"}>
         <FormControl size="small">
           <Select value={activeStep} onChange={onChangeStep}>
-            {Array.from({ length: 27 }).map((_, i: number) => {
+            {Array.from({ length: totalStep }).map((_, i: number) => {
               return (
                 <MenuItem value={i} key={i}>
                   {i + 1}

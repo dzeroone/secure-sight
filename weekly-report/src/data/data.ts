@@ -495,6 +495,15 @@ export const data = {
     }
 }
 
+export const ROLES = {
+  ADMIN: 'admin',
+  LEVEL3: 'l3',
+  LEVEL2: 'l2',
+  LEVEL1: 'l1',
+}
+
+export const ROLE_NAMES = Object.fromEntries(Object.entries(ROLES).map(([k, v]) => [v, k]))
+
 export const REPORT_STATUS = {
     DRAFT: 0,
     SUBMIT: 1,

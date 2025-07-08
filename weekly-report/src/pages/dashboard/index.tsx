@@ -51,7 +51,7 @@ import TableOfContents from "../../components/pdf-components/TableOfContents";
 import ThreatIntelSummary from "../../components/pdf-components/ThreatIntelSummary";
 import Alert from "../../components/ui/Alert";
 import axiosApi from "../../config/axios";
-import { REPORT_AUDIT_STATUS, REPORT_STATUS } from "../../data/data";
+import { REPORT_AUDIT_STATUS, REPORT_STATUS, ROLE_NAMES, ROLES } from "../../data/data";
 import {
   updateChartData,
   updateClientName,
@@ -118,6 +118,20 @@ const Dashboard = () => {
   const [selectReporterShown, setSelectReporterShown] = useState(false);
   const [reporters, setReporters] = useState<any[]>([]);
   const [selectedReporter, setSelectedReporter] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState('')
+
+  const levels = useMemo(() => {
+    if(currentUser?.role == ROLES.LEVEL1) {
+      setSelectedLevel(ROLES.LEVEL3)
+      return [ROLES.LEVEL3, ROLES.LEVEL2]
+    }
+    if(currentUser?.role == ROLES.LEVEL2) {
+      setSelectedLevel(ROLES.LEVEL3)
+      return [ROLES.LEVEL3]
+    }
+    setSelectedLevel('')
+    return []
+  }, [currentUser?.role])
 
   /**
    * get report data from elastic index
@@ -620,14 +634,15 @@ const Dashboard = () => {
   // - end
 
   const loadReporters = useCallback(async () => {
-    if (!selectReporterShown) return;
+    if (!selectedLevel || !reportState.assignment?._id) return;
     try {
+      setSelectedReporter('');
       const res = await axiosApi.get(
-        `/assignments/${reportState.assignment?._id}/suggest-reporters`
+        `/assignments/${reportState.assignment?._id}/suggest-reporters?level=${selectedLevel}`
       );
       setReporters(res.data);
     } catch (e) {}
-  }, [selectReporterShown]);
+  }, [selectedLevel, reportState.assignment?._id]);
 
   const handlePrint = async () => {
     setIsPreparingPdf(true);
@@ -1023,25 +1038,48 @@ const Dashboard = () => {
           <DialogHeader>
             <DialogTitle>Select reporter</DialogTitle>
           </DialogHeader>
-          <Label htmlFor="reporter">Reporter</Label>
-          <SelectInput
-            id="reporter"
-            value={selectedReporter}
-            onChange={(e) => {
-              setSelectedReporter(e.target.value);
-            }}
-          >
-            <option value="" disabled>
-              None
-            </option>
-            {reporters.map((r: any) => {
-              return (
-                <option value={r._id} key={r._id}>
-                  {r.fullname}
-                </option>
-              );
-            })}
-          </SelectInput>
+          <div>
+            <Label htmlFor="reporter-level-input">Level</Label>
+            <SelectInput
+              id="reporter-level-input"
+              value={selectedLevel}
+              onChange={(e) => {
+                setSelectedLevel(e.target.value);
+              }}
+            >
+              <option value="" disabled>
+                None
+              </option>
+              {levels.map((l: any) => {
+                return (
+                  <option value={l} key={l}>
+                    {ROLE_NAMES[l]}
+                  </option>
+                );
+              })}
+            </SelectInput>
+          </div>
+          <div className="mt-2">
+            <Label htmlFor="reporter">Reporter</Label>
+            <SelectInput
+              id="reporter"
+              value={selectedReporter}
+              onChange={(e) => {
+                setSelectedReporter(e.target.value);
+              }}
+            >
+              <option value="" disabled>
+                None
+              </option>
+              {reporters.map((r: any) => {
+                return (
+                  <option value={r._id} key={r._id}>
+                    {r.fullname}
+                  </option>
+                );
+              })}
+            </SelectInput>
+          </div>
           <DialogFooter>
             <Button
               onClick={() => {

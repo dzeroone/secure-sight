@@ -217,13 +217,11 @@ class UserController {
     })
   }
 
-  async getSameLevelUsers(userId: string) {
+  async getUsersByRole(role: string) {
     const userModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
-    const user = await userModel.findById(userId)
-    if (!user) throw new Error("User not found!")
 
     return userModel.find({
-      role: user.role
+      role
     }, {
       fullname: 1
     }).lean()
