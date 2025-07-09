@@ -10,7 +10,7 @@ export const monthlyReportSlice = createSlice({
     initialState: monthlyReportInitialValue,
     reducers: {
         resetMonthlyReportState(_, action: PayloadAction<typeof monthlyReportInitialValue | null>) {
-            const defaultValues = structuredClone(monthlyReportInitialValue)
+            const defaultValues = JSON.parse(JSON.stringify(monthlyReportInitialValue))
             return {
                 ...defaultValues,
                 ...action.payload
