@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { SendIcon } from "lucide-react";
 import { formatMonthlyReportSession, formatWeeklyReportSession, getMonthlyReportIndex } from "../../helpers/form_helper";
 import ModalLoading from "../../components/ModalLoading";
+import { toast } from "react-toastify";
 
 export default function AssignmentMessagePage() {
   const [busy, setBusy] = useState(false)
@@ -60,15 +61,10 @@ export default function AssignmentMessagePage() {
       loadAssignmentMessages()
     }catch(e) {
       const msg = getErrorMessage(e)
-      alert(msg)
+      toast.error(msg)
     }finally{
       setSendingMessage(false)
     }
-  }
-
-  const getMessanger = (id) => {
-    return messageState.info?.assignee?._id === id ?
-      messageState.info?.assignee.fullname : messageState.info?.reporter?._id === id ? messageState.info?.reporter.fullname : null
   }
 
   const getReportSession = () => {
@@ -102,7 +98,7 @@ export default function AssignmentMessagePage() {
           { messageState.messages.map((m) => {
             return (
               <div key={m._id} className="mb-2">
-                <div><strong>{getMessanger(m.sId)}</strong></div>
+                <div><strong>{m.sender.fullname}</strong></div>
                 <div className="message">{m.msg}</div>
               </div>
             )

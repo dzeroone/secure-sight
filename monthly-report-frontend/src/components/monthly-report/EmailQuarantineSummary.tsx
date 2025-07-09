@@ -67,12 +67,12 @@ const EmailQuarantineSummary = () => {
               }}
             >
               <td width={500}>
-                <p style={{ margin: 0, lineHeight: 1.3 }}>
+                <p style={{ margin: 0, lineHeight: 1.3, wordBreak: 'break-word' }}>
                   {data.sender_receipts.sender}
                 </p>
               </td>
               <td width={500}>
-                <p style={{ margin: 0, lineHeight: 1.3 }}>
+                <p style={{ margin: 0, lineHeight: 1.3, wordBreak: 'break-word' }}>
                   {data.sender_receipts.receipt}
                 </p>
               </td>

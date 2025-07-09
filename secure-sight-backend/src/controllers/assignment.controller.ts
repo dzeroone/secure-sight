@@ -67,7 +67,46 @@ class AssignmentController {
   }
 
   async getMessages(assingmentId: string) {
-    return assignmentMessageModel.find({ aId: assingmentId }).sort({ cAt: 1 })
+    return assignmentMessageModel.aggregate([
+      {
+        $match: {
+          aId: assingmentId
+        }
+      },
+      {
+        $sort: { cAt: 1 }
+      },
+      {
+        $addFields: {
+          oSId: { $toObjectId: "$sId" }
+        }
+      },
+      {
+        $lookup: {
+          from: COLLECTIONS.USERS,
+          localField: "oSId",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                fullname: 1
+              }
+            }
+          ],
+          as: "sender"
+        }
+      },
+      {
+        $unwind: "$sender"
+      },
+      {
+        $project: {
+          msg: 1,
+          sender: 1
+        }
+      }
+    ])
+    // return assignmentMessageModel.find({ aId: assingmentId }).sort({ cAt: 1 })
   }
 
   async saveMessage(assingmentId: string, senderId: string, message: string) {

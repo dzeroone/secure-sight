@@ -4,7 +4,7 @@ import { useAppSelector } from "@@/lib/hooks";
 import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
 import { CHART_EXTRAS } from "@@/constants";
-import { Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 
 export const ThreatIntelSummary = () => {
   const data = useAppSelector(
@@ -147,41 +147,26 @@ export const ThreatIntelSummary = () => {
               width: "100%",
               borderCollapse: "collapse",
               borderColor: "#c6c6c9",
-              textAlign: "center",
             }}
           >
-            <thead>
-              <tr style={{ color: "#090c9b", fontSize: 24 }}>
-                <th>Sr. No</th>
-                <th>Advisory Name</th>
-                <th>About Advisory</th>
-                <th>Investigation Summary</th>
-              </tr>
-            </thead>
             <tbody>
               {data.ioc_investigation.data.map((l, m) => (
                 <tr
                   style={{ fontSize: 20, backgroundColor: "#ededed" }}
                   key={m}
                 >
-                  <td>{m + 1}.</td>
-                  <td>{l.advisory_name}</td>
-                  <td>{l.about_advisory}</td>
-                  <td
-                    style={{
-                      wordBreak: "break-all",
-                    }}
-                  >
-                    <strong>
-                      Incident No: {l.investigation_summary.incident_no}
-                      <br />
-                      Incident Over View:{" "}
-                      {l.investigation_summary.incident_overview}
-                      <br />
-                      Findings: {l.investigation_summary.findings}
-                      <br />
-                      Action Taken: {l.investigation_summary.action_taken}
-                    </strong>
+                  <Box component="td" width="3rem">{m + 1}.</Box>
+                  <td style={{ wordBreak: 'break-word' }}>
+                    <Box display="flex" flexDirection="column" gap={2}>
+                      <div><strong>Advisory Name: </strong>{l.advisory_name}</div>
+                      <div><strong>About Advisory: </strong><br />{l.about_advisory}</div>
+                      <Divider sx={{ w: '100%' }} />
+                      <div><strong>Investigation Summary: </strong></div>
+                      <div><strong>Incident No: </strong>{l.investigation_summary.incident_no}</div>
+                      <div><strong>Incident Overview: </strong>{l.investigation_summary.incident_overview}</div>
+                      <div><strong>Findings: </strong>{l.investigation_summary.findings}</div>
+                      <div><strong>Action Taken: </strong>{l.investigation_summary.action_taken}</div>
+                    </Box>
                   </td>
                 </tr>
               ))}
