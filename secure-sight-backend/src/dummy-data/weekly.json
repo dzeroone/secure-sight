@@ -1,62 +1,100 @@
 {
-  "Key_feature_adoption_rate_of_Cw": {
+  "ENDPOINT_INVENTORY": {
     "date": {
-      "Key_feature_adoption_rate_of_Cw": {
-        "graph": {
+      "ENDPOINT_INVENTORY": {
+        "Bar_graph": {
           "Key": [
-            "-",
-            "Anti-malware Scans",
-            "Web Reputation",
-            "Behavior Monitoring",
-            "Predictive Machine Learning",
-            "Smart Feedback",
-            "Firewall",
-            "Suspicious Connection Service"
+            "XDR feature enabled",
+            "XDR feature not enabled",
+            "Action Required"
           ],
           "data": [
+            "",
+            "",
+            "0"
+          ],
+          "label": "Info",
+          "backgroundColor": "#ff8200",
+          "chart_type": "vertical_bar"
+        },
+        "CP_and_LI": {
+          "License_Information": [
             {
-              "label": "Total",
-              "data": [
-                "0",
-                "0",
-                "0",
-                "0",
-                "0",
-                "0",
-                ""
-              ],
-              "backgroundColor": "#ff8200"
+              "Status": "",
+              "Product": "Apex One as a Service"
             },
             {
-              "label": "Count",
-              "data": [
-                "0",
-                "0",
-                "0",
-                "0",
-                "0",
-                "0",
-                ""
-              ],
-              "backgroundColor": "#696969"
+              "Status": "",
+              "Product": "Cloud App Security"
             }
           ],
-          "chart_type": "horizontal_bar"
+          "Products_Connected": [
+            {
+              "Status": "Connected",
+              "Product": "Apex One as a Service"
+            },
+            {
+              "Status": "Connected",
+              "Product": "Cloud App Security"
+            }
+          ]
         }
       },
-      "blank": 0,
-      "title": "Cw"
+      "blank": 0
+    }
+  },
+  "CLOSED_INCIDENT_SUMMARY": {
+    "date": {
+      "CLOSED_INCIDENT_SUMMARY": {
+        "graph": {
+          "Key": [
+            "P1",
+            "P2",
+            "P3",
+            "P4"
+          ],
+          "data": {
+            "True Positive": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "False Positive": [
+              0,
+              2,
+              0,
+              7
+            ],
+            "Remediated": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "Duplicate": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "label": "Count",
+          "chart_type": "stacked_bar"
+        }
+      },
+      "blank": 0
     }
   },
   "PENDING_INCIDENTS_SUMMARY": {
     "date": {
       "PENDING_INCIDENTS_SUMMARY": {
-        "T_P_Incidents": "0",
+        "T_P_Incidents": "8",
         "P_I_F_Customer": "",
         "P_Incidents_from_SOC": "",
         "Pie_chart": {
           "data": [
-            "0",
+            "8",
             "",
             ""
           ],
@@ -76,68 +114,92 @@
       "blank": 0
     }
   },
-  "CLOSED_INCIDENT_SUMMARY": {
-    "date": {
-      "CLOSED_INCIDENT_SUMMARY": {
-        "graph": {
-          "Key": [
-            "P1",
-            "P2",
-            "P3",
-            "P4"
-          ],
-          "data": {
-            "True Positive": [10, 0, 0, 0],
-            "False Positive": [0, 20, 0, 0],
-            "Remediated": [0, 0, 30, 0],
-            "Duplicate": [0, 0, 0, 40]
-          },
-          "label": "Count",
-          "chart_type": "stacked_bar"
-        }
+  "Key Feature Adoption Rate of C1": {
+    "Key Feature Adoption Rate of C1": [
+      {
+        "Feature Name": "Intrusion Prevention System (IPS)",
+        "Total": "319",
+        "Count": "319",
+        "Rate": "100"
       },
-      "blank": 0
-    }
-  },
-  "SLO_SUMMARY": {
-    "date": {
-      "SLO_SUMMARY": {
-        "graph": {
-          "Key": [
-            "Total Closed Incidents",
-            "SLO Met",
-            "SLO Not Met"
-          ],
-          "data": [0, 0, 0],
-          "label": "Case volume",
-          "backgroundColor": "#ff8200",
-          "chart_type": "vertical_bar"
-        },
-        "SLO_Details": [
-          {
-            "Priority": 1,
-            "Description": "Incidents that have a severe impact on customer operations. This event is a concern, such as attack formations or potential breaches.",
-            "Response_Time": ""
-          },
-          {
-            "Priority": 2,
-            "Description": "Incidents that have a significant impact, or the potential to have a severe impact, on operations.",
-            "Response_Time": ""
-          },
-          {
-            "Priority": 3,
-            "Description": "Incidents that have a minimal impact with the potential for escalation if not contained, causing significant impact on operations.",
-            "Response_Time": ""
-          },
-          {
-            "Priority": 4,
-            "Description": "Incidents that do not have a direct impact on customer operations but violate the customer security baseline.",
-            "Response_Time": ""
-          }
-        ]
+      {
+        "Feature Name": "Anti-malware",
+        "Total": "319",
+        "Count": "319",
+        "Rate": "100"
       },
-      "blank": 0
-    }
+      {
+        "Feature Name": "Web Reputation",
+        "Total": "319",
+        "Count": "319",
+        "Rate": "100"
+      },
+      {
+        "Feature Name": "Behavior Monitoring",
+        "Total": "319",
+        "Count": "319",
+        "Rate": "100"
+      },
+      {
+        "Feature Name": "Predictive Machine Learning",
+        "Total": "319",
+        "Count": "319",
+        "Rate": "100"
+      },
+      {
+        "Feature Name": "Smart Feedback",
+        "Total": "319",
+        "Count": "0",
+        "Rate": "0"
+      },
+      {
+        "Feature Name": "Firewall",
+        "Total": "319",
+        "Count": "1",
+        "Rate": "0"
+      },
+      {
+        "Feature Name": "Agent Self-Protection",
+        "Total": "319",
+        "Count": "318",
+        "Rate": "100"
+      },
+      {
+        "Feature Name": "File Integrity Monitoring (FIM)",
+        "Total": "319",
+        "Count": "318",
+        "Rate": "100"
+      },
+      {
+        "Feature Name": "Log Inspection",
+        "Total": "319",
+        "Count": "319",
+        "Rate": "100"
+      },
+      {
+        "Feature Name": "Device Control",
+        "Total": "NA",
+        "Count": "NA",
+        "Rate": "NA"
+      },
+      {
+        "Feature Name": "Application Control",
+        "Total": "319",
+        "Count": "304",
+        "Rate": "95"
+      }
+    ],
+    "chart_type": "horizontal_bar",
+    "label": [
+      "Total",
+      "Count",
+      "Rate"
+    ],
+    "background_color": [
+      "rgb(255,130,0)",
+      "rgb(251,214,92)",
+      "rgb(9,12,155)"
+    ]
   },
   "THREAT_INTEL_SUMMARY": {
     "date": {
@@ -170,7 +232,12 @@
         },
         "Matched_IOCs_Detailed_Summary": [],
         "Incident_Summary_by_Severity": {
-          "data": [0, 0, 0, 0],
+          "data": [
+            0,
+            77,
+            3,
+            12
+          ],
           "label": [
             "Critical",
             "High",
@@ -190,9 +257,14 @@
           "data": []
         },
         "Incident_Summary_by_status": {
-          "data": [0, 0],
+          "data": [
+            84,
+            0,
+            8
+          ],
           "label": [
             "Closed Incidents",
+            "Closed Incidents without acknowledgement",
             "Pending Incidents"
           ],
           "backgroundColor": [
@@ -215,12 +287,32 @@
           "data": [
             {
               "label": "Closed",
-              "data": [0, 0, 0, 0],
+              "data": [
+                0,
+                77,
+                0,
+                7
+              ],
               "backgroundColor": "#ffcd9a"
             },
             {
+              "label": "Closed without acknowledgement",
+              "data": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "backgroundColor": "#f59e42"
+            },
+            {
               "label": "Pending",
-              "data": [0, 0, 0, 0],
+              "data": [
+                0,
+                0,
+                3,
+                5
+              ],
               "backgroundColor": "#ffc0cb"
             }
           ],
@@ -231,16 +323,40 @@
           "data": []
         },
         "T10IS_by_Category": {
-          "Key": [],
+          "Key": [
+            "FortiGate: Attack detected by UDP/TCP signature.",
+            "File Detections in Windows Directory - Blocked",
+            "Terminal Shell in Container",
+            "Checkpoint: Multiple LAN firewall administration authentication failure.",
+            "[Heuristic Attribute] Possible Remote Services Behavior",
+            "Possible Account Compromise - Atypical Travel",
+            "FortiGate: Firewall device shutdown."
+          ],
           "data": [
             {
               "label": "Closed",
-              "data": [],
+              "data": [
+                77,
+                0,
+                4,
+                0,
+                1,
+                1,
+                1
+              ],
               "backgroundColor": "#ffd9b2"
             },
             {
               "label": "Pending",
-              "data": [],
+              "data": [
+                0,
+                5,
+                0,
+                3,
+                0,
+                0,
+                0
+              ],
               "backgroundColor": "#ffa950"
             }
           ],
@@ -254,54 +370,46 @@
       "blank": 0
     }
   },
-  "ENDPOINT_INVENTORY": {
+  "SLO_SUMMARY": {
     "date": {
-      "ENDPOINT_INVENTORY": {
-        "Bar_graph": {
+      "SLO_SUMMARY": {
+        "graph": {
           "Key": [
-            "XDR feature enabled",
-            "XDR feature not enabled",
-            "Action Required"
+            "Total Closed Incidents",
+            "SLO Met",
+            "SLO Not Met"
           ],
           "data": [
-            "",
-            "",
-            "7"
+            84,
+            0,
+            84
           ],
-          "label": "Info",
+          "label": "Case volume",
           "backgroundColor": "#ff8200",
           "chart_type": "vertical_bar"
         },
-        "CP_and_LI": {
-          "License_Information": [
-            {
-              "Status": "",
-              "Product": "TM Cloud One"
-            },
-            {
-              "Status": "",
-              "Product": "TM Vision One"
-            },
-            {
-              "Status": "",
-              "Product": "TM Deep Security"
-            }
-          ],
-          "Products_Connected": [
-            {
-              "Status": "Not Connected",
-              "Product": "TM Cloud One"
-            },
-            {
-              "Status": "Connected",
-              "Product": "TM Vision One"
-            },
-            {
-              "Status": "",
-              "Product": "TM Deep Security"
-            }
-          ]
-        }
+        "SLO_Details": [
+          {
+            "Priority": 1,
+            "Description": "Incidents that have a severe impact on customer operations. This event is a concern, such as attack formations or potential breaches.",
+            "Response_Time": ""
+          },
+          {
+            "Priority": 2,
+            "Description": "Incidents that have a significant impact, or the potential to have a severe impact, on operations.",
+            "Response_Time": ""
+          },
+          {
+            "Priority": 3,
+            "Description": "Incidents that have a minimal impact with the potential for escalation if not contained, causing significant impact on operations.",
+            "Response_Time": ""
+          },
+          {
+            "Priority": 4,
+            "Description": "Incidents that do not have a direct impact on customer operations but violate the customer security baseline.",
+            "Response_Time": ""
+          }
+        ]
       },
       "blank": 0
     }
@@ -310,13 +418,16 @@
     "date": {
       "EXECUTIVE_SUMMARY": {
         "total_incidents": {
-          "total_incidents": "0",
-          "start_date": "2025-06-06",
-          "end_date": "2025-06-12"
+          "total_incidents": "92",
+          "start_date": "2025-07-07",
+          "end_date": "2025-07-13"
         },
         "risk_index": {
           "chart": {
-            "data": [57.3, 42.7],
+            "data": [
+              32.5,
+              67.5
+            ],
             "backgroundColor": [
               "rgb(255, 130, 0)",
               "rgb(105, 105, 105)"
@@ -325,13 +436,34 @@
             "chart_type": "doughnut"
           }
         },
-        "highly_exploitable": 1739,
-        "Incident_Closed": 0,
-        "Highest_incidient": 0,
-        "Highest_incidient_date": null,
+        "highly_exploitable": 9406,
+        "Incident_Closed": 84,
+        "Highest_incidient": 77,
+        "Highest_incidient_date": "",
         "top_incident": {
-          "no_incidents": 0,
-          "table": []
+          "no_incidents": 5,
+          "table": [
+            {
+              "incident_name": "FortiGate: Attack detected by UDP/TCP signature. - 77",
+              "status": "Closed"
+            },
+            {
+              "incident_name": "File Detections in Windows Directory - Blocked - 5",
+              "status": "Waiting"
+            },
+            {
+              "incident_name": "Terminal Shell in Container - 4",
+              "status": "Closed"
+            },
+            {
+              "incident_name": "Checkpoint: Multiple LAN firewall administration authentication failure. - 3",
+              "status": "Waiting"
+            },
+            {
+              "incident_name": "[Heuristic Attribute] Possible Remote Services Behavior - 1",
+              "status": "Closed"
+            }
+          ]
         },
         "agent_life_cycle": {
           "apex_chart": {
@@ -371,12 +503,18 @@
           "action": ""
         },
         "endpoint_protection": {
-          "data": [35, 22],
+          "data": [
+            11,
+            10
+          ],
           "label": [],
           "key": "Agents Deployed"
         },
         "endpoint_sensor": {
-          "data": [1, 1],
+          "data": [
+            10,
+            10
+          ],
           "label": [],
           "key": "Sensors Enabled"
         }
@@ -384,53 +522,79 @@
       "blank": 0
     }
   },
-  "Key_feature_adoption_rate_of_Ap": {
-    "date": {
-      "Key_feature_adoption_rate_of_Ap": {
-        "graph": {
-          "Key": [
-            "-",
-            "Anti-malware Scans",
-            "Web Reputation",
-            "Behavior Monitoring",
-            "Predictive Machine Learning",
-            "Smart Feedback",
-            "Firewall",
-            "Suspicious Connection Service"
-          ],
-          "data": [
-            {
-              "label": "Total",
-              "data": [
-                "17",
-                "4",
-                "5",
-                "4",
-                "4",
-                "4",
-                "35"
-              ],
-              "backgroundColor": "#ff8200"
-            },
-            {
-              "label": "Count",
-              "data": [
-                "13",
-                "5",
-                "3",
-                "3",
-                "6",
-                "21",
-                "22"
-              ],
-              "backgroundColor": "#696969"
-            }
-          ],
-          "chart_type": "horizontal_bar"
-        }
+  "Key Feature Adoption Rate of A1": {
+    "Key Feature Adoption Rate of A1": [
+      {
+        "Feature Name": "Vulnerability Protection",
+        "Total": 11,
+        "Count": 10,
+        "Rate": 90.9
       },
-      "blank": 0,
-      "title": "ap"
-    }
+      {
+        "Feature Name": "Anti-Malware Scans",
+        "Total": 12,
+        "Count": 11,
+        "Rate": 91.7
+      },
+      {
+        "Feature Name": "Web Reputation",
+        "Total": 10,
+        "Count": 9,
+        "Rate": 90
+      },
+      {
+        "Feature Name": "Behavior Monitoring",
+        "Total": 8,
+        "Count": 7,
+        "Rate": 87.5
+      },
+      {
+        "Feature Name": "Predictive Machine Learning",
+        "Total": 10,
+        "Count": 9,
+        "Rate": 90
+      },
+      {
+        "Feature Name": "Smart Feedback",
+        "Total": 10,
+        "Count": 9,
+        "Rate": 90
+      },
+      {
+        "Feature Name": "Firewall",
+        "Total": 8,
+        "Count": 0,
+        "Rate": 0
+      },
+      {
+        "Feature Name": "Suspicious Connection Service",
+        "Total": 11,
+        "Count": 10,
+        "Rate": 90.9
+      },
+      {
+        "Feature Name": "Device Control",
+        "Total": 10,
+        "Count": 8,
+        "Rate": 80
+      },
+      {
+        "Feature Name": "Application Control",
+        "Total": 8,
+        "Count": 3,
+        "Rate": 37.5
+      }
+    ],
+    "chart_type": "horizontal_bar",
+    "label": [
+      "Total",
+      "Count",
+      "Rate"
+    ],
+    "background_color": [
+      "rgb(255,130,0)",
+      "rgb(251,214,92)",
+      "rgb(9,12,155)"
+    ]
   }
 }

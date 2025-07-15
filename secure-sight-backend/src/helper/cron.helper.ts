@@ -17,7 +17,7 @@ const scheduler = new Pulse({
 	defaultConcurrency: 4,
 	maxConcurrency: 4,
 	processEvery: '10 seconds',
-	resumeOnRestart: true,
+	resumeOnRestart: false,
 });
 
 scheduler.define(SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, async (job, done) => {

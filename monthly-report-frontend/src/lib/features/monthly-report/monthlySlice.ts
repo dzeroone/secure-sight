@@ -151,6 +151,10 @@ export const monthlyReportSlice = createSlice({
                         type: '',
                         payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
                     })
+                    reducers.updateOISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.total_incidents`, value: priorityData['Total Incidents'] }
+                    })
                 })
             }
             // -
