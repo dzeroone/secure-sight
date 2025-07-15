@@ -20,8 +20,7 @@ const KFAWorkloadSecurity = () => {
           marginBottom: 0,
         }}
       >
-        Key feature adoption rate of C1WS / server &amp; workload security /
-        protection
+        Key feature adoption rate of C1WS / Server & Workload Security / Protection
       </p>
       <div
         style={{

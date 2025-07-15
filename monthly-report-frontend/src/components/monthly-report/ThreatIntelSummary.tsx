@@ -5,6 +5,7 @@ import GroupedBarChartHorizontal from "../charts/GroupedBarChartHorizontal";
 import RecommendationNotes from "../RecommendationNotes";
 import { CHART_EXTRAS } from "@@/constants";
 import { Box, Divider, Typography } from "@mui/material";
+import { ReactNode } from "react";
 
 export const ThreatIntelSummary = () => {
   const data = useAppSelector(
@@ -155,17 +156,19 @@ export const ThreatIntelSummary = () => {
                   style={{ fontSize: 20, backgroundColor: "#ededed" }}
                   key={m}
                 >
-                  <Box component="td" width="3rem">{m + 1}.</Box>
+                  <Box component="td" width="3rem" sx={{
+                    color: "#090c9b", fontSize: 24
+                  }}>{m + 1}.</Box>
                   <td style={{ wordBreak: 'break-word' }}>
                     <Box display="flex" flexDirection="column" gap={2}>
-                      <div><strong>Advisory Name: </strong>{l.advisory_name}</div>
-                      <div><strong>About Advisory: </strong><br />{l.about_advisory}</div>
+                      <div><FeatureKey>Advisory Name: </FeatureKey>{l.advisory_name}</div>
+                      <div><FeatureKey>About Advisory: </FeatureKey><br />{l.about_advisory}</div>
                       <Divider sx={{ w: '100%' }} />
-                      <div><strong>Investigation Summary: </strong></div>
-                      <div><strong>Incident No: </strong>{l.investigation_summary.incident_no}</div>
-                      <div><strong>Incident Overview: </strong>{l.investigation_summary.incident_overview}</div>
-                      <div><strong>Findings: </strong>{l.investigation_summary.findings}</div>
-                      <div><strong>Action Taken: </strong>{l.investigation_summary.action_taken}</div>
+                      <div><FeatureKey>Investigation Summary: </FeatureKey></div>
+                      <div><FeatureKey>Incident No: </FeatureKey>{l.investigation_summary.incident_no}</div>
+                      <div><FeatureKey>Incident Overview: </FeatureKey>{l.investigation_summary.incident_overview}</div>
+                      <div><FeatureKey>Findings: </FeatureKey>{l.investigation_summary.findings}</div>
+                      <div><FeatureKey>Action Taken: </FeatureKey>{l.investigation_summary.action_taken}</div>
                     </Box>
                   </td>
                 </tr>
@@ -178,3 +181,11 @@ export const ThreatIntelSummary = () => {
     </div>
   );
 };
+
+function FeatureKey({ children }: { children: ReactNode }) {
+  return (
+    <Box component="span" sx={{
+      color: "#090c9b", fontSize: 24, fontWeight: 600
+    }}>{children}</Box>
+  )
+}

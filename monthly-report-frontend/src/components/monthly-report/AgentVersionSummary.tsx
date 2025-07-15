@@ -73,7 +73,7 @@ const AgentVersionSummary = () => {
               marginBottom: 0,
             }}
           >
-            C1WS / server & workload security / protection
+            C1WS / Server & Workload Security / Protection
           </p>
           <div
             style={{
