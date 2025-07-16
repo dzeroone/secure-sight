@@ -471,72 +471,72 @@ const Dashboard = () => {
             );
           }
 
-          if (data.Key_feature_adoption_rate_of_Ap?.date) {
-            const graph =
-              data.Key_feature_adoption_rate_of_Ap?.date
-                .Key_feature_adoption_rate_of_Ap?.graph;
-            graph?.Key.forEach((k: string, i: number) => {
-              dispatch(
-                updateDataProp({
-                  attr: `kFARAp.key[${i}]`,
-                  value: k,
-                })
-              );
-            });
-            graph?.data.forEach((d: any, i: number) => {
+          if (data['Key Feature Adoption Rate of A1']) {
+            const graphData =
+              data['Key Feature Adoption Rate of A1']['Key Feature Adoption Rate of A1'];
+            
+            data['Key Feature Adoption Rate of A1'].label.forEach((label: any, i: number) => {
               dispatch(
                 updateDataProp({
                   attr: `kFARAp.data[${i}].label`,
-                  value: graph.data[i].label,
+                  value: label,
                 })
               );
               dispatch(
                 updateDataProp({
                   attr: `kFARAp.data[${i}].backgroundColor`,
-                  value: graph.data[i].backgroundColor,
+                  value: data['Key Feature Adoption Rate of A1'].background_color[i],
                 })
               );
-              graph.data[i].data.forEach((dv: any, j: number) => {
+            });
+            graphData.forEach((feature: any, i: number) => {
+              dispatch(
+                updateDataProp({
+                  attr: `kFARAp.key[${i}]`,
+                  value: feature['Feature Name'],
+                })
+              );
+              data['Key Feature Adoption Rate of A1'].label.forEach((label: any, j: number) => {
                 dispatch(
                   updateDataProp({
-                    attr: `kFARAp.data[${i}].data[${j}]`,
-                    value: Number(dv) || 0,
+                    attr: `kFARAp.data[${j}].data[${i}]`,
+                    value: Number(feature[label]) || 0,
                   })
                 );
               });
             });
           }
 
-          if (data.Key_feature_adoption_rate_of_Cw?.date) {
-            const graph =
-              data.Key_feature_adoption_rate_of_Cw?.date
-                .Key_feature_adoption_rate_of_Cw?.graph;
-            graph?.Key.forEach((k: string, i: number) => {
-              dispatch(
-                updateDataProp({
-                  attr: `kFARWl.key[${i}]`,
-                  value: k,
-                })
-              );
-            });
-            graph?.data.forEach((d: any, i: number) => {
+          if (data['Key Feature Adoption Rate of C1']) {
+            const graphData =
+              data['Key Feature Adoption Rate of C1']['Key Feature Adoption Rate of C1'];
+            
+            data['Key Feature Adoption Rate of C1'].label.forEach((label: any, i: number) => {
               dispatch(
                 updateDataProp({
                   attr: `kFARWl.data[${i}].label`,
-                  value: graph.data[i].label,
+                  value: label,
                 })
               );
               dispatch(
                 updateDataProp({
                   attr: `kFARWl.data[${i}].backgroundColor`,
-                  value: graph.data[i].backgroundColor,
+                  value: data['Key Feature Adoption Rate of C1'].background_color[i],
                 })
               );
-              graph.data[i].data.forEach((dv: any, j: number) => {
+            });
+            graphData.forEach((feature: any, i: number) => {
+              dispatch(
+                updateDataProp({
+                  attr: `kFARWl.key[${i}]`,
+                  value: feature['Feature Name'],
+                })
+              );
+              data['Key Feature Adoption Rate of C1'].label.forEach((label: any, j: number) => {
                 dispatch(
                   updateDataProp({
-                    attr: `kFARWl.data[${i}].data[${j}]`,
-                    value: Number(dv) || 0,
+                    attr: `kFARWl.data[${j}].data[${i}]`,
+                    value: Number(feature[label]) || 0,
                   })
                 );
               });
@@ -1015,11 +1015,11 @@ const Dashboard = () => {
               )}
 
               {/* Key feature apex one */}
-              {reportData?.Key_feature_adoption_rate_of_Ap &&
+              {reportData['Key Feature Adoption Rate of A1'] &&
                 tableOfContents[11].visible && <KeyFeatureApex />}
 
               {/* Key feature workload */}
-              {reportData?.Key_feature_adoption_rate_of_Cw &&
+              {reportData['Key Feature Adoption Rate of C1'] &&
                 tableOfContents[12].visible && <KeyFeatureWorkLoad />}
 
               {/* Key feature deep security */}
