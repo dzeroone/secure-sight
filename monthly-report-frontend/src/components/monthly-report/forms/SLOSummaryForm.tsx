@@ -26,7 +26,7 @@ const SLOSummaryForm = () => {
   };
 
   const handleChartDataChange = (index: number, value: string) => {
-    dispatch(updateSLOChartData({ index, value: parseInt(value) }));
+    dispatch(updateSLOChartData({ index, value: Number(value) }));
   };
 
   const handleChartColorChange = (color: string) => {
