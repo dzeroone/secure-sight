@@ -62,7 +62,7 @@ const SLOSummaryForm = () => {
               <TextField
                 label={`Data ${index + 1}`}
                 variant="outlined"
-                value={data.slo_chart.datasets[0].data[index].toString()}
+                value={(data.slo_chart.datasets[0].data[index] != null && data.slo_chart.datasets[0].data[index] != undefined) ? data.slo_chart.datasets[0].data[index].toString() : ""}
                 onChange={(e) => handleChartDataChange(index, e.target.value)}
                 fullWidth
               />
