@@ -121,7 +121,13 @@ class AssignmentController {
 
   async getCustomerWithAssignmentsForDate(date: string, assignedBy: string, reportType: ReportType) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
-    const customers = await CustomerModel.find({}, { name: 1, tCode: 1 }).sort({
+    const customers = await CustomerModel.find({
+      $or: [{
+        status: 1,
+      }, {
+        status: null
+      }]
+    }, { name: 1, tCode: 1 }).sort({
       name: 1
     }).lean()
     for (let customer of customers) {
