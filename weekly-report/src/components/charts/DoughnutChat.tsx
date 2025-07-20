@@ -4,7 +4,7 @@ const DoughnutChat = ({ data, label, isPendingIncidentSummary }: any) => {
   const displayLabel = label === undefined ? true : label;
 
   const chartData = {
-    labels: data.label,
+    labels: Array.isArray(data.label) ? [...data.label] : data.label,
     datasets: [
       {
         data: data?.data,

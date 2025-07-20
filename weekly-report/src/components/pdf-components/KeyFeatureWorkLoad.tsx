@@ -15,7 +15,7 @@ const KeyFeatureWorkLoad: React.FC<KeyFeatureWorkLoadProps> = () => {
     <div className="key-feature-workload" id="key-feature-cloud-one">
       <div className="p-8">
         <p className="title">
-          Cloud one Workload Security Key feature Adoption Rate
+          Key feature adoption rate of C1WS / Server & Workload Security / Protection
         </p>
         {/* <p className="title">{data?.date.title}</p> */}
         <GroupedBarChartHorizontal

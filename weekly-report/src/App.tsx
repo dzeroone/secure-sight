@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import Providers from "./providers";
+import { gracefulStringWrap } from "./utils/helpers";
 
 function App() {
   Chart.register(
@@ -24,6 +25,22 @@ function App() {
     Legend,
     ChartDataLabels
   );
+  Chart.register({
+    id: "LabelSplit",
+    beforeLayout: function (chart) {
+      const config = chart.config as any
+      // console.log(config.type)
+      if(config.type != "bar") {
+        // console.log('skkk')
+        return
+      }
+      chart.data?.labels?.forEach(function (label, i, labelArr) {
+        if (typeof label == "string" && label.length > 15) {
+          labelArr[i] = gracefulStringWrap(label, 15);
+        }
+      });
+    },
+  });
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Providers>

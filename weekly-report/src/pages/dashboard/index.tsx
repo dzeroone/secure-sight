@@ -475,7 +475,7 @@ const Dashboard = () => {
             const graphData =
               data['Key Feature Adoption Rate of A1']['Key Feature Adoption Rate of A1'];
             
-            data['Key Feature Adoption Rate of A1'].label.forEach((label: any, i: number) => {
+            ["Total", "Count"].forEach((label: any, i: number) => {
               dispatch(
                 updateDataProp({
                   attr: `kFARAp.data[${i}].label`,
@@ -496,7 +496,7 @@ const Dashboard = () => {
                   value: feature['Feature Name'],
                 })
               );
-              data['Key Feature Adoption Rate of A1'].label.forEach((label: any, j: number) => {
+              ["Total", "Count"].forEach((label: any, j: number) => {
                 dispatch(
                   updateDataProp({
                     attr: `kFARAp.data[${j}].data[${i}]`,
@@ -511,7 +511,7 @@ const Dashboard = () => {
             const graphData =
               data['Key Feature Adoption Rate of C1']['Key Feature Adoption Rate of C1'];
             
-            data['Key Feature Adoption Rate of C1'].label.forEach((label: any, i: number) => {
+            ["Total", "Count"].forEach((label: any, i: number) => {
               dispatch(
                 updateDataProp({
                   attr: `kFARWl.data[${i}].label`,
@@ -532,7 +532,7 @@ const Dashboard = () => {
                   value: feature['Feature Name'],
                 })
               );
-              data['Key Feature Adoption Rate of C1'].label.forEach((label: any, j: number) => {
+              ["Total", "Count"].forEach((label: any, j: number) => {
                 dispatch(
                   updateDataProp({
                     attr: `kFARWl.data[${j}].data[${i}]`,
