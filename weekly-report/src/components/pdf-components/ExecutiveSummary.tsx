@@ -202,12 +202,6 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data }) => {
             Incidents:
           </strong>
         </p>
-        <ul>
-          <li className="mb-4 text-sm">
-            Highest({executiveSummaryData.nOfTIncidents}) Incidents triggered on{" "}
-            <strong>{executiveSummaryData.iTDate}</strong>
-          </li>
-        </ul>
         <table
           className="w-full border-spacing-1 mb-1 border-none border-separate"
           cellPadding={5}

@@ -283,10 +283,11 @@ const Dashboard = () => {
           dispatch(
             updateExecutiveSummary({
               field: "iTDate",
-              value: moment(
+              value: data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY
+                  .Highest_incidient_date ? moment(
                 data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY
                   .Highest_incidient_date
-              ).format("Do MMMM YYYY"),
+              ).format("Do MMMM YYYY") : "",
             })
           );
           dispatch(
@@ -295,7 +296,7 @@ const Dashboard = () => {
               value:
                 Number(
                   data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY
-                    .endpoint_protection.data[1]
+                    .endpoint_protection.data[0]
                 ) || 0,
             })
           );
@@ -305,7 +306,7 @@ const Dashboard = () => {
               value:
                 Number(
                   data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY
-                    .endpoint_protection.data[0]
+                    .endpoint_protection.data[1]
                 ) || 0,
             })
           );
