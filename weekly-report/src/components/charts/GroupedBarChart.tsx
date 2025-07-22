@@ -17,11 +17,21 @@ const GroupedBarChart = ({ data }: any) => {
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
           y: {
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
         },
         plugins: {
@@ -39,6 +49,9 @@ const GroupedBarChart = ({ data }: any) => {
               padding: 15,
               boxWidth: 10,
               boxPadding: 10,
+              font: {
+                weight: "bold"
+              }
             },
           },
           title: {

@@ -16,11 +16,21 @@ const BarChartHorizontal = ({ data }: any) => {
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
           y: {
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
         },
         plugins: {
@@ -36,6 +46,9 @@ const BarChartHorizontal = ({ data }: any) => {
           legend: {
             labels: {
               padding: 20,
+              font: {
+                weight: "bold"
+              }
             },
           },
         },

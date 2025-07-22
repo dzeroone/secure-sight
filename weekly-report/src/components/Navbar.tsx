@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <nav>
       <div className="brand">
-        <span>Automated Report Generation</span>
+        <span>Weekly Report Automation</span>
       </div>
       <div className="hamburger-menu">
         <button>

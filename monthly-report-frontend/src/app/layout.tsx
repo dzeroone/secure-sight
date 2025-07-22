@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Providers from "@@/providers";
 
 export const metadata: Metadata = {
-  title: "Eventus Report Generation",
+  title: "Report Automation",
   description: "",
 };
 

@@ -29,6 +29,7 @@ const PieChart = ({ data }: any) => {
               padding: 10,
               font: {
                 size: 9,
+                weight: "bold"
               },
             },
           },

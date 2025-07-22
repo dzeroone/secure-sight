@@ -13,11 +13,21 @@ const VerticalBarChart = ({ data }: any) => {
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
           y: {
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
         },
         maintainAspectRatio: false,

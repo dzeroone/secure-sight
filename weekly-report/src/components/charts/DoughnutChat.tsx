@@ -43,6 +43,7 @@ const DoughnutChat = ({ data, label, isPendingIncidentSummary }: any) => {
               boxPadding: 10,
               font: {
                 size: 13,
+                weight: "bold"
               },
             },
           },

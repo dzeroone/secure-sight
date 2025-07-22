@@ -112,7 +112,7 @@ const Navbar = ({
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Eventus Report Generation
+            Monthly Report Automation
           </Typography>
           {currentUser ? (
             <Box display="flex" gap={1} alignItems="center">

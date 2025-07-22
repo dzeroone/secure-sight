@@ -18,12 +18,22 @@ const StackedHorizontalBarChart = ({ data }: any) => {
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
           y: {
             stacked: true,
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
         },
         plugins: {
@@ -32,6 +42,13 @@ const StackedHorizontalBarChart = ({ data }: any) => {
               return value !== 0 ? value : "";
             },
           },
+          legend: {
+            labels: {
+              font: {
+                weight: "bold"
+              }
+            }
+          }
         },
       }}
     />

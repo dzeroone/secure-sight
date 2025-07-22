@@ -29,16 +29,31 @@ const GroupedBarChartHorizontal = ({ data }: any) => {
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
           y: {
             grid: {
               display: false,
             },
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
         },
         plugins: {
           legend: {
             position: "top",
+            labels: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
           title: {
             display: false,

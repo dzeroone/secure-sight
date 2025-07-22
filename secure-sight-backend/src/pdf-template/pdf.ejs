@@ -1927,6 +1927,70 @@
       },
     });
 
+    const doughnutChartOptions = {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: true
+        }
+      }
+    }
+
+    const barChartOptionsIndexAxisY = {
+      indexAxis: 'y',
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              weight: "bold"
+            }
+          }
+        },
+        datalabels: {
+          anchor: 'end',
+          align: 'end',
+          formatter: (value) => value,
+          color: '#090c9b',
+          font: {
+            weight: 'bold',
+            size: 14
+          }
+        }
+      },
+      layout: {
+        padding: {
+          right: 30,
+          left: 10,
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            display: true
+          },
+          beginAtZero: true,
+          ticks: {
+            font: {
+              weight: "bold"
+            }
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            font: {
+              weight: "bold"
+            }
+          }
+        }
+      }
+    }
+
     <% if(data.risk_metrics.top_risk_incidents.indicators.length > 0) { %>
       const indicators = <%- JSON.stringify(data.risk_metrics.top_risk_incidents.indicators) %>;
 
@@ -2040,6 +2104,11 @@
                 x: {
                   grid: {
                     display: false
+                  },
+                  ticks: {
+                    font: {
+                      weight: "bold"
+                    }
                   }
                 },
                 y: {
@@ -2047,6 +2116,11 @@
                     display: true
                   },
                   beginAtZero: true,
+                  ticks: {
+                    font: {
+                      weight: "bold"
+                    }
+                  }
                 }
               }
           },
@@ -2063,17 +2137,7 @@
               labels: "",
               datasets: <%- JSON.stringify(data.detailed_summary.risk_index_chart.datasets) %>
           },
-          options: {
-              responsive: true,
-              plugins: {
-                  legend: {
-                      display: false
-                  },
-                  tooltip: {
-                      enabled: true
-                  }
-              }
-          }
+          options: doughnutChartOptions
       });
     <% } %>
 
@@ -2086,17 +2150,7 @@
               labels: "",
               datasets: <%- JSON.stringify(data.risk_metrics.last_risk_score?.charts[0].datasets) %>
           },
-          options: {
-              responsive: true,
-              plugins: {
-                  legend: {
-                      display: false
-                  },
-                  tooltip: {
-                      enabled: true
-                  }
-              }
-          }
+          options: doughnutChartOptions
       });
     <% } %>
 
@@ -2108,17 +2162,7 @@
               labels: "",
               datasets: <%- JSON.stringify(data.risk_metrics.last_risk_score?.charts[1].datasets) %>
           },
-          options: {
-              responsive: true,
-              plugins: {
-                  legend: {
-                      display: false
-                  },
-                  tooltip: {
-                      enabled: true
-                  }
-              }
-          }
+          options: doughnutChartOptions
       });
     <% } %>
 
@@ -2130,17 +2174,7 @@
               labels: "",
               datasets: <%- JSON.stringify(data.risk_metrics.last_risk_score?.charts[2].datasets) %>
           },
-          options: {
-              responsive: true,
-              plugins: {
-                  legend: {
-                      display: false
-                  },
-                  tooltip: {
-                      enabled: true
-                  }
-              }
-          }
+          options: doughnutChartOptions
       });
     <% } %>
 
@@ -2153,41 +2187,7 @@
               labels: <%- JSON.stringify(data.threat_intel_summary.count_of_advisory_chart?.key) %>,
               datasets: <%- JSON.stringify(data.threat_intel_summary.count_of_advisory_chart?.datasets) %>
           },
-          options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      offset: -1,
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      },
-                      beginAtZero: true,
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  },
-              }
-          },
+          options: barChartOptionsIndexAxisY,
           plugins: [ChartDataLabels]
       });
     <% } %>
@@ -2201,40 +2201,7 @@
               labels: <%- JSON.stringify(data.threat_intel_summary.ioc_chart?.key) %>,
               datasets: <%- JSON.stringify(data.threat_intel_summary.ioc_chart?.datasets) %>
           },
-          options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      },
-                      beginAtZero: true,
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  },
-              }
-          },
+          options: barChartOptionsIndexAxisY,
           plugins: [ChartDataLabels]
       });
     <% } %>
@@ -2247,40 +2214,7 @@
               labels: <%- JSON.stringify(data.overall_incident_summary.incidents_chart.key) %>,
               datasets: <%- JSON.stringify(data.overall_incident_summary.incidents_chart.datasets) %>
           },
-          options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      },
-                      beginAtZero: true,
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              }
-          },
+          options: barChartOptionsIndexAxisY,
           plugins: [ChartDataLabels]
       });
     <% } %>
@@ -2293,39 +2227,7 @@
               labels: <%- JSON.stringify(data.slo_summary.slo_chart.key) %>,
               datasets: <%- JSON.stringify(data.slo_summary.slo_chart.datasets) %>
           },
-          options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              }
-          },
+          options: barChartOptionsIndexAxisY,
           plugins: [ChartDataLabels]
       });
     <% } %>
@@ -2339,37 +2241,7 @@
               datasets: <%- JSON.stringify(data.detection_summary_apex_one.detection_chart.datasets) %>
           },
           options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              },
+              ...barChartOptionsIndexAxisY,
               maintainAspectRatio: false
           },
           plugins: [ChartDataLabels]
@@ -2385,37 +2257,7 @@
               datasets: <%- JSON.stringify(data.detection_summary_apex_one.attempts_blocked_chart.datasets) %>
           },
           options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              },
+              ...barChartOptionsIndexAxisY,
               maintainAspectRatio: false
           },
           plugins: [ChartDataLabels]
@@ -2431,37 +2273,7 @@
               datasets: <%- JSON.stringify(data.email_quarantine_summary_cas.status_chart.datasets) %>
           },
           options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  },
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              },
+              ...barChartOptionsIndexAxisY,
               maintainAspectRatio: false
           },
           plugins: [ChartDataLabels]
@@ -2477,37 +2289,7 @@
               datasets: <%- JSON.stringify(data.top_vulnerabilities_detected.impact_chart.datasets) %>
           },
           options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              },
+              ...barChartOptionsIndexAxisY,
               maintainAspectRatio: false
           },
           plugins: [ChartDataLabels]
@@ -2523,37 +2305,7 @@
               datasets: <%- JSON.stringify(data.top_risk_device.risk_score_chart.datasets) %>
           },
           options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              },
+              ...barChartOptionsIndexAxisY,
               maintainAspectRatio: false
           },
           plugins: [ChartDataLabels]
@@ -2569,37 +2321,7 @@
               datasets: <%- JSON.stringify(data.top_risk_users.risk_score_chart.datasets) %>
           },
           options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              },
+              ...barChartOptionsIndexAxisY,
               maintainAspectRatio: false
           },
           plugins: [ChartDataLabels]
@@ -2614,42 +2336,7 @@
               labels: <%- JSON.stringify(data.endpoint_feature_compliance.compliance_chart.key) %>,
               datasets: <%- JSON.stringify(data.endpoint_feature_compliance.compliance_chart.datasets) %>
           },
-          options: {
-              indexAxis: 'y',
-              plugins: {
-                  legend: {
-                      display: false
-                  },
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              }
-          },
+          options: barChartOptionsIndexAxisY,
           plugins: [ChartDataLabels]
       });
     <% } %>
@@ -2663,37 +2350,7 @@
               datasets: <%- JSON.stringify(data.key_feature_adoption_apex_one.apex_one_chart.datasets) %>
           },
           options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              },
+              ...barChartOptionsIndexAxisY,
               maintainAspectRatio: false
           },
           plugins: [ChartDataLabels]
@@ -2709,37 +2366,7 @@
               datasets: <%- JSON.stringify(data.key_feature_adoption_server_workload.workload_security_chart.datasets) %>
           },
           options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              },
+              ...barChartOptionsIndexAxisY,
               maintainAspectRatio: false
           },
           plugins: [ChartDataLabels]
@@ -2756,37 +2383,7 @@
               datasets: <%- JSON.stringify(data.key_feature_adoption_deep_security.deep_security_chart.datasets) %>
           },
           options: {
-              indexAxis: 'y',
-              plugins: {
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              },
+              ...barChartOptionsIndexAxisY,
               maintainAspectRatio: false
           },
           plugins: [ChartDataLabels]
@@ -2808,11 +2405,21 @@
               grid: {
                 display: false,
               },
+              ticks: {
+                font: {
+                  weight: "bold"
+                }
+              }
             },
             y: {
               grid: {
                 display: false,
               },
+              ticks: {
+                font: {
+                  weight: "bold"
+                }
+              }
             },
           },
           maintainAspectRatio: false,
@@ -2838,42 +2445,7 @@
               labels: <%- JSON.stringify(data.agent_versions_summary.server_workload_protection_chart.key) %>,
               datasets: <%- JSON.stringify(data.agent_versions_summary.server_workload_protection_chart.datasets) %>
           },
-          options: {
-              indexAxis: 'y',
-              plugins: {
-                  legend: {
-                      display: false
-                  },
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              }
-          },
+          options: barChartOptionsIndexAxisY,
           plugins: [ChartDataLabels]
       });
     <% } %>
@@ -2886,42 +2458,7 @@
               labels: <%- JSON.stringify(data.agent_versions_summary.standard_endpoint_protection_chart.key) %>,
               datasets: <%- JSON.stringify(data.agent_versions_summary.standard_endpoint_protection_chart.datasets) %>
           },
-          options: {
-              indexAxis: 'y',
-              plugins: {
-                  legend: {
-                      display: false
-                  },
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              }
-          },
+          options: barChartOptionsIndexAxisY,
           plugins: [ChartDataLabels]
       });
     <% } %>
@@ -2935,42 +2472,7 @@
               labels: <%- JSON.stringify(data.deep_security.server_workload_protection_chart.key) %>,
               datasets: <%- JSON.stringify(data.deep_security.server_workload_protection_chart.datasets) %>
           },
-          options: {
-              indexAxis: 'y',
-              plugins: {
-                  legend: {
-                      display: false
-                  },
-                  datalabels: {
-                      anchor: 'end',
-                      align: 'end',
-                      formatter: (value) => value,
-                      color: '#090c9b',
-                      font: {
-                          weight: 'bold',
-                          size: 14
-                      }
-                  }
-              },
-              layout: {
-                padding: {
-                  right: 30,
-                  left: 10,
-                },
-              },
-              scales: {
-                  x: {
-                      grid: {
-                          display: true
-                      }
-                  },
-                  y: {
-                      grid: {
-                          display: false
-                      }
-                  }
-              }
-          },
+          options: barChartOptionsIndexAxisY,
           plugins: [ChartDataLabels]
       });
     <% } %>

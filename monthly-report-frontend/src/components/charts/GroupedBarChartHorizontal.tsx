@@ -18,6 +18,11 @@ const GroupedBarChartHorizontal = ({ data }: any) => {
               display: false, // Hide x-axis grid
             },
             beginAtZero: true, // Start the x-axis from zero
+            ticks: {
+              font: {
+                weight: "bold"
+              }
+            }
           },
           y: {
             grid: {
@@ -25,6 +30,9 @@ const GroupedBarChartHorizontal = ({ data }: any) => {
             },
             ticks: {
               autoSkip: false, // Ensure all labels are displayed
+              font: {
+                weight: "bold"
+              }
             },
           },
         },
@@ -42,6 +50,9 @@ const GroupedBarChartHorizontal = ({ data }: any) => {
             position: "top", // Legend position at the top
             labels: {
               padding: 20, // Padding around legend labels
+              font: {
+                weight: "bold"
+              }
             },
           },
         },

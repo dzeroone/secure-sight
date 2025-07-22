@@ -35,5 +35,5 @@ export const getErrorMessage = (e) => {
 }
 
 export const setDocumentTitle = (title) => {
-  document.title = `${title} | Eventus Reporting`;
+  document.title = `${title} | Report Automation`;
 }
