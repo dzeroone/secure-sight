@@ -1,6 +1,6 @@
 import { Doughnut } from "react-chartjs-2";
 
-const DoughnutChat = ({ data, label, isPendingIncidentSummary }: any) => {
+const DoughnutChat = ({ data, label, isPendingIncidentSummary, height }: any) => {
   const displayLabel = label === undefined ? true : label;
 
   const chartData = {
@@ -20,7 +20,7 @@ const DoughnutChat = ({ data, label, isPendingIncidentSummary }: any) => {
   return (
     <Doughnut
       data={chartData}
-      height={300}
+      height={height ?? 300}
       options={{
         maintainAspectRatio: false,
         devicePixelRatio: 4,

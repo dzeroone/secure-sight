@@ -1,18 +1,6 @@
-import { MoreVert } from "@mui/icons-material";
-import { number, object } from "prop-types";
 import React, { useState } from "react";
-import { Bar, Pie } from "react-chartjs-2";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
-import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
-import { flattenObj, getFields, uniqs, uniqsarr } from "../ulit/commonFunction";
+import { Bar } from "react-chartjs-2";
+import { flattenObj, getFields, uniqs } from "../ulit/commonFunction";
 
 const BarChart = ({ data }) => {
   const [columns, setColumns] = useState(data?.column);

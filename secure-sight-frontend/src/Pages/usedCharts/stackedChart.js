@@ -1,14 +1,6 @@
-import { MoreVert } from "@mui/icons-material";
 import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
-import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
-import { flattenObj, getFields, uniqs } from "../ulit/commonFunction";
+import { uniqs } from "../ulit/commonFunction";
 
 const RadialChartData = {
   series: [44, 55, 67, 83],

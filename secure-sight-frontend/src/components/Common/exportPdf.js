@@ -1,7 +1,5 @@
-import { FileDownload } from "@mui/icons-material";
 import React from "react";
 import ReactToPrint from "react-to-print";
-import { Dropdown, DropdownItem } from "reactstrap";
 
 const ExportPdf = ({ content, Title }) => {
   const reactToPrintTriggerdash = React.useCallback(() => {

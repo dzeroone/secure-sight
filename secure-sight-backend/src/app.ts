@@ -59,7 +59,7 @@ const build = async () => {
 
     // MongoDB Connection
     const CONNECTION_STRING: string = `${process.env.mongo_base_url}/${process.env.mongo_db}` || ""
-    mongoose.connect(CONNECTION_STRING)
+    await mongoose.connect(CONNECTION_STRING)
     mongoose.connection.once('open', () => {
         console.log(`Connection to database has been established successfully ${CONNECTION_STRING}`)
     })

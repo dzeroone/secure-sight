@@ -7,8 +7,6 @@ import {
 	DropdownItem,
 } from "reactstrap";
 
-//i18n
-import { withTranslation } from "react-i18next";
 // Redux
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -57,11 +55,11 @@ const ProfileMenu = (props) => {
 					<DropdownItem divider />
 					<Link to="/userprofile" className="dropdown-item">
 						<i className="ri-user-line align-middle me-2" />
-						<span>{props.t("Profile")}</span>
+						<span>{"Profile"}</span>
 					</Link>
 					<Link to="/logout" className="dropdown-item">
 						<i className="ri-shut-down-line align-middle me-2 text-danger" />
-						<span>{props.t("Logout")}</span>
+						<span>{"Logout"}</span>
 					</Link>
 				</DropdownMenu>
 			</Dropdown>
@@ -80,5 +78,5 @@ const mapStatetoProps = (state) => {
 };
 
 export default withRouter(
-	connect(mapStatetoProps, {})(withTranslation()(ProfileMenu))
+	connect(mapStatetoProps, {})(ProfileMenu)
 );

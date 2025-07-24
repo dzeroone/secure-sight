@@ -1,4 +1,3 @@
-import { MoreVert } from "@mui/icons-material";
 import { Fragment, useState } from "react";
 import {
   Dropdown,
@@ -17,6 +16,7 @@ import {
 } from "../../Pages/ulit/commonFunction";
 import { RawDataModel } from "./editModel";
 import { useNavigate } from "react-router";
+import { MoreVerticalIcon } from "lucide-react";
 
 const CostomDropdow = ({
   i,
@@ -59,7 +59,7 @@ const CostomDropdow = ({
             toggle={() => setBtnprimary1(!btnprimary1)}
           >
             <DropdownToggle tag="button" className="btn ">
-              <MoreVert />
+              <MoreVerticalIcon />
             </DropdownToggle>
             <DropdownMenu>
               <DropdownItem

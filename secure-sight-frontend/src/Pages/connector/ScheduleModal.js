@@ -1,5 +1,4 @@
-import { Schedule } from "@mui/icons-material";
-import { Modal, DatePicker, Select } from "antd";
+import { DatePicker, Modal, Select } from "antd";
 
 const ScheduleModal = ({ visible, onCancel, onSchedule }) => {
     const handleOk = () => {

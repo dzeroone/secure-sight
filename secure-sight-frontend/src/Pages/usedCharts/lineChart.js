@@ -1,17 +1,5 @@
-import { MoreVert } from "@mui/icons-material";
 import React, { useState } from "react";
-import { Line, Pie } from "react-chartjs-2";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
-import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
-import { flattenObj, getFields, uniqs } from "../ulit/commonFunction";
+import { Line } from "react-chartjs-2";
 
 const LineChart = ({ data }) => {
   const [btnprimary1, setBtnprimary1] = useState(false);

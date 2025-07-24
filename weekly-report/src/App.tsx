@@ -41,6 +41,9 @@ function App() {
       });
     },
   });
+
+  Chart.defaults.scales.linear.grace = "5%";
+  
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Providers>

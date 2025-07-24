@@ -1,5 +1,3 @@
-import { Download } from "@mui/icons-material";
-import React from "react";
 import { CSVLink } from "react-csv";
 import { DropdownItem } from "reactstrap";
 import { deepKeys } from "./commonFunction";

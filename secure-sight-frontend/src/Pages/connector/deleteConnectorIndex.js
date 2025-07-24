@@ -1,4 +1,3 @@
-import { CloseOutlined } from "@mui/icons-material";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -13,6 +12,7 @@ import {
 } from "reactstrap";
 
 //Import Breadcrumb
+import { XIcon } from "lucide-react";
 import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
@@ -160,7 +160,7 @@ const DeleteConnectorIndexs = () => {
                               }}
                               className="input-group-text"
                             >
-                              <CloseOutlined />
+                              <XIcon />
                             </button>
                             <input
                               type="text"

@@ -2,19 +2,18 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDropdown";
-import NotificationDropdown from "../../components/Common/TopbarDropdown/NotificationDropdown";
-import { withTranslation } from "react-i18next";
-import logoSm from "../../assets/images/logo-sm.png";
 import logoDark from "../../assets/images/logo-dark.png";
 import logoLight from "../../assets/images/logo-light.png";
+import logoSm from "../../assets/images/logo-sm.png";
+import AppsDropdown from "../../components/Common/TopbarDropdown/AppsDropdown";
+import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDropdown";
+import NotificationDropdown from "../../components/Common/TopbarDropdown/NotificationDropdown";
+import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
 import {
+  changeSidebarType,
   showRightSidebarAction,
   toggleLeftmenu,
-  changeSidebarType,
 } from "../../store/actions";
-import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
-import AppsDropdown from "../../components/Common/TopbarDropdown/AppsDropdown";
 
 const Header = (props) => {
   const [search, setsearch] = useState(false);
@@ -197,4 +196,4 @@ export default connect(mapStatetoProps, {
   showRightSidebarAction,
   toggleLeftmenu,
   changeSidebarType,
-})(withTranslation()(Header));
+})(Header);

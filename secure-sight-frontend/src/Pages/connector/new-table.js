@@ -1,10 +1,8 @@
-import { CloseOutlined } from "@mui/icons-material";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, CardTitle, Col, Input, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table } from "reactstrap";
 
 // Import Breadcrumb
-import { Link } from "react-router-dom";
 import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
@@ -14,8 +12,9 @@ import {
 	uperCase,
 } from "../ulit/commonFunction";
 
-import ModalLoading from "../../components/ModalLoading";
+import { XIcon } from "lucide-react";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
+import ModalLoading from "../../components/ModalLoading";
 import { getErrorMessage } from "../../helpers/utils";
 
 const ConnectorListTwo = () => {
@@ -303,7 +302,7 @@ const ConnectorListTwo = () => {
 										breadcrumbItem={
 											<div className="input-group">
 												<button onClick={() => setSearchedVal("")} className="input-group-text">
-													<CloseOutlined />
+													<XIcon />
 												</button>
 												<input
 													type="text"

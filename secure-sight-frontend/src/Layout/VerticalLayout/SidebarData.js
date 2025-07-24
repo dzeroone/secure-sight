@@ -92,19 +92,19 @@ const SidebarData = [
 		],
 	},
 	{
-		roles: ['l3', 'l2'],
+		roles: [ROLES.LEVEL3, ROLES.LEVEL2],
 		label: "Assign",
 		icon: "ri-send-plane-2-line",
 		url: "/assign/monthly-report",
 		bgcolor: "bg-primary",
 		subItem: [
 			{
-				roles: ['l3', 'l2'],
+				roles: [ROLES.LEVEL3, ROLES.LEVEL2],
 				sublabel: "Monthly report",
 				link: "/assign/monthly-report",
 			},
 			{
-				roles: ['l3', 'l2'],
+				roles: [ROLES.LEVEL3, ROLES.LEVEL2],
 				sublabel: "Weekly report",
 				link: "/assign/weekly-report",
 			},
@@ -132,6 +132,11 @@ const SidebarData = [
 		label: "Reports",
 		icon: "ri-table-2",
 		subItem: [
+			{
+				roles: [ROLES.LEVEL3],
+				sublabel: "Auto assignment",
+				link: "/reports/auto-assign",
+			},
 			{
 				roles: [ROLES.LEVEL3],
 				sublabel: "Archived reports",

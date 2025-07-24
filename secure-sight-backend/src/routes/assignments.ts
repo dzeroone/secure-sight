@@ -391,4 +391,70 @@ router.post('/submissions/:id/approve',
   }
 )
 
+router.get('/schedules/:reportType(monthly|weekly)',
+  auth,
+  hasRole([ROLES.LEVEL3]),
+  async (req, res) => {
+    try {
+      const reportType = req.params.reportType as ReportType
+      const data = await assignmentController.getUsersForSchedule(reportType)
+      res.send(data)
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.post('/schedules/:reportType(monthly|weekly)',
+  auth,
+  hasRole([ROLES.LEVEL3]),
+  async (req, res) => {
+    try {
+      const reportType = req.params.reportType as ReportType
+      if(!req.body.reporterId || !req.body.customerId) {
+        throw new Error("Invalid request")
+      }
+      const data = await assignmentController.createSchedule(reportType, { uId: req.body.reporterId, cId: req.body.customerId})
+      res.send(data)
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.get('/schedules/:reportType(monthly|weekly)/users',
+  auth,
+  hasRole([ROLES.LEVEL3]),
+  async (req, res) => {
+    try {
+      const reportType = req.params.reportType as ReportType
+      const data = await assignmentController.getUsers(req.query.search as string, reportType)
+      res.send(data)
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.delete('/schedules/:scheduleId',
+  auth,
+  hasRole([ROLES.LEVEL3]),
+  async (req, res) => {
+    try {
+      const data = await assignmentController.deleteSchedule(req.params.scheduleId)
+      res.send(data)
+    } catch (e: any) {
+      res.status(400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
 export default router

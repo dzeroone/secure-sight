@@ -1,4 +1,3 @@
-import { Autocomplete, Box } from "@mui/material";
 import { useMemo } from "react";
 
 function formatText(text) {
@@ -39,9 +38,8 @@ const Columns = (data) => {
           name === "risk-level" ||
           name === "Risk-Level" ||
           name === "Risk" ? (
-          <Box
-            component="span"
-            sx={(theme) => ({
+          <span
+            style={{
               backgroundColor:
                 cell.getValue() === "High" || cell.getValue() === "high"
                   ? theme.palette.error.dark
@@ -56,8 +54,8 @@ const Columns = (data) => {
               borderRadius: "0.25rem",
               // color: "#fff",
               maxWidth: "9ch",
-              p: "0.25rem",
-            })}
+              padding: "0.25rem",
+            }}
           >
             {cell.getValue()?.toLocaleString?.("", {
               style: "currency",
@@ -65,7 +63,7 @@ const Columns = (data) => {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             })}
-          </Box>
+          </span>
         ) : cell.getValue() === null ? (
           "N/A"
         ) : cell.getValue() === false ? (
@@ -230,22 +228,6 @@ function uperCase(text) {
   return text.toUpperCase();
 }
 export {
-  deepKeys,
-  Columns,
-  allReplace,
-  hidencolumn,
-  uniqs,
-  flattenObj,
-  getFields,
-  capitalizedArray,
-  replaceDot,
-  replaceAllObjKeys,
-  objectkey,
-  uniqsarr,
-  formatText,
-  arrayReduce,
-  formatCapilize,
-  sortObject,
-  uperCase,
-  ColumnsHeadWithEdit,
+  allReplace, arrayReduce, capitalizedArray, Columns, ColumnsHeadWithEdit, deepKeys, flattenObj, formatCapilize, formatText, getFields, hidencolumn, objectkey, replaceAllObjKeys, replaceDot, sortObject, uniqs, uniqsarr, uperCase
 };
+

@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
-import { Collapse, Row, Col, Container } from "reactstrap";
 import classname from "classnames";
-import { withTranslation } from "react-i18next";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { Col, Collapse, Container, Row } from "reactstrap";
 import withRouter from "../../components/Common/withRouter";
 
 // Import Data
@@ -194,5 +193,5 @@ const mapStatetoProps = (state) => {
 };
 
 export default withRouter(
-  connect(mapStatetoProps, {})(withTranslation()(Navbar))
+  connect(mapStatetoProps, {})(Navbar)
 );

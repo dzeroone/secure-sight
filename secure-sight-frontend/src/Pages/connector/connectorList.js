@@ -1,4 +1,3 @@
-import { CloseOutlined } from "@mui/icons-material";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import {
@@ -22,13 +21,12 @@ import {
 import swal from "sweetalert";
 
 //Import Breadcrumb
-import { Link } from "react-router-dom";
+import { LogsIcon, TrashIcon, UploadIcon } from "lucide-react";
 import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
+import { getErrorMessage } from "../../helpers/utils";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
 import { allReplace, formatCapilize } from "../ulit/commonFunction";
-import { LogsIcon, TrashIcon, UploadIcon } from "lucide-react";
-import { getErrorMessage } from "../../helpers/utils";
 
 const ConnectorList = () => {
   const [openLoader, setOpenLoader] = useState(false);

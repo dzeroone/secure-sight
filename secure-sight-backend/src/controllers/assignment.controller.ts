@@ -1,7 +1,8 @@
-import { COLLECTIONS, MASTER_ADMIN_DB, REPORT_AUDIT_STATUS } from "../constant"
-import { extractInfoFromIndex, formatReportSession, getMontlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
+import { COLLECTIONS, MASTER_ADMIN_DB, REPORT_AUDIT_STATUS, ROLES } from "../constant"
+import { extractInfoFromIndex, formatReportSession, getMonthlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
 import assignmentMessageModel from "../models/assignmentMessageModel"
 import assignmentModel, { AssignmentDocumentType } from "../models/assignmentModel"
+import assignmentScheduleModel from "../models/assignmentScheduleModel"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { ReportAssignmentValidationValues } from "../validators/report-assignment.validator"
 import assignmentReportController from "./assignment-report.controller"
@@ -475,6 +476,92 @@ class AssignmentController {
     return assignments
   }
 
+  async getSchedules(reportType: ReportType) {
+    return assignmentScheduleModel.find({
+      rType: reportType
+    }).lean()
+  }
+
+  async getUsersForSchedule(reportType: ReportType) {
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+
+    const customers = await customerController.getAllCodes()
+
+    for(let customer of customers) {
+      const schedule = await assignmentScheduleModel.findOne({
+        rType: reportType,
+        cId: customer._id
+      }).lean() as any
+      if(schedule) {
+        schedule.uId = await UserModel.findById(schedule?.uId, { fullname: 1, role: 1 })
+        customer.schedule = schedule
+      }
+    }
+    return customers
+  }
+
+  async createSchedule(reportType: ReportType, { uId, cId }: { uId: string, cId: string}) {
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+    const user = await UserModel.findById(uId);
+    if(!user) throw new Error("Invalid request");
+
+    const customer = await CustomerModel.findById(cId);
+    if(!customer) throw new Error("Invalid request")
+
+    const exisiting = await assignmentScheduleModel.findOne({
+      rType: reportType,
+      cId: customer._id,
+      uId: user._id
+    })
+
+    if(exisiting) {
+      throw new Error("Invalid request")
+    }
+
+    return assignmentScheduleModel.create({
+      rType: reportType,
+      uId: user._id,
+      cId: customer._id,
+      cAt: new Date(),
+      uAt: new Date()
+    })
+  }
+
+  async deleteSchedule(id: string) {
+    return assignmentScheduleModel.deleteOne({
+      _id: id
+    })
+  }
+
+  async getUsers(search: string, reportType: ReportType) {
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    const schedules = await this.getSchedules(reportType)
+    const skipedUserIds: any[] = [] //schedules.map(s => s.uId)
+    const skippedRoles = [ROLES.ADMIN, ROLES.LEVEL3]
+
+    return UserModel.find({
+      _id: {
+        $nin: skipedUserIds
+      },
+      role: {
+        $nin: skippedRoles
+      },
+      status: { $ne: -1 },
+      $or: [
+        {
+          email: new RegExp(search, "si")
+        },
+        {
+          fullname: new RegExp(search, "si")
+        }
+      ]
+    }, {
+      fullname: 1,
+      role: 1
+    }).limit(20).sort({ fullname: 1 })
+  }
+
   async getPendingReviewsForUser(assignee: Express.User) {
     const assignments = await assignmentModel.find({
       aBy: assignee._id,
@@ -680,7 +767,7 @@ class AssignmentController {
     const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
     const assignments: any[] = await assignmentModel.find({
       rType: reportType,
-      index: reportType == 'monthly' ? getMontlyReportIndex(date, customer.tCode) : getWeeklyReportIndex(date, customer.tCode),
+      index: reportType == 'monthly' ? getMonthlyReportIndex(date, customer.tCode) : getWeeklyReportIndex(date, customer.tCode),
       aBy: assignedBy,
       cId: customer._id,
     }).lean()

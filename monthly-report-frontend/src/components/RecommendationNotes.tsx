@@ -22,7 +22,9 @@ export default function RecommendationNotes({
           >
             {note.key}
           </p>
-          <ul>
+          <ul style={{
+            textAlign: "justify"
+          }}>
             {note.data.map((j, k) => (
               <li style={{ fontSize: 24 }} key={k}>
                 {j}

@@ -293,19 +293,8 @@
 
 // export default PieChart;
 
-import { MoreVert } from "@mui/icons-material";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Pie } from "react-chartjs-2";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
-import { Breadcrumbsub } from "../../components/Common/Breadcrumb";
 import { flattenObj, getFields, uniqs } from "../ulit/commonFunction";
 
 const PieChart = ({ data }) => {

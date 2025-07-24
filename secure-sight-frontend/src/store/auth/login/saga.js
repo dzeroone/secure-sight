@@ -4,8 +4,6 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { LOGIN_USER, LOGOUT_USER } from "./actionTypes";
 import { apiError, loginSuccess, logoutUserSuccess } from "./actions";
 
-//Include Both Helper File with needed methods
-import { getFirebaseBackend } from "../../../helpers/firebase_helper";
 import {
   postJwtLogin,
 } from "../../../helpers/fakebackend_helper";
@@ -15,18 +13,10 @@ import { toast } from "react-toastify";
 import { DashboardList, ReportList } from "../../../Pages/ulit/dashboardlist";
 import { getMSALApplication } from "../../../helpers/azure_sso.helper";
 
-const fireBaseBackend = getFirebaseBackend();
 
 function* loginUser({ payload: { user, history } }) {
   try {
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      const response = yield call(
-        fireBaseBackend.loginUser,
-        user.email,
-        user.password
-      );
-      yield put(loginSuccess(response));
-    } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
+    if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
       const response = yield call(postJwtLogin, {
         email: user.email,
         password: user.password,

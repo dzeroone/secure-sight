@@ -4,26 +4,19 @@ import ApiEndPoints from "../Network_call/ApiEndPoints";
 import ApiServices from "../Network_call/apiservices";
 import { CheckIcon } from "lucide-react";
 import { getErrorMessage, getRoleTitle } from "../helpers/utils";
-import { format } from "date-fns";
 import { toast } from "react-toastify";
 
-export default function DropdownReportAssignment({
+export default function DropdownScheduleUsers({
   customerId,
-  date,
-  index,
-  assignments,
+  schedule,
   onAssigned,
-  onUnAssigned,
   reportType = 'monthly' // monthly | weekly
 }) {
   const [search, setSearch] = useState('')
   const [users, setUsers] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const [busy, setBusy] = useState(false)
-  const [instructionMessage, setInstructionMessage] = useState('')
-  const instructionModalOnCompleteRef = useRef(null)
   const [affectedUserId, setAffectedUserId] = useState(false) // holds which userid is currently in operation of assignment or unassignment
-  const [instructionInputModalShown, setInstructionInputModalShown] = useState(false)
 
   // find user timeout ref
   const fuTimeoutRef = useRef(null)
@@ -34,19 +27,17 @@ export default function DropdownReportAssignment({
       const res = await ApiServices(
         'get',
         {
-          search,
-          index
+          search
         },
-        `${ApiEndPoints.Users}/search`
+        `${ApiEndPoints.Assignments}/schedules/${reportType}/users`
       )
 
       setUsers(res.map(u => {
-        const assignment = assignments.find(a => a.reporter._id === u._id)
-        if(assignment) {
+        if(schedule) {
           return {
             ...u,
             assigned: true,
-            assignmentId: assignment._id
+            scheduleId: schedule._id
           }
         }
         return u
@@ -57,33 +48,22 @@ export default function DropdownReportAssignment({
     }finally{
       setBusy(false)
     }
-  }, [search, assignments])
+  }, [search, schedule])
 
   const assign = useCallback(async (user) => {
     try {
-      const message = await getInstructionMessage()
       setBusy(true)
       setAffectedUserId(user._id)
 
       const data = await ApiServices(
         'post',
         {
-          index,
-          date: format(date, 'yyyy-MM-dd'),
           customerId,
           reporterId: user._id,
-          message
         },
-        `${ApiEndPoints.Assignments}/${reportType}/assign`
+        `${ApiEndPoints.Assignments}/schedules/${reportType}`
       )
-      onAssigned(customerId, {
-        _id: data._id,
-        reporter: {
-          _id: data.reporterId,
-          fullname: user.fullname,
-          role: user.role
-        }
-      })
+      onAssigned()
     }catch(e) {
       console.error(e)
       const msg = getErrorMessage(e)
@@ -94,35 +74,6 @@ export default function DropdownReportAssignment({
     }
   }, [])
 
-  const unAssign = useCallback(async (user) => {
-    try {
-      setBusy(true)
-      setAffectedUserId(user._id)
-
-      await ApiServices(
-        'delete',
-        null,
-        `${ApiEndPoints.Assignments}/${user.assignmentId}`
-      )
-      onUnAssigned(customerId, user.assignmentId)
-    }catch(e) {
-      alert(e.message)
-      console.error(e)
-    }finally{
-      setBusy(false)
-      setAffectedUserId(null)
-    }
-  }, [])
-
-  const getInstructionMessage = async () => {
-    instructionModalOnCompleteRef.current = null
-    const p = new Promise((resolve, _) => {
-      instructionModalOnCompleteRef.current = resolve
-      setInstructionInputModalShown(true)
-    })
-
-    return p
-  }
 
   useEffect(() => {
     if(fuTimeoutRef.current) {
@@ -136,27 +87,6 @@ export default function DropdownReportAssignment({
       }
     }
   }, [findUsers, isOpen])
-
-  // sync user list when assignments changes
-  useEffect(() => {
-    setUsers((state) => {
-      const newS = state.map(u => {
-        const assignment = assignments.find(a => a.reporter._id === u._id)
-        if(assignment) {
-          return {
-            ...u,
-            assigned: true,
-            assignmentId: assignment._id
-          }
-        }
-        return {
-          ...u,
-          assigned: false
-        }
-      })
-      return newS
-    })
-  }, [assignments])
 
   return (
     <Dropdown isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} direction="start" size="sm">
@@ -195,7 +125,7 @@ export default function DropdownReportAssignment({
                 {busy && (affectedUserId === u._id) ? (
                   <Spinner size='sm' color="primary" />
                 ) : (
-                  <Button size="sm" onClick={() => u.assigned? unAssign(u) : assign(u)} disabled={busy}>
+                  <Button size="sm" onClick={() => assign(u)} disabled={busy}>
                     {u.assigned ? 'Remove' : 'Assign'}
                   </Button>
                 )}
@@ -210,28 +140,6 @@ export default function DropdownReportAssignment({
         ) : null}
         </div>
       </DropdownMenu>
-      <Modal isOpen={instructionInputModalShown} onClosed={() => {
-        setInstructionInputModalShown(false)
-        instructionModalOnCompleteRef.current(instructionMessage)
-      }}>
-        <ModalHeader>Instruction for reporter</ModalHeader>
-        <ModalBody>
-          <Input
-            type="text"
-            placeholder="Write instructions ..."
-            value={instructionMessage}
-            onChange={(e) => {
-              setInstructionMessage(e.target.value)
-            }}
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button onClick={() => {
-            setInstructionInputModalShown(false)
-            instructionModalOnCompleteRef.current(instructionMessage)
-          }}>Done</Button>
-        </ModalFooter>
-      </Modal>
     </Dropdown>
   )
 }

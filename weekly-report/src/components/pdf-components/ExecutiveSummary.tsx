@@ -165,6 +165,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data }) => {
                           ],
                         }}
                         label={false}
+                        height="auto"
                       />
                       <p className="absolute top-1/2 left-1/2 m-0 text-2xl font-normal -translate-x-1/2 -translate-y-1/2">
                         {executiveSummaryData.riskIndex}%

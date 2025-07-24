@@ -8,7 +8,6 @@ import MetisMenu from "metismenujs";
 import { Link } from "react-router-dom";
 import withRouter from "../../components/Common/withRouter";
 //i18n
-import { withTranslation } from "react-i18next";
 import { useProfile } from "../../Hooks/UserHooks";
 const Sidebar = (props) => {
 	const ref = useRef();
@@ -187,7 +186,7 @@ const Sidebar = (props) => {
 														fontSize: '1.125rem'
 													}}
 												></i>
-												<span style={{ flex: 1 }}>{props.t(item.label)}</span>
+												<span style={{ flex: 1 }}>{item.label}</span>
 											</Link>
 										</li>
 									) : (
@@ -227,7 +226,7 @@ const Sidebar = (props) => {
 														fontSize: '1.125rem'
 													}}
 												></i>
-												<span style={{ flex: 1 }}>{props.t(item.label)}</span>
+												<span style={{ flex: 1 }}>{item.label}</span>
 												{item.issubMenubadge && (
 													<span
 														className={item.bgcolor || ''}
@@ -267,7 +266,7 @@ const Sidebar = (props) => {
 																	e.currentTarget.style.color = '#ffffff';
 																}}
 															>
-																{props.t(subItem.sublabel)}
+																{subItem.sublabel}
 															</Link>
 															{subItem.subMenu && (
 																<ul
@@ -299,7 +298,7 @@ const Sidebar = (props) => {
 																					e.currentTarget.style.color = '#ffffff';
 																				}}
 																			>
-																				{props.t(menuItem.title)}
+																				{menuItem.title}
 																			</Link>
 																		</li>
 																	))}
@@ -324,4 +323,4 @@ Sidebar.propTypes = {
 	location: PropTypes.object,
 	t: PropTypes.any,
 };
-export default withRouter(withTranslation()(Sidebar));
+export default withRouter(Sidebar);

@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { map } from "lodash";
+import React, { useEffect, useState } from "react";
 import {
   Dropdown,
-  DropdownToggle,
-  DropdownMenu,
   DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
 } from "reactstrap";
-import { map } from "lodash";
 
 //i18n
-import i18n from "../../../i18n";
-
-import { withTranslation } from "react-i18next";
+// import i18n from "../../../i18n";
 
 import languages from "../../../CommonData/languages";
 
@@ -25,7 +23,7 @@ const LanguageDropdown = () => {
 
   const changeLanguageAction = (lang) => {
     //set language as i18n
-    i18n.changeLanguage(lang);
+    // i18n.changeLanguage(lang);
     localStorage.setItem("I18N_LANGUAGE", lang);
     setselectLang(lang);
   };
@@ -69,4 +67,4 @@ const LanguageDropdown = () => {
   );
 };
 
-export default withTranslation()(LanguageDropdown);
+export default LanguageDropdown;

@@ -1,12 +1,12 @@
+import { FileTextIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
+import { toast } from "react-toastify";
+import { Table } from "reactstrap";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import { getErrorMessage } from "../../helpers/utils";
-import { toast } from "react-toastify";
-import ApiServices from "../../Network_call/apiservices";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
-import { Button, Table } from "reactstrap";
-import { PictureAsPdf } from "@mui/icons-material";
-import ReactPaginate from "react-paginate";
+import ApiServices from "../../Network_call/apiservices";
 
 export default function ArchivedReportsPage() {
   const [busy, setBusy] = useState(false)
@@ -66,7 +66,7 @@ export default function ArchivedReportsPage() {
                   <td>{data.customer.name}</td>
                   <td>
                     <a href={`${ApiEndPoints.AssignmentReports}/files/${data.report.fileName}`} target="_blank" className="btn btn-sm">
-                      <PictureAsPdf />
+                      <FileTextIcon />
                     </a>
                   </td>
                 </tr>

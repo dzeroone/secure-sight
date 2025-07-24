@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import { Download } from "@mui/icons-material";
 import MaterialReactTable from "material-react-table";
 
 import { CSVLink } from "react-csv";
@@ -8,6 +7,7 @@ import { CSVLink } from "react-csv";
 //Import Breadcrumb
 import { IconButton, Tooltip } from "@mui/material";
 import { Columns, deepKeys } from "../Pages/ulit/commonFunction";
+import { DownloadIcon } from "lucide-react";
 
 const MaterialTable = ({
   data,
@@ -116,7 +116,7 @@ const ExportCSV = ({ data, title }) => {
     <CSVLink headers={mainHeader} data={data} filename={title}>
       <Tooltip title="Download CSV">
         <IconButton>
-          <Download />
+          <DownloadIcon />
         </IconButton>
       </Tooltip>
       {/* <DropdownItem>Export CSV</DropdownItem> */}

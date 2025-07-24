@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Col, Dropdown, DropdownMenu, DropdownToggle, Row, Spinner } from "reactstrap";
+import { Dropdown, DropdownMenu, DropdownToggle, Spinner } from "reactstrap";
 import SimpleBar from "simplebar-react";
 
 //Import images
@@ -9,7 +9,6 @@ import SimpleBar from "simplebar-react";
 
 //i18n
 import formatRelative from "date-fns/formatRelative";
-import { withTranslation } from "react-i18next";
 import ApiEndPoints from "../../../Network_call/ApiEndPoints";
 import ApiServices from "../../../Network_call/apiservices";
 
@@ -93,7 +92,7 @@ const NotificationDropdown = (props) => {
         <DropdownMenu className="dropdown-menu-lg dropdown-menu-end p-0">
           <div className="p-3">
             <div className="position-relative">
-              <h6 className="m-0">{props.t("Notifications")} </h6>
+              <h6 className="m-0">{"Notifications"} </h6>
               {openLoader ?
                 <Spinner size='sm' className="position-absolute top-0 end-0" />
                 : null}
@@ -143,7 +142,7 @@ const NotificationDropdown = (props) => {
   );
 };
 
-export default withTranslation()(NotificationDropdown);
+export default NotificationDropdown;
 
 NotificationDropdown.propTypes = {
   t: PropTypes.any,

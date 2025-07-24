@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDropdown";
+import eventusLogoHorizontal from "../../assets/images/eventus_logo_horizontal.png";
 import NotificationDropdown from "../../components/Common/TopbarDropdown/NotificationDropdown";
-import { withTranslation } from "react-i18next";
+import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
 import {
+  changeSidebarType,
   showRightSidebarAction,
   toggleLeftmenu,
-  changeSidebarType,
 } from "../../store/actions";
-import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
-import eventusLogoHorizontal from "../../assets/images/eventus_logo_horizontal.png"
 import "./logo.css";
 
 // Create a style element for the keyframes
@@ -169,4 +167,4 @@ export default connect(mapStatetoProps, {
   showRightSidebarAction,
   toggleLeftmenu,
   changeSidebarType,
-})(withTranslation()(Header));
+})(Header);

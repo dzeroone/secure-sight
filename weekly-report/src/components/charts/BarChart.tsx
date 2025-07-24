@@ -5,6 +5,7 @@ const BarChart = ({ data }: any) => {
     labels: [...data.Key],
     datasets: [
       {
+        categoryPercentage: 0.5,
         data: data?.data,
         label: data?.label,
         backgroundColor: data?.backgroundColor,

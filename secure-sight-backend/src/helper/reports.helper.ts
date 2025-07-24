@@ -23,7 +23,7 @@ export const jsonFlattenObject = function (data: any) {
 	return result
 }
 
-export const getMontlyReportIndex = (date: string, tenantCode: string) => {
+export const getMonthlyReportIndex = (date: string, tenantCode: string) => {
 	const month = format(date, 'MMMM').toLowerCase()
 	const year = getYear(date)
 	const tenant = tenantCode.toLowerCase()

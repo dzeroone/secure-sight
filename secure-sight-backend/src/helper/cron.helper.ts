@@ -7,9 +7,14 @@ const path = require('path')
 import decompress from 'decompress'
 import Pulse from '@pulsecron/pulse'
 import notificationController from '../controllers/notification.controller'
+import assignmentController from '../controllers/assignment.controller'
+import logger from '../utils/logger'
+import { format } from 'date-fns'
+import { getMonthlyReportIndex, getWeeklyReportIndex } from './reports.helper'
 
 export enum SCHEDULE_JOB_NAME {
-	RUN_PYTHON_COMMAND = 'run_python_command'
+	RUN_PYTHON_COMMAND = 'run_python_command',
+	ASSIGN_REPORTERS = 'assign_reporters',
 }
 
 const scheduler = new Pulse({
@@ -51,6 +56,70 @@ scheduler.define(SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, async (job, done) => {
 
 		done(err as any, stdout)
 	})
+})
+
+scheduler.define(SCHEDULE_JOB_NAME.ASSIGN_REPORTERS, async (job, done) => {
+	console.log("RUNN", SCHEDULE_JOB_NAME.ASSIGN_REPORTERS)
+	const { reportType } = job.attrs.data
+	if(reportType != 'monthly' && reportType != 'weekly') {
+		done()
+		return;
+	}
+	const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
+	const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+
+	const l3Users = await UserModel.find({
+		role: ROLES.LEVEL3,
+		status: { $ne: -1 }
+	}).lean()
+
+	if(l3Users.length < 0) {
+		// no l3 user found, let's skip the assignment
+		done()
+		return;
+	}
+
+	const pickedL3User = l3Users[0]
+
+	const schedules = await assignmentController.getSchedules(reportType)
+
+	for(let schedule of schedules) {
+		const customer = await CustomerModel.findOne({
+			_id: schedule.cId,
+			$or: [{
+        status: 1,
+      }, { status: null }]
+		}).lean()
+		if(!customer) {
+			// customer is not active or not found
+			continue;
+		}
+
+		const reporter = await UserModel.findOne({
+			_id: schedule.uId,
+			status: { $ne: -1 }
+		}).lean()
+		if(!reporter) {
+			// reporter is not active or not found
+			continue;
+		}
+
+		const date = format(new Date(), 'yyyy-MM-dd')
+		const index = reportType == 'monthly' ? getMonthlyReportIndex(date, customer.tCode) : getWeeklyReportIndex(date, customer.tCode)
+		const data = await assignmentController.assignReport({
+			customerId: customer._id.toString(),
+			date,
+			index,
+			reporterId: reporter._id.toString()
+		}, pickedL3User._id.toString(), reportType)
+		
+		logger.info({
+			msg: `${pickedL3User?.fullname || pickedL3User?.email} has assigned report_index:${index} to ${reporter.fullname || reporter.email}`
+		})
+	}
+
+	console.log("RUNN DONE", SCHEDULE_JOB_NAME.ASSIGN_REPORTERS)
+	done()
 })
 
 let scheduledControllerDB: any = {}

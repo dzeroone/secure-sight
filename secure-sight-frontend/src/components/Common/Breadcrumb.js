@@ -1,8 +1,8 @@
+import { RefreshCwIcon } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Breadcrumb, BreadcrumbItem, Col, Row } from "reactstrap";
 import { timedata } from "../../Pages/ulit/timeforGertData";
-import { Refresh } from "@mui/icons-material";
 
 const Breadcrumbs = (props) => {
   return (
@@ -61,7 +61,7 @@ export const ChartHeader = ({ handleChange, reload, title }) => {
           <>
             <div className="d-flex">
               <button type="button" className="btn" onClick={reload}>
-                <Refresh color="inherit" />
+                <RefreshCwIcon color="inherit" />
               </button>
               <select
                 className="form-select"
