@@ -108,6 +108,11 @@ const SidebarData = [
 				sublabel: "Weekly report",
 				link: "/assign/weekly-report",
 			},
+			{
+				roles: [ROLES.LEVEL3],
+				sublabel: "Auto assignment",
+				link: "/assign/auto-assign",
+			}
 		],
 	},
 	{
@@ -132,11 +137,6 @@ const SidebarData = [
 		label: "Reports",
 		icon: "ri-table-2",
 		subItem: [
-			{
-				roles: [ROLES.LEVEL3],
-				sublabel: "Auto assignment",
-				link: "/reports/auto-assign",
-			},
 			{
 				roles: [ROLES.LEVEL3],
 				sublabel: "Archived reports",

@@ -51,7 +51,7 @@ import ActivityLogPage from "../Pages/activity-log";
 import ArchivedReportsPage from "../Pages/reports/archived-reports";
 import CountrySettingsPage from "../settings/countries";
 import ConnectorLogsIndexPage from "../Pages/connector/logs";
-import AutoReportAssignPage from "../Pages/reports/auto-report-assign";
+import AutoReportAssignPage from "../Pages/assign/auto-report-assign";
 
 export const history = createBrowserHistory({ window });
 
@@ -129,6 +129,10 @@ const authProtectedRoutes = [
     path: "/customers/:id/dl-change-requests", component: <DLChangeRequestsPage />
   },
   {
+    roles: [ROLES.LEVEL3],
+    path: "/assign/auto-assign", component: <AutoReportAssignPage />
+  },
+  {
     roles: [ROLES.LEVEL3, ROLES.LEVEL2],
     path: "/assign/monthly-report", component: <AssignMonthlyReportPage />
   },
@@ -155,10 +159,6 @@ const authProtectedRoutes = [
   {
     roles: [ROLES.LEVEL3],
     path: "/reports/archived-reports", component: <ArchivedReportsPage />
-  },
-  {
-    roles: [ROLES.LEVEL3],
-    path: "/reports/auto-assign", component: <AutoReportAssignPage />
   },
   {
     roles: [ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2, ROLES.LEVEL1],
