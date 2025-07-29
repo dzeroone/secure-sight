@@ -215,7 +215,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ data }) => {
             </tr>
           </thead>
           <tbody className="bg-[#ededed] text-sm font-light">
-            {data?.date.EXECUTIVE_SUMMARY.top_incident?.table.map(
+            {executiveSummaryData.topIncidents?.map(
               (item: any, i: number) => (
                 <tr key={i}>
                   <td className="px-4 py-2 font-medium">

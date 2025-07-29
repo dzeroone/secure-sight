@@ -58,6 +58,7 @@ import {
   updateClientState,
   updateDataProp,
   updateExecutiveSummary,
+  updateExecutiveSummaryProp,
   updateIncidentSummaryData,
   updateMatchSummaryData,
   updatePendingIncidentSummaryData,
@@ -65,7 +66,7 @@ import {
 import { withAuth } from "../../hocs/withAuth";
 import { useAuth } from "../../providers/AuthProvider";
 import store, { RootState } from "../../store/store";
-import { getErrorMessage } from "../../utils/helpers";
+import { extractInfoFromIndex, getErrorMessage } from "../../utils/helpers";
 import {
   Dialog,
   DialogContent,
@@ -330,6 +331,13 @@ const Dashboard = () => {
                 ) || 0,
             })
           );
+          dispatch(
+            updateExecutiveSummaryProp({
+              attr: "topIncidents",
+              value: data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.top_incident?.table || []
+            })
+          );
+          
 
           // CLOSED_INCIDENT_SUMMARY
           if (

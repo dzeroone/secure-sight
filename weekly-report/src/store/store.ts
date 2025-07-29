@@ -1,22 +1,22 @@
 import { combineReducers, configureStore, UnknownAction } from "@reduxjs/toolkit";
+import sloReducer from "../features/weekly/sloSlice";
 import {
   alcReducer,
-  dataReducer,
   apexOneReducer,
-  workloadSecurityReducer,
-  endpointReducer,
-  matchedIcosReducer,
   chartReducer,
-  pendingIncidentSummaryReducer,
-  incidentSummaryReducer,
-  matchSummaryReducer,
   clientReducer,
-  tableOfContentsReducer,
-  executiveSummaryReducer,
-  recommendationReducer,
+  dataReducer,
   deepSecurityReducer,
+  endpointReducer,
+  executiveSummaryReducer,
+  incidentSummaryReducer,
+  matchedIcosReducer,
+  matchSummaryReducer,
+  pendingIncidentSummaryReducer,
+  recommendationReducer,
+  tableOfContentsReducer,
+  workloadSecurityReducer,
 } from "../features/weekly/weeklySlice";
-import sloReducer from "../features/weekly/sloSlice";
 
 const combinedReducer = combineReducers({
   executiveSummary: executiveSummaryReducer,
@@ -43,7 +43,9 @@ const rootReducer: typeof combinedReducer = (state, action: UnknownAction) => {
   if (action.type === 'RESET') {
     state = {} as RootState;
   } else if (action.type === 'RESTORE') {
-    state = action.payload as RootState;
+    const defaultState = JSON.parse(JSON.stringify(state))
+    state =  Object.assign({} , defaultState, action.payload) as RootState;
+    // state = action.payload as RootState;
   }
   return combinedReducer(state, action);
 };

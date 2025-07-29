@@ -160,6 +160,10 @@ export interface ExecutiveSummaryState {
   nOfICWoAck: number // number of incidents closed without ack
   nOfTIncidents: number, // number of triggered incidents
   iTDate: string // incident trigger date
+  topIncidents: {
+    incident_name: string,
+    source: string
+  }[],
   epTAgents: number
   epDAgents: number
   epTSensors: number
@@ -173,6 +177,7 @@ const initialExecutiveSummaryState: ExecutiveSummaryState = {
   nOfICWoAck: 0,
   nOfTIncidents: 0,
   iTDate: '',
+  topIncidents: [],
   epTAgents: 0,
   epDAgents: 0,
   epTSensors: 0,
@@ -186,10 +191,19 @@ const executiveSummarySlice = createSlice({
       // @ts-ignore
       state[action.payload.field] = action.payload.value
       return state
+    },
+    updateExecutiveSummaryProp(state, action: PayloadAction<{ attr: string, value: any }>) {
+      _set(state, action.payload.attr, action.payload.value)
+    },
+    removeExecutiveSummaryPropArr(state, action: PayloadAction<{ attr: string, index: number }>) {
+      const vArr = _get(state, action.payload.attr)
+      if (Array.isArray(vArr)) {
+        vArr.splice(action.payload.index, 1)
+      }
     }
   },
 });
-export const { updateExecutiveSummary } =
+export const { updateExecutiveSummary, updateExecutiveSummaryProp, removeExecutiveSummaryPropArr } =
   executiveSummarySlice.actions;
 export const executiveSummaryReducer = executiveSummarySlice.reducer;
 // - End Executive summary

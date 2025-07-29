@@ -162,16 +162,12 @@ function SavedReportsPage() {
                       </td>
                       <td className="p-4">
                         <p className="text-sm">
-                          {moment(
-                            report?.data.reportData.WEEKLY_REPORT.start_date
-                          ).format("Do MMMM YYYY")}
+                          { report?.data.formData.client.dateFrom }
                         </p>
                       </td>
                       <td className="p-4">
                         <p className="text-sm">
-                          {moment(
-                            report?.data.reportData.WEEKLY_REPORT.end_date
-                          ).format("Do MMMM YYYY")}
+                          { report?.data.formData.client.dateTo }
                         </p>
                       </td>
                       <td className="p-4">

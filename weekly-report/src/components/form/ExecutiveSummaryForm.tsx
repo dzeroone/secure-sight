@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { updateExecutiveSummary } from "../../features/weekly/weeklySlice";
+import { updateExecutiveSummary, updateExecutiveSummaryProp } from "../../features/weekly/weeklySlice";
 import { RootState } from "../../store/store";
 import AlcForm from "./AlcForm";
 import EndpointProtectionForm from "./EndpointProtectionForm";
@@ -88,33 +88,43 @@ export default function ExecutiveSummaryForm() {
         />
       </div>
       <div>
-        <Label>Highest incidents triggered</Label>
-        <TextInput
-          value={data.nOfTIncidents}
-          type="number"
-          onChange={(e) => {
-            dispatch(
-              updateExecutiveSummary({
-                field: "nOfTIncidents",
-                value: Number(e.target.value) || 0,
-              })
-            );
-          }}
-        />
-      </div>
-      <div>
-        <Label>Highest incidents triggered on date</Label>
-        <TextInput
-          value={data.iTDate}
-          onChange={(e) => {
-            dispatch(
-              updateExecutiveSummary({
-                field: "iTDate",
-                value: e.target.value,
-              })
-            );
-          }}
-        />
+        <h3 className="text-lg font-semibold">Top incidents</h3>
+        <div className="flex flex-col gap-4">
+          {data.topIncidents?.map((incident, i) => {
+            return (
+              <div className="flex flex-col gap-2" key={i}>
+                <div>
+                  <Label>Incident name {i+1}</Label>
+                  <TextInput
+                    value={incident.incident_name}
+                    onChange={(e) => {
+                      dispatch(
+                        updateExecutiveSummaryProp({
+                          attr: `topIncidents[${i}].incident_name`,
+                          value: e.target.value,
+                        })
+                      );
+                    }}
+                  />
+                </div>
+                <div>
+                  <Label>Incident source {i+1}</Label>
+                  <TextInput
+                    value={incident.source}
+                    onChange={(e) => {
+                      dispatch(
+                        updateExecutiveSummaryProp({
+                          attr: `topIncidents[${i}].source`,
+                          value: e.target.value,
+                        })
+                      );
+                    }}
+                  />
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
       <AlcForm />
       <EndpointProtectionForm />
