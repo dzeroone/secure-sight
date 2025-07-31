@@ -21,6 +21,7 @@ interface ConnectorSchedulerTestDataType {
 		date: any
 		day: any
 		repeat: any
+		timezone: string
 		inventory: any
 		config: any
 	}
@@ -456,7 +457,8 @@ class ConnectorController {
 					'date',
 					'day',
 					'repeat',
-					'inventory',
+					'timezone',
+					'inventory'
 				]
 				paramsType.forEach((paramsKeyName: string) => {
 					const isKeyExists = Object.keys(data).includes(paramsKeyName)
@@ -504,6 +506,7 @@ class ConnectorController {
 					}, {
 						$set: {
 							isConnectorScheduled: true,
+							timezone: data.timezone,
 							scheduleInfo: data,
 							updated_at: new Date()
 						}

@@ -171,7 +171,7 @@ export const invokeConnector = async (connectorId: string, connectorParams: Reco
 			}
 		}
 		const job = await scheduler.now(SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, { connectorId, command })
-		console.log('invoked job', job)
+		// console.log('invoked job', job)
 	} catch (e) {
 		throw e
 	}
@@ -183,7 +183,7 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 	console.log('connector scheduler start!!')
 
 	try {
-		let { minute, hour, date, day, repeat, connectorId } =
+		let { minute, hour, date, day, repeat, connectorId, timezone } =
 			response
 
 		const dbConnection = dynamicModelWithDBConnection(
@@ -239,7 +239,9 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 
 		const job = scheduler.create(SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, { connectorId, command })
 		job.unique({ 'data.connectorId': connectorId })
-		job.repeatEvery(schedulingString)
+		job.repeatEvery(schedulingString, {
+			timezone
+		})
 		return job.save()
 
 		// return scheduler.every(schedulingString, SCHEDULE_JOB_NAME.RUN_PYTHON_COMMAND, { command })

@@ -10,6 +10,7 @@ import {
 	DropdownMenu,
 	DropdownToggle,
 	Form,
+	Input,
 	Row
 } from "reactstrap";
 
@@ -27,6 +28,7 @@ import ConnectorList from "../connectorList";
 import ModalLoading from "../../../components/ModalLoading";
 import { ArchiveIcon } from "lucide-react";
 import BreadcrumbWithTitle from "../../../components/Common/BreadcrumbWithTitle";
+import timezones from "timezones.json"
 
 
 
@@ -38,7 +40,7 @@ const ConnectorUploader = () => {
 
 	const [openLoader, setOpenLoader] = useState(false);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
-	const [selectedLanguage, setSelectedLanguage] = useState('');
+	const [selectedTimezone, setSelectedTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
 	const [state, setState] = useState({
 		currentFile: undefined,
 		previewImage: undefined,
@@ -147,7 +149,7 @@ const ConnectorUploader = () => {
 		if (state.uploadFiles) {
 			if (state.currentFileIndex !== null) {
 				const payload = {
-					info: { email: userData.email, dbName: userData.dbName },
+					info: { email: userData.email, dbName: userData.dbName, timezone: selectedTimezone },
 					data: [state.multiConnectorInfo[state.currentFileIndex]],
 				};
 				const response = await ApiServices(
@@ -191,19 +193,6 @@ const ConnectorUploader = () => {
 			currentFileIndex: isLastFile ? null : prevState.currentFileIndex + 1,
 		}));
 	}, [state.lastUploadedFileIndex]);
-
-	useEffect(() => {
-		if (selectedLanguage === '') {
-			return;
-		}
-		// Uncomment the below "setSelectedLanguage"  inorder to send an APi call to set the laguage in the back-end
-		// and Just for your info, There is no api on the back-end for this
-
-		// setSelectedLanguage({
-		// 	language: selectedLanguage,
-		// });
-
-	}, [selectedLanguage]);
 
 	useEffect(() => {
 		if (state.files.length > 0) {
@@ -291,8 +280,8 @@ const ConnectorUploader = () => {
 		setDropdownOpen(!dropdownOpen);
 	};
 
-	const handleLanguageSelect = (event) => {
-		setSelectedLanguage(event);
+	const handleTimezoneChange = (v) => {
+		setSelectedTimezone(v);
 	};
 
 
@@ -367,6 +356,21 @@ const ConnectorUploader = () => {
 							</Card>
 						</Col>
 						<Col className="col-12 col-md-3">
+							<div className="mb-3">
+								<Input
+									type="select"
+									value={selectedTimezone}
+									onChange={(e) => {
+										handleTimezoneChange(e.target.value)
+									}}
+								>
+									{timezones.map((timezone, i) => {
+										return (
+											<option value={timezone.utc[0]} key={i}>{timezone.text}</option>
+										)
+									})}
+								</Input>
+							</div>
 							<div className="d-line-block">
 								<button
 									type="button"

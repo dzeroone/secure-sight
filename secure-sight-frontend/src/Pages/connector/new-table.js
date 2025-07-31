@@ -16,6 +16,7 @@ import { XIcon } from "lucide-react";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import ModalLoading from "../../components/ModalLoading";
 import { getErrorMessage } from "../../helpers/utils";
+import timezones from "timezones.json";
 
 const ConnectorListTwo = () => {
 	const [openLoader, setOpenLoader] = useState(false);
@@ -87,22 +88,18 @@ const ConnectorListTwo = () => {
 		// if (response.success) {
 		setConfig(connectorConfigurationDetail.isConnectorScheduled);
 		setConnectorName(jsonData.data.connectorBasePath);
+
 		if (connectorConfigurationDetail.scheduleInfo) {
 			const scheduleInfo = connectorConfigurationDetail.scheduleInfo
 			setSchedulerData({
 				connectorId: item,
+				timezone: connectorConfigurationDetail.timezone || "",
 				repeat: scheduleInfo.repeat,
 				minute: scheduleInfo.minute,
 				hour: scheduleInfo.hour,
 				weekDay: scheduleInfo.day,
 				monthDay: scheduleInfo.date
 			})
-			console.log(objectkey(jsonData.data.config).reduce((p, c) => {
-				return {
-					...p,
-					[c]: scheduleInfo.config[c]
-				}
-			}, {}))
 			setConfigData(objectkey(jsonData.data.config).reduce((p, c) => {
 				return {
 					...p,
@@ -110,6 +107,15 @@ const ConnectorListTwo = () => {
 				}
 			}, {}))
 		} else {
+			setSchedulerData({
+				connectorId: item,
+				timezone: connectorConfigurationDetail.timezone || "",
+				repeat: "monthly",
+				minute: "0",
+				hour: "0",
+				weekDay: "0",
+				monthDay: "1",
+			})
 			setConfigData(objectkey(jsonData.data.config).reduce((p, c) => {
 				return {
 					...p,
@@ -153,6 +159,7 @@ const ConnectorListTwo = () => {
 						: schedulerData.monthDay,
 				inventory: uperCase(connectorName),
 				repeat: schedulerData.repeat,
+				timezone: schedulerData.timezone,
 				config: Object.assign({}, ...schedulConfig),
 			},
 		};
@@ -355,7 +362,7 @@ const ConnectorListTwo = () => {
 							toggle={() => setScheduleModalVisible(false)}
 							size="lg"
 						>
-							<ModalHeader>Schedule Connector</ModalHeader>
+							<ModalHeader>Schedule Connector: {formatCapilize(allReplace(selectedConnector?.display_name || "", { _: " ", "-": " " }))}</ModalHeader>
 							<ModalBody>
 								<form>
 									<Row gutter={[16, 16]}>
@@ -379,6 +386,28 @@ const ConnectorListTwo = () => {
 												<SelectOption data={minuteData} value={schedulerData.minute} name="minute" handelChange={handelChange} />
 											</> : null}
 									</Row>
+									<div className="form-floating mb-3">
+										<Input
+											id="timezone-input"
+											type="select"
+											value={schedulerData.timezone}
+											placeholder="Timezone"
+											onChange={(e) => {
+												handelChange({
+													event: e.target.value,
+													name: "timezone"
+												})
+											}}
+										>
+											<option value="" disabled>None</option>
+											{timezones.map((timezone, i) => {
+												return (
+													<option value={timezone.utc[0]} key={i}>{timezone.text}</option>
+												)
+											})}
+										</Input>
+										<label htmlFor="timezone-input">Timezone</label>
+									</div>
 								</form>
 								{objectkey(configData).length > 0 && (
 									<Row gutter={[16, 16]}>
