@@ -118,6 +118,51 @@ export const monthlyReportSlice = createSlice({
                     })
                 })
             }
+
+            // Threat intel summary
+            {
+                if (data['THREAT_INTEL_SUMMARY']?.['IOC Match Details'] && Array.isArray(data['THREAT_INTEL_SUMMARY']?.['IOC Match Details'])) {
+                    const iocMatchDetails = data['THREAT_INTEL_SUMMARY']['IOC Match Details']
+                    for(let i=state.threat_intel_summary.ioc_match_details.data.length,l=iocMatchDetails.length; i<l; i++) {
+                        reducers.addTISIOCMatchDetail(state)
+                    }
+                    iocMatchDetails.forEach((matchedData, i) => {
+                        reducers.updateTISIOCMatchDetail(state, {
+                            type: '',
+                            payload: {
+                                field: 'advisory_name',
+                                index: i,
+                                value: matchedData['Advisory Name']
+                            }
+                        })
+                        reducers.updateTISIOCMatchDetail(state, {
+                            type: '',
+                            payload: {
+                                field: 'ioc_type',
+                                index: i,
+                                value: matchedData['Matched IOC type']
+                            }
+                        })
+                        reducers.updateTISIOCMatchDetail(state, {
+                            type: '',
+                            payload: {
+                                field: 'detail',
+                                index: i,
+                                value: matchedData['Matched IOC Details']
+                            }
+                        })
+                        reducers.updateTISIOCMatchDetail(state, {
+                            type: '',
+                            payload: {
+                                field: 'endpoint_name',
+                                index: i,
+                                value: matchedData['Endpoint Name/Email']
+                            }
+                        })
+                    })
+                }
+            }
+
             // -
             // Overall Incidents Summary
             if (data['Overall Incidents Summary']?.['Status Summary']) {
@@ -460,6 +505,10 @@ export const monthlyReportSlice = createSlice({
                     ['Accounts with Weak Authentication', 'accounts_with_weak_auth'],
                     ['Accounts that Increase Attack Surface Risk', 'account_attack_surface_risk'],
                     ['Accounts with Excessive Privilege', 'accounts_with_excessive_privilege'],
+                    ['Legacy Authentication Protocol with Log On Activity', 'legacy_auth_logon_activity'],
+                    ['Unexpected Internet-Facing Service Port Count', 'unexpected_internet_facing_serve_port.service_port'],
+                    ['Unexpected Internet-Facing Public IP Count', 'unexpected_internet_facing_serve_port.affected_ip'],
+                    ['Hosts with Insecure Host Count', 'host_with_insecure_connection.insecure_connection'],
                     ['Hosts with Insecure Connection Issues', 'legacy_auth_logon_activity']
                 ])
                 if (configReportData) {
@@ -484,6 +533,13 @@ export const monthlyReportSlice = createSlice({
             // Top Vulnerabilities Detected
             {
                 const topVData = data['Top Vulnerability Detected']?.['Top Vulnerabilities Detected']
+                reducers.updateTVDChartLabel(state, {
+                    type: '',
+                    payload: {
+                        datasetIndex: 0,
+                        value: 'CVSS Score'
+                    }
+                })
                 if (topVData) {
                     for (let i = state.top_vulnerabilities_detected.impact_chart.key.length; i < topVData.length; i++) {
                         reducers.addTVDChartBar(state);
@@ -1035,7 +1091,7 @@ export const monthlyReportSlice = createSlice({
         toggleTopRiskVisibility(state, action: PayloadAction<boolean>) {
             state.risk_metrics.top_risk_incidents.visible = action.payload;
         },
-        //Threat Inter Summary
+        //Threat Intel Summary
         updateTISIOCSweep(state, action: PayloadAction<number>) {
             state.threat_intel_summary.total_ioc_sweep = action.payload
         },
@@ -1297,6 +1353,9 @@ export const monthlyReportSlice = createSlice({
         // top vulnerabilities detected
         updateTVDChartKey: (state, action: PayloadAction<{ index: number; value: string }>) => {
             state.top_vulnerabilities_detected.impact_chart.key[action.payload.index] = action.payload.value;
+        },
+        updateTVDChartLabel: (state, action: PayloadAction<{ datasetIndex: number; value: string }>) => {
+            state.top_vulnerabilities_detected.impact_chart.datasets[action.payload.datasetIndex].label = action.payload.value;
         },
         updateTVDChartData: (state, action: PayloadAction<{ datasetIndex: number; index: number; value: number }>) => {
             state.top_vulnerabilities_detected.impact_chart.datasets[action.payload.datasetIndex].data[action.payload.index] = action.payload.value;

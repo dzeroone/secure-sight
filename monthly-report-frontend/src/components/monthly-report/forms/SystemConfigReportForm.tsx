@@ -1,20 +1,13 @@
+import RecommendationInput from "@@/components/RecommendationInput";
 import { updateNestedField } from "@@/helper/helper";
 import { systemConfigurationReport } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import {
-  Button,
   Divider,
-  FormControl,
   Grid,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
-import ClearIcon from "@mui/icons-material/Clear";
-import RecommendationInput from "@@/components/RecommendationInput";
 
 const SystemConfigReportForm: React.FC = () => {
   const data = useAppSelector(

@@ -78,7 +78,7 @@ const TopVulnerabilitiesForm = () => {
             </Grid>
             <Grid item xs={5}>
               <TextField
-                label={`CVE Impact Score ${index + 1}`}
+                label={`CVSS Score ${index + 1}`}
                 variant="outlined"
                 value={data.impact_chart.datasets[0].data[index]}
                 type="number"
@@ -113,7 +113,7 @@ const TopVulnerabilitiesForm = () => {
         ))}
         <Grid item xs={6}>
           <MuiColorInput
-            label="CVE Impact Score Color"
+            label="CVSS Score Color"
             value={data.impact_chart.datasets[0].backgroundColor}
             onChange={(color) => handleColorChange(0, color)}
             fullWidth

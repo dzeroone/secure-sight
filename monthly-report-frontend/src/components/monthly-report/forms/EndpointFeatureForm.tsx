@@ -1,23 +1,16 @@
-import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
-import {
-  Button,
-  Divider,
-  FormControl,
-  Grid,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
-import ClearIcon from "@mui/icons-material/Clear";
+import RecommendationInput from "@@/components/RecommendationInput";
 import {
   updateEPFChartColor,
   updateEPFChartData,
   updateEPFChartKey,
 } from "@@/lib/features/monthly-report/monthlySlice";
+import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
+import {
+  Divider,
+  Grid,
+  TextField
+} from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
-import RecommendationInput from "@@/components/RecommendationInput";
 
 const EndpointFeatureForm = () => {
   const data = useAppSelector(

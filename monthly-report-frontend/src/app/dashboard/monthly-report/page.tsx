@@ -96,7 +96,12 @@ const MonthlyReportPage = () => {
         if (responseData && responseData.data) {
           const data = responseData.data;
 
+          if (responseData.commonData) {
+            dispatch(setCommonData(responseData.commonData));
+          }
+
           dispatch(updateFromElasticData(data));
+          
           if (responseData.customer) {
             dispatch(
               firstPage({
@@ -108,9 +113,6 @@ const MonthlyReportPage = () => {
                 customer_name: responseData.customer.tCode.toUpperCase(),
               })
             );
-          }
-          if (responseData.commonData) {
-            dispatch(setCommonData(responseData.commonData));
           }
           if (responseData.assignment) {
             dispatch(setAssignment(responseData.assignment));
