@@ -41,7 +41,7 @@ export default function AssignmentInput({
           />
         </div>
       </div>
-    ) : scheduledCustomer && !isPast(date)? (
+    ) : scheduledCustomer ? (
       <div>
         Scheduled for assigning to {scheduledCustomer.schedule.uId.fullname} - {getRoleTitle(scheduledCustomer.schedule.uId.role)}
       </div>
