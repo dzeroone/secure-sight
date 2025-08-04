@@ -53,6 +53,7 @@ import Alert from "../../components/ui/Alert";
 import axiosApi from "../../config/axios";
 import { REPORT_AUDIT_STATUS, REPORT_STATUS, ROLE_NAMES, ROLES } from "../../data/data";
 import {
+  addMatchedIco,
   updateChartData,
   updateClientName,
   updateClientState,
@@ -180,6 +181,31 @@ const Dashboard = () => {
           data: payload,
         });
         const responseData = res.data;
+
+        if (responseData?.commonData) {
+          const chart = responseData.commonData.threat_intel_summary
+            .ioc_chart ?? {
+            ip: 0,
+            url: 0,
+            domain: 0,
+            hash: 0,
+            sender_email: 0,
+          };
+          dispatch(
+            updateMatchSummaryData({
+              iocMatched: matchSummary.iocMatched,
+              iocSweeped: [
+                chart.ip,
+                chart.url,
+                chart.domain,
+                chart.hash,
+                chart.sender_email,
+              ],
+              labels: matchSummary.labels,
+            })
+          );
+        }
+
         if (responseData && responseData.data) {
           const data = responseData.data;
 
@@ -422,6 +448,22 @@ const Dashboard = () => {
                 pendingFromCustomer: [0, 0, 0, 0],
               })
             );
+
+            const Matched_IOCs_Detailed_Summary = data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY
+              .Matched_IOCs_Detailed_Summary
+            if(Array.isArray(Matched_IOCs_Detailed_Summary) && Matched_IOCs_Detailed_Summary.length) {
+              const data = Matched_IOCs_Detailed_Summary[0]
+              data.forEach((item: any, i: number) => {
+                dispatch(addMatchedIco({
+                  srNo: item['Sr.No'],
+                  advisoryName: item['Advisory Name'],
+                  matchedIocType: item['Matched IOC type'],
+                  matchedIocDetails: item['Matched IOC Details'],
+                  noOfendpoint: item['No of Endpoints / Email']
+                }));
+              })
+            }
+            
           }
           if (
             data?.PENDING_INCIDENTS_SUMMARY?.date?.PENDING_INCIDENTS_SUMMARY
@@ -587,29 +629,6 @@ const Dashboard = () => {
               });
             });
           }
-        }
-        if (responseData?.commonData) {
-          const chart = responseData.commonData.threat_intel_summary
-            .ioc_chart ?? {
-            ip: 0,
-            url: 0,
-            domain: 0,
-            hash: 0,
-            sender_email: 0,
-          };
-          dispatch(
-            updateMatchSummaryData({
-              iocMatched: matchSummary.iocMatched,
-              iocSweeped: [
-                chart.ip,
-                chart.url,
-                chart.domain,
-                chart.hash,
-                chart.sender_email,
-              ],
-              labels: matchSummary.labels,
-            })
-          );
         }
       } else {
         dispatch({
