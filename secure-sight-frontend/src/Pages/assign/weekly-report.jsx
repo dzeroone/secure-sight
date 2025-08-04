@@ -12,6 +12,7 @@ import DropdownReportAssignment from "../../components/DropdownReportAssignment"
 import ModalLoading from "../../components/ModalLoading";
 import { getWeeklyReportIndex } from "../../helpers/form_helper";
 import { getErrorMessage, getRoleTitle } from "../../helpers/utils";
+import AssignmentInput from "../../components/AssignmentInput";
 
 const linkStack = [
   {title: 'Dashboard', route: '/dashboard'},
@@ -23,6 +24,8 @@ export default function AssignWeeklyReportPage() {
   const [busy, setBusy] = useState(false)
 
   const [customers, setCustomers] = useState([])
+  const [schedules, setSchedules] = useState([])
+
   const navigate = useNavigate()
 
   const getAssignments = useCallback(async () => {
@@ -44,6 +47,23 @@ export default function AssignWeeklyReportPage() {
       setBusy(false)
     }
   }, [date])
+
+  const loadSchedules = useCallback(async () => {
+    try {
+      setBusy(true)
+      const data = await ApiServices(
+        "get",
+        null,
+        `${ApiEndPoints.Assignments}/schedules/weekly`
+      )
+      setSchedules(data)
+    }catch(e) {
+      const msg = getErrorMessage(e)
+      toast.error(msg)
+    }finally{
+      setBusy(false)
+    }
+  }, [])
 
   const onAssigned = useCallback(async (customerId, info) => {
     setCustomers(customers => {
@@ -104,9 +124,17 @@ export default function AssignWeeklyReportPage() {
     navigate(`/assignments/${assingment._id}`)
   }
 
+  const assignemtIsScheduled = (customer) => {
+    return schedules.find(s => s._id == customer._id && s.schedule)
+  }
+
   useEffect(() => {
     getAssignments()
   }, [getAssignments])
+
+  useEffect(() => {
+    loadSchedules()
+  }, [loadSchedules])
 
   return (
     <div className="page-content">
@@ -146,36 +174,14 @@ export default function AssignWeeklyReportPage() {
                   <div>Tenant code: {customer.tCode}</div>
                 </td>
                 <td>
-                  <div className="d-flex flex-wrap gap-1">
-                    {customer.assignments.map(assignment => {
-                      return (
-                        <ButtonGroup size="sm" key={assignment._id}>
-                          <Button outline>
-                            {assignment.reporter.fullname} - 
-                            {getRoleTitle(assignment.reporter.role)}
-                          </Button>
-                          <Button onClick={() => removeAssignment(customer, assignment)} outline>
-                            <XIcon size='1em' />
-                          </Button>
-                          <Button onClick={() => gotoMessagingScreen(assignment)} outline>
-                            <MessageSquareIcon size='1em' />
-                          </Button>
-                        </ButtonGroup>
-                      )
-                    })}
-                    <div className="d-inline-flex">
-                      <DropdownReportAssignment
-                        key={date}
-                        date={date}
-                        index={getWeeklyReportIndex(date, customer.tCode)}
-                        customerId={customer._id}
-                        assignments={customer.assignments}
-                        onAssigned={onAssigned}
-                        onUnAssigned={onUnAssigned}
-                        reportType="weekly"
-                      />
-                    </div>
-                  </div>
+                  <AssignmentInput
+                    date={date}
+                    scheduledCustomer={assignemtIsScheduled(customer)}
+                    customer={customer}
+                    removeAssignment={removeAssignment}
+                    onAssigned={onAssigned}
+                    onUnAssigned={onUnAssigned}
+                  />
                 </td>
               </tr>
             )

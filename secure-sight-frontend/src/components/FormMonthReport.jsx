@@ -14,6 +14,8 @@ export default function FormMonthReport({ formik, btnText, afterForm }) {
     assigned: []
   })
 
+  const [schedules, setSchedules] = useState([])
+
   const loadInfo = useCallback(async () => {
     if(!formik.values.selectedDate) return
     formik.setFieldValue('tenant', '')
@@ -36,9 +38,35 @@ export default function FormMonthReport({ formik, btnText, afterForm }) {
     }
   }, [formik.values.selectedDate])
 
+  const loadSchedules = useCallback(async () => {
+    try {
+      setBusy(true)
+      setSchedules([])
+      const data = await ApiServices(
+        "get",
+        null,
+        `${ApiEndPoints.Assignments}/schedules/monthly`
+      )
+      setSchedules(data)
+    }catch(e) {
+      const msg = getErrorMessage(e)
+      toast.error(msg)
+    }finally{
+      setBusy(false)
+    }
+  }, [])
+
+  const assignemtIsScheduled = (customer) => {
+    return schedules.find(s => s._id == customer._id && s.schedule)
+  }
+
   useEffect(() => {
     loadInfo()
   }, [loadInfo])
+
+  useEffect(() => {
+    loadSchedules()
+  }, [loadSchedules])
 
   return (
     <Card>
@@ -81,7 +109,7 @@ export default function FormMonthReport({ formik, btnText, afterForm }) {
                     <option value='' disabled>Select a tenant</option>
                     {info.customers?.map(customer => {
                       return (
-                        <option value={customer.tCode} disabled={info.assigned.some((ac) => customer.tCode == ac.tCode)} key={customer._id}>{customer.name}</option>
+                        <option value={customer.tCode} disabled={info.assigned.some((ac) => customer.tCode == ac.tCode) || assignemtIsScheduled(customer)} key={customer._id}>{customer.name}</option>
                       )
                     })}
                   </Input>
