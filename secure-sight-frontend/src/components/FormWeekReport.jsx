@@ -48,7 +48,7 @@ export default function FormWeekReport({ formik, btnText, afterForm }) {
       const data = await ApiServices(
         "get",
         null,
-        `${ApiEndPoints.Assignments}/schedules/monthly`
+        `${ApiEndPoints.Assignments}/schedules/weekly`
       )
       setSchedules(data)
     }catch(e) {
