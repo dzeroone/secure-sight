@@ -428,7 +428,7 @@ router.post('/schedules/:reportType(monthly|weekly)',
 
 router.get('/schedules/:reportType(monthly|weekly)/users',
   auth,
-  hasRole([ROLES.LEVEL3]),
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
   async (req, res) => {
     try {
       const reportType = req.params.reportType as ReportType
