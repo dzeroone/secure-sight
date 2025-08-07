@@ -355,7 +355,7 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({
         {tableOfContents[6].visible && (
           <>
             <p className="title" id="top-incident-summary-status">
-              Top 10 Incidents Summary by Category
+              Top {dataState.t10ISCat.Key.length} Incidents Summary by Category
             </p>
             <div className="w-full" style={{height: `${dataState.t10ISCat.Key.length * 60}px`}}>
               <StackedHorizontalBarChart data={dataState.t10ISCat} />
