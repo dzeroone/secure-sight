@@ -504,9 +504,9 @@ export const endpointReducer = endpointSlice.reducer;
 
 const initialState = {
   chartData: [
-    { label: "XDR feature enabled", dataPoint: 0, backgroundColor: "rgba(75,192,192,1)" },
-    { label: "XDR feature not enabled", dataPoint: 0, backgroundColor: "rgba(153,102,255,1)" },
-    { label: "Action Required", dataPoint: 0, backgroundColor: "rgba(255,159,64,1)" },
+    { label: "XDR feature enabled", dataPoint: 0 },
+    { label: "XDR feature not enabled", dataPoint: 0 },
+    { label: "Action Required", dataPoint: 0 },
   ],
 };
 
@@ -516,9 +516,14 @@ const chartSlice = createSlice({
   reducers: {
     updateChartData: (state, action) => {
       const { index, label, dataPoint } = action.payload;
-      if (index >= 0 && index < state.chartData.length) {
+      if(index > state.chartData.length - 1) {
+        state.chartData.push({
+          label,
+          dataPoint: Number(dataPoint) || 0
+        })
+      }else if (index >= 0 && index < state.chartData.length) {
         state.chartData[index].label = label;
-        state.chartData[index].dataPoint = parseFloat(dataPoint);
+        state.chartData[index].dataPoint = Number(dataPoint) || 0;
       }
     },
     resetChartData: (state) => {
