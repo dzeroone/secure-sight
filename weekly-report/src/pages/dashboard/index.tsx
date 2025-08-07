@@ -343,7 +343,7 @@ const Dashboard = () => {
               value:
                 Number(
                   data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_sensor
-                    .data[1]
+                    .data[0]
                 ) || 0,
             })
           );
@@ -353,7 +353,7 @@ const Dashboard = () => {
               value:
                 Number(
                   data.EXECUTIVE_SUMMARY?.date.EXECUTIVE_SUMMARY.endpoint_sensor
-                    .data[0]
+                    .data[1]
                 ) || 0,
             })
           );
