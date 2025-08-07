@@ -45,7 +45,7 @@ const EndpointInventory: React.FC<EndpointInventoryProps> = ({ data }) => {
               <div className="w-3/4">
                 <BarChart data={newChartData} />
               </div>
-              <div className="w-2/5 pl-14">
+              <div className="w-1/4 pl-1">
                 <RecommendationNotes notes={eInventoryRecommendations} />
               </div>
             </div>
