@@ -10,6 +10,7 @@ const StackedHorizontalBarChart = ({ data }: any) => {
       data={chartData}
       options={{
         responsive: true,
+        maintainAspectRatio: false,
         devicePixelRatio: 4,
         indexAxis: "y",
         scales: {

@@ -357,7 +357,9 @@ const ThreatIntelSummary: React.FC<ThreatIntelSummaryProps> = ({
             <p className="title" id="top-incident-summary-status">
               Top 10 Incidents Summary by Category
             </p>
-            <StackedHorizontalBarChart data={dataState.t10ISCat} />
+            <div className="w-full" style={{height: `${dataState.t10ISCat.Key.length * 60}px`}}>
+              <StackedHorizontalBarChart data={dataState.t10ISCat} />
+            </div>
             {/* <p className="font-bold capitalize">
           {data?.date.THREAT_INTEL_SUMMARY.R_S_N_T10IS.key}
         </p>
