@@ -42,7 +42,7 @@ const EndpointInventory: React.FC<EndpointInventoryProps> = ({ data }) => {
           <>
             <p className="title">Endpoint Inventory</p>
             <div className="w-full flex flex-row flex-nowrap items-center">
-              <div className="w-3/5">
+              <div className="w-3/4">
                 <BarChart data={newChartData} />
               </div>
               <div className="w-2/5 pl-14">
