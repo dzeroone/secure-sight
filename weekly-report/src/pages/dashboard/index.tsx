@@ -427,12 +427,16 @@ const Dashboard = () => {
                     .T10IS_by_Category.Key,
                   data: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.T10IS_by_Category.data.map(
                     (d: any) => {
-                      if (d.label == "Pending from Customer") {
+                      if (d.label == "Pending") {
                         d.label = `Pending from ${responseData.customer.tCode.toUpperCase()}`;
                       }
                       return d;
                     }
-                  ),
+                  ).concat({
+                    label: "Pending for SOC Team",
+                    data: Array.from({length: data.THREAT_INTEL_SUMMARY?.date.THREAT_INTEL_SUMMARY.T10IS_by_Category.Key.length}).fill(0),
+                    backgroundColor: "#ff8200"
+                  }),
                 },
               })
             );
