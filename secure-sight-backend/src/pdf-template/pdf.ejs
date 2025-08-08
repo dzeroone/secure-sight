@@ -1826,7 +1826,7 @@
         </div>
       </div>
       <% } %>
-      <% if(data.deep_security.server_workload_protection_chart.visible) { %>
+      <% if(data.deep_security?.server_workload_protection_chart?.visible) { %>
       <div>
         <p
           style="
@@ -1843,7 +1843,7 @@
         </div>
       </div>
       <% } %>
-      <% if(data.agent_versions_summary.server_workload_protection_chart.visible) { %>
+      <% if(data.agent_versions_summary?.server_workload_protection_chart?.visible) { %>
       <div>
         <p
           style="
@@ -1861,7 +1861,7 @@
       </div>
       <% } %>
       <% if(data.agent_versions_summary.standard_endpoint_protection_chart.visible) { %>
-      <div style="<%= (data.agent_versions_summary.server_workload_protection_chart.visible && data.deep_security.server_workload_protection_chart.visible) ? 'page-break-before:always;' : '' %>">
+      <div style="<%= (data.agent_versions_summary?.server_workload_protection_chart?.visible && data.deep_security?.server_workload_protection_chart?.visible) ? 'page-break-before:always;' : '' %>">
         <p
           style="
             font-size: 26px;
@@ -2437,7 +2437,7 @@
       });
     <% } %>
 
-    <% if(data.agent_versions_summary.server_workload_protection_chart.visible && data.agent_versions_summary.server_workload_protection_chart.datasets.length > 0 ) { %>
+    <% if(data.agent_versions_summary?.server_workload_protection_chart?.visible && data.agent_versions_summary?.server_workload_protection_chart?.datasets.length > 0 ) { %>
       const ctx22 = document.getElementById('horizontalBarCharts22').getContext('2d');
       const horizontalBarChart22 = new Chart(ctx22, {
           type: 'bar',
@@ -2464,7 +2464,7 @@
     <% } %>
 
     // deep security
-    <% if(data.deep_security.server_workload_protection_chart.visible && data.deep_security.server_workload_protection_chart.datasets.length > 0 ) { %>
+    <% if(data.deep_security?.server_workload_protection_chart?.visible && data.deep_security?.server_workload_protection_chart?.datasets.length > 0 ) { %>
       const dpsWPChartCtx = document.getElementById('dpsWPChart').getContext('2d');
       const dpsWPChart = new Chart(dpsWPChartCtx, {
           type: 'bar',
