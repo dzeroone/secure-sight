@@ -31,6 +31,7 @@ const StackedHorizontalBarChart = ({ data }: any) => {
               display: false,
             },
             ticks: {
+              autoSkip: false,
               font: {
                 weight: "bold"
               }
