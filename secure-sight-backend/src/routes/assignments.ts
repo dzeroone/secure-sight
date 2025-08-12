@@ -393,7 +393,7 @@ router.post('/submissions/:id/approve',
 
 router.get('/schedules/:reportType(monthly|weekly)',
   auth,
-  hasRole([ROLES.ADMIN, ROLES.LEVEL3]),
+  hasRole([ROLES.ADMIN, ROLES.LEVEL3, ROLES.LEVEL2]),
   async (req, res) => {
     try {
       const reportType = req.params.reportType as ReportType
