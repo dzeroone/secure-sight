@@ -4,14 +4,18 @@
       "ENDPOINT_INVENTORY": {
         "Bar_graph": {
           "Key": [
-            "XDR feature enabled",
-            "XDR feature not enabled",
-            "Action Required"
+            "Immediate Action Required",
+            "Sensor disabled",
+            "Sensor update recommended",
+            "Unmanaged endpoints",
+            "Sensor only"
           ],
           "data": [
-            "",
-            "",
-            "0"
+            "6",
+            "4",
+            "18",
+            "193",
+            "6"
           ],
           "label": "Info",
           "backgroundColor": "#ff8200",
@@ -34,7 +38,7 @@
               "Product": "Apex One as a Service"
             },
             {
-              "Status": "Connected",
+              "Status": "Not Connected",
               "Product": "Cloud App Security"
             }
           ]
@@ -42,6 +46,93 @@
       },
       "blank": 0
     }
+  },
+  "Key Feature Adoption Rate of C1": {
+    "Key Feature Adoption Rate of C1": [
+      {
+        "Feature Name": "Intrusion Prevention System (IPS)",
+        "Total": "299",
+        "Count": "153",
+        "Rate": "51"
+      },
+      {
+        "Feature Name": "Anti-malware",
+        "Total": "299",
+        "Count": "153",
+        "Rate": "51"
+      },
+      {
+        "Feature Name": "Web Reputation",
+        "Total": "299",
+        "Count": "135",
+        "Rate": "45"
+      },
+      {
+        "Feature Name": "Behavior Monitoring",
+        "Total": "294",
+        "Count": "294",
+        "Rate": "100"
+      },
+      {
+        "Feature Name": "Predictive Machine Learning",
+        "Total": "299",
+        "Count": "299",
+        "Rate": "100"
+      },
+      {
+        "Feature Name": "Smart Feedback",
+        "Total": "299",
+        "Count": "182",
+        "Rate": "61"
+      },
+      {
+        "Feature Name": "Firewall",
+        "Total": "299",
+        "Count": "36",
+        "Rate": "12"
+      },
+      {
+        "Feature Name": "Agent Self-Protection",
+        "Total": "299",
+        "Count": "153",
+        "Rate": "51"
+      },
+      {
+        "Feature Name": "File Integrity Monitoring (FIM)",
+        "Total": "299",
+        "Count": "153",
+        "Rate": "51"
+      },
+      {
+        "Feature Name": "Log Inspection",
+        "Total": "299",
+        "Count": "153",
+        "Rate": "51"
+      },
+      {
+        "Feature Name": "Device Control",
+        "Total": "NA",
+        "Count": "NA",
+        "Rate": "NA"
+      },
+      {
+        "Feature Name": "Application Control",
+        "Total": "299",
+        "Count": "31",
+        "Rate": "10"
+      }
+    ],
+    "chart_type": "horizontal_bar",
+    "label": [
+      "Total",
+      "Count",
+      "Rate"
+    ],
+    "background_color": [
+      "rgb(255,130,0)",
+      "rgb(251,214,92)",
+      "rgb(9,12,155)"
+    ]
   },
   "CLOSED_INCIDENT_SUMMARY": {
     "date": {
@@ -57,20 +148,20 @@
             "True Positive": [
               0,
               0,
-              0,
+              1,
               0
             ],
             "False Positive": [
               0,
-              2,
               0,
-              7
+              16,
+              19
             ],
             "Remediated": [
               0,
               0,
               0,
-              0
+              1
             ],
             "Duplicate": [
               0,
@@ -89,12 +180,12 @@
   "PENDING_INCIDENTS_SUMMARY": {
     "date": {
       "PENDING_INCIDENTS_SUMMARY": {
-        "T_P_Incidents": "8",
+        "T_P_Incidents": "50",
         "P_I_F_Customer": "",
         "P_Incidents_from_SOC": "",
         "Pie_chart": {
           "data": [
-            "8",
+            "50",
             "",
             ""
           ],
@@ -114,334 +205,19 @@
       "blank": 0
     }
   },
-  "Key Feature Adoption Rate of C1": {
-    "Key Feature Adoption Rate of C1": [
-      {
-        "Feature Name": "Intrusion Prevention System (IPS)",
-        "Total": "319",
-        "Count": "319",
-        "Rate": "100"
-      },
-      {
-        "Feature Name": "Anti-malware",
-        "Total": "319",
-        "Count": "319",
-        "Rate": "100"
-      },
-      {
-        "Feature Name": "Web Reputation",
-        "Total": "319",
-        "Count": "319",
-        "Rate": "100"
-      },
-      {
-        "Feature Name": "Behavior Monitoring",
-        "Total": "319",
-        "Count": "319",
-        "Rate": "100"
-      },
-      {
-        "Feature Name": "Predictive Machine Learning",
-        "Total": "319",
-        "Count": "319",
-        "Rate": "100"
-      },
-      {
-        "Feature Name": "Smart Feedback",
-        "Total": "319",
-        "Count": "0",
-        "Rate": "0"
-      },
-      {
-        "Feature Name": "Firewall",
-        "Total": "319",
-        "Count": "1",
-        "Rate": "0"
-      },
-      {
-        "Feature Name": "Agent Self-Protection",
-        "Total": "319",
-        "Count": "318",
-        "Rate": "100"
-      },
-      {
-        "Feature Name": "File Integrity Monitoring (FIM)",
-        "Total": "319",
-        "Count": "318",
-        "Rate": "100"
-      },
-      {
-        "Feature Name": "Log Inspection",
-        "Total": "319",
-        "Count": "319",
-        "Rate": "100"
-      },
-      {
-        "Feature Name": "Device Control",
-        "Total": "NA",
-        "Count": "NA",
-        "Rate": "NA"
-      },
-      {
-        "Feature Name": "Application Control",
-        "Total": "319",
-        "Count": "304",
-        "Rate": "95"
-      }
-    ],
-    "chart_type": "horizontal_bar",
-    "label": [
-      "Total",
-      "Count",
-      "Rate"
-    ],
-    "background_color": [
-      "rgb(255,130,0)",
-      "rgb(251,214,92)",
-      "rgb(9,12,155)"
-    ]
-  },
-  "THREAT_INTEL_SUMMARY": {
-    "date": {
-      "THREAT_INTEL_SUMMARY": {
-        "Indicators_of_Compromise_IOC": {
-          "Key": [
-            "IP",
-            "URL",
-            "Hash",
-            "Domain",
-            "Email"
-          ],
-          "data": [
-            {
-              "label": "IOC Sweeped",
-              "data": [],
-              "backgroundColor": "#e67700"
-            },
-            {
-              "label": "IOC Matched",
-              "data": [],
-              "backgroundColor": "#696969"
-            }
-          ],
-          "chart_type": "vertical_bar"
-        },
-        "R_S_N_Ioc": {
-          "key": "notes",
-          "data": []
-        },
-        "Matched_IOCs_Detailed_Summary": [[
-          {
-            "Sr.No": 0,
-            "Advisory Name": "",
-            "Matched IOC type": "ALU",
-            "Matched IOC Details": 10,
-            "No of Endpoints / Email": 10
-          },
-          {
-            "Sr.No": 1,
-            "Advisory Name": "",
-            "Matched IOC type": "TALU",
-            "Matched IOC Details": 10,
-            "No of Endpoints / Email": 10
-          }
-        ]],
-        "Incident_Summary_by_Severity": {
-          "data": [
-            0,
-            77,
-            3,
-            12
-          ],
-          "label": [
-            "Critical",
-            "High",
-            "Medium",
-            "Low"
-          ],
-          "backgroundColor": [
-            "#ff8200",
-            "#ffa950",
-            "#ffd9b2",
-            "#ffc0cb"
-          ],
-          "chart_type": "doughnut"
-        },
-        "R_S_N_ISBS": {
-          "key": "notes",
-          "data": []
-        },
-        "Incident_Summary_by_status": {
-          "data": [
-            84,
-            0,
-            8
-          ],
-          "label": [
-            "Closed Incidents",
-            "Closed Incidents without acknowledgement",
-            "Pending Incidents"
-          ],
-          "backgroundColor": [
-            "#ff8200",
-            "#ffa950"
-          ],
-          "chart_type": "doughnut"
-        },
-        "R_S_N_ISB_Status": {
-          "key": "summary",
-          "data": []
-        },
-        "Incidents_Summary_by_Priority": {
-          "Key": [
-            "P1",
-            "P2",
-            "P3",
-            "P4"
-          ],
-          "data": [
-            {
-              "label": "Closed",
-              "data": [
-                0,
-                77,
-                0,
-                7
-              ],
-              "backgroundColor": "#ffcd9a"
-            },
-            {
-              "label": "Closed without acknowledgement",
-              "data": [
-                0,
-                0,
-                0,
-                0
-              ],
-              "backgroundColor": "#f59e42"
-            },
-            {
-              "label": "Pending",
-              "data": [
-                0,
-                0,
-                3,
-                5
-              ],
-              "backgroundColor": "#ffc0cb"
-            }
-          ],
-          "chart_type": "vertical_bar"
-        },
-        "R_S_N_ISBP": {
-          "key": "recommendation",
-          "data": []
-        },
-        "T10IS_by_Category": {
-          "Key": [
-            "FortiGate: Attack detected by UDP/TCP signature.",
-            "File Detections in Windows Directory - Blocked",
-            "Terminal Shell in Container",
-            "Checkpoint: Multiple LAN firewall administration authentication failure.",
-            "[Heuristic Attribute] Possible Remote Services Behavior",
-            "Possible Account Compromise - Atypical Travel",
-            "FortiGate: Firewall device shutdown."
-          ],
-          "data": [
-            {
-              "label": "Closed",
-              "data": [
-                77,
-                0,
-                4,
-                0,
-                1,
-                1,
-                1
-              ],
-              "backgroundColor": "#ffd9b2"
-            },
-            {
-              "label": "Pending",
-              "data": [
-                0,
-                5,
-                0,
-                3,
-                0,
-                0,
-                0
-              ],
-              "backgroundColor": "#ffa950"
-            }
-          ],
-          "chart_type": "horizontal_bar"
-        },
-        "R_S_N_T10IS": {
-          "key": "notes",
-          "data": []
-        }
-      },
-      "blank": 0
-    }
-  },
-  "SLO_SUMMARY": {
-    "date": {
-      "SLO_SUMMARY": {
-        "graph": {
-          "Key": [
-            "Total Closed Incidents",
-            "SLO Met",
-            "SLO Not Met"
-          ],
-          "data": [
-            84,
-            0,
-            84
-          ],
-          "label": "Case volume",
-          "backgroundColor": "#ff8200",
-          "chart_type": "vertical_bar"
-        },
-        "SLO_Details": [
-          {
-            "Priority": 1,
-            "Description": "Incidents that have a severe impact on customer operations. This event is a concern, such as attack formations or potential breaches.",
-            "Response_Time": ""
-          },
-          {
-            "Priority": 2,
-            "Description": "Incidents that have a significant impact, or the potential to have a severe impact, on operations.",
-            "Response_Time": ""
-          },
-          {
-            "Priority": 3,
-            "Description": "Incidents that have a minimal impact with the potential for escalation if not contained, causing significant impact on operations.",
-            "Response_Time": ""
-          },
-          {
-            "Priority": 4,
-            "Description": "Incidents that do not have a direct impact on customer operations but violate the customer security baseline.",
-            "Response_Time": ""
-          }
-        ]
-      },
-      "blank": 0
-    }
-  },
   "EXECUTIVE_SUMMARY": {
     "date": {
       "EXECUTIVE_SUMMARY": {
         "total_incidents": {
-          "total_incidents": "92",
-          "start_date": "2025-07-07",
-          "end_date": "2025-07-13"
+          "total_incidents": "94",
+          "start_date": "2025-07-28",
+          "end_date": "2025-08-03"
         },
         "risk_index": {
           "chart": {
             "data": [
-              32.5,
-              67.5
+              24.9,
+              75.1
             ],
             "backgroundColor": [
               "rgb(255, 130, 0)",
@@ -451,31 +227,31 @@
             "chart_type": "doughnut"
           }
         },
-        "highly_exploitable": 9406,
-        "Incident_Closed": 84,
-        "Highest_incidient": 77,
+        "highly_exploitable": 624,
+        "Incident_Closed": 23,
+        "Highest_incidient": 15,
         "Highest_incidient_date": "",
         "top_incident": {
           "no_incidents": 5,
           "table": [
             {
-              "incident_name": "FortiGate: Attack detected by UDP/TCP signature. - 77",
+              "incident_name": "Possible Spear Phishing Attack via Link - 15",
               "status": "Closed"
             },
             {
-              "incident_name": "File Detections in Windows Directory - Blocked - 5",
-              "status": "Waiting"
-            },
-            {
-              "incident_name": "Terminal Shell in Container - 4",
+              "incident_name": "IndusFace-WAF: Multiple file injection attack attempts detected and blocked in a short time span. - 13",
               "status": "Closed"
             },
             {
-              "incident_name": "Checkpoint: Multiple LAN firewall administration authentication failure. - 3",
-              "status": "Waiting"
+              "incident_name": "Forcepoint-One-SSE: User creation detected. - 6",
+              "status": "Closed"
             },
             {
-              "incident_name": "[Heuristic Attribute] Possible Remote Services Behavior - 1",
+              "incident_name": "Account Attempted to Upload File Containing Malicious URL to OneDrive - 4",
+              "status": "Closed"
+            },
+            {
+              "incident_name": "Possible Account Compromise - Atypical Travel - 2",
               "status": "Closed"
             }
           ]
@@ -519,16 +295,16 @@
         },
         "endpoint_protection": {
           "data": [
-            11,
-            10
+            960,
+            609
           ],
           "label": [],
           "key": "Agents Deployed"
         },
         "endpoint_sensor": {
           "data": [
-            10,
-            10
+            960,
+            737
           ],
           "label": [],
           "key": "Sensors Enabled"
@@ -541,63 +317,63 @@
     "Key Feature Adoption Rate of A1": [
       {
         "Feature Name": "Vulnerability Protection",
-        "Total": 11,
-        "Count": 10,
-        "Rate": 90.9
+        "Total": 609,
+        "Count": 609,
+        "Rate": 100
       },
       {
         "Feature Name": "Anti-Malware Scans",
-        "Total": 12,
-        "Count": 11,
-        "Rate": 91.7
+        "Total": 609,
+        "Count": 609,
+        "Rate": 100
       },
       {
         "Feature Name": "Web Reputation",
-        "Total": 10,
-        "Count": 9,
-        "Rate": 90
+        "Total": 740,
+        "Count": 740,
+        "Rate": 100
       },
       {
         "Feature Name": "Behavior Monitoring",
-        "Total": 8,
-        "Count": 7,
-        "Rate": 87.5
+        "Total": 759,
+        "Count": 676,
+        "Rate": 89.1
       },
       {
         "Feature Name": "Predictive Machine Learning",
-        "Total": 10,
-        "Count": 9,
-        "Rate": 90
+        "Total": 759,
+        "Count": 759,
+        "Rate": 100
       },
       {
         "Feature Name": "Smart Feedback",
-        "Total": 10,
-        "Count": 9,
-        "Rate": 90
+        "Total": 756,
+        "Count": 756,
+        "Rate": 100
       },
       {
         "Feature Name": "Firewall",
-        "Total": 8,
-        "Count": 0,
-        "Rate": 0
+        "Total": 758,
+        "Count": 33,
+        "Rate": 4.4
       },
       {
         "Feature Name": "Suspicious Connection Service",
-        "Total": 11,
-        "Count": 10,
-        "Rate": 90.9
+        "Total": 608,
+        "Count": 608,
+        "Rate": 100
       },
       {
         "Feature Name": "Device Control",
-        "Total": 10,
-        "Count": 8,
-        "Rate": 80
+        "Total": 713,
+        "Count": 534,
+        "Rate": 74.9
       },
       {
         "Feature Name": "Application Control",
-        "Total": 8,
-        "Count": 3,
-        "Rate": 37.5
+        "Total": 739,
+        "Count": 633,
+        "Rate": 85.7
       }
     ],
     "chart_type": "horizontal_bar",
@@ -611,5 +387,250 @@
       "rgb(251,214,92)",
       "rgb(9,12,155)"
     ]
+  },
+  "THREAT_INTEL_SUMMARY": {
+    "date": {
+      "THREAT_INTEL_SUMMARY": {
+        "Indicators_of_Compromise_IOC": {
+          "Key": [
+            "IP",
+            "URL",
+            "Hash",
+            "Domain",
+            "Email"
+          ],
+          "data": [
+            {
+              "label": "IOC Sweeped",
+              "data": [],
+              "backgroundColor": "#e67700"
+            },
+            {
+              "label": "IOC Matched",
+              "data": [],
+              "backgroundColor": "#696969"
+            }
+          ],
+          "chart_type": "vertical_bar"
+        },
+        "R_S_N_Ioc": {
+          "key": "notes",
+          "data": []
+        },
+        "Matched_IOCs_Detailed_Summary": [
+          []
+        ],
+        "Incident_Summary_by_Severity": {
+          "data": [
+            0,
+            47,
+            17,
+            30
+          ],
+          "label": [
+            "Critical",
+            "High",
+            "Medium",
+            "Low"
+          ],
+          "backgroundColor": [
+            "#ff8200",
+            "#ffa950",
+            "#ffd9b2",
+            "#ffc0cb"
+          ],
+          "chart_type": "doughnut"
+        },
+        "R_S_N_ISBS": {
+          "key": "notes",
+          "data": []
+        },
+        "Incident_Summary_by_status": {
+          "data": [
+            44,
+            0,
+            50
+          ],
+          "label": [
+            "Closed Incidents",
+            "Closed Incidents without acknowledgement",
+            "Pending Incidents"
+          ],
+          "backgroundColor": [
+            "#ff8200",
+            "#ffa950"
+          ],
+          "chart_type": "doughnut"
+        },
+        "R_S_N_ISB_Status": {
+          "key": "summary",
+          "data": []
+        },
+        "Incidents_Summary_by_Priority": {
+          "Key": [
+            "P1",
+            "P2",
+            "P3",
+            "P4"
+          ],
+          "data": [
+            {
+              "label": "Closed",
+              "data": [
+                0,
+                0,
+                17,
+                27
+              ],
+              "backgroundColor": "#ffcd9a"
+            },
+            {
+              "label": "Closed without acknowledgement",
+              "data": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "backgroundColor": "#f59e42"
+            },
+            {
+              "label": "Pending",
+              "data": [
+                0,
+                47,
+                0,
+                3
+              ],
+              "backgroundColor": "#ffc0cb"
+            }
+          ],
+          "chart_type": "vertical_bar"
+        },
+        "R_S_N_ISBP": {
+          "key": "recommendation",
+          "data": []
+        },
+        "T10IS_by_Category": {
+          "Key": [
+            "No forwarded logs observed from Windows-AD.",
+            "No forwarded logs observed from ArubaSwitch.",
+            "Possible Spear Phishing Attack via Link",
+            "IndusFace-WAF: Multiple file injection attack attempts detected and blocked in a short time span.",
+            "Forcepoint-One-SSE: User creation detected.",
+            "Account Attempted to Upload File Containing Malicious URL to OneDrive",
+            "No forwarded logs observed from Fortigate-FGT60ETK19050904.",
+            "No forwarded logs observed from Fortigate-FG100FTK20042721.",
+            "No forwarded logs observed from AWS.",
+            "No forwarded logs observed from IndusFace-WAS.",
+            "Possible Account Compromise - Atypical Travel",
+            "[Heuristic Attribute] Possible Remote Services Behavior",
+            "Network Sniffing",
+            "IndusFace-WAF: Multiple general SQL injection attack attempts detected and blocked in a short time span.",
+            "Possible Disabling of Antivirus Software",
+            "IndusFace-WAF: Possible Multiple malicious content injection attack attempts and blocked detected in a short time span.",
+            "IndusFace-WAF: Multiple advanced persistent threat attack attempts detected and blocked in a short time span."
+          ],
+          "data": [
+            {
+              "label": "Closed",
+              "data": [
+                0,
+                0,
+                15,
+                13,
+                6,
+                4,
+                0,
+                0,
+                0,
+                0,
+                2,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1
+              ],
+              "backgroundColor": "#ffd9b2"
+            },
+            {
+              "label": "Pending",
+              "data": [
+                17,
+                16,
+                0,
+                0,
+                0,
+                0,
+                4,
+                4,
+                3,
+                3,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "backgroundColor": "#ffa950"
+            }
+          ],
+          "chart_type": "horizontal_bar"
+        },
+        "R_S_N_T10IS": {
+          "key": "notes",
+          "data": []
+        }
+      },
+      "blank": 0
+    }
+  },
+  "SLO_SUMMARY": {
+    "date": {
+      "SLO_SUMMARY": {
+        "graph": {
+          "Key": [
+            "Total Closed Incidents",
+            "SLO Met",
+            "SLO Not Met"
+          ],
+          "data": [
+            44,
+            44,
+            0
+          ],
+          "label": "Case volume",
+          "backgroundColor": "#ff8200",
+          "chart_type": "vertical_bar"
+        },
+        "SLO_Details": [
+          {
+            "Priority": 1,
+            "Description": "Incidents that have a severe impact on customer operations. This event is a concern, such as attack formations or potential breaches.",
+            "Response_Time": ""
+          },
+          {
+            "Priority": 2,
+            "Description": "Incidents that have a significant impact, or the potential to have a severe impact, on operations.",
+            "Response_Time": ""
+          },
+          {
+            "Priority": 3,
+            "Description": "Incidents that have a minimal impact with the potential for escalation if not contained, causing significant impact on operations.",
+            "Response_Time": ""
+          },
+          {
+            "Priority": 4,
+            "Description": "Incidents that do not have a direct impact on customer operations but violate the customer security baseline.",
+            "Response_Time": ""
+          }
+        ]
+      },
+      "blank": 0
+    }
   }
 }
