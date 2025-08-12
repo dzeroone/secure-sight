@@ -36,7 +36,8 @@ function App() {
       }
       chart.data?.labels?.forEach(function (label, i, labelArr) {
         if (typeof label == "string" && label.length > 15) {
-          labelArr[i] = gracefulStringWrap(label, 15);
+          let splitLength = Math.ceil(label.length/2)
+          labelArr[i] = gracefulStringWrap(label, splitLength);
         }
       });
     },
