@@ -175,6 +175,7 @@ export default function AssignWeeklyReportPage() {
                 </td>
                 <td>
                   <AssignmentInput
+                    reportType="weekly"
                     date={date}
                     scheduledCustomer={assignemtIsScheduled(customer)}
                     customer={customer}

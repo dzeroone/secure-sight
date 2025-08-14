@@ -1,11 +1,11 @@
-import { Button, ButtonGroup } from "reactstrap"
-import { getRoleTitle } from "../helpers/utils"
 import { XIcon } from "lucide-react"
+import { Button, ButtonGroup } from "reactstrap"
+import { getMonthlyReportIndex, getWeeklyReportIndex } from "../helpers/form_helper"
+import { getRoleTitle } from "../helpers/utils"
 import DropdownReportAssignment from "./DropdownReportAssignment"
-import { getMonthlyReportIndex } from "../helpers/form_helper"
-import { isPast } from "date-fns"
 
 export default function AssignmentInput({
+  reportType = 'monthly',
   date,
   scheduledCustomer,
   customer,
@@ -33,11 +33,12 @@ export default function AssignmentInput({
           <DropdownReportAssignment
             key={date}
             date={date}
-            index={getMonthlyReportIndex(date, customer.tCode)}
+            index={reportType == 'monthly' ? getMonthlyReportIndex(date, customer.tCode) : getWeeklyReportIndex(date, customer.tCode)}
             customerId={customer._id}
             assignments={customer.assignments}
             onAssigned={onAssigned}
             onUnAssigned={onUnAssigned}
+            reportType={reportType}
           />
         </div>
       </div>
