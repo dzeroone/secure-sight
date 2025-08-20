@@ -114,9 +114,9 @@ const ConnectorList = () => {
     connectorData(userData.dbName);
   };
 
-  const onClickUpload = (connectorId) => {
+  const onClickUpload = (connector) => {
     setUploadModalShown(true)
-    refConnectorOnOperation.current = connectorId
+    refConnectorOnOperation.current = connector
   }
 
   const uploadConnectorFile = async () => {
@@ -129,9 +129,9 @@ const ConnectorList = () => {
       await ApiServices(
         'patch',
         formData,
-        `${ApiEndPoints.Connector}/${refConnectorOnOperation.current}/file`
+        `${ApiEndPoints.Connector}/${refConnectorOnOperation.current._id}/file`
       )
-      toast.success('File updated')
+      toast.success(`${connectorFile[0].name} file updated.`)
     } catch (e) {
       const msg = getErrorMessage(e)
       toast.error(msg)
@@ -250,7 +250,7 @@ const ConnectorList = () => {
                             <div className="d-flex gap-1">
                               <Button
                                 onClick={() => {
-                                  onClickUpload(item._id);
+                                  onClickUpload(item);
                                 }}
                                 size="sm"
                               >
@@ -285,11 +285,17 @@ const ConnectorList = () => {
         </Col>
       </Row>
       <Modal centered isOpen={uploadModalShown} toggle={() => setUploadModalShown(false)}>
-        <ModalHeader>Upload connector file</ModalHeader>
+        <ModalHeader>
+          {refConnectorOnOperation.current ? formatCapilize(
+            allReplace(refConnectorOnOperation.current.display_name, {
+              _: " ",
+              "-": " ",
+            })
+          ) : ''}
+        </ModalHeader>
         <ModalBody>
           <FormGroup>
             <Input type="file" accept=".py,.env" onChange={(e) => {
-              console.log(e.target.files)
               setConnectorFile(e.target.files)
             }} />
             <FormText>
