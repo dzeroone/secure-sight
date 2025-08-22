@@ -135,7 +135,7 @@ export interface SchedulingSchema {
 	isSpecificDateAndTime?: boolean | undefined
 }
 
-export const invokeConnector = async (connectorId: string, connectorParams: Record<string, any>) => {
+export const invokeConnector = async (connectorId: string, connectorParams: Record<string, any>, timezone?: string) => {
 	try {
 		const serverPath = DIRS.CONNECTOR_UPLOAD_DIR
 
@@ -156,6 +156,9 @@ export const invokeConnector = async (connectorId: string, connectorParams: Reco
 				? `${serverPath}/${connectorBasePath}/${connectorParams[keyOfSecretData]}`
 				: `--${keyOfSecretData} ${connectorParams[keyOfSecretData]}`
 		})
+		if(timezone) {
+			argsList.push(`--timezone ${timezone}`)
+		}
 
 		let argsOfConnector = argsList.join(' ').trim()
 		let zipFilePath = path.join(serverPath, connectorBasePath + `.zip`)
@@ -221,6 +224,8 @@ export const connectorTestScheduler = async (response: any, data: any) => {
 		} else {
 			schedulingString = `0 */23 * * *`
 		}
+
+		argsList.push(`--timezone ${timezone}`)
 
 		let argsOfConnector = argsList.join(' ').trim()
 		let command = `python3 ${serverPath}/${connectorBasePath}/${connectorFileNameWithExtension} ${argsOfConnector} > ${serverPath}/${connectorBasePath}.log`

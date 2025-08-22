@@ -376,7 +376,7 @@ class ConnectorController {
 
 		const config = connectorData.scheduleInfo.config
 
-		return invokeConnector(connectorId, config)
+		return invokeConnector(connectorId, config, connectorData.scheduleInfo.timezone)
 
 	}
 
