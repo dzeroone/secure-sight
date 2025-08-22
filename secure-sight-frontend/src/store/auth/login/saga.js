@@ -12,6 +12,7 @@ import ApiEndPoints from "../../../Network_call/ApiEndPoints";
 import { toast } from "react-toastify";
 import { DashboardList, ReportList } from "../../../Pages/ulit/dashboardlist";
 import { getMSALApplication } from "../../../helpers/azure_sso.helper";
+import { getErrorMessage } from "../../../helpers/utils";
 
 
 function* loginUser({ payload: { user, history } }) {
@@ -51,7 +52,7 @@ function* loginUser({ payload: { user, history } }) {
       }
     }
   } catch (error) {
-    yield put(apiError(error));
+    yield put(apiError(getErrorMessage(error)));
   }
 }
 

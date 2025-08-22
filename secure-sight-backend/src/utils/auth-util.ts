@@ -57,7 +57,7 @@ async function matchCredential(params: any, user: any) {
 
 export const sendUserDetail = async (params: any) => {
     let response;
-    const dm = dynamicModelWithDBConnection(params.dbName, COLLECTIONS.USERS)
+    const dm = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
     let user = await dm.findOne({ email: params.email }).lean()
     if (user) {
         return matchCredential(params, user)

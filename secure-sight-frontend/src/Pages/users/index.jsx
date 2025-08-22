@@ -112,7 +112,9 @@ export default function UserIndexPage() {
 
   return (
     <div className="page-content">
-      <BreadcrumbWithTitle title="Users" />
+      <BreadcrumbWithTitle title="Users" endContent={
+        <Link to="/users/new" className="btn btn-primary">Add User</Link>
+      } />
       <Table className="overflow-auto">
         <thead>
           {selectedUsers.length ? (

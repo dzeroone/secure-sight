@@ -375,3 +375,20 @@ body {
 .message {
   white-space: pre;
 }
+
+.divider {
+  display: flex;
+  flex-direction: row;
+  &::before, &::after {
+    content: "";
+    flex: 1 1;
+    border-bottom: 1px solid;
+    margin: auto;
+  }
+  &::before {
+    margin-right: 0.8rem;
+  }
+  &::after {
+    margin-left: 0.8rem;
+  }
+}

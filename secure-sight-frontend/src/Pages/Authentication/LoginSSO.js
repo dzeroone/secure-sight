@@ -1,12 +1,16 @@
 import PropTypes from "prop-types";
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   Button,
   CardBody,
   Col,
   Container,
+  Form,
+  FormFeedback,
+  Input,
+  Label,
   Row
 } from "reactstrap";
 import eventusLogoHorizontal from "../../assets/images/eventus_logo_vertical.png";
@@ -16,12 +20,40 @@ import { getErrorMessage, setDocumentTitle } from "../../helpers/utils";
 import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ApiServices from "../../Network_call/apiservices";
 import { WindowsIcon } from "../../components/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import Divider from "../../components/Divider";
+import { LogInIcon } from "lucide-react";
+import { loginUser } from "../../store/actions";
 
 const LoginSSO = (props) => {
   setDocumentTitle("Login")
 
-  const [busy, setBusy] = useState(false)
   const navigate = useNavigate()
+
+  const dispatch = useDispatch();
+
+  const validation = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email("Please Enter Your Email").required("Please Enter Your Email"),
+      password: Yup.string().required("Please Enter Your Password"),
+    }),
+    onSubmit: (values) => {
+      dispatch(loginUser(values, props.router.navigate));
+    },
+  });
+
+  const { error } = useSelector((state) => ({
+    error: state.login.error,
+  }));
+
+  const [busy, setBusy] = useState(false)
 
   const handleAzureRedirecPromise = useCallback(async () => {
     try {
@@ -128,6 +160,7 @@ const LoginSSO = (props) => {
                   boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
                   height: "auto",
                   padding: "40px",
+                  color: '#000'
                 }}
               >
                 <h1
@@ -152,6 +185,89 @@ const LoginSSO = (props) => {
                   Log in to access your account
                 </p>
                 <CardBody style={{ paddingTop: "0" }}>
+                  <Form
+                    className="form-horizontal"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      validation.handleSubmit();
+                      return false;
+                    }}
+                  >
+                    {error ? (
+                      <div className="alert alert-danger">
+                        <div>{JSON.stringify(error)}</div>
+                      </div>
+                    ) : null}
+                    <div className="d-flex flex-column gap-4">
+                      <div>
+                        <Label className="form-label" style={{ color: "#444" }}>
+                          Email
+                        </Label>
+                        <Input
+                          name="email"
+                          className="elevated-input"
+                          placeholder="Enter your email"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.email || ""}
+                          invalid={
+                            validation.touched.email && validation.errors.email
+                              ? true
+                              : false
+                          }
+                        />
+                        {validation.touched.email && validation.errors.email ? (
+                          <FormFeedback type="invalid">
+                            <div>{validation.errors.email}</div>
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                      <div>
+                        <Label className="form-label" style={{ color: "#444" }}>
+                          Password
+                        </Label>
+                        <Input
+                          className="elevated-input"
+                          name="password"
+                          type="password"
+                          placeholder="Enter your password"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.password || ""}
+                          invalid={
+                            validation.touched.password && validation.errors.password
+                              ? true
+                              : false
+                          }
+                        />
+                        {validation.touched.password && validation.errors.password ? (
+                          <FormFeedback type="invalid">
+                            <div>{validation.errors.password}</div>
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                      <div className="d-flex flex-row justify-content-between align-items-end">
+                        <button
+                          className="btn btn-lg btn-primary"
+                          type="submit"
+                        >
+                          Log In <LogInIcon />
+                        </button>
+                        <div className="text-md-end mt-3 mt-md-0">
+                          <Link
+                            to="/auth-recoverpw"
+                            style={{
+                              textDecoration: "underline",
+                              color: "#27294F",
+                            }}
+                          >
+                            Forgot your password?
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </Form>
+                  <Divider className="my-4 text-muted">OR</Divider>
                   <Button
                     size="lg"
                     onClick={onClickSignIn}

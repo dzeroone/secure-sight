@@ -23,24 +23,23 @@ const router = express.Router();
 //     }
 // })
 
-// router.post('/login',
-//     // CompareDate,
-//     setDbName,
-//     async (req: Request<UserProps>, res: Response) => {
-//         try {
-//             const data = await AuthController.login(req.body);
+router.post('/login',
+    // CompareDate,
+    async (req: Request<UserProps>, res: Response) => {
+        try {
+            const data = await AuthController.login(req.body);
 
-//             if (!data) {
-//                 return res.status(401).json({ message: 'Invalid credentials' }); // Handle invalid login attempts
-//             }
+            if (!data) {
+                return res.status(401).json({ message: 'Invalid credentials' }); // Handle invalid login attempts
+            }
 
-//             res.status(200).json(data); // Send back user data or token on successful login
-//         } catch (error) {
-//             console.error(error); // Log the error for debugging
-//             res.status(500).json({ message: 'Internal Server Error' }); // Generic error message for server issues
-//         }
-//     }
-// );
+            res.status(200).json(data); // Send back user data or token on successful login
+        } catch (error) {
+            console.error(error); // Log the error for debugging
+            res.status(500).json({ message: 'Internal Server Error' }); // Generic error message for server issues
+        }
+    }
+);
 
 router.post('/azure-ad', async (req, res) => {
   if (!req.body.token) throw new Error("Token not provided")
