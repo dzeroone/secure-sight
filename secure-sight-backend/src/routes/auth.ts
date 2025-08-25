@@ -41,6 +41,17 @@ router.post('/login',
     }
 );
 
+router.post('/forgot', async (req, res) => {
+  try {
+    await authController.forgot(req.body.email)
+    res.sendStatus(201)
+  }catch(e: any) {
+    res.status(400).send({
+      message: e.message
+    })
+  }
+})
+
 router.post('/azure-ad', async (req, res) => {
   if (!req.body.token) throw new Error("Token not provided")
   const token = req.body.token

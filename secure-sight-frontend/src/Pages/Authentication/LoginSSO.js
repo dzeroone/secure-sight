@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -26,6 +26,7 @@ import * as Yup from "yup";
 import Divider from "../../components/Divider";
 import { LogInIcon } from "lucide-react";
 import { loginUser } from "../../store/actions";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
 
 const LoginSSO = (props) => {
   setDocumentTitle("Login")
@@ -49,9 +50,37 @@ const LoginSSO = (props) => {
     },
   });
 
+  const passwordResetForm = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      email: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email("Please Enter Your Email").required("Please Enter Your Email"),
+    }),
+    onSubmit: async (values) => {
+      try {
+        const data = await ApiServices(
+          'post',
+          {
+            email: values.email
+          },
+          ApiEndPoints.AuthForgot
+        )
+        toast.success("Password reset request has been sent to administrator. You will be contacted soon.")
+      }catch(e) {
+        const msg = getErrorMessage(e)
+        toast.error(msg)
+      }
+    },
+  });
+
   const { error } = useSelector((state) => ({
     error: state.login.error,
   }));
+
+  const formContainerRef = useRef(null)
+  const [activeForm, setActiveForm] = useState('signin')
 
   const [busy, setBusy] = useState(false)
 
@@ -160,7 +189,8 @@ const LoginSSO = (props) => {
                   boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
                   height: "auto",
                   padding: "40px",
-                  color: '#000'
+                  color: '#000',
+                  overflow: 'hidden'
                 }}
               >
                 <h1
@@ -174,109 +204,196 @@ const LoginSSO = (props) => {
                 >
                   Welcome
                 </h1>
-                <p
-                  className="mb-5"
-                  style={{
-                    color: "#777",
-                    fontSize: "16px",
-                    textAlign: "left",
-                  }}
-                >
-                  Log in to access your account
-                </p>
-                <CardBody style={{ paddingTop: "0" }}>
-                  <Form
-                    className="form-horizontal"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      validation.handleSubmit();
-                      return false;
+                <SwitchTransition>
+                  <CSSTransition
+                    key={activeForm}
+                    nodeRef={formContainerRef}
+                    addEndListener={(done) => {
+                      formContainerRef.current.addEventListener("transitionend", done, false);
                     }}
+                    classNames="fade"
                   >
-                    {error ? (
-                      <div className="alert alert-danger">
-                        <div>{JSON.stringify(error)}</div>
-                      </div>
-                    ) : null}
-                    <div className="d-flex flex-column gap-4">
-                      <div>
-                        <Label className="form-label" style={{ color: "#444" }}>
-                          Email
-                        </Label>
-                        <Input
-                          name="email"
-                          className="elevated-input"
-                          placeholder="Enter your email"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.email || ""}
-                          invalid={
-                            validation.touched.email && validation.errors.email
-                              ? true
-                              : false
-                          }
-                        />
-                        {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">
-                            <div>{validation.errors.email}</div>
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                      <div>
-                        <Label className="form-label" style={{ color: "#444" }}>
-                          Password
-                        </Label>
-                        <Input
-                          className="elevated-input"
-                          name="password"
-                          type="password"
-                          placeholder="Enter your password"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.password || ""}
-                          invalid={
-                            validation.touched.password && validation.errors.password
-                              ? true
-                              : false
-                          }
-                        />
-                        {validation.touched.password && validation.errors.password ? (
-                          <FormFeedback type="invalid">
-                            <div>{validation.errors.password}</div>
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                      <div className="d-flex flex-row justify-content-between align-items-end">
-                        <button
-                          className="btn btn-lg btn-primary"
-                          type="submit"
-                        >
-                          Log In <LogInIcon />
-                        </button>
-                        <div className="text-md-end mt-3 mt-md-0">
-                          <Link
-                            to="/auth-recoverpw"
+                    <div ref={formContainerRef}>
+                      {activeForm == 'signin' ? (
+                        <div>
+                          <p
+                            className="mb-5"
                             style={{
-                              textDecoration: "underline",
-                              color: "#27294F",
+                              color: "#777",
+                              fontSize: "16px",
+                              textAlign: "left",
                             }}
                           >
-                            Forgot your password?
-                          </Link>
+                            Log in to access your account
+                          </p>
+                          <div style={{ paddingTop: "0" }}>
+                            <Form
+                              className="form-horizontal"
+                              onSubmit={(e) => {
+                                e.preventDefault();
+                                validation.handleSubmit();
+                                return false;
+                              }}
+                            >
+                              {error ? (
+                                <div className="alert alert-danger">
+                                  <div>{error}</div>
+                                </div>
+                              ) : null}
+                              <div className="d-flex flex-column gap-2">
+                                <div>
+                                  <Label className="form-label" style={{ color: "#444" }}>
+                                    Email
+                                  </Label>
+                                  <Input
+                                    name="email"
+                                    className="elevated-input"
+                                    placeholder="Enter your email"
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    value={validation.values.email || ""}
+                                    invalid={
+                                      validation.touched.email && validation.errors.email
+                                        ? true
+                                        : false
+                                    }
+                                  />
+                                  {validation.touched.email && validation.errors.email ? (
+                                    <FormFeedback type="invalid">
+                                      <div>{validation.errors.email}</div>
+                                    </FormFeedback>
+                                  ) : null}
+                                </div>
+                                <div>
+                                  <Label className="form-label" style={{ color: "#444" }}>
+                                    Password
+                                  </Label>
+                                  <Input
+                                    className="elevated-input"
+                                    name="password"
+                                    type="password"
+                                    placeholder="Enter your password"
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    value={validation.values.password || ""}
+                                    invalid={
+                                      validation.touched.password && validation.errors.password
+                                        ? true
+                                        : false
+                                    }
+                                  />
+                                  {validation.touched.password && validation.errors.password ? (
+                                    <FormFeedback type="invalid">
+                                      <div>{validation.errors.password}</div>
+                                    </FormFeedback>
+                                  ) : null}
+                                </div>
+                                <div className="d-flex flex-row justify-content-between align-items-end">
+                                  <button
+                                    className="btn btn-lg btn-primary"
+                                    type="submit"
+                                  >
+                                    Log In <LogInIcon />
+                                  </button>
+                                  <div className="text-md-end mt-3 mt-md-0">
+                                    <button
+                                      type="button"
+                                      className="btn btn-link"
+                                      onClick={() => {
+                                        setActiveForm('forgot')
+                                      }}
+                                    >
+                                      Forgot your password?
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </Form>
+                            <Divider className="my-4 text-muted">OR</Divider>
+                            <Button
+                              size="lg"
+                              onClick={onClickSignIn}
+                              disabled={busy}
+                              color="primary"
+                            >
+                              <WindowsIcon /> Log in with Azure AD
+                            </Button>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div>
+                          <div>
+                            <p
+                              className="mb-5"
+                              style={{
+                                color: "#777",
+                                fontSize: "16px",
+                                textAlign: "left",
+                              }}
+                            >
+                              Password reset
+                            </p>
+                            <div style={{ paddingTop: "0" }}>
+                              <Form
+                                className="form-horizontal"
+                                onSubmit={(e) => {
+                                  e.preventDefault();
+                                  passwordResetForm.handleSubmit();
+                                  return false;
+                                }}
+                              >
+                                <div className="d-flex flex-column gap-2">
+                                  <div>
+                                    <Label className="form-label" style={{ color: "#444" }}>
+                                      Email
+                                    </Label>
+                                    <Input
+                                      className="elevated-input"
+                                      name="email"
+                                      placeholder="example@email.net"
+                                      onChange={passwordResetForm.handleChange}
+                                      onBlur={passwordResetForm.handleBlur}
+                                      value={passwordResetForm.values.email || ""}
+                                      invalid={
+                                        passwordResetForm.touched.email && passwordResetForm.errors.email
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {passwordResetForm.touched.email && passwordResetForm.errors.email ? (
+                                      <FormFeedback type="invalid">
+                                        <div>{passwordResetForm.errors.email}</div>
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                  <div className="d-flex flex-row justify-content-between align-items-end">
+                                    <button
+                                      className="btn btn-lg btn-primary"
+                                      type="submit"
+                                    >
+                                      Send
+                                    </button>
+                                    <div className="text-md-end mt-3 mt-md-0">
+                                      <button
+                                        type="button"
+                                        className="btn btn-link"
+                                        onClick={() => {
+                                          setActiveForm('signin')
+                                        }}
+                                      >
+                                        Sign in to your account
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </Form>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </Form>
-                  <Divider className="my-4 text-muted">OR</Divider>
-                  <Button
-                    size="lg"
-                    onClick={onClickSignIn}
-                    disabled={busy}
-                    color="primary"
-                  >
-                    <WindowsIcon /> Log in with Azure AD
-                  </Button>
-                </CardBody>
+                  </CSSTransition>
+                </SwitchTransition>
               </div>
             </Col>
           </Row>

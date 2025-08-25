@@ -4,6 +4,7 @@ import { ROLES, COLLECTIONS, MASTER_ADMIN_DB } from '../constant';
 import { dynamicModelWithDBConnection } from '../models/dynamicModel';
 import { sendEmail } from '../helper/email.helper';
 import { signAuthToken } from '../helper/token.helper';
+import passwordResetRequestModel from '../models/password-reset-request.model';
 
 class AuthController {
   async register(params: UserProps) {
@@ -43,6 +44,24 @@ class AuthController {
       fullname: name,
       role: user.role
     }
+  }
+
+  async forgot(email: string) {
+    const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+    let user = await UserModel.findOne({ email }).lean()
+    if(!user) throw new Error("Email not found!")
+    
+    return passwordResetRequestModel.updateOne({
+      userId: user._id
+    }, {
+      $set: {
+        userId: user._id,
+        cAt: new Date()
+      }
+    }, {
+      new: true,
+      upsert: true
+    })
   }
 
   async licenseKey(params: any) {

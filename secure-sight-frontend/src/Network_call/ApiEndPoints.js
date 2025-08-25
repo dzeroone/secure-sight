@@ -16,6 +16,7 @@ const ApiEndPoints = {
   ActiveConnector: createEndpoint("/connector/activate-connector"),
   AsynConnectorUser: createEndpoint("/connector/shareConnectorToUser"),
   AzureAD: createEndpoint("/auth/azure-ad"),
+  AuthForgot: createEndpoint("/auth/forgot"),
   ChangeLanguage: createEndpoint("/connector/change-language"),
   CommonData: createEndpoint('/common-data'),
   ConnectorList: createEndpoint("/connector/connector-list"),

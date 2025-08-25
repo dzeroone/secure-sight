@@ -5,7 +5,7 @@ import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, Form, FormFeedback, Input, Label } from "reactstrap";
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ModalLoading from "../../components/ModalLoading";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import { ROLES } from "../../data/app";
@@ -26,19 +26,26 @@ export default function EditUserPage(props) {
       fullname: "",
       team: "",
       position: "",
+      role: 'l1',
       email: "",
-      role: 'l1'
+      contact: "",
+      password: ""
     },
     validationSchema: Yup.object({
       fullname: Yup.string().required("Please enter full name"),
       team: Yup.string().optional("Please enter team"),
       position: Yup.string().required("Please enter position"),
-      email: Yup.string().required("Please enter email"),
       role: Yup.string().required("Please select a role"),
+      email: Yup.string().required("Please enter email"),
+      contact: Yup.string().required("Please enter contact"),
+      password: Yup.string().optional()
     }),
     onSubmit: async (values, {resetForm}) => {
       setBusy(true)
       try {
+        if(!isOutUser) {
+          values.password = ""
+        }
         const response = await ApiServices(
           'patch',
           values,
@@ -62,6 +69,11 @@ export default function EditUserPage(props) {
     },
   });
 
+  const isOutUser = useMemo(() => {
+    let email = formik.values.email
+    return email.substring(email.indexOf('@')+1) !== process.env.REACT_APP_ORG_DOMAIN
+  }, [formik.values])
+
   const getUser = useCallback(async () => {
     try {
       const response = await ApiServices(
@@ -74,7 +86,9 @@ export default function EditUserPage(props) {
         team: response.team || '',
         position: response.position || '',
         email: response.email || '',
-        role: response.role
+        role: response.role,
+        contact: response.contact || '',
+        password: ""
       }
       formik.setValues(formData)
     }catch(e) {
@@ -239,6 +253,52 @@ export default function EditUserPage(props) {
                 </FormFeedback>
               ) : null}
             </div>
+            <div>
+              <Label className="form-label">Contact</Label>
+              <Input
+                type="text"
+                name="contact"
+                value={formik.values.contact}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={
+                  formik.touched.contact &&
+                  formik.errors.contact
+                    ? true
+                    : false
+                }
+              />
+              {formik.touched.contact &&
+              formik.errors.contact ? (
+                <FormFeedback type="invalid">
+                  {formik.errors.contact}
+                </FormFeedback>
+              ) : null}
+            </div>
+            {isOutUser ? (
+              <div>
+                <Label className="form-label">Temporary password</Label>
+                <Input
+                  type="password"
+                  name="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={
+                    formik.touched.password &&
+                    formik.errors.password
+                      ? true
+                      : false
+                  }
+                />
+                {formik.touched.password &&
+                formik.errors.password ? (
+                  <FormFeedback type="invalid">
+                    {formik.errors.password}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            ) : null}
             <div>
               <Button type="submit" color="primary">Save</Button>
             </div>
