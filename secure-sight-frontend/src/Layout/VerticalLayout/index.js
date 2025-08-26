@@ -19,6 +19,8 @@ import {
   changeLayoutWidth,
   showRightSidebarAction
 } from "../../store/actions";
+import { Alert, Container } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 // Add these styles to your CSS
 const layoutStyles = {

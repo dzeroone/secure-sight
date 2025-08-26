@@ -34,8 +34,7 @@ function* loginUser({ payload: { user, history } }) {
         ApiEndPoints.Login
       );
       if (response.success) {
-        localStorage.setItem("authUser", JSON.stringify(response.data));
-        yield put(loginSuccess(response));
+        yield put(loginSuccess(response.data));
         ReportList({
           dbName: response.data.dbName,
           userId: response.data.user_id,

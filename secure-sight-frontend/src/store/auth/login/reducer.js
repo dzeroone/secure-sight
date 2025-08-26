@@ -4,10 +4,13 @@ import {
   LOGOUT_USER,
   LOGOUT_USER_SUCCESS,
   API_ERROR,
+  UPDATE_USER,
 } from "./actionTypes";
 
 const initialState = {
   error: "",
+  user: null,
+  signedIn: false,
   loading: false,
 };
 
@@ -16,27 +19,33 @@ const login = (state = initialState, action) => {
     case LOGIN_USER:
       state = {
         ...state,
+        signedIn: false,
         loading: true,
       };
       break;
     case LOGIN_SUCCESS:
       state = {
         ...state,
+        user: action.payload,
+        error: null,
+        signedIn: true,
         loading: false,
       };
       break;
     case LOGOUT_USER:
-      state = { ...state, isUserLogout: false };
+      state = { ...state, loading: true };
       break;
     case LOGOUT_USER_SUCCESS:
-      state = { ...state, isUserLogout: true };
+      state = { ...state, user: null, signedIn: false, loading: false };
+      break;
+    case UPDATE_USER:
+      state = {...state, user: action.payload}
       break;
     case API_ERROR:
       state = {
         ...state,
         error: action.payload,
-        loading: false,
-        isUserLogout: false,
+        loading: false
       };
       break;
     default:

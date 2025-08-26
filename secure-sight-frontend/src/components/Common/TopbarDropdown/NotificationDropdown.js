@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Dropdown, DropdownMenu, DropdownToggle, Spinner } from "reactstrap";
 import SimpleBar from "simplebar-react";
 
@@ -9,33 +9,16 @@ import SimpleBar from "simplebar-react";
 
 //i18n
 import formatRelative from "date-fns/formatRelative";
-import ApiEndPoints from "../../../Network_call/ApiEndPoints";
-import ApiServices from "../../../Network_call/apiservices";
+import { useSelector } from "react-redux";
 
 const NotificationDropdown = (props) => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [openLoader, setOpenLoader] = useState(false);
-  const notificationTimeoutId = useRef(null)
+  const notifications = useSelector(s => s.Updates.notifications);
+  const openLoader = useSelector(s => s.Updates.fetching);
+
   const lastMaxUpdated = useRef(localStorage.getItem("nlud") || "")
 
-  const loadNotifications = useCallback(async () => {
-    try {
-      setOpenLoader(true)
-      const response = await ApiServices(
-        "get",
-        null,
-        ApiEndPoints.Notifications
-      );
-      setNotifications(response)
-    } catch (e) {
-      console.log(e)
-    } finally {
-      notificationTimeoutId.current = setTimeout(loadNotifications, 5000)
-      setOpenLoader(false)
-    }
-  }, [])
 
   const maxNotificationDate = useMemo(() => {
     let max = ""
@@ -59,16 +42,6 @@ const NotificationDropdown = (props) => {
   const formatDate = (date) => {
     return formatRelative(date, new Date())
   }
-
-  useEffect(() => {
-    loadNotifications();
-
-    return () => {
-      if (notificationTimeoutId.current) {
-        clearTimeout(notificationTimeoutId.current)
-      }
-    }
-  }, [loadNotifications])
 
   return (
     <React.Fragment>

@@ -33,8 +33,29 @@ router.patch('/',
       }
       await userController.updateUser(data, {
         fullname: req.body.fullname,
-        email: req.body.email
+        email: req.body.email,
+        contact: req.body.contact
       })
+      res.send({
+        success: true
+      })
+    } catch (e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
+router.patch('/change-password',
+  auth,
+  async (req, res) => {
+    try {
+      let data = await userController.findOneByEmail(req.user!.email)
+      if(!data) {
+        throw new Error("Invalid")
+      }
+      await userController.changePassword(data, req.body)
       res.send({
         success: true
       })

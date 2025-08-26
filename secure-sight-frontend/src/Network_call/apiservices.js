@@ -1,17 +1,16 @@
 import Axios from 'axios';
 import { history } from '../Routes/routes';
+import { store } from '../store/store';
+import { logoutUser } from '../store/actions';
 
 const axiosInstance = Axios.create();
 
 axiosInstance.interceptors.request.use(
 	(config) => {
 		config.headers = {};
-		let userInfo = localStorage.getItem("authUser");
-		if (userInfo) {
-			userInfo = JSON.parse(userInfo)
-			if (userInfo.token) {
-				config.headers.Authorization = `Bearer ${userInfo.token}`;
-			}
+		const userInfo = store.getState().login.user
+		if (userInfo?.token) {
+			config.headers.Authorization = `Bearer ${userInfo.token}`;
 		}
 		return config;
 	},
@@ -79,6 +78,7 @@ const ApiServices = async (
 					}
 					if (error.response.status === 401) {
 						localStorage.removeItem('authUser')
+						store.dispatch(logoutUser())
 						history.replace('/')
 						return;
 					}

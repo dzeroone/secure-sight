@@ -1,0 +1,2 @@
+export const GET_UPDATES = 'GET_UPDATES'
+export const GET_UPDATES_SUCCESS = 'GET_UPDATES_SUCCESS'

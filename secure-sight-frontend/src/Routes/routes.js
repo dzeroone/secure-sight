@@ -52,6 +52,7 @@ import ArchivedReportsPage from "../Pages/reports/archived-reports";
 import CountrySettingsPage from "../settings/countries";
 import ConnectorLogsIndexPage from "../Pages/connector/logs";
 import AutoReportAssignPage from "../Pages/assign/auto-report-assign";
+import PasswordResetRequestsPage from "../Pages/users/password-reset-requests";
 
 export const history = createBrowserHistory({ window });
 
@@ -93,6 +94,10 @@ const authProtectedRoutes = [
   {
     roles: [ROLES.ADMIN],
     path: "/users/transfer-admin", component: <TransferAdminPage />
+  },
+  {
+    roles: [ROLES.ADMIN, ROLES.LEVEL3],
+    path: "/users/password-reset-requests", component: <PasswordResetRequestsPage />
   },
   {
     roles: [ROLES.ADMIN, ROLES.LEVEL3],

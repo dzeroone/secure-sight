@@ -25,7 +25,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Divider from "../../components/Divider";
 import { LogInIcon } from "lucide-react";
-import { loginUser } from "../../store/actions";
+import { loginSuccess, loginUser } from "../../store/actions";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 
 const LoginSSO = (props) => {
@@ -97,7 +97,7 @@ const LoginSSO = (props) => {
           },
           ApiEndPoints.AzureAD
         )
-        localStorage.setItem('authUser', JSON.stringify(data))
+        dispatch(loginSuccess(data))
         navigate('/dashboard', {
           replace: true
         })

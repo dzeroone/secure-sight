@@ -37,6 +37,7 @@ async function matchCredential(params: any, user: any) {
         const token = signAuthToken(params)
         params.username = user.username;
         params.role = user.role;
+        params.promptPassChange = user.promptPassChange
         params.id = user._id;
 
         let name = (params.role === "tenant_admin") ? `${user.companyName}` : `${user.username}`

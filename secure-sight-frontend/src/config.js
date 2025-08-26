@@ -11,5 +11,6 @@ module.exports = {
     clientId: process.env.REACT_APP_AZURE_CLIENT_ID,
     authority: `https://login.microsoftonline.com/${process.env.REACT_APP_AZURE_TENENT_ID}`,
     redirectUri: `${process.env.REACT_APP_AZURE_REDIRECT_URI}`
-  }
+  },
+  REDUX_KEY: 'redux_state'
 }

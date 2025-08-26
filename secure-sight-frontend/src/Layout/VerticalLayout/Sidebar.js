@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useCallback, useEffect, useRef } from "react";
-import sidebarData from "./SidebarData";
+import { useSidebarData } from "../../Hooks/SidebarData";
 //Simple bar
 import SimpleBar from "simplebar-react";
 // MetisMenu
@@ -9,10 +9,12 @@ import { Link } from "react-router-dom";
 import withRouter from "../../components/Common/withRouter";
 //i18n
 import { useProfile } from "../../Hooks/UserHooks";
+import Badge from "../../components/Badge";
 const Sidebar = (props) => {
 	const ref = useRef();
 
 	const { userProfile } = useProfile();
+	const sidebarData = useSidebarData()
 
 	const activateParentDropdown = useCallback(item => {
 		item.classList.add("active");
@@ -168,7 +170,8 @@ const Sidebar = (props) => {
 													color: '#ffffff',
 													transition: 'all 0.15s ease',
 													textDecoration: 'none',
-													fontWeight: '500'
+													fontWeight: '500',
+													position: 'relative'
 												}}
 												onMouseEnter={(e) => {
 													e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -187,6 +190,7 @@ const Sidebar = (props) => {
 													}}
 												></i>
 												<span style={{ flex: 1 }}>{item.label}</span>
+												{item.hasNotice ? <Badge /> : null}
 											</Link>
 										</li>
 									) : (
@@ -197,7 +201,7 @@ const Sidebar = (props) => {
 											<Link
 												to={item.url ? item.url : "/#"}
 												title={item.label}
-												className={`sidebar-link ${((item.issubMenubadge || item.isHasArrow)
+												className={`sidebar-link ${((item.isHasArrow)
 													? " "
 													: "has-arrow")}`}
 												style={{
@@ -208,7 +212,8 @@ const Sidebar = (props) => {
 													color: '#ffffff',
 													transition: 'all 0.15s ease',
 													textDecoration: 'none',
-													fontWeight: '500'
+													fontWeight: '500',
+													position: 'relative'
 												}}
 												onMouseEnter={(e) => {
 													e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -227,21 +232,7 @@ const Sidebar = (props) => {
 													}}
 												></i>
 												<span style={{ flex: 1 }}>{item.label}</span>
-												{item.issubMenubadge && (
-													<span
-														className={item.bgcolor || ''}
-														style={{
-															marginLeft: 'auto',
-															fontSize: '0.75rem',
-															padding: '0.25rem 0.5rem',
-															borderRadius: '9999px',
-															backgroundColor: !item.bgcolor ? 'rgba(255, 255, 255, 0.2)' : '',
-															color: '#ffffff'
-														}}
-													>
-														{item.badgeValue}
-													</span>
-												)}
+												{item.hasNotice ? <Badge /> : null}
 											</Link>
 											{item.subItem && (
 												<ul className="sub-menu">
@@ -255,7 +246,8 @@ const Sidebar = (props) => {
 																	fontSize: '0.875rem',
 																	color: '#ffffff',
 																	textDecoration: 'none',
-																	transition: 'all 0.15s ease'
+																	transition: 'all 0.15s ease',
+																	position: 'relative'
 																}}
 																onMouseEnter={(e) => {
 																	e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -267,6 +259,7 @@ const Sidebar = (props) => {
 																}}
 															>
 																{subItem.sublabel}
+																{subItem.hasNotice ? <Badge /> : null}
 															</Link>
 															{subItem.subMenu && (
 																<ul
@@ -287,7 +280,8 @@ const Sidebar = (props) => {
 																					color: '#ffffff',
 																					borderRadius: '0.5rem',
 																					textDecoration: 'none',
-																					transition: 'all 0.15s ease'
+																					transition: 'all 0.15s ease',
+																					position: 'relative'
 																				}}
 																				onMouseEnter={(e) => {
 																					e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -299,6 +293,7 @@ const Sidebar = (props) => {
 																				}}
 																			>
 																				{menuItem.title}
+																				{menuItem.hasNotice ? <Badge /> : null}
 																			</Link>
 																		</li>
 																	))}

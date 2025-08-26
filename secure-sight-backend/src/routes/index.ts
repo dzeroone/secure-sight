@@ -9,7 +9,7 @@ import elastic from './elastic'
 import dashboard from './dashboard'
 import report from './report'
 import mailScheduler from './mail-scheduler'
-import notificationRouter from './notification'
+import updatesRouter from './updates'
 import userRouter from './user/index'
 import customerRouter from './customers/index'
 import assignmentRouter from './assignments'
@@ -36,7 +36,7 @@ router.use('/report', report)
 router.use('/assignment-reports', assignmentReportRouter)
 router.use('/schedule', mailScheduler)
 router.use("/teams", teamRouter)
-router.use('/notifications', notificationRouter)
+router.use('/updates', updatesRouter)
 router.use('/users', userRouter)
 router.use('/customers', customerRouter)
 router.use('/assignments', assignmentRouter)

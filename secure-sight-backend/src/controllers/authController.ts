@@ -5,6 +5,7 @@ import { dynamicModelWithDBConnection } from '../models/dynamicModel';
 import { sendEmail } from '../helper/email.helper';
 import { signAuthToken } from '../helper/token.helper';
 import passwordResetRequestModel from '../models/password-reset-request.model';
+import userController from './user.controller';
 
 class AuthController {
   async register(params: UserProps) {
@@ -43,6 +44,32 @@ class AuthController {
       email,
       fullname: name,
       role: user.role
+    }
+  }
+
+  async getPasswordResetRequests(user: Express.User) {
+    if(![ROLES.ADMIN, ROLES.LEVEL3].includes(user.role)) return []
+    return passwordResetRequestModel.find().lean()
+  }
+
+  async getPasswordResetRequestsDetails(user: Express.User) {
+    if(![ROLES.ADMIN, ROLES.LEVEL3].includes(user.role)) return []
+    const data = await passwordResetRequestModel.find().lean()
+    const items = []
+    for(let r of data) {
+      let item: any = r
+      item.user = await userController.getUserById(r.userId!.toString())
+      items.push(item)
+    }
+    return items
+  }
+
+  async passwordChanged(userId: string) {
+    const r = await passwordResetRequestModel.findOne({
+      userId
+    })
+    if(r) {
+      return r.deleteOne()
     }
   }
 

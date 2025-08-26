@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import { Router } from "react-router";
 // import "./i18n";
 
-import { configureStore } from "./store/store";
+import { configureStore, store } from "./store/store";
 import { history } from './Routes/routes';
 
 const CustomRouter = ({ history, ...props }) => {
@@ -31,7 +31,7 @@ const CustomRouter = ({ history, ...props }) => {
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Provider store={configureStore({})}>
+  <Provider store={store}>
     <React.Fragment>
       <CustomRouter history={history}>
         <App />

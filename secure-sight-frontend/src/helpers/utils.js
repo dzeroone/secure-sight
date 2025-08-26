@@ -1,3 +1,5 @@
+import { merge } from "lodash";
+
 const ROLES = {
   'admin': "Admin",
   'l1': "Level 1",
@@ -36,4 +38,22 @@ export const getErrorMessage = (e) => {
 
 export const setDocumentTitle = (title) => {
   document.title = `${title} | Report Automation`;
+}
+
+export const isOrgEmail = (email) => {
+  return email.substring(email.indexOf('@')+1) == process.env.REACT_APP_ORG_DOMAIN
+}
+
+export const loadState = (key) => {
+  const strState = localStorage.getItem(key)
+  if(!strState) return {}
+  return merge(JSON.parse(strState), {
+    Updates: {
+      fetching: false
+    }
+  })
+}
+
+export const saveState = (key, data) => {
+  return localStorage.setItem(key, JSON.stringify(data))
 }

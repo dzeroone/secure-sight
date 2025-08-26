@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 
 // Formik Validation
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
 //redux
@@ -29,12 +29,22 @@ import ApiServices from "../../Network_call/apiservices";
 import BreadcrumbWithTitle from "../../components/Common/BreadcrumbWithTitle";
 import { ROLE_NAMES } from "../../data/app";
 import { setProfileData } from "../../helpers/api_helper";
-import { getErrorMessage } from "../../helpers/utils";
+import { getErrorMessage, isOrgEmail } from "../../helpers/utils";
 import ModalLoading from "../../components/ModalLoading";
+import { InputField } from "../../components/form-fields";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../store/actions";
+
+const pChangeSchema = Yup.object({
+  cPass: Yup.string().required("Please enter your current password"),
+  nPass: Yup.string().required("Please enter your new password"),
+  coPass: Yup.string().oneOf([Yup.ref('nPass'), null], 'Passwords must match').required("Please confirm your password"),
+})
 
 const UserProfile = () => {
   const [ user, setUser ] = useState(null);
   const [busy, setBusy] = useState(false)
+  const dispatch = useDispatch()
   const { userProfile } = useProfile()
 
   const formik = useFormik({
@@ -42,10 +52,12 @@ const UserProfile = () => {
     initialValues: {
       fullname: "",
       email: "",
+      contact: ""
     },
     validationSchema: Yup.object({
       fullname: Yup.string().required("Please Enter Your Full name"),
       email: Yup.string().email("Invalid email").required("Please Enter Your Email"),
+      contact: Yup.string().optional(),
     }),
     onSubmit: async (values) => {
       try {
@@ -55,11 +67,12 @@ const UserProfile = () => {
           values,
           ApiEndPoints.Me
         )
-        setProfileData({
+        dispatch(updateUser({
           ...userProfile,
           fullname: values.fullname,
-          email: values.email
-        })
+          email: values.email,
+          contact: values.contact
+        }))
         toast.success("Profile updated.")
         location.reload()
       }catch(e) {
@@ -71,6 +84,27 @@ const UserProfile = () => {
     },
   });
 
+  const handlePChange = async (values) => {
+    try {
+      setBusy(true)
+      await ApiServices(
+        "patch",
+        values,
+        `${ApiEndPoints.Me}/change-password`
+      )
+      dispatch(updateUser({
+        ...userProfile,
+        promptPassChange: false
+      }))
+      toast.success("Password has been changed.")
+    }catch(e) {
+      const msg = getErrorMessage(e)
+      toast.error(msg)
+    }finally{
+      setBusy(false)
+    }
+  }
+
   const loadUser = useCallback(async () => {
     try {
       const data = await ApiServices(
@@ -81,7 +115,8 @@ const UserProfile = () => {
       setUser(data)
       formik.setValues({
         fullname: data.fullname,
-        email: data.email
+        email: data.email,
+        contact: data.contact || ""
       })
     }catch(e) {
       const msg = getErrorMessage(e)
@@ -172,9 +207,76 @@ const UserProfile = () => {
                       ) : null}
                     </div>
                     <div>
+                      <Label className="form-label">Contact</Label>
+                      <Input
+                        type="text"
+                        name="contact"
+                        value={formik.values.contact}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        invalid={
+                          formik.touched.contact &&
+                          formik.errors.contact
+                            ? true
+                            : false
+                        }
+                      />
+                      {formik.touched.contact &&
+                      formik.errors.contact ? (
+                        <FormFeedback type="invalid">
+                          {formik.errors.contact}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div>
                       <Button type="submit" color="primary">Save</Button>
                     </div>
                   </Form>
+                  {!isOrgEmail(userProfile.email) ? (
+                    <div>
+                      <h4 className="card-title mb-4 text-center text-white">Change password</h4>
+                      <Formik
+                        initialValues={{
+                          cPass: "",
+                          nPass: "",
+                          coPass: ""
+                        }}
+                        validationSchema={pChangeSchema}
+                        onSubmit={handlePChange}
+                      >
+                        {instance => (
+                          <Form onSubmit={instance.handleSubmit} className="d-flex flex-column gap-2">
+                            <div>
+                              <InputField
+                                label="Current password"
+                                name="cPass"
+                                type="password"
+                              />
+                            </div>
+                            <div>
+                              <InputField
+                                label="New password"
+                                name="nPass"
+                                type="password"
+                              />
+                            </div>
+                            <div>
+                              <InputField
+                                label="Confirm password"
+                                name="coPass"
+                                type="password"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Button type="submit" color="primary">Save</Button>
+                            </div>
+                          </Form>
+                        )}
+                      </Formik>
+                      
+                    </div>
+                  ) : null}
                 </CardBody>
               </Card>
             </Col>

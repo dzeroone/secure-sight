@@ -7,9 +7,13 @@ import ApiEndPoints from "../../Network_call/ApiEndPoints";
 import ModalLoading from "../../components/ModalLoading";
 import ListDLChanges from "../../components/ListDLChanges";
 import ListPendingAssignmentReviews from "../../components/ListPendingAssignmentReviews";
+import { useSelector } from "react-redux";
+import { Alert } from "reactstrap";
+import { Link } from "react-router-dom";
 
 export default function DashboardPage() {
   const [busy, setBusy] = useState(false)
+  const user = useSelector(s => s.login.user)
 
   const [dashboardData, setDashboardData] = useState({
     submissions: [],
@@ -45,6 +49,16 @@ export default function DashboardPage() {
 
   return (
     <div className="page-content">
+      {user && user.promptPassChange ? (
+        <div className="">
+          <Alert color='info'>
+            <div className='d-flex justify-content-between'>
+              <div>Your password has been reset. Please change your password immediately.</div>
+              <Link to={'/userprofile'} className='alert-link'>Change Password</Link>
+            </div>
+          </Alert>
+        </div>
+      ) : null}
       <BreadcrumbWithTitle title="Dashboard" />
       {/* <div>
         <div className="w-50 border border-info border-opacity-25 p-2 rounded" style={{ minHeight: '10rem'}}>

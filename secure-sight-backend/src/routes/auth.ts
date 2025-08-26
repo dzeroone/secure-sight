@@ -2,8 +2,9 @@ import express, { Request, Response } from 'express';
 import { default as AuthController, default as authController } from '../controllers/authController';
 import { verifyAzureIdToken } from '../helper/token.helper';
 import { UserProps } from '../types/types';
-import { auth } from '../utils/auth-util';
+import { auth, hasRole } from '../utils/auth-util';
 import logger from '../utils/logger';
+import { ROLES } from '../constant';
 const router = express.Router();
 
 // router.post('/register', async (req: Request<UserProps>, res: Response) => {
@@ -32,6 +33,9 @@ router.post('/login',
             if (!data) {
                 return res.status(401).json({ message: 'Invalid credentials' }); // Handle invalid login attempts
             }
+            logger.info({
+              msg: `${data.data.fullname || data.data.email} has been signed in`
+            })
 
             res.status(200).json(data); // Send back user data or token on successful login
         } catch (error) {
@@ -87,6 +91,17 @@ router.post('/info',
     res.send(req.user)
   }
 )
+
+router.get("/password-reset-requests", auth, hasRole([ROLES.ADMIN, ROLES.LEVEL3]), async (req, res) => {
+  try {
+    const data = await authController.getPasswordResetRequestsDetails(req.user!)
+    res.send(data)
+  }catch(e: any) {
+    res.status(400).send({
+      message: e.message
+    })
+  }
+})
 
 router.post('/generate-license-key', async (req: Request<UserProps>, res: Response) => {
   let data = await AuthController.licenseKey(req.body)

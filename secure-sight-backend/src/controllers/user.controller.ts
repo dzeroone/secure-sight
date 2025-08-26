@@ -1,4 +1,4 @@
-import { genSalt, hash } from "bcryptjs";
+import { compare, genSalt, hash } from "bcryptjs";
 import { COLLECTIONS, MASTER_ADMIN_DB, ROLES } from "../constant"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
 import { Document } from "mongoose";
@@ -6,6 +6,7 @@ import assignmentController from "./assignment.controller";
 import assignmentReportController from "./assignment-report.controller";
 import customerController from "./customer.controller";
 import teamController from "./team.controller";
+import authController from "./authController";
 
 class UserController {
   async addUser(data: any) {
@@ -117,6 +118,7 @@ class UserController {
       const salt = await genSalt(10)
       const hashedPassword = await hash(data.password, salt)
       data.password = hashedPassword
+      data.promptPassChange = true
     } else {
       delete data.password
     }
@@ -138,8 +140,24 @@ class UserController {
         throw new Error(`You can't change the role. This user has pending task to complete.`)
       }
     }
+    if(data.password) {
+      await authController.passwordChanged(user._id)
+    }
     return user.updateOne({
       $set: data
+    })
+  }
+
+  async changePassword(user: any, data: any) {
+    const isMatch = await compare(data.cPass, user.password)
+    if(!isMatch) throw new Error("Password is not correct!")
+    const salt = await genSalt(10)
+    const hashedPassword = await hash(data.nPass, salt)
+    return user.updateOne({
+      $set: {
+        password: hashedPassword,
+        promptPassChange: false
+      }
     })
   }
 

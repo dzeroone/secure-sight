@@ -1,12 +1,8 @@
-import { useState } from "react";
-import { getLoggedinUser } from "../helpers/api_helper";
+import { useSelector } from "react-redux";
 
 export const useProfile = () => {
-  const userProfileSession = getLoggedinUser();
-  const [loading] = useState(userProfileSession ? false : true);
-  const [userProfile] = useState(
-    userProfileSession ? userProfileSession : null
-  );
+  const userProfile = useSelector(s => s.login.user)
+  const loading = useSelector(s => s.login.fetching)
 
   return { userProfile, loading };
 };
