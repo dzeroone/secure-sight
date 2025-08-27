@@ -1,4 +1,4 @@
-import { REPORT_AUDIT_STATUS_LABEL, REPORT_STATUS_LABEL } from "@@/constants";
+import { DASHBOARD_REDUX_STATE, REPORT_AUDIT_STATUS_LABEL, REPORT_STATUS_LABEL } from "@@/constants";
 import { format } from "date-fns/format";
 
 export function updateNestedField(obj: any, path: string, value: any): any {
@@ -61,4 +61,34 @@ export const getReportAuditStatusTitle = (statusCode: number) => {
 
 export const formatMonthlyReportSession = (date: string) => {
     return format(date, 'MMMM, yyyy')
+}
+
+export const loadAuthUser = () => {
+  const state = localStorage.getItem(DASHBOARD_REDUX_STATE)
+  if(!state) return null
+  const parsed = JSON.parse(state)
+  return parsed.login.user
+}
+
+export const setAuthUser = (data: any) => {
+  const state = localStorage.getItem(DASHBOARD_REDUX_STATE)
+  if(!state) {
+    let d = {
+      login: {
+        user: data
+      }
+    }
+    localStorage.setItem(DASHBOARD_REDUX_STATE, JSON.stringify(d))
+    return
+  }
+  const parsed = JSON.parse(state)
+  if(!parsed.login) {
+    parsed.login = {
+      user: data
+    }
+  }else{
+    parsed.login.user = data
+  }
+
+  localStorage.setItem(DASHBOARD_REDUX_STATE, JSON.stringify(parsed))
 }

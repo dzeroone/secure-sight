@@ -13,7 +13,7 @@ import profile from "./auth/profile/reducer";
 import account from "./auth/register/reducer";
 import Updates from "./update/reducer";
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   // public
   Layout,
   calendar,
@@ -23,5 +23,12 @@ const rootReducer = combineReducers({
   account,
   Updates
 });
+
+const rootReducer = (state, action) => {
+  if(action.type == 'RESTORE_LOCAL') {
+    return appReducer(action.payload, action)
+  }
+  return appReducer(state, action)
+}
 
 export default rootReducer;

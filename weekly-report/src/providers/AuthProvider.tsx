@@ -1,3 +1,4 @@
+import { loadAuthUser, setAuthUser } from "@/lib/utils";
 import {
   createContext,
   PropsWithChildren,
@@ -37,8 +38,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const setAuth = useCallback(
     (data: AuthUser | null, redirect_url?: string) => {
-      if (data) localStorage.setItem("authUser", JSON.stringify(data));
-      else localStorage.removeItem("authUser");
+      setAuthUser(data);
       setCurrentUser(data);
       if (redirect_url) {
         router(redirect_url, {
@@ -65,9 +65,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
-    const data = localStorage.getItem("authUser");
+    const data = loadAuthUser();
     if (data) {
-      setCurrentUser(JSON.parse(data) as AuthUser);
+      setCurrentUser(data as AuthUser);
     }
     setLoading(false);
   }, []);

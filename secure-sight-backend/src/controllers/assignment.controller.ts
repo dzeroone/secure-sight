@@ -132,7 +132,7 @@ class AssignmentController {
       name: 1
     }).lean()
     for (let customer of customers) {
-      await this._populateAssignmentsForCustomerForDate(customer, date, assignedBy, reportType)
+      await this._populateAssignmentsForCustomerForDate(customer, date, reportType)
     }
     return customers
   }
@@ -156,7 +156,7 @@ class AssignmentController {
     }).lean()
 
     for (let customer of customers) {
-      await this._populateAssignmentsForCustomerForDate(customer, date, reporterId)
+      await this._populateAssignmentsForCustomerForDate(customer, date, reportType, reporterId)
     }
     return customers
   }
@@ -214,7 +214,7 @@ class AssignmentController {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
     const customers = await CustomerModel.find({}, { name: 1, tCode: 1 }).lean()
     for (let customer of customers) {
-      await this._populateAssignmentsForCustomerForDate(customer, date, assignedBy, 'weekly')
+      await this._populateAssignmentsForCustomerForDate(customer, date, 'weekly', assignedBy)
     }
     return customers
   }
@@ -238,7 +238,7 @@ class AssignmentController {
     }).lean()
 
     for (let customer of customers) {
-      await this._populateAssignmentsForCustomerForDate(customer, date, userId, 'weekly')
+      await this._populateAssignmentsForCustomerForDate(customer, date, 'weekly', userId)
     }
     return customers
   }
@@ -731,11 +731,11 @@ class AssignmentController {
     })
   }
 
-  async updateReportCreator(assignment: AssignmentDocumentType, userId: string) {
+  async updateReportCreator(assignment: AssignmentDocumentType, userId: string, previousCreatorId: string) {
     const customer = await customerController.getCustomerById(assignment.cId!)
     if(!customer) throw new Error("Customer not found!")
 
-    const report = await assignmentReportController.getOneByIndexForReporter(assignment.index!, userId)
+    const report = await assignmentReportController.getOneByIndexForReporter(assignment.index!, previousCreatorId)
     if(!report) throw new Error("Report not found!")
 
     if(assignment.reporterId == assignment.sBy) {
@@ -763,14 +763,19 @@ class AssignmentController {
     })
   }
 
-  private async _populateAssignmentsForCustomerForDate(customer: any, date: string, assignedBy: string, reportType: 'monthly' | 'weekly' = 'monthly') {
+  private async _populateAssignmentsForCustomerForDate(customer: any, date: string, reportType: 'monthly' | 'weekly' = 'monthly', assignedBy?: string) {
     const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
-    const assignments: any[] = await assignmentModel.find({
+    const query: any = {
       rType: reportType,
       index: reportType == 'monthly' ? getMonthlyReportIndex(date, customer.tCode) : getWeeklyReportIndex(date, customer.tCode),
-      aBy: assignedBy,
       cId: customer._id,
-    }).lean()
+    }
+
+    if(assignedBy) {
+      query.aBy = assignedBy
+    }
+
+    const assignments: any[] = await assignmentModel.find(query).lean()
     for (let assignment of assignments) {
       assignment.reporter = await UserModel.findOne({
         _id: assignment.reporterId

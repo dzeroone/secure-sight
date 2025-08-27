@@ -11,7 +11,7 @@ const AuthProtected = (props) => {
     redirect is un-auth access protected routes via url
     */
 
-  if (!userProfile && loading) {
+  if (!userProfile) {
     return (
       <Navigate to={{ pathname: "/", state: { from: props.location } }} />
     );

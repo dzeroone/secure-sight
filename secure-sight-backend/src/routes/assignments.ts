@@ -121,7 +121,7 @@ router.post('/:id/transfer-tasks',
       if(!req.body.fromUserId || !req.body.toUserId || !req.body.task) {
         throw new Error("Invalid argument")
       }
-      const fromUser = await userController.getUserById(req.body.fromUserId)
+      const fromUser = await userController.getUserById(req.body.fromUserId) as any
       if(!fromUser) {
         throw new Error("From user not found!")
       }
@@ -148,7 +148,7 @@ router.post('/:id/transfer-tasks',
           msg: `${req.user?.fullname || req.user?.email} has changed the reviewer for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser?.fullname || fromUser?.email} to ${toUser?.fullname || toUser?.email}`
         })
       }else if(req.body.task == responsibilities.REPORT_CREATOR) {
-        await assignmentController.updateReportCreator(assignment, toUser._id.toString())
+        await assignmentController.updateReportCreator(assignment, toUser._id.toString(), fromUser._id.toString())
         logger.info({
           msg: `${req.user?.fullname || req.user?.email} has changed the report creator for assignment:${assignment._id} of report_index:${assignment.index} from ${fromUser?.fullname || fromUser?.email} to ${toUser?.fullname || toUser?.email}`
         })

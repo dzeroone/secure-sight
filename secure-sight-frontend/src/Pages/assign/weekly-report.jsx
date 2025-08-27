@@ -63,7 +63,7 @@ export default function AssignWeeklyReportPage() {
     }finally{
       setBusy(false)
     }
-  }, [])
+  }, [date])
 
   const onAssigned = useCallback(async (customerId, info) => {
     setCustomers(customers => {

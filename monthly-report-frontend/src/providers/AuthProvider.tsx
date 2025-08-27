@@ -1,5 +1,6 @@
 "use client";
 
+import { loadAuthUser, setAuthUser } from "@@/helper/helper";
 import { useRouter } from "next/navigation";
 import {
   createContext,
@@ -39,8 +40,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const setAuth = useCallback(
     (data: AuthUser | null, redirect_url?: string) => {
-      if (data) localStorage.setItem("authUser", JSON.stringify(data));
-      else localStorage.removeItem("authUser");
+      setAuthUser(data);
       setCurrentUser(data);
       if (redirect_url) {
         router.replace(redirect_url);
@@ -65,9 +65,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
-    const data = localStorage.getItem("authUser");
+    const data = loadAuthUser();
     if (data) {
-      setCurrentUser(JSON.parse(data) as AuthUser);
+      setCurrentUser(data as AuthUser);
     }
     setLoading(false);
   }, []);

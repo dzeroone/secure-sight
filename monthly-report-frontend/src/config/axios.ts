@@ -1,3 +1,4 @@
+import { loadAuthUser } from "@@/helper/helper";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SECURE_SIGHT_API_BASE || ''
@@ -8,11 +9,10 @@ const axiosApi = axios.create({
 
 axiosApi.interceptors.request.use(
     (config) => {
-        let userInfo = localStorage.getItem("authUser");
+        let userInfo = loadAuthUser();
         if (userInfo) {
-            const parsed = JSON.parse(userInfo)
-            if (parsed.token) {
-                config.headers.Authorization = `Bearer ${parsed.token}`;
+            if (userInfo.token) {
+                config.headers.Authorization = `Bearer ${userInfo.token}`;
             }
         }
         return config;

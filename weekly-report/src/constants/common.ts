@@ -1,0 +1,1 @@
+export const DASHBOARD_REDUX_STATE = 'redux_state'

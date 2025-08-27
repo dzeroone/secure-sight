@@ -1,3 +1,5 @@
+export const DASHBOARD_REDUX_STATE = 'redux_state'
+
 export const REPORT_STATUS = {
   DRAFT: 0,
   SUBMIT: 1,
