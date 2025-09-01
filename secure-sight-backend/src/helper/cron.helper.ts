@@ -9,7 +9,7 @@ import Pulse from '@pulsecron/pulse'
 import notificationController from '../controllers/notification.controller'
 import assignmentController from '../controllers/assignment.controller'
 import logger from '../utils/logger'
-import { format } from 'date-fns'
+import { format, subMonths } from 'date-fns'
 import { getMonthlyReportIndex, getWeeklyReportIndex } from './reports.helper'
 
 export enum SCHEDULE_JOB_NAME {
@@ -104,7 +104,7 @@ scheduler.define(SCHEDULE_JOB_NAME.ASSIGN_REPORTERS, async (job, done) => {
 			continue;
 		}
 
-		const date = format(new Date(), 'yyyy-MM-dd')
+		const date = reportType == 'monthly' ? format(subMonths(new Date(), 1), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
 		const index = reportType == 'monthly' ? getMonthlyReportIndex(date, customer.tCode) : getWeeklyReportIndex(date, customer.tCode)
 		const data = await assignmentController.assignReport({
 			customerId: customer._id.toString(),
