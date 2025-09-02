@@ -35,7 +35,7 @@ const PendingIncidentsSummary = () => {
           <tr style={{ color: "#090c9b", fontSize: 24 }}>
             <th>Incident Names</th>
             <th style={{ whiteSpace: "nowrap" }}>Priority</th>
-            <th>Date of Occurrence</th>
+            <th>No of Occurrence</th>
             <th>Severity</th>
           </tr>
         </thead>

@@ -564,7 +564,7 @@ export const monthlyReportInitialValue = {
             "key": [
                 "Incidents Closed with Resolution",
                 "Incidents Closed without Acknowledgement",
-                "Pending Incidents with Customer",
+                "Pending Incidents",
                 "Pending Incidents with SOC Team"
             ],
             "datasets": [

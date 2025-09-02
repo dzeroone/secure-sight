@@ -194,7 +194,11 @@ export const monthlyReportSlice = createSlice({
                     })
                     reducers.updateOISField(state, {
                         type: '',
-                        payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
+                        payload: { path: `${priority}.pending_with_customer.pending_incidents`, value: priorityData['Pending Incidents'] || 0 }
+                    })
+                    reducers.updateOISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] || 0 }
                     })
                     reducers.updateOISField(state, {
                         type: '',
@@ -218,11 +222,16 @@ export const monthlyReportSlice = createSlice({
                     })
                     reducers.updateWISField(state, {
                         type: '',
-                        payload: { path: `${priority}.pending_with_customer.pending_incidents`, value: priorityData['Pending Incidents from Customer'] }
+                        payload: { path: `${priority}.pending_with_customer.pending_incidents`, value: priorityData['Pending Incidents'] || 0 }
                     })
                     reducers.updateWISField(state, {
                         type: '',
-                        payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
+                        payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] || 0 }
+                    })
+
+                    reducers.updateWISField(state, {
+                        type: '',
+                        payload: { path: `${priority}.total_incidents`, value: priorityData['Total Incidents'] || 0 }
                     })
                 })
             // -
@@ -241,17 +250,82 @@ export const monthlyReportSlice = createSlice({
                     })
                     reducers.updateSIEMField(state, {
                         type: '',
-                        payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] }
+                        payload: { path: `${priority}.pending_with_customer.pending_incidents`, value: priorityData['Pending Incidents'] || 0 }
+                    })
+                    reducers.updateSIEMField(state, {
+                        type: '',
+                        payload: { path: `${priority}.pending_with_soc_team`, value: priorityData['Pending Incidents with SOC Team'] || 0 }
+                    })
+                    reducers.updateSIEMField(state, {
+                        type: '',
+                        payload: { path: `${priority}.total_incidents`, value: priorityData['Total Incidents'] || 0 }
                     })
                 })
             // -
             // High Incidents Summary
-            // @TODO
-            // cannot find data mapping
+            if (data['Critical High Incidents Summary']?.['Critical/High Incidents Summary']) {
+                let values = data['Critical High Incidents Summary']?.['Critical/High Incidents Summary']
+                if(values.length > state.high_incident_summary.data.length) {
+                    reducers.addHISIncident(state)
+                }
+                values.forEach((hIncident: any, index: number) => {
+                    reducers.updateHISIncident(state, {
+                        type: '',
+                        payload: {
+                            index,
+                            field: 'priority',
+                            value: hIncident['Impact-Priority'] || ""
+                        }
+                    })
+                    reducers.updateHISIncident(state, {
+                        type: '',
+                        payload: {
+                            index,
+                            field: 'incident_title',
+                            value: hIncident['Incient Title'] || ""
+                        }
+                    })
+                    reducers.updateHISIncident(state, {
+                        type: '',
+                        payload: {
+                            index,
+                            field: 'findings.action_performed',
+                            value: hIncident['Findings and Actions Performed'] || ""
+                        }
+                    })
+                })
+            }
+            
             // -
             // Pending Incidents Summary
-            // @TODO
-            // no data found on elastic, so, data format is unknown
+            if (data['Pending Incidents Summary']?.['Pending Incidents Summary']) {
+                let values = data['Pending Incidents Summary']?.['Pending Incidents Summary']
+                if(values.length > state.pending_incident_summary.data.length) {
+                    reducers.pendingIncidentsSummary(state, {
+                        type: "",
+                        payload: {
+                            incident_name: "",
+                            priority: "",
+                            no_of_occurrence: "",
+                            severity: "",
+                        }
+                    })
+                }
+                values.forEach((incident: any, index: number) => {
+                    reducers.updatePendingIncidentsSummary(state, {
+                        type: '',
+                        payload: {
+                            index: index,
+                            data: {
+                                incident_name: incident["Incident Name"] || "",
+                                priority: incident["Priority"] || "",
+                                severity: incident["Impact"] || "",
+                                no_of_occurrence: incident['No of Occurance'] || 0
+                            },
+                        }
+                    })
+                })
+            }
             // -
 
             // SLO Summary
