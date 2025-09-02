@@ -704,6 +704,41 @@ export const monthlyReportSlice = createSlice({
                     for (let i = state.account_compromise_events.risk_event_table.length; i < topVData.length; i++) {
                         reducers.addACERiskEvent(state);
                     }
+                    
+                    topVData.forEach((eData: any, i: number) => {
+                        reducers.updateACERiskEvent(state, {
+                            type: "",
+                            payload: {
+                                index: i,
+                                field: "asset",
+                                value: eData["Asset"]
+                            }
+                        })
+                        reducers.updateACERiskEvent(state, {
+                            type: "",
+                            payload: {
+                                index: i,
+                                field: "data_source",
+                                value: eData["Data Source"]
+                            }
+                        })
+                        reducers.updateACERiskEvent(state, {
+                            type: "",
+                            payload: {
+                                index: i,
+                                field: "event_risk",
+                                value: eData["Event Risk"]
+                            }
+                        })
+                        reducers.updateACERiskEvent(state, {
+                            type: "",
+                            payload: {
+                                index: i,
+                                field: "risk_event",
+                                value: eData["Risk Event"]
+                            }
+                        })
+                    })
                 }
 
                 // @TODO
