@@ -161,13 +161,25 @@ class AssignmentController {
     return customers
   }
 
-  async getMonthlyAssignmentsForUser(user: Express.User) {
+  async getMonthlyAssignmentsForUser(user: Express.User, {prev, next}: {prev?: string, next?: string}) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
 
-    const assignments: any[] = await assignmentModel.find({
+    const filter: any = {
       rType: 'monthly',
       reporterId: user._id
-    }).sort({ cAt: -1 }).lean()
+    }
+
+    if(prev) {
+      filter['cAt'] = {
+        $lt: new Date(prev)
+      }
+    }else if(next) {
+      filter['cAt'] = {
+        $gt: new Date(next)
+      }
+    }
+
+    const assignments: any[] = await assignmentModel.find(filter).sort({ cAt: -1 }).limit(20).lean()
     const customerIds = assignments.map(a => a.cId)
     const customers = await CustomerModel.find({
       _id: {
@@ -191,7 +203,7 @@ class AssignmentController {
   }
 
   async assignReport(data: ReportAssignmentValidationValues, assignedBy: string, reportType: ReportType) {
-    const exists = await this.isReporterAssignedForIndex(data.reporterId, data.index)
+    const exists = await this.isReporterAssignedForIndex(data.index)
 
     if (exists) throw new Error("Assignment already exists")
 
@@ -243,13 +255,25 @@ class AssignmentController {
     return customers
   }
 
-  async getWeeklyAssignmentsForUser(user: Express.User) {
+  async getWeeklyAssignmentsForUser(user: Express.User, {prev, next}: {prev?: string, next?: string}) {
     const CustomerModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.CUSTOMERS)
 
-    const assignments: any[] = await assignmentModel.find({
+    const filter: any = {
       rType: 'weekly',
       reporterId: user._id
-    }).sort({ cAt: -1 }).lean()
+    }
+
+    if(prev) {
+      filter['cAt'] = {
+        $lt: new Date(prev)
+      }
+    }else if(next) {
+      filter['cAt'] = {
+        $gt: new Date(next)
+      }
+    }
+
+    const assignments: any[] = await assignmentModel.find(filter).sort({ cAt: -1 }).limit(20).lean()
     const customerIds = assignments.map(a => a.cId)
     const customers = await CustomerModel.find({
       _id: {
@@ -651,10 +675,9 @@ class AssignmentController {
     }
   }
 
-  async isReporterAssignedForIndex(reporterId: string, index: string) {
+  async isReporterAssignedForIndex(index: string) {
     const doc = await assignmentModel.findOne({
-      index,
-      reporterId
+      index
     }, { reporterId: 1 })
     return !!doc
   }

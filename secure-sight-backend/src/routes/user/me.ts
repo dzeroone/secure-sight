@@ -84,7 +84,7 @@ router.get('/dashboard',
 router.get('/monthly-assignments',
   auth,
   async (req, res) => {
-    const data = await assignmentController.getMonthlyAssignmentsForUser(req.user!)
+    const data = await assignmentController.getMonthlyAssignmentsForUser(req.user!, req.query)
     res.send(data)
   }
 )
@@ -92,7 +92,7 @@ router.get('/monthly-assignments',
 router.get('/weekly-assignments',
   auth,
   async (req, res) => {
-    const data = await assignmentController.getWeeklyAssignmentsForUser(req.user!)
+    const data = await assignmentController.getWeeklyAssignmentsForUser(req.user!, req.query)
     res.send(data)
   }
 )

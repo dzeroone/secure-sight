@@ -35,7 +35,10 @@ const assignmentSchema = new Schema({
   sCBy: String, // status changed by
   aMLS: Date, // assignee message last seen
   rMLS: Date, // reporter message last seen
-  cAt: Date,
+  cAt: {
+    type: Date,
+    index: true
+  },
   uAt: Date
 })
 

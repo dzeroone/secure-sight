@@ -2,7 +2,7 @@ import { Fragment, useCallback, useEffect, useState } from "react"
 import ModalLoading from "./ModalLoading"
 import ApiServices from '../Network_call/apiservices'
 import ApiEndPoints from "../Network_call/ApiEndPoints"
-import { Alert, Button, Table } from "reactstrap"
+import { Alert, Button, Pagination, PaginationItem, PaginationLink, Table } from "reactstrap"
 import { EyeIcon, FileStack, MessageSquareIcon } from "lucide-react"
 import { format } from "date-fns"
 import { formatMonthlyReportSession } from "../helpers/form_helper"
@@ -12,24 +12,63 @@ import { REPORT_AUDIT_STATUS } from "../data/app"
 export default function AssignedMonthlyReportList() {
   const [busy, setBusy] = useState(false)
   const [assignments, setAssignments] = useState([])
+  const [pagination, setPagination] = useState({
+    hasPrevPage: false,
+    hasNextPage: true
+  })
 
   const navigate = useNavigate()
   
-  const loadAssignments = useCallback(async () => {
+  const loadAssignments = async (pageQuery) => {
     try {
       setBusy(true)
-      const res= await ApiServices(
+
+      let query = ""
+      if(pageQuery?.next) {
+        query = `?prev=${assignments[assignments.length - 1].cAt}`
+      }else if(pageQuery?.prev) {
+        query = `?next=${assignments[0].cAt}`
+      }
+      
+      const res = await ApiServices(
         'get',
         null,
-        `${ApiEndPoints.Users}/me/monthly-assignments`
+        `${ApiEndPoints.Users}/me/monthly-assignments${query}`
       )
-      setAssignments(res)
+      if(res.length) {
+        if(pageQuery?.next) {
+          setPagination(s => ({
+            ...s,
+            hasNextPage: true
+          }))
+        }else if(pageQuery?.prev) {
+          setPagination(s => ({
+            ...s,
+            hasPrevPage: true
+          }))
+        }
+
+        setAssignments(res)
+
+      }else{
+        if(pageQuery?.next) {
+          setPagination(s => ({
+            ...s,
+            hasNextPage: false
+          }))
+        }else if(pageQuery?.prev) {
+          setPagination(s => ({
+            ...s,
+            hasPrevPage: false
+          }))
+        }
+      }
     }catch(e) {
       alert(e.message)
     }finally{
       setBusy(false)
     }
-  }, [])
+  }
 
   const viewReport = (assignment) => {
     if(assignment.reportId) {
@@ -48,7 +87,7 @@ export default function AssignedMonthlyReportList() {
 
   useEffect(() => {
     loadAssignments()
-  }, [loadAssignments])
+  }, [])
 
   return (
     <div>
@@ -100,6 +139,26 @@ export default function AssignedMonthlyReportList() {
             )
           })}
         </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={4}>
+              <div>
+                <Pagination listClassName="mb-0">
+                  <PaginationItem disabled={!pagination.hasPrevPage}>
+                    <PaginationLink onClick={() => {
+                      loadAssignments({ prev: true })
+                    }}>Prev</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem disabled={!pagination.hasNextPage}>
+                    <PaginationLink onClick={() => {
+                      loadAssignments({ next: true })
+                    }}>Next</PaginationLink>
+                  </PaginationItem>
+                </Pagination>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
       </Table>
       <ModalLoading
         isOpen={busy}

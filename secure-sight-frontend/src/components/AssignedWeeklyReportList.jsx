@@ -14,21 +14,57 @@ export default function AssignedWeeklyReportList() {
   
   const navigate = useNavigate()
   
-  const loadAssignments = useCallback(async () => {
+  const loadAssignments = async (pageQuery) => {
     try {
       setBusy(true)
+
+      let query = ""
+      if(pageQuery?.next) {
+        query = `?prev=${assignments[assignments.length - 1].cAt}`
+      }else if(pageQuery?.prev) {
+        query = `?next=${assignments[0].cAt}`
+      }
+
       const res= await ApiServices(
         'get',
         null,
-        `${ApiEndPoints.Users}/me/weekly-assignments`
+        `${ApiEndPoints.Users}/me/weekly-assignments${query}`
       )
-      setAssignments(res)
+      
+      if(res.length) {
+        if(pageQuery?.next) {
+          setPagination(s => ({
+            ...s,
+            hasNextPage: true
+          }))
+        }else if(pageQuery?.prev) {
+          setPagination(s => ({
+            ...s,
+            hasPrevPage: true
+          }))
+        }
+
+        setAssignments(res)
+
+      }else{
+        if(pageQuery?.next) {
+          setPagination(s => ({
+            ...s,
+            hasNextPage: false
+          }))
+        }else if(pageQuery?.prev) {
+          setPagination(s => ({
+            ...s,
+            hasPrevPage: false
+          }))
+        }
+      }
     }catch(e) {
       alert(e.message)
     }finally{
       setBusy(false)
     }
-  }, [])
+  }
 
   const viewReport = (assignment) => {
     if(assignment.reportId){
@@ -46,7 +82,7 @@ export default function AssignedWeeklyReportList() {
 
   useEffect(() => {
     loadAssignments()
-  }, [loadAssignments])
+  }, [])
 
   return (
     <div>
