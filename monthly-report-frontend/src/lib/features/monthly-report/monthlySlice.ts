@@ -284,7 +284,7 @@ export const monthlyReportSlice = createSlice({
                         payload: {
                             index,
                             field: 'incident_title',
-                            value: hIncident['Incient Title'] || ""
+                            value: hIncident['Incident Title'] || ""
                         }
                     })
                     reducers.updateHISIncident(state, {
