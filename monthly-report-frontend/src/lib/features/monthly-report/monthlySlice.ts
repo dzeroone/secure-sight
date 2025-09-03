@@ -266,7 +266,9 @@ export const monthlyReportSlice = createSlice({
             if (data['Critical High Incidents Summary']?.['Critical/High Incidents Summary']) {
                 let values = data['Critical High Incidents Summary']?.['Critical/High Incidents Summary']
                 if(values.length > state.high_incident_summary.data.length) {
-                    reducers.addHISIncident(state)
+                    for(let i=state.high_incident_summary.data.length; i<values.length; i++) {
+                        reducers.addHISIncident(state)
+                    }
                 }
                 values.forEach((hIncident: any, index: number) => {
                     reducers.updateHISIncident(state, {
