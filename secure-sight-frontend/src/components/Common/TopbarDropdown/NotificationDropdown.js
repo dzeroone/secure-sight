@@ -22,7 +22,7 @@ const NotificationDropdown = (props) => {
 
   const maxNotificationDate = useMemo(() => {
     let max = ""
-    notifications.forEach(n => {
+    notifications?.forEach(n => {
       if (n.uAt > max) {
         max = n.uAt
       }
@@ -73,7 +73,7 @@ const NotificationDropdown = (props) => {
           </div>
 
           <SimpleBar style={{ height: "230px" }}>
-            {notifications.map(notification => {
+            {notifications?.map(notification => {
               return (
                 <div className="text-reset notification-item" key={notification._id}>
                   <div className="d-flex" >
