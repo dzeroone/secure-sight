@@ -33,11 +33,11 @@ export const getMonthlyReportIndex = (date: string, tenantCode: string) => {
 
 export const getWeeklyReportIndex = (date: string, tenantCode: string) => {
 	const start_date = subDays(date, 7)
-	const start_day = format(start_date, 'dd')
+	const start_day = format(start_date, 'd')
 	const start_month = format(start_date, 'MMM').toLowerCase()
 
 	const end_date = subDays(date, 1)
-	const end_day = format(end_date, 'dd')
+	const end_day = format(end_date, 'd')
 	const end_month = format(end_date, 'MMM').toLowerCase()
 
 	const year = getYear(date)
