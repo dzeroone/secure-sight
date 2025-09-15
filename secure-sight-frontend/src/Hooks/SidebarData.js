@@ -50,7 +50,7 @@ export const useSidebarData = () => {
 				icon: "ri-group-line",
 				url: "/users",
 				bgcolor: "bg-primary",
-				hasNotice: passwordResets.length,
+				hasNotice: passwordResets?.length,
 				subItem: [
 					{
 						roles: [ROLES.ADMIN, ROLES.LEVEL3],
@@ -76,7 +76,7 @@ export const useSidebarData = () => {
 						roles: [ROLES.ADMIN, ROLES.LEVEL3],
 						sublabel: "Password reset requests",
 						link: '/users/password-reset-requests',
-						hasNotice: passwordResets.length,
+						hasNotice: passwordResets?.length,
 					}
 				],
 			},
