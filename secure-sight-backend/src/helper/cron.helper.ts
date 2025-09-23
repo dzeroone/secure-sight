@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { dynamicModelWithDBConnection } from '../models/dynamicModel'
-import { COLLECTIONS, DIRS, MASTER_ADMIN_DB, ROLES } from '../constant'
+import { COLLECTIONS, DIRS, MASTER_ADMIN_DB, REPORT_AUDIT_STATUS, ROLES } from '../constant'
 import child_process from 'child_process'
 import mongoose from 'mongoose'
 const path = require('path')
@@ -11,10 +11,12 @@ import assignmentController from '../controllers/assignment.controller'
 import logger from '../utils/logger'
 import { format, subMonths } from 'date-fns'
 import { getMonthlyReportIndex, getWeeklyReportIndex } from './reports.helper'
+import assignmentReportController from '../controllers/assignment-report.controller'
 
 export enum SCHEDULE_JOB_NAME {
 	RUN_PYTHON_COMMAND = 'run_python_command',
 	ASSIGN_REPORTERS = 'assign_reporters',
+	ARCHIVE_REPORTS = "archive_reports"
 }
 
 const scheduler = new Pulse({
@@ -83,6 +85,8 @@ scheduler.define(SCHEDULE_JOB_NAME.ASSIGN_REPORTERS, async (job, done) => {
 
 	const schedules = await assignmentController.getSchedules(reportType)
 
+	const date = reportType == 'monthly' ? format(subMonths(new Date(), 1), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
+
 	for(let schedule of schedules) {
 		const customer = await CustomerModel.findOne({
 			_id: schedule.cId,
@@ -104,7 +108,6 @@ scheduler.define(SCHEDULE_JOB_NAME.ASSIGN_REPORTERS, async (job, done) => {
 			continue;
 		}
 
-		const date = reportType == 'monthly' ? format(subMonths(new Date(), 1), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
 		const index = reportType == 'monthly' ? getMonthlyReportIndex(date, customer.tCode) : getWeeklyReportIndex(date, customer.tCode)
 		const data = await assignmentController.assignReport({
 			customerId: customer._id.toString(),
@@ -116,6 +119,53 @@ scheduler.define(SCHEDULE_JOB_NAME.ASSIGN_REPORTERS, async (job, done) => {
 		logger.info({
 			msg: `${pickedL3User?.fullname || pickedL3User?.email} has assigned report_index:${index} to ${reporter.fullname || reporter.email}`
 		})
+	}
+
+	console.log("RUNN DONE", SCHEDULE_JOB_NAME.ASSIGN_REPORTERS)
+	done()
+})
+
+scheduler.define(SCHEDULE_JOB_NAME.ARCHIVE_REPORTS, async (job, done) => {
+	console.log("RUNN", SCHEDULE_JOB_NAME.ARCHIVE_REPORTS)
+
+	const { reportType } = job.attrs.data
+	if(reportType != 'monthly' && reportType != 'weekly') {
+		done()
+		return;
+	}
+	
+	const UserModel = dynamicModelWithDBConnection(MASTER_ADMIN_DB, COLLECTIONS.USERS)
+
+	const l3Users = await UserModel.find({
+		role: ROLES.LEVEL3,
+		status: { $ne: -1 }
+	}).lean()
+
+	if(l3Users.length < 0) {
+		// no l3 user found, let's skip the assignment
+		done()
+		return;
+	}
+
+	const pickedL3User = l3Users[0]
+
+	const date = reportType == 'monthly' ? format(subMonths(new Date(), 1), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
+
+	const pastAssignments = await assignmentController.getPastRootAssignments(date, reportType)
+
+	for(let assignment of pastAssignments) {
+		if(!assignment.reportId) {
+      continue
+    }
+		const report = await assignmentReportController.getById(assignment.reportId)
+		if (!report) {
+			continue
+		}
+
+		if (report.auditStatus && report.auditStatus == REPORT_AUDIT_STATUS.APPROVED) {
+			continue
+		}
+		await assignmentController.archive(assignment, pickedL3User as any)
 	}
 
 	console.log("RUNN DONE", SCHEDULE_JOB_NAME.ASSIGN_REPORTERS)

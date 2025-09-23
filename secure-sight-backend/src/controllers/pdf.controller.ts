@@ -108,13 +108,17 @@ class PdfController {
       await page.evaluateOnNewDocument(
         (authData) => {
           localStorage.clear();
-          localStorage.setItem('authUser', JSON.stringify(authData));
+          localStorage.setItem('redux_state', JSON.stringify(authData));
         },
         {
-          email: user.email,
-          id: user._id,
-          role: user.role,
-          token: signAuthToken({ email: user.email }),
+          login: {
+            user: {
+              email: user.email,
+              id: user._id,
+              role: user.role,
+              token: signAuthToken({ email: user.email }),
+            }
+          }
         }
       );
 

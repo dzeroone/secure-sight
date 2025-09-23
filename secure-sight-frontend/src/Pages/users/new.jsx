@@ -164,7 +164,6 @@ export default function NewUserPage(props) {
               <Input
                 type="select"
                 name="role"
-                disabled={formik.values.role === 'admin'}
                 value={formik.values.role}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -179,11 +178,11 @@ export default function NewUserPage(props) {
                 <option value='l1'>Level 1</option>
                 <option value='l2'>Level 2</option>
                 {userProfile.role === ROLES.ADMIN ? (
-                  <option value='l3'>Level 3</option>
+                  <>
+                    <option value='l3'>Level 3</option>
+                    <option value='admin'>Admin</option>
+                  </>
                 ): null}
-                {formik.values.role === ROLES.ADMIN ? (
-                  <option value='admin'>Admin</option>
-                ) : null}
               </Input>
               {formik.touched.role &&
               formik.errors.role ? (

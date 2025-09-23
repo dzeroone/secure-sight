@@ -71,6 +71,98 @@ export const DateField = ({
   </div>
 )
 
+export const CheckboxField = ({
+  label,
+  name,
+  checkedValue,
+  uncheckedValue,
+  hint,
+  className,
+  inputClassName
+}) => {
+  return (
+    <div className={className}>
+      <Field name={name} type="checkbox">
+        {
+          ({ field, form }) => {
+            return (
+              <FormGroup check>
+                <Input
+                  type="checkbox"
+                  id={field.name}
+                  name={field.name}
+                  title={label}
+                  checked={form.values?.[name] == checkedValue}
+                  onClick={
+                    (e) => {
+                      form.setFieldValue(name, form.values?.[name] == checkedValue ? uncheckedValue : checkedValue)
+                    }
+                  }
+                  invalid={
+                    getIn(form.errors, field.name) && getIn(form.touched, field.name)
+                  }
+                  className={inputClassName}
+                />
+                <Label for={field.name} check>{label}</Label>
+              </FormGroup>
+            )
+          }
+        }
+      </Field>
+      <ErrorMessage name={name}>
+        {msg => <FormFeedback type="invalid">{msg}</FormFeedback>}
+      </ErrorMessage>
+      {hint ? <FormText>{hint}</FormText> : null}
+    </div>
+  )
+}
+
+export const RadioField = ({
+  label,
+  name,
+  value,
+  hint,
+  className,
+  inputClassName
+}) => {
+  return (
+    <div className={className}>
+      <Field name={name} type="radio">
+        {
+          ({ field, form }) => {
+            return (
+              <FormGroup check>
+                <Input
+                  type="radio"
+                  id={field.name + value.toString()}
+                  name={field.name}
+                  title={label}
+                  checked={form.values?.[name] === value}
+                  onChange={(e) => {}}
+                  onClick={
+                    (e) => {
+                      form.setFieldValue(name, value)
+                    }
+                  }
+                  invalid={
+                    getIn(form.errors, field.name) && getIn(form.touched, field.name)
+                  }
+                  className={inputClassName}
+                />
+                <Label for={field.name + value} check>{label}</Label>
+              </FormGroup>
+            )
+          }
+        }
+      </Field>
+      <ErrorMessage name={name}>
+        {msg => <FormFeedback type="invalid">{msg}</FormFeedback>}
+      </ErrorMessage>
+      {hint ? <FormText>{hint}</FormText> : null}
+    </div>
+  )
+}
+
 export const CheckboxArrayField = ({
   name,
   index,

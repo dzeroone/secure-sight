@@ -4,6 +4,7 @@ import scheduler from "./helper/cron.helper";
 build().then((app) => {
   scheduler.start()
   
+  console.log("Schedule processor started")
   
   /**
    * Gracefully stop job scheduler

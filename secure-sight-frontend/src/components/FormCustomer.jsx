@@ -1,6 +1,6 @@
 import { FieldArray, Formik } from "formik"
 import { Button, Card, CardBody, Col, Container, Form, FormFeedback, Label, Row } from "reactstrap"
-import { CheckboxArrayField, CheckboxField, DateField, InputField } from "./form-fields"
+import { CheckboxArrayField, CheckboxField, DateField, InputField, RadioField } from "./form-fields"
 
 import yup from "../helpers/yup.extras"
 import { useCallback, useEffect, useState } from "react"
@@ -159,6 +159,21 @@ export function FormCustomer({
                         </Col>
                       </Row>
                     </fieldset>
+                  </Col>
+                  <Col sm={12} className="py-4">
+                    <Label>Cyber Risk Exposure Management - CREM License?</Label>
+                    <div className="d-flex gap-4">
+                      <RadioField
+                        label="Yes"
+                        name="cremLicense"
+                        value={true}
+                      />
+                      <RadioField
+                        label="No"
+                        name="cremLicense"
+                        value={false}
+                      />
+                    </div>
                   </Col>
                   <Col sm={12}>
                     <fieldset className="border border-secondary rounded p-2">

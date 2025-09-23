@@ -4,6 +4,7 @@ import assignmentMessageModel from "../models/assignmentMessageModel"
 import assignmentModel, { AssignmentDocumentType } from "../models/assignmentModel"
 import assignmentScheduleModel from "../models/assignmentScheduleModel"
 import { dynamicModelWithDBConnection } from "../models/dynamicModel"
+import logger from "../utils/logger"
 import { ReportAssignmentValidationValues } from "../validators/report-assignment.validator"
 import assignmentReportController from "./assignment-report.controller"
 import customerController from "./customer.controller"
@@ -784,6 +785,55 @@ class AssignmentController {
       title: 'Report transfer',
       message: `You have been assigned as report creator of ${assignment.rType} report for ${customer.name}, session ( ${formatReportSession(assignment.rType as ReportType, info.date)} ).`
     })
+  }
+
+  async archive(assignment: AssignmentDocumentType, archivedBy: Express.User) {
+    if(!assignment.reportId) return 
+    
+    const rootAssingment = await this.getRootAssignment(assignment)
+    await this.reportApproved(rootAssingment!, assignment.reportId, archivedBy!)
+    logger.info({
+      msg: `${archivedBy?.fullname || archivedBy?.email} has approved the report for assignment:${assignment._id} of report_index:${assignment.index}`
+    })
+  }
+
+  async getPastRootAssignments(date: string, reportType: ReportType) {
+    return assignmentModel.aggregate([
+      {
+        $match: {
+          date: {
+            $lt: date
+          },
+          rType: reportType
+        }
+      },
+      {
+        $lookup: {
+          from: "assignments",
+          localField: "aBy",
+          foreignField: "reporterId",
+          as: "leaf",
+          let: {"rType": "$rType"},
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$rType", "$$rType"]}
+              }
+            }
+          ]
+        }
+      },
+      {
+        $match: {
+          "leaf": {
+            $size: 0
+          }
+        }
+      },
+      {
+        $unset: "leaf"
+      }
+    ])
   }
 
   private async _populateAssignmentsForCustomerForDate(customer: any, date: string, reportType: 'monthly' | 'weekly' = 'monthly', assignedBy?: string) {

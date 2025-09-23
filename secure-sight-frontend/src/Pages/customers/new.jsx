@@ -21,6 +21,7 @@ export default function NewCustomerPage(props) {
         to: '',
         cc: ''
       },
+      cremLicense: false,
       apiConfig: {
         apex: {
           baseUrl: '',

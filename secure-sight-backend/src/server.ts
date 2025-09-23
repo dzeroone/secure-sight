@@ -28,6 +28,22 @@ build().then(async (app) => {
   await job2.save()
   // -- end of auto assign reporter job
 
+  // schedule auto archive reports jobs
+  const monthlyReportArchiveJob = scheduler.create(SCHEDULE_JOB_NAME.ARCHIVE_REPORTS, {
+    reportType: 'monthly'
+  })
+  job1.unique({ 'data.reportType': 'monthly' })
+  job1.repeatEvery("0 0 1 * *"); //"0 0 1 * *"
+  await job1.save()
+
+  const weeklyReportArchiveJob = scheduler.create(SCHEDULE_JOB_NAME.ARCHIVE_REPORTS, {
+    reportType: 'weekly'
+  })
+  job2.unique({ 'data.reportType': 'weekly' })
+  job2.repeatEvery("0 0 * * 1")
+  await job2.save()
+  // -- end of auto archive reports job
+
   const PORT = process.env.PORT || 5001
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 
