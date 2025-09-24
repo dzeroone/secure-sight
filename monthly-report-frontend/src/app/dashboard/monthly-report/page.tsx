@@ -42,10 +42,13 @@ import {
   firstPage,
   resetMonthlyReportState,
   setCommonData,
+  updateAboutField,
+  updateESField,
   updateFromElasticData,
 } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import { Box, Grid } from "@mui/material";
+import { format } from "date-fns/format";
 import { useConfirm } from "material-ui-confirm";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
@@ -117,6 +120,11 @@ const MonthlyReportPage = () => {
           if (responseData.assignment) {
             dispatch(setAssignment(responseData.assignment));
           }
+          dispatch(updateAboutField({
+            path: ['date'],
+            value: format(responseData.date, "MMMM")
+          }))
+          dispatch(updateESField({ field: "date", value: format(responseData.date, "MMMM") }));
           dispatch(setCanSubmitReport(responseData.canSubmitReport || false));
         }
       } else {
