@@ -200,11 +200,10 @@ const ApexOneSummaryForm = () => {
         <h3>Top Endpoints Actions</h3>
         <Grid container spacing={2}>
           {data.tables.table1.map((item, index) => (
-            <Grid item xs={12}>
+            <Grid item xs={12} key={index}>
               <Grid
                 container
                 spacing={2}
-                key={index}
                 alignItems="center"
               >
                 <Grid item xs={11}>
