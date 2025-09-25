@@ -132,9 +132,9 @@ const MonthlyReportPage = () => {
           }
           dispatch(updateAboutField({
             path: ['date'],
-            value: format(responseData.date, "MMMM")
+            value: format(responseData.date, "MMMM yyyy")
           }))
-          dispatch(updateESField({ field: "date", value: format(responseData.date, "MMMM") }));
+          dispatch(updateESField({ field: "date", value: format(responseData.date, "MMMM yyyy") }));
           dispatch(updateDSField({ field: "date", value: format(responseData.date, "MMMM yyyy") }));
 
           // populate product assetment form using previous month's data
