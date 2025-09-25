@@ -44,6 +44,7 @@ import {
   resetMonthlyReportState,
   setCommonData,
   updateAboutField,
+  updateDSField,
   updateESField,
   updateFromElasticData,
   updatePARTMProduct
@@ -134,6 +135,7 @@ const MonthlyReportPage = () => {
             value: format(responseData.date, "MMMM")
           }))
           dispatch(updateESField({ field: "date", value: format(responseData.date, "MMMM") }));
+          dispatch(updateDSField({ field: "date", value: format(responseData.date, "MMMM yyyy") }));
 
           // populate product assetment form using previous month's data
           if(prevMonthData?.product_assessment_report && Array.isArray(prevMonthData.product_assessment_report)) {
