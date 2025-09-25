@@ -21,7 +21,7 @@ const DetailedSummary = () => {
           Detailed Summary
         </p>
         <p style={{ fontSize: 24, color: "#000" }}>
-          A total number of <strong>{data.no_of_incidents}</strong> {pluralizeWithMapping(Number(data.no_of_incidents) || 0, {one: "was", other: "were"})}{" "}
+          A total number of <strong>{data.no_of_incidents} {pluralizeWithMapping(Number(data.no_of_incidents) || 0, {one: "Incident", other: "Incidents"})}</strong> {pluralizeWithMapping(Number(data.no_of_incidents) || 0, {one: "was", other: "were"})}{" "}
           observed during the month of <strong>{data.date}</strong>.
         </p>
       </div>

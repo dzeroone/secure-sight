@@ -192,7 +192,7 @@
             Detailed Summary
             </p>
             <p style="font-size: 19px; color: #000;">
-            A total number of <strong><%= data.detailed_summary.no_of_incidents %></strong> <%= pluralizeWithMapping(Number(data.detailed_summary.no_of_incidents) || 0, {one: "was", other: "were"}) %> observed during the month of <strong><%= data.detailed_summary.date %></strong>.
+            A total number of <strong><%= data.detailed_summary.no_of_incidents %> <%= pluralizeWithMapping(Number(data.no_of_incidents) || 0, {one: "Incident", other: "Incidents"}) %></strong> <%= pluralizeWithMapping(Number(data.detailed_summary.no_of_incidents) || 0, {one: "was", other: "were"}) %> observed during the month of <strong><%= data.detailed_summary.date %></strong>.
             </p>
         </div>
         <% if(data.detailed_summary.risk_index_chart.datasets.length > 0) { %>
