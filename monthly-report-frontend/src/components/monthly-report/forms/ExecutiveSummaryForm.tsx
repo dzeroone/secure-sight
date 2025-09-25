@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
-import { Grid, TextField } from "@mui/material";
+import { Divider, Grid, TextField } from "@mui/material";
 import {
   updateESField,
   updateESDataField,
@@ -42,56 +42,65 @@ const ExecutiveSummaryForm = () => {
         />
       </Grid>
       {report.data.map((item, i) => (
-        <Grid container item xs={12} spacing={2} key={i}>
+        <Fragment key={i}>
           <Grid item xs={12}>
-            <TextField
-              label="Title"
-              variant="outlined"
-              value={item.title}
-              onChange={(e) => handleDataChange(i, "title", e.target.value)}
-              fullWidth
-            />
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  label="Title"
+                  variant="outlined"
+                  value={item.title}
+                  onChange={(e) => handleDataChange(i, "title", e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              {item.desc != null && (
+                <Grid item xs={12}>
+                  <TextField
+                    label="Description"
+                    variant="outlined"
+                    value={item.desc}
+                    onChange={(e) => handleDataChange(i, "desc", e.target.value)}
+                    minRows={3}
+                    multiline
+                    fullWidth
+                  />
+                </Grid>
+              )}
+              {item.sub?.map((subItem, j) => (
+                <Grid item xs={12} mt={2} key={j}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        label={`Sub Item ${j + 1} Title`}
+                        variant="outlined"
+                        value={subItem.title}
+                        onChange={(e) =>
+                          handleSubDataChange(i, j, "title", e.target.value)
+                        }
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        label={`Sub Item ${j + 1} Description`}
+                        variant="outlined"
+                        value={subItem.desc}
+                        onChange={(e) =>
+                          handleSubDataChange(i, j, "desc", e.target.value)
+                        }
+                        minRows={3}
+                        multiline
+                        fullWidth
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
-          {item.desc !== "" && (
-            <Grid item xs={12}>
-              <TextField
-                label="Description"
-                variant="outlined"
-                value={item.desc}
-                onChange={(e) => handleDataChange(i, "desc", e.target.value)}
-                multiline
-                fullWidth
-              />
-            </Grid>
-          )}
-          {item.sub?.map((subItem, j) => (
-            <Grid container item xs={12} spacing={2} key={j}>
-              <Grid item xs={12}>
-                <TextField
-                  label={`Sub Item ${j + 1} Title`}
-                  variant="outlined"
-                  value={subItem.title}
-                  onChange={(e) =>
-                    handleSubDataChange(i, j, "title", e.target.value)
-                  }
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label={`Sub Item ${j + 1} Description`}
-                  variant="outlined"
-                  value={subItem.desc}
-                  onChange={(e) =>
-                    handleSubDataChange(i, j, "desc", e.target.value)
-                  }
-                  multiline
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-          ))}
-        </Grid>
+          {i != report.data.length - 1 ? <Grid item xs={12}><Divider /></Grid> : null}
+        </Fragment>
       ))}
     </Grid>
   );

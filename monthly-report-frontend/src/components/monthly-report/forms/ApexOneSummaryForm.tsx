@@ -196,84 +196,147 @@ const ApexOneSummaryForm = () => {
       </Grid>
 
       {/* Table 1 for Files Actions */}
-      <Grid container item xs={12} spacing={2}>
+      <Grid item xs={12}>
         <h3>Top Endpoints Actions</h3>
-        {data.tables.table1.map((item, index) => (
-          <Grid
-            container
-            item
-            xs={12}
-            spacing={2}
-            key={index}
-            alignItems="center"
-          >
-            <Grid item xs={6}>
-              <TextField
-                label="File Cleaned"
-                variant="outlined"
-                value={item.file_cleaned || ""}
-                onChange={(e) =>
-                  handleUpdateTableEntry(
-                    "table1",
-                    index,
-                    "file_cleaned",
-                    e.target.value
-                  )
-                }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="File Quarantined"
-                variant="outlined"
-                value={item.file_quarantined || ""}
-                onChange={(e) =>
-                  handleUpdateTableEntry(
-                    "table1",
-                    index,
-                    "file_quarantined",
-                    e.target.value
-                  )
-                }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="File Deleted"
-                variant="outlined"
-                value={item.file_deleted || ""}
-                onChange={(e) =>
-                  handleUpdateTableEntry(
-                    "table1",
-                    index,
-                    "file_deleted",
-                    e.target.value
-                  )
-                }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1}>
-              <IconButton
-                aria-label="delete"
-                color="primary"
-                onClick={() => handleRemoveTableEntry("table1", index)}
+        <Grid container spacing={2}>
+          {data.tables.table1.map((item, index) => (
+            <Grid item xs={12}>
+              <Grid
+                container
+                spacing={2}
+                key={index}
+                alignItems="center"
               >
-                <ClearIcon />
-              </IconButton>
+                <Grid item xs={11}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="File Cleaned"
+                        variant="outlined"
+                        value={item.file_cleaned || ""}
+                        onChange={(e) =>
+                          handleUpdateTableEntry(
+                            "table1",
+                            index,
+                            "file_cleaned",
+                            e.target.value
+                          )
+                        }
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="Count"
+                        variant="outlined"
+                        type="number"
+                        value={
+                          item.fc_v ? item.fc_v : 0
+                        }
+                        onChange={(e) =>
+                          handleUpdateTableEntry(
+                            "table1",
+                            index,
+                            "fc_v",
+                            e.target.value
+                          )
+                        }
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="File Quarantined"
+                        variant="outlined"
+                        value={item.file_quarantined || ""}
+                        onChange={(e) =>
+                          handleUpdateTableEntry(
+                            "table1",
+                            index,
+                            "file_quarantined",
+                            e.target.value
+                          )
+                        }
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="Count"
+                        variant="outlined"
+                        type="number"
+                        value={
+                          item.fq_v ? item.fq_v : 0
+                        }
+                        onChange={(e) =>
+                          handleUpdateTableEntry(
+                            "table1",
+                            index,
+                            "fq_v",
+                            e.target.value
+                          )
+                        }
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="File Deleted"
+                        variant="outlined"
+                        value={item.file_deleted || ""}
+                        onChange={(e) =>
+                          handleUpdateTableEntry(
+                            "table1",
+                            index,
+                            "file_deleted",
+                            e.target.value
+                          )
+                        }
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="Count"
+                        variant="outlined"
+                        type="number"
+                        value={
+                          item.fd_v ? item.fd_v : 0
+                        }
+                        onChange={(e) =>
+                          handleUpdateTableEntry(
+                            "table1",
+                            index,
+                            "fd_v",
+                            e.target.value
+                          )
+                        }
+                        fullWidth
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={1}>
+                  <IconButton
+                    aria-label="delete"
+                    color="primary"
+                    onClick={() => handleRemoveTableEntry("table1", index)}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
             </Grid>
+          ))}
+          <Grid item xs={12}>
+            <Button
+              onClick={() => handleAddTableEntry("table1")}
+              color="primary"
+              variant="contained"
+            >
+              Add Endpoint
+            </Button>
           </Grid>
-        ))}
-        <Grid item xs={12}>
-          <Button
-            onClick={() => handleAddTableEntry("table1")}
-            color="primary"
-            variant="contained"
-          >
-            Add Endpoint
-          </Button>
         </Grid>
       </Grid>
       <Grid item xs={12}>

@@ -86,7 +86,7 @@ router.post("/data/search",
       }
 
       // alu
-      // const response = weekly
+      // const response = monthly
       
 
       const test = req.body.test;

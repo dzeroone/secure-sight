@@ -1,5 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import BrandLogo from "@@/assets/images/logo.png";
+import { useAuth } from "@@/providers/AuthProvider";
+import { Home } from "@mui/icons-material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   Box,
   Button,
@@ -13,17 +18,9 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import MuiDrawer from "@mui/material/Drawer";
 import { useState } from "react";
-import Link from "next/link";
-import { DASHBOARD, MONTHLY_REPORT, WEEKLY_REPORT } from "@@/constants/routes";
-import BrandLogo from "@@/assets/images/logo.png";
-import { Home, LibraryBooks } from "@mui/icons-material";
-import { useAuth } from "@@/providers/AuthProvider";
 
 const drawerWidth: number = 240;
 
@@ -136,7 +133,7 @@ const Navbar = ({
           <Box>
             <img
               src={BrandLogo.src}
-              style={{ width: "100px", maxHeight: "80px" }}
+              style={{ width: "140px", maxHeight: "80px" }}
               alt=""
             />
           </Box>

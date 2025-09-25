@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppSelector } from "@@/lib/hooks";
+import RecommendationNotes from "../RecommendationNotes";
 
 const PendingIncidentsSummary = () => {
   const data = useAppSelector(
@@ -56,6 +57,7 @@ const PendingIncidentsSummary = () => {
           ))}
         </tbody>
       </table>
+      <RecommendationNotes notes={data.notes} />
     </div>
   );
 };

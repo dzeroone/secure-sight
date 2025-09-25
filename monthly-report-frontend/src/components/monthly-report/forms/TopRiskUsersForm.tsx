@@ -70,7 +70,7 @@ const TopRiskUsersForm = () => {
       </Grid>
 
       <Grid item xs={12}>
-        <h3>Top Risk Users Chart</h3>
+        <h3>Top High Risk Users Chart</h3>
       </Grid>
 
       {data.risk_score_chart.key.map((label, index) => (

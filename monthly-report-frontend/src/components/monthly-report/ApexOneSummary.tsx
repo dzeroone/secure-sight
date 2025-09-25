@@ -98,9 +98,9 @@ const ApexOneSummary = () => {
                     }}
                     key={j}
                   >
-                    <td>{i.file_cleaned}</td>
-                    <td>{i.file_quarantined}</td>
-                    <td>{i.file_deleted}</td>
+                    <td>{i.file_cleaned} ({i.fc_v || 0})</td>
+                    <td>{i.file_quarantined} ({i.fq_v || 0})</td>
+                    <td>{i.file_deleted} ({i.fd_v || 0})</td>
                   </tr>
                 ))}
               </tbody>

@@ -1,7 +1,7 @@
 "use client";
 import { useAppSelector } from "@@/lib/hooks";
 import DoughnutChart from "../charts/DoughnutChart";
-import { pluralize } from "@@/helper/helper";
+import { pluralize, pluralizeWithMapping } from "@@/helper/helper";
 
 const DetailedSummary = () => {
   const data = useAppSelector((state) => state.monthlyReport.detailed_summary);
@@ -21,7 +21,7 @@ const DetailedSummary = () => {
           Detailed Summary
         </p>
         <p style={{ fontSize: 24, color: "#000" }}>
-          A total number of <strong>{data.no_of_incidents}</strong> were
+          A total number of <strong>{data.no_of_incidents}</strong> {pluralizeWithMapping(Number(data.no_of_incidents) || 0, {one: "was", other: "were"})}{" "}
           observed during the month of <strong>{data.date}</strong>.
         </p>
       </div>
@@ -77,7 +77,7 @@ const DetailedSummary = () => {
           </li>
           <li style={{ fontSize: 24, marginBottom: "1rem" }}>
             <strong>
-              {pluralize(Number(data.incidents_closed) || 0, "Incident")}
+              {data.incidents_closed || 0} {pluralizeWithMapping(Number(data.incidents_closed) || 0, {one: "Incident", other:"Incidents"})}
             </strong>{" "}
             Closed without customer resolution.
           </li>

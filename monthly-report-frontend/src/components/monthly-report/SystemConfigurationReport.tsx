@@ -24,8 +24,8 @@ const SystemConfigurationReport = () => {
             <tr style={{ backgroundColor: "#090c9b", color: "white" }}>
               <th
                 // colSpan={2}
-                style={{ padding: 24, width: "40%" }}
-              ></th>
+                style={{ padding: 24, width: "40%", textAlign: "left", textTransform: "uppercase" }}
+              >Internal Assets</th>
               <th style={{ padding: 24 }}></th>
             </tr>
           </thead>

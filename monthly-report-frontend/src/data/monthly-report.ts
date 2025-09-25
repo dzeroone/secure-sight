@@ -88,12 +88,12 @@ export const monthlyReportInitialValue = {
                 "link": "top_vulnerabilities_detected"
             },
             {
-                "title": "Top Risk Devices",
+                "title": "Top High Risk Devices",
                 "page_no": "21",
                 "link": "top_risk_devices"
             },
             {
-                "title": "Top Risk Users",
+                "title": "Top High Risk Users",
                 "page_no": "22",
                 "link": "top_risk_users"
             },
@@ -274,85 +274,85 @@ export const monthlyReportInitialValue = {
         "data": [
             {
                 "title": "Incidents Overview by SOC Team",
-                "desc": "",
+                // "desc": "",
                 "sub": [
                     {
                         "title": "Possible Spear Phishing Attack via Link",
-                        "desc": "A suspicious URL associated with phishing attacks was detected in an email message. The SOC team identified various URLs and shared the detailed investigation for the same."
+                        "desc": ""
                     },
                     {
                         "title": "Hacking Tool Detection – Blocked",
-                        "desc": "A hacking tool, used for cracking computer and network security or by system administrators to test security, was detected and blocked on an endpoint. The SOC team identified various malware detections and shared all the information regarding the incidents with the required action."
+                        "desc": ""
                     },
                     {
                         "title": "Suspicious File Creation in Uncommon Folder",
-                        "desc": "Identified file creation in uncommon folder which is usually leveraged by adversary to drop malicious payload. The SOC team shared all the relevant information related to the cases for the action needed to be taken."
+                        "desc": ""
                     },
                     {
                         "title": "Targeted Attack Detection: Removal of Access to Common Administrative or Troubleshooting Tools",
-                        "desc": "This behavior often indicates malicious intent or unauthorized system modification attempts. SOC team observed it was detected by analyzing the behavior of the process and shared all the information regarding the incidents for the required action."
+                        "desc": ""
                     },
                     {
                         "title": "Possible Spear Phishing Attack on High-profile User via Link",
-                        "desc": "A suspicious URL associated with phishing attacks was detected in an email message sent to a high-profile user. The SOC team identified the sender emails and shared all the information regarding the incidents for the required action."
+                        "desc": ""
                     }
                 ]
             },
             {
                 "title": "Action Performed by SOC Team",
-                "desc": "",
+                // "desc": "",
                 "sub": [
                     {
                         "title": "Possible Spear Phishing Attack via Link",
-                        "desc": "While investigating, the SOC team identified various URLs: [hxxps]:[/][/]wwwyoutube[.]com[/]watch?v=a7YQ5DEho1w, [hxxps]:[/][/]docs[.]google[.]com[/]forms[/]d[/]e[/]1FAIpQLScdOeUQR7wPm1WiV4oJOVBFOsLgmrbu22bRNBDPbJN0cBdZPw[/]viewform, http:[/][/]surl[.]li[/]jwktc*, http:[/][/]www[.]kotharimed[.]com. The SOC team shared the detailed investigation for the same."
+                        "desc": ""
                     },
                     {
                         "title": "Hacking Tool Detection – Blocked",
-                        "desc": "While investigating, the SOC team identified various malware detections: HackTool[.]Win32[.]NeatDM[.]A, HackTool[.]Win32[.]MIMIKATZ[.]CNFK, HKTL_AMMYADMN, HackTool[.]Win64[.]PassView[.]C. The SOC team shared all the information regarding the incidents with the required action."
+                        "desc": ""
                     },
                     {
                         "title": "Suspicious File Creation in Uncommon Folder",
-                        "desc": "The alert indicates that various suspicious files were created in an unusual location on the endpoint. The SOC team has shared all the relevant information related to the cases for action need to be taken."
+                        "desc": ""
                     },
                     {
                         "title": "Targeted Attack Detection: Removal of Access to Common Administrative or Troubleshooting Tools",
-                        "desc": "The alert was triggered because someone or something disabled access to Task Manager, which is a common tool used for troubleshooting and managing tasks on a computer. SOC team observed that it was detected by analyzing the behavior of the process SmartClientSvc[.]exe, which was launched by another program called services.exe. The SOC team shared all the information regarding the incidents for the required action."
+                        "desc": ""
                     },
                     {
                         "title": "Possible Spear Phishing Attack on High-profile User via Link",
-                        "desc": "While investigating, the SOC team identified the Sender: prathama_ghosal@XXX[.]com, dxlulevu@gmail[.]com, suketukothari@XXXX[.]com. The SOC team shared all the information regarding the incidents for the required action."
+                        "desc": ""
                     }
                 ]
             },
             {
                 "title": "Recommendations by SOC Team",
-                "desc": "",
+                // "desc": "",
                 "sub": [
                     {
                         "title": "Possible Spear Phishing Attack via Link",
-                        "desc": "Preventing spear phishing attacks via links involves several strategies such as verifying the link without clicking, employing web proxies or web gateways, and ensuring regular updates and patches to mitigate the risks associated with clicking on suspicious links."
+                        "desc": ""
                     },
                     {
                         "title": "Hacking Tool Detection – Blocked",
-                        "desc": "Implement access controls and strong authentication methods to prevent unauthorized access to sensitive systems. This includes deploying robust authentication mechanisms and continuously monitoring for any unauthorized access attempts."
+                        "desc": ""
                     },
                     {
                         "title": "Suspicious File Creation in Uncommon Folder",
-                        "desc": "Implement file monitoring solutions to detect and alert on suspicious file activities in real-time. Regularly review and update security policies to restrict access to critical folders and files, thereby reducing the risk of unauthorized file creation and potential malware deployment."
+                        "desc": ""
                     },
                     {
                         "title": "Targeted Attack Detection: Removal of Access to Common Administrative or Troubleshooting Tools",
-                        "desc": "Review and tighten access controls to common administrative and troubleshooting tools. Limit access to privileged accounts, regularly audit permissions, and implement multi-factor authentication (MFA) for accessing critical systems and applications to add an extra layer of security against targeted attacks."
+                        "desc": ""
                     },
                     {
                         "title": "Possible Spear Phishing Attack on High-profile User via Link",
-                        "desc": "Preventing spear phishing attacks via links involves strategies like verifying the link without clicking, employing web proxies or web gateways, and ensuring regular updates and patches. These measures help mitigate the risks associated with clicking on suspicious links sent to high-profile users."
+                        "desc": ""
                     }
                 ]
             },
             {
                 "title": "Conclusion",
-                "desc": "The MXDR SOCaaS provided comprehensive monitoring and incident response throughout the month of Month 202X. It has effectively mitigated various security incidents, safeguarding the organization's digital assets and infrastructure. The observations and recommendations in this report underline the importance of maintaining a proactive and adaptive cybersecurity strategy. For a detailed account of security incidents, resolutions, and performance metrics, please refer to the full MXDR SOCaaS monthly report for Month202X"
+                "desc": ""
             }
         ]
     },
@@ -723,7 +723,13 @@ export const monthlyReportInitialValue = {
                     "action_performed": ""
                 }
             },
-        ]
+        ],
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "pending_incident_summary": {
         "id": "waiting_incidents_summary",
@@ -734,7 +740,13 @@ export const monthlyReportInitialValue = {
                 "no_of_occurrence": "",
                 "severity": ""
             }
-        ]
+        ],
+        "notes": [
+            {
+                "key": "",
+                "data": [""]
+            }
+        ],
     },
     "slo_summary": {
         "id": "slo_summary",
@@ -825,8 +837,11 @@ export const monthlyReportInitialValue = {
             "table1": [
                 {
                     "file_cleaned": "",
+                    "fc_v": 0,
                     "file_quarantined": "",
-                    "file_deleted": ""
+                    "fq_v": 0,
+                    "file_deleted": "",
+                    "fd_v": 0
                 },
             ],
             "table2": [

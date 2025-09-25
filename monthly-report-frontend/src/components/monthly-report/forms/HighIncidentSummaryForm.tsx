@@ -6,10 +6,11 @@ import {
   removeHISIncident,
   updateHISIncident,
 } from "@@/lib/features/monthly-report/monthlySlice";
+import RecommendationInput from "@@/components/RecommendationInput";
 
 const HighIncidentSummaryForm = () => {
   const report = useAppSelector(
-    (state) => state.monthlyReport?.high_incident_summary.data
+    (state) => state.monthlyReport?.high_incident_summary
   );
   const dispatch = useAppDispatch();
   const handleChange = (index: number, field: string, value: string) => {
@@ -25,7 +26,7 @@ const HighIncidentSummaryForm = () => {
   };
   return (
     <Grid container spacing={3} p={2}>
-      {report.map((item, i) => (
+      {report.data.map((item, i) => (
         <Grid container item xs={12} alignItems="center" key={i}>
           <Grid container item xs={11} spacing={2} alignItems="center">
             <Grid item xs={6}>
@@ -112,6 +113,12 @@ const HighIncidentSummaryForm = () => {
         <Button variant="contained" color="primary" onClick={handleAdd}>
           Add
         </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <RecommendationInput
+            values={report.notes}
+            entity="high_incident_summary"
+          />
       </Grid>
     </Grid>
   );

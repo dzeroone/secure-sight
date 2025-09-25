@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import eventusLogoHorizontal from "../../assets/images/eventus_logo_horizontal.png";
+import logo from "../../assets/images/logo-light.png";
 import NotificationDropdown from "../../components/Common/TopbarDropdown/NotificationDropdown";
 import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
 import {
@@ -135,7 +135,7 @@ const Header = (props) => {
           }}
         >
           <div className="d-flex align-items-center justify-content-between w-100">
-            <img src={eventusLogoHorizontal} alt="eventus" width='128px' className="me-4" />
+            <img src={logo} alt="eventus" width='128px' className="me-4" />
             <div className="loading-bar" />
             <div className="d-flex align-items-center">
               <button

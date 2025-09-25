@@ -6,10 +6,11 @@ import {
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import { Button, Grid, IconButton, TextField } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import RecommendationInput from "@@/components/RecommendationInput";
 
 const PendingIncidentsSummaryForm = () => {
   const report = useAppSelector(
-    (state) => state.monthlyReport?.pending_incident_summary.data
+    (state) => state.monthlyReport?.pending_incident_summary
   );
 
   const dispatch = useAppDispatch();
@@ -17,7 +18,7 @@ const PendingIncidentsSummaryForm = () => {
     const updatedItem = {
       index: index,
       data: {
-        ...report[index],
+        ...report.data[index],
         [field]: value,
       },
     };
@@ -40,7 +41,7 @@ const PendingIncidentsSummaryForm = () => {
 
   return (
     <Grid container xs={12} rowSpacing={3} p={2}>
-      {report.map((item, i) => (
+      {report.data.map((item, i) => (
         <Grid container item xs={12} spacing={2} key={i} alignItems="center">
           <Grid container item xs={11} spacing={2}>
             <Grid item xs={6}>
@@ -99,6 +100,12 @@ const PendingIncidentsSummaryForm = () => {
         <Button variant="contained" color="primary" onClick={handleAdd}>
           Add
         </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <RecommendationInput
+          values={report.notes}
+          entity="pending_incident_summary"
+        />
       </Grid>
     </Grid>
   );

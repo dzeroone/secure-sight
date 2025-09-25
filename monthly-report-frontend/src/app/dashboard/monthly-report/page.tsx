@@ -39,19 +39,21 @@ import {
   setStatusFromServer,
 } from "@@/lib/features/monthly-report/monthlyPageStateSlice";
 import {
+  addPARTMProduct,
   firstPage,
   resetMonthlyReportState,
   setCommonData,
   updateAboutField,
   updateESField,
   updateFromElasticData,
+  updatePARTMProduct
 } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import { Box, Grid } from "@mui/material";
 import { format } from "date-fns/format";
 import { useConfirm } from "material-ui-confirm";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const MonthlyReportPage = () => {
   const report = useAppSelector((state) => state.monthlyReport);
@@ -64,6 +66,7 @@ const MonthlyReportPage = () => {
   const confirm = useConfirm();
   const router = useRouter();
   const pathname = usePathname();
+  const [reportDate, setReportDate] = useState("")
 
   const getElasticData = useCallback(async () => {
     try {
@@ -95,9 +98,15 @@ const MonthlyReportPage = () => {
           responseType: "json",
         });
 
+        const previousMonthsRes = await axiosApi.get(`/assignment-reports/previous-month/${payload.index}`, {
+          responseType: "json",
+        });
+        const prevMonthData = previousMonthsRes.data;
+
         const responseData = res.data;
         if (responseData && responseData.data) {
           const data = responseData.data;
+          setReportDate(responseData.date)
 
           if (responseData.commonData) {
             dispatch(setCommonData(responseData.commonData));
@@ -125,8 +134,28 @@ const MonthlyReportPage = () => {
             value: format(responseData.date, "MMMM")
           }))
           dispatch(updateESField({ field: "date", value: format(responseData.date, "MMMM") }));
+
+          // populate product assetment form using previous month's data
+          if(prevMonthData?.product_assessment_report && Array.isArray(prevMonthData.product_assessment_report)) {
+            const tmProducts = prevMonthData.product_assessment_report.tm_products_summary
+            for( let i=report.product_assessment_report.tm_products_summary.length, l=tmProducts.length; i<l; i++) {
+              dispatch(addPARTMProduct())
+            }
+            tmProducts.forEach((tmp: any, i: number) => {
+              dispatch(updatePARTMProduct({
+                index: i, field: 'tm_product', value: tmp['tm_product']
+              }));
+              dispatch(updatePARTMProduct({
+                index: i, field: 'connection_status', value: tmp['connection_status']
+              }));
+              dispatch(updatePARTMProduct({
+                index: i, field: 'identifier', value: tmp['identifier']
+              }));
+            })
+          }
           dispatch(setCanSubmitReport(responseData.canSubmitReport || false));
         }
+        // end
       } else {
         router.push("monthly-report/saved");
       }
@@ -152,7 +181,9 @@ const MonthlyReportPage = () => {
   return (
     <Grid container>
       <Grid item xs={3.5}>
-        <MonthlyReportForm />
+        {reportDate ? (
+          <MonthlyReportForm reportDate={reportDate} />
+        ) : null}
       </Grid>
       <Grid item xs={8.5} style={{ borderLeft: "1px solid #ccc" }}>
         <Box

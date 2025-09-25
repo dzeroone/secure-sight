@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppSelector } from "@@/lib/hooks";
+import RecommendationNotes from "../RecommendationNotes";
 
 const HighIncidentsSummary = () => {
   const data = useAppSelector(
@@ -72,6 +73,9 @@ const HighIncidentsSummary = () => {
           ))}
         </tbody>
       </table>
+      <div>
+        <RecommendationNotes notes={data.notes} />
+      </div>
     </div>
   );
 };

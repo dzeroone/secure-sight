@@ -6,8 +6,9 @@ import { WeeklyReportEditValidationValues, WeeklyReportValidationValues } from "
 import { ReportType } from "./assignment.controller"
 import pdfController from "./pdf.controller"
 import path from "path"
-import { extractInfoFromIndex } from "../helper/reports.helper"
+import { extractInfoFromIndex, getMonthlyReportIndex, getWeeklyReportIndex } from "../helper/reports.helper"
 import customerController from "./customer.controller"
+import { format, subDays, subMonths } from "date-fns"
 
 class AssignmentReportController {
   async getPaginated(query: any, user: Express.User, reportType: ReportType) {
@@ -253,6 +254,24 @@ class AssignmentReportController {
     return {
       total: count,
       items: reportData
+    }
+  }
+
+  async getPreviousMonthReport(index: string) {
+    const { date, tCode, rType } = extractInfoFromIndex(index)
+    const previousDate = rType == "monthly" ? format(subMonths(new Date(date), 1), 'yyyy-MM-dd') : format(subDays(new Date(date), 7), 'yyyy-MM-dd')
+    const previousIndex = rType == "monthly" ? getMonthlyReportIndex(previousDate, tCode) : getWeeklyReportIndex(previousDate, tCode)
+    
+    // console.log(previousDate, previousIndex)
+    
+    const report = await assignmentReportModel.findOne({
+      reporterId: {$exists: true},
+      index: previousIndex
+    }).lean()
+    if(report) {
+      return report.data
+    }else{
+      return {}
     }
   }
 

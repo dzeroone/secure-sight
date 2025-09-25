@@ -22,8 +22,7 @@ const RiskMetrics = () => {
         Risk Metrics
       </p>
       <p style={{ fontSize: 24, color: "#000" }}>
-        Provide security risk metrics that give an at-a-glance view of the
-        security landscape of the <strong>{data.date}</strong>.
+        Provide security risk metrics that offer an at-a-glance view of the security landscape for <strong>{data.date}</strong>.
       </p>
       <div>
         <p

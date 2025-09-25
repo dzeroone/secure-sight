@@ -40,6 +40,21 @@ router.get('/approved',
   }
 )
 
+router.get('/previous-month/:index',
+  auth,
+  async (req, res) => {
+    try {
+      if(!req.params.index) throw new Error("no index")
+      const data = await assignmentReportController.getPreviousMonthReport(req.params.index)
+      res.json(data)
+    }catch(e: any) {
+      res.status(e.status || 400).send({
+        message: e.message
+      })
+    }
+  }
+)
+
 router.get('/:reportType(monthly|weekly)',
   auth,
   async (req, res) => {

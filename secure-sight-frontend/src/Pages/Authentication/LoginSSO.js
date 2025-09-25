@@ -13,7 +13,7 @@ import {
   Label,
   Row
 } from "reactstrap";
-import eventusLogoHorizontal from "../../assets/images/eventus_logo_vertical.png";
+import logo from "../../assets/images/logo-light.png";
 import withRouter from "../../components/Common/withRouter";
 import { getMSALApplication } from "../../helpers/azure_sso.helper";
 import { getErrorMessage, setDocumentTitle } from "../../helpers/utils";
@@ -137,7 +137,7 @@ const LoginSSO = (props) => {
           <Row className="justify-content-between align-items-center">
             <Col lg={6}>
               <div className="text-center">
-                <img src={eventusLogoHorizontal} alt="eventus" width='150px' className="mb-4" />
+                <img src={logo} alt="eventus" width='150px' className="mb-4" />
               </div>
               <h1
                 className="h1"

@@ -18,7 +18,7 @@ const TopRiskDevice = () => {
           color: "#090c9b",
         }}
       >
-        Top Risk Devices
+        Top High Risk Devices
       </p>
       <div
         style={{

@@ -192,7 +192,7 @@
             Detailed Summary
             </p>
             <p style="font-size: 19px; color: #000;">
-            A total number of <strong><%= data.detailed_summary.no_of_incidents %></strong> were observed during the month of <strong><%= data.detailed_summary.date %></strong>.
+            A total number of <strong><%= data.detailed_summary.no_of_incidents %></strong> <%= pluralizeWithMapping(Number(data.detailed_summary.no_of_incidents) || 0, {one: "was", other: "were"}) %> observed during the month of <strong><%= data.detailed_summary.date %></strong>.
             </p>
         </div>
         <% if(data.detailed_summary.risk_index_chart.datasets.length > 0) { %>
@@ -223,7 +223,7 @@
                 <strong><%= data.detailed_summary.highly_exploitable %> CVEs detected</strong> in internal assets.
             </li>
             <li style="font-size: 19px; margin-bottom: 1rem;">
-                <strong><%= pluralize(Number(data.detailed_summary.incidents_closed) || 0, "Incident") %></strong> Closed without customer resolution.
+                <strong><%= data.detailed_summary.incidents_closed || 0 %> <%= pluralizeWithMapping(Number(data.detailed_summary.incidents_closed) || 0, {one: "Incident", other: "Incidents"}) %></strong> Closed without customer resolution.
             </li>
             </ul>
         </div>
@@ -284,7 +284,7 @@
             Risk Metrics
         </p>
         <p style="font-size: 19px; color: #000;">
-            Provide security risk metrics that give an at-a-glance view of the security landscape of the <strong><%= data.risk_metrics.date %></strong>.
+            Provide security risk metrics that offer an at-a-glance view of the security landscape for <strong><%= data.risk_metrics.date %></strong>.
         </p>
         <div>
             <p style="font-size: 26px; font-weight: bold; color: #090c9b; margin-bottom: 0;">
@@ -957,6 +957,9 @@
             <% }); %>
           </tbody>
         </table>
+        <div>
+          <%- include('./partials/recommendations', { notes: data.high_incident_summary.notes }) %>
+        </div>
     </div>
     <% } %>
 
@@ -1062,9 +1065,9 @@
                 <tbody>
                   <% data.detection_summary_apex_one.tables.table1.forEach((item, i) => { %>
                   <tr style="font-size: 20px;" key="<%= i %>">
-                    <td><%= item.file_cleaned %></td>
-                    <td><%= item.file_quarantined %></td>
-                    <td><%= item.file_deleted %></td>
+                    <td><%= item.file_cleaned %> (<%= item.fc_v || 0 %>)</td>
+                    <td><%= item.file_quarantined %> (<%= item.fq_v || 0 %>)</td>
+                    <td><%= item.file_deleted %> (<%= item.fd_v || 0 %>)</td>
                   </tr>
                   <% }); %>
                 </tbody>
@@ -1329,7 +1332,7 @@
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="background-color: #090c9b; color: white;">
-                <th style="padding: 24; width: 40%;"></th>
+                <th style="padding: 24; width: 40%; text-align: left; text-transform: uppercase;">Internal Assets</th>
                 <th style="padding: 24;"></th>
               </tr>
             </thead>

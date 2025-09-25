@@ -3,7 +3,7 @@ import ejs from 'ejs';
 import { PDFDocument } from "pdf-lib";
 import path from "path";
 import { signAuthToken } from "../helper/token.helper";
-import { pluralize } from "../helper/string.helper";
+import { pluralize, pluralizeWithMapping } from "../helper/string.helper";
 import { CHART_EXTRAS } from "../constant";
 
 class PdfController {
@@ -37,7 +37,7 @@ class PdfController {
       });
 
       // Generate the second PDF
-      const html2 = await ejs.renderFile(path.resolve("./src/pdf-template/pdf.ejs"), { data, pluralize, CHART_EXTRAS });
+      const html2 = await ejs.renderFile(path.resolve("./src/pdf-template/pdf.ejs"), { data, pluralize, pluralizeWithMapping, CHART_EXTRAS });
       const page2 = await browser.newPage();
       await page2.setContent(html2, {
         waitUntil: ["load", "networkidle0", "domcontentloaded"],

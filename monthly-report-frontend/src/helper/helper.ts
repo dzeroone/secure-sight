@@ -1,6 +1,9 @@
 import { DASHBOARD_REDUX_STATE, REPORT_AUDIT_STATUS_LABEL, REPORT_STATUS_LABEL } from "@@/constants";
 import { format } from "date-fns/format";
 
+const pluralRules = new Intl.PluralRules('en-US');
+
+
 export function updateNestedField(obj: any, path: string, value: any): any {
     const keys = path.split(".");
     let newObj = { ...obj }; // Start with a shallow copy of the input object
@@ -26,6 +29,8 @@ export function updateNestedField(obj: any, path: string, value: any): any {
 
 export const pluralize = (count: number, noun: string, suffix = 's') =>
     `${count} ${noun}${count > 1 ? suffix : ''}`;
+
+export const pluralizeWithMapping = (count: number, mapping: {one: string, other: string}) => pluralRules.select(count) == "one" ? mapping.one : mapping.other;
 
 export const gracefulStringWrap = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text

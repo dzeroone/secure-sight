@@ -69,6 +69,7 @@ import TopVulnerabilitiesForm from "./monthly-report/forms/TopVulnerabilitiesFor
 import VulnAssessmentReportForm from "./monthly-report/forms/VulnAssessmentReportForm";
 import WorkbenchIncidentSummaryForm from "./monthly-report/forms/WorkbenchIncidentSummaryForm";
 import MonthlyFormStepper from "./MonthlyFormStepper";
+import { format } from "date-fns/format";
 const steps = [
   {
     id: "first_page",
@@ -162,12 +163,12 @@ const steps = [
   },
   {
     id: "top_risk_devices",
-    label: "Top Risk Device",
+    label: "Top High Risk Devices",
     component: <TopRiskDeviceForm />,
   },
   {
     id: "top_risk_users",
-    label: "Top Risk Users",
+    label: "Top High Risk Users",
     component: <TopRiskUsersForm />,
   },
   {
@@ -208,7 +209,7 @@ const steps = [
     component: <AgentVersionForm />,
   }
 ];
-const MonthlyReportForm = () => {
+const MonthlyReportForm = ({reportDate}: {reportDate: string}) => {
   const [generatingPdf, setGeneratingPdf] = useState(false);
   const data = useAppSelector((state) => state.monthlyReport);
   const pageState = useAppSelector((state) => state.monthlyReportPageState);
@@ -294,9 +295,12 @@ const MonthlyReportForm = () => {
       if (elasticIndex) {
         router.replace(`/dashboard/monthly-report?id=${responseData._id}`);
       } else {
-        setTimeout(() => {
-          location.reload();
-        }, 2000)
+        if(selectedReporter) {
+          // this is necessary for handling disabled state on submit
+          setTimeout(() => {
+            location.reload();
+          }, 2000)
+        }
       }
     } catch (e) {
       console.error(e);
@@ -358,7 +362,8 @@ const MonthlyReportForm = () => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "generated.pdf";
+        const fileName = `${format(new Date(reportDate), "MMMM yyyy")}-${data.monthly_report.client_name} Monthly Report.pdf`
+        a.download = fileName;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
