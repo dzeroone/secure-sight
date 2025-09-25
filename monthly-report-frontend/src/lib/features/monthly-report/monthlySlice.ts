@@ -1409,8 +1409,11 @@ export const monthlyReportSlice = createSlice({
             if (action.payload === 'table1') {
                 state.detection_summary_apex_one.tables.table1.push({
                     file_cleaned: '',
+                    fc_v: 0,
                     file_quarantined: '',
+                    fq_v: 0,
                     file_deleted: '',
+                    fd_v: 0
                 });
             } else if (action.payload === 'table2') {
                 state.detection_summary_apex_one.tables.table2.push({
