@@ -82,6 +82,9 @@ const MonthlyReportPage = () => {
         );
         const responseData = res.data;
         const reportDoc = responseData.data;
+
+        setReportDate(responseData.assignment.date)
+
         dispatch(resetMonthlyReportState(reportDoc.data));
         dispatch(setStatusFromServer(reportDoc.status));
         dispatch(setStatus(reportDoc.status));
