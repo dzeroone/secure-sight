@@ -69,7 +69,7 @@ const MonthlyReportPage = () => {
   const pathname = usePathname();
   const [reportDate, setReportDate] = useState("")
 
-  const getElasticData = useCallback(async () => {
+  const getElasticData = async () => {
     try {
       if (reportId) {
         dispatch(setProcessing(true));
@@ -179,11 +179,11 @@ const MonthlyReportPage = () => {
     } finally {
       dispatch(setProcessing(false));
     }
-  }, [elasticIndex, reportId, dispatch]);
+  };
 
   useEffect(() => {
     getElasticData();
-  }, [getElasticData]);
+  }, [reportId, elasticIndex]);
 
   return (
     <Grid container>
