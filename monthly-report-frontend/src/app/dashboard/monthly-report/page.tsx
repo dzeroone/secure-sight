@@ -41,7 +41,6 @@ import {
 import {
   addPARTMProduct,
   firstPage,
-  populatePARTMProduct,
   resetMonthlyReportState,
   setCommonData,
   updateAboutField,
@@ -145,7 +144,21 @@ const MonthlyReportPage = () => {
           if(prevMonthData?.product_assessment_report) {
             const tmProducts = prevMonthData.product_assessment_report?.tm_products_summary
             if(tmProducts && Array.isArray(tmProducts)) {
-              dispatch(populatePARTMProduct(tmProducts))
+              console.log(report.product_assessment_report.tm_products_summary, tmProducts)
+              for( let i=report.product_assessment_report.tm_products_summary.length, l=tmProducts.length; i<l; i++) {
+                dispatch(addPARTMProduct())
+              }
+              tmProducts.forEach((tmp: any, i: number) => {
+                dispatch(updatePARTMProduct({
+                  index: i, field: 'tm_product', value: tmp['tm_product']
+                }));
+                dispatch(updatePARTMProduct({
+                  index: i, field: 'connection_status', value: tmp['connection_status']
+                }));
+                dispatch(updatePARTMProduct({
+                  index: i, field: 'identifier', value: tmp['identifier']
+                }));
+              })
             }
           }
           dispatch(setCanSubmitReport(responseData.canSubmitReport || false));
