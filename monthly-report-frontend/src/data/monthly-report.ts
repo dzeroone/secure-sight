@@ -281,7 +281,7 @@ export const monthlyReportInitialValue = {
                         "desc": ""
                     },
                     {
-                        "title": "Hacking Tool Detection – Blocked",
+                        "title": "Hacking Tool Detection - Blocked",
                         "desc": ""
                     },
                     {
@@ -307,7 +307,7 @@ export const monthlyReportInitialValue = {
                         "desc": ""
                     },
                     {
-                        "title": "Hacking Tool Detection – Blocked",
+                        "title": "Hacking Tool Detection - Blocked",
                         "desc": ""
                     },
                     {
@@ -333,7 +333,7 @@ export const monthlyReportInitialValue = {
                         "desc": ""
                     },
                     {
-                        "title": "Hacking Tool Detection – Blocked",
+                        "title": "Hacking Tool Detection - Blocked",
                         "desc": ""
                     },
                     {

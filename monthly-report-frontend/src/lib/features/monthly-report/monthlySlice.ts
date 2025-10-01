@@ -19,6 +19,80 @@ export const monthlyReportSlice = createSlice({
         updateFromElasticData(state, action: PayloadAction<any>) {
             const data = action.payload;
             const reducers = monthlyReportSlice.caseReducers;
+
+            // Executive Summary
+            {
+                if(data['Executive Summary']?.['Incident Overview by SOC Team']) {
+                    let values = data['Executive Summary']?.['Incident Overview by SOC Team']
+                    for(let i=0, l=values.length; i<l; i++) {
+                        reducers.updateESSubField(state, {
+                            type: '',
+                            payload: {
+                                index: 0,
+                                subIndex: i,
+                                field: "title",
+                                value: values[i]?.['Name of Incident']
+                            }
+                        })
+                        reducers.updateESSubField(state, {
+                            type: '',
+                            payload: {
+                                index: 0,
+                                subIndex: i,
+                                field: "desc",
+                                value: values[i]?.['Description']
+                            }
+                        })
+                    }
+                }
+                if(data['Executive Summary']?.['Action Performed by SOC Team']) {
+                    let values = data['Executive Summary']?.['Action Performed by SOC Team']
+                    for(let i=0, l=values.length; i<l; i++) {
+                        reducers.updateESSubField(state, {
+                            type: '',
+                            payload: {
+                                index: 1,
+                                subIndex: i,
+                                field: "title",
+                                value: values[i]?.['Name of Incident']
+                            }
+                        })
+                        reducers.updateESSubField(state, {
+                            type: '',
+                            payload: {
+                                index: 1,
+                                subIndex: i,
+                                field: "desc",
+                                value: values[i]?.['Action Performed']
+                            }
+                        })
+                    }
+                }
+                if(data['Executive Summary']?.['Recommendations by SOC Team']) {
+                    let values = data['Executive Summary']?.['Recommendations by SOC Team']
+                    for(let i=0, l=values.length; i<l; i++) {
+                        reducers.updateESSubField(state, {
+                            type: '',
+                            payload: {
+                                index: 2,
+                                subIndex: i,
+                                field: "title",
+                                value: values[i]?.['Name of Incident']
+                            }
+                        })
+                        reducers.updateESSubField(state, {
+                            type: '',
+                            payload: {
+                                index: 2,
+                                subIndex: i,
+                                field: "desc",
+                                value: values[i]?.['Recommendations']
+                            }
+                        })
+                    }
+                }
+            }
+
             // detailed summary
             if (data['Detailed Summary']?.['Total No of Incidents']?.['Total Incidents'])
                 reducers.updateDSField(state, {
