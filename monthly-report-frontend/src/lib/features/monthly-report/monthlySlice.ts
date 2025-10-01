@@ -757,7 +757,7 @@ export const monthlyReportSlice = createSlice({
                             type: '',
                             payload: {
                                 index,
-                                value: vData['Device Name']
+                                value: vData['User Name']
                             }
                         })
                         reducers.updateTRUChartData(state, {
@@ -1629,6 +1629,26 @@ export const monthlyReportSlice = createSlice({
             state.account_compromise_events.risk_event_table.splice(action.payload, 1);
         },
         // product assessment report
+        populatePARTMProduct(state, action: PayloadAction<TMProductSummary[]>) {
+            const reducers = monthlyReportSlice.caseReducers;
+            for( let i=state.product_assessment_report.tm_products_summary.length, l=action.payload.length; i<l; i++) {
+                reducers.addPARTMProduct(state)
+            }
+            action.payload.forEach((tmp: any, i: number) => {
+                reducers.updatePARTMProduct(state, {
+                    type: "",
+                    payload: { index: i, field: 'tm_product', value: tmp['tm_product'] }
+                });
+                reducers.updatePARTMProduct(state, {
+                    type: "",
+                    payload: { index: i, field: 'connection_status', value: tmp['connection_status'] }
+                });
+                reducers.updatePARTMProduct(state, {
+                    type: "",
+                    payload: { index: i, field: 'identifier', value: tmp['identifier'] }
+                });
+            })
+        },
         updatePARTMProduct: (
             state,
             action: PayloadAction<{ index: number; field: keyof TMProductSummary; value: string }>
@@ -2000,6 +2020,7 @@ export const {
     addACERiskEvent,
     removeACERiskEvent,
     // product assessment summary
+    populatePARTMProduct,
     updatePARTMProduct,
     addPARTMProduct,
     removePARTMProduct,
