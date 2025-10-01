@@ -1628,7 +1628,22 @@ export const monthlyReportSlice = createSlice({
         removeACERiskEvent: (state, action: PayloadAction<number>) => {
             state.account_compromise_events.risk_event_table.splice(action.payload, 1);
         },
-
+        populatePARTMProduct(state, action: PayloadAction<TMProductSummary[]>) {
+            for( let i=state.product_assessment_report.tm_products_summary.length, l=action.payload.length; i<l; i++) {
+                addPARTMProduct()
+            }
+            action.payload.forEach((tmp: any, i: number) => {
+                updatePARTMProduct({
+                    index: i, field: 'tm_product', value: tmp['tm_product']
+                });
+                updatePARTMProduct({
+                    index: i, field: 'connection_status', value: tmp['connection_status']
+                });
+                updatePARTMProduct({
+                    index: i, field: 'identifier', value: tmp['identifier']
+                });
+            })
+        },
         // product assessment report
         updatePARTMProduct: (
             state,
@@ -2001,6 +2016,7 @@ export const {
     addACERiskEvent,
     removeACERiskEvent,
     // product assessment summary
+    populatePARTMProduct,
     updatePARTMProduct,
     addPARTMProduct,
     removePARTMProduct,
