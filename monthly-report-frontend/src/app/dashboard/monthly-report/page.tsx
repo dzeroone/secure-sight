@@ -48,7 +48,8 @@ import {
   updateDSField,
   updateESField,
   updateFromElasticData,
-  updatePARTMProduct
+  updatePARTMProduct,
+  updateRMDate
 } from "@@/lib/features/monthly-report/monthlySlice";
 import { useAppDispatch, useAppSelector } from "@@/lib/hooks";
 import { Box, Grid } from "@mui/material";
@@ -140,6 +141,7 @@ const MonthlyReportPage = () => {
           }))
           dispatch(updateESField({ field: "date", value: format(responseData.date, "MMMM yyyy") }));
           dispatch(updateDSField({ field: "date", value: format(responseData.date, "MMMM yyyy") }));
+          dispatch(updateRMDate(format(responseData.date, "MMMM yyyy")))
 
           // populate product assetment form using previous month's data
           if(prevMonthData?.product_assessment_report) {
