@@ -33,7 +33,7 @@ const login = (state = initialState, action) => {
       };
       break;
     case LOGOUT_USER:
-      state = { ...state, loading: true };
+      state = { ...state, user: null, loading: true };
       break;
     case LOGOUT_USER_SUCCESS:
       state = { ...state, user: null, signedIn: false, loading: false };

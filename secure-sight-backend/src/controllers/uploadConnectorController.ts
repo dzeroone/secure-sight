@@ -44,7 +44,7 @@ class UploadConnectorController {
                     COLLECTIONS.USERS,
                 )
                 // const query = { email, name: nameWithoutExtension, display_name, category }
-                const query = { email, name: nameWithoutExtension, display_name }
+                const query = { name: nameWithoutExtension, display_name }
                 const user = await userModel.findOne({
                     email: email.toLowerCase()
                 })

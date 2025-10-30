@@ -11,13 +11,13 @@ import { useSelector, useDispatch } from "react-redux";
 const Logout = () => {
   const dispatch = useDispatch();
 
-  const signedIn = useSelector((state) => state.login.signedIn);
+  const user = useSelector((state) => state.login.user);
 
   useEffect(() => {
     dispatch(logoutUser());
   }, [dispatch]);
 
-  if (!signedIn) {
+  if (!user) {
     return <Navigate to="/" />;
   }
 

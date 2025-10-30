@@ -51,7 +51,7 @@ class ConnectorController {
 		for (let index in data) {
 			let obj = data[index]
 			// const query = { email: obj.email, name: obj.name, display_name: obj.display_name, category: obj.category }
-			const query = { email: obj.email, name: obj.name, display_name: obj.display_name }
+			const query = { name: obj.name, display_name: obj.display_name }
 			const info = await dm.findOneAndUpdate(query, obj, {
 				new: true,
 				upsert: true
