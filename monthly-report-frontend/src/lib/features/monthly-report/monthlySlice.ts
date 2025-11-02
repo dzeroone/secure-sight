@@ -513,7 +513,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table1',
                                 index: i,
                                 fieldPath: 'file_cleaned',
-                                value: fcsEntries[i][0]
+                                value: fcsEntries[i]?.[0]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -522,7 +522,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table1',
                                 index: i,
                                 fieldPath: 'fc_v',
-                                value: fcsEntries[i][1]
+                                value: fcsEntries[i]?.[1]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -531,7 +531,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table1',
                                 index: i,
                                 fieldPath: 'file_quarantined',
-                                value: fqmEntries[i][0]
+                                value: fqmEntries[i]?.[0]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -540,7 +540,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table1',
                                 index: i,
                                 fieldPath: 'fq_v',
-                                value: fqmEntries[i][1]
+                                value: fqmEntries[i]?.[1]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -549,7 +549,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table1',
                                 index: i,
                                 fieldPath: 'file_deleted',
-                                value: fdEntries[i][0]
+                                value: fdEntries[i]?.[0]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -558,7 +558,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table1',
                                 index: i,
                                 fieldPath: 'fd_v',
-                                value: fdEntries[i][1]
+                                value: fdEntries[i]?.[1]
                             }
                         })
                     }
@@ -569,7 +569,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table2',
                                 index: i,
                                 fieldPath: 'connection_endpoint.endpoint',
-                                value: cccbEntries[i][0]
+                                value: cccbEntries[i]?.[0]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -578,7 +578,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table2',
                                 index: i,
                                 fieldPath: 'connection_endpoint.blocked',
-                                value: cccbEntries[i][1]
+                                value: cccbEntries[i]?.[1]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -587,7 +587,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table2',
                                 index: i,
                                 fieldPath: 'attempts_blocked.endpoint',
-                                value: iabEntries[i][0]
+                                value: iabEntries[i]?.[0]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -596,7 +596,7 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table2',
                                 index: i,
                                 fieldPath: 'attempts_blocked.blocked',
-                                value: iabEntries[i][1]
+                                value: iabEntries[i]?.[1]
                             }
                         })
                     }
