@@ -22,9 +22,9 @@ export const monthlyReportSlice = createSlice({
 
             // Executive Summary
             {
-                if(data['Executive Summary']?.['Incident Overview by SOC Team']) {
+                if (data['Executive Summary']?.['Incident Overview by SOC Team']) {
                     let values = data['Executive Summary']?.['Incident Overview by SOC Team']
-                    for(let i=0, l=values.length; i<l; i++) {
+                    for (let i = 0, l = values.length; i < l; i++) {
                         reducers.updateESSubField(state, {
                             type: '',
                             payload: {
@@ -45,9 +45,9 @@ export const monthlyReportSlice = createSlice({
                         })
                     }
                 }
-                if(data['Executive Summary']?.['Action Performed by SOC Team']) {
+                if (data['Executive Summary']?.['Action Performed by SOC Team']) {
                     let values = data['Executive Summary']?.['Action Performed by SOC Team']
-                    for(let i=0, l=values.length; i<l; i++) {
+                    for (let i = 0, l = values.length; i < l; i++) {
                         reducers.updateESSubField(state, {
                             type: '',
                             payload: {
@@ -68,9 +68,9 @@ export const monthlyReportSlice = createSlice({
                         })
                     }
                 }
-                if(data['Executive Summary']?.['Recommendations by SOC Team']) {
+                if (data['Executive Summary']?.['Recommendations by SOC Team']) {
                     let values = data['Executive Summary']?.['Recommendations by SOC Team']
-                    for(let i=0, l=values.length; i<l; i++) {
+                    for (let i = 0, l = values.length; i < l; i++) {
                         reducers.updateESSubField(state, {
                             type: '',
                             payload: {
@@ -197,7 +197,7 @@ export const monthlyReportSlice = createSlice({
             {
                 if (data['THREAT_INTEL_SUMMARY']?.['IOC Match Details'] && Array.isArray(data['THREAT_INTEL_SUMMARY']?.['IOC Match Details'])) {
                     const iocMatchDetails = data['THREAT_INTEL_SUMMARY']['IOC Match Details']
-                    for(let i=state.threat_intel_summary.ioc_match_details.data.length,l=iocMatchDetails.length; i<l; i++) {
+                    for (let i = state.threat_intel_summary.ioc_match_details.data.length, l = iocMatchDetails.length; i < l; i++) {
                         reducers.addTISIOCMatchDetail(state)
                     }
                     iocMatchDetails.forEach((matchedData, i) => {
@@ -339,8 +339,8 @@ export const monthlyReportSlice = createSlice({
             // High Incidents Summary
             if (data['Critical High Incidents Summary']?.['Critical/High Incidents Summary']) {
                 let values = data['Critical High Incidents Summary']?.['Critical/High Incidents Summary']
-                if(values.length > state.high_incident_summary.data.length) {
-                    for(let i=state.high_incident_summary.data.length; i<values.length; i++) {
+                if (values.length > state.high_incident_summary.data.length) {
+                    for (let i = state.high_incident_summary.data.length; i < values.length; i++) {
                         reducers.addHISIncident(state)
                     }
                 }
@@ -371,12 +371,12 @@ export const monthlyReportSlice = createSlice({
                     })
                 })
             }
-            
+
             // -
             // Pending Incidents Summary
             if (data['Pending Incidents Summary']?.['Pending Incidents Summary']) {
                 let values = data['Pending Incidents Summary']?.['Pending Incidents Summary']
-                if(values.length > state.pending_incident_summary.data.length) {
+                if (values.length > state.pending_incident_summary.data.length) {
                     reducers.pendingIncidentsSummary(state, {
                         type: "",
                         payload: {
@@ -487,26 +487,42 @@ export const monthlyReportSlice = createSlice({
 
                 const top3 = data['Detection Summary from A1']?.['Top 03 Endpoints']
                 if (top3) {
-                    for (let i = state.detection_summary_apex_one.tables.table1.length; i < top3['File Cleaned/Spyware'].length; i++) {
+                    const fcsEntries = Object.entries(top3['File Cleaned/Spyware Object'])
+                    const fqmEntries = Object.entries(top3['File Qurantined(Malware) Object'])
+                    const fdEntries = Object.entries(top3['File Deleted Object'])
+
+                    for (let i = state.detection_summary_apex_one.tables.table1.length; i < fcsEntries.length; i++) {
                         reducers.addDSAOTableEntry(state, {
                             type: '',
                             payload: 'table1'
                         })
                     }
-                    for (let i = state.detection_summary_apex_one.tables.table2.length; i < top3['C & C Connection Blocked'].length; i++) {
+
+                    const cccbEntries = Object.entries(top3['C & C Connection Blocked Object'])
+                    const iabEntries = Object.entries(top3['Intrusion Attempts Blocked Object'])
+                    for (let i = state.detection_summary_apex_one.tables.table2.length; i < cccbEntries.length; i++) {
                         reducers.addDSAOTableEntry(state, {
                             type: '',
                             payload: 'table2'
                         })
                     }
-                    for (let i = 0; i < top3['File Cleaned/Spyware'].length; i++) {
+                    for (let i = 0; i < fcsEntries.length; i++) {
                         reducers.updateDSAOTableEntry(state, {
                             type: '',
                             payload: {
                                 table: 'table1',
                                 index: i,
                                 fieldPath: 'file_cleaned',
-                                value: top3['File Cleaned/Malware'][i]
+                                value: fcsEntries[i][0]
+                            }
+                        })
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table1',
+                                index: i,
+                                fieldPath: 'fc_v',
+                                value: fcsEntries[i][1]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -515,7 +531,16 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table1',
                                 index: i,
                                 fieldPath: 'file_quarantined',
-                                value: top3['File Qurantined(Malware)'][i]
+                                value: fqmEntries[i][0]
+                            }
+                        })
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table1',
+                                index: i,
+                                fieldPath: 'fq_v',
+                                value: fqmEntries[i][1]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -524,18 +549,36 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table1',
                                 index: i,
                                 fieldPath: 'file_deleted',
-                                value: top3['File Deleted'][i]
+                                value: fdEntries[i][0]
+                            }
+                        })
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table1',
+                                index: i,
+                                fieldPath: 'fd_v',
+                                value: fdEntries[i][1]
                             }
                         })
                     }
-                    for (let i = 0; i < top3['C & C Connection Blocked'].length; i++) {
+                    for (let i = 0; i < cccbEntries.length; i++) {
                         reducers.updateDSAOTableEntry(state, {
                             type: '',
                             payload: {
                                 table: 'table2',
                                 index: i,
                                 fieldPath: 'connection_endpoint.endpoint',
-                                value: top3['C & C Connection Blocked'][i]
+                                value: cccbEntries[i][0]
+                            }
+                        })
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table2',
+                                index: i,
+                                fieldPath: 'connection_endpoint.blocked',
+                                value: cccbEntries[i][1]
                             }
                         })
                         reducers.updateDSAOTableEntry(state, {
@@ -544,7 +587,16 @@ export const monthlyReportSlice = createSlice({
                                 table: 'table2',
                                 index: i,
                                 fieldPath: 'attempts_blocked.endpoint',
-                                value: top3['Intrusion Attempts Blocked'][i]
+                                value: iabEntries[i][0]
+                            }
+                        })
+                        reducers.updateDSAOTableEntry(state, {
+                            type: '',
+                            payload: {
+                                table: 'table2',
+                                index: i,
+                                fieldPath: 'attempts_blocked.blocked',
+                                value: iabEntries[i][1]
                             }
                         })
                     }
@@ -780,7 +832,7 @@ export const monthlyReportSlice = createSlice({
                     for (let i = state.account_compromise_events.risk_event_table.length; i < topVData.length; i++) {
                         reducers.addACERiskEvent(state);
                     }
-                    
+
                     topVData.forEach((eData: any, i: number) => {
                         reducers.updateACERiskEvent(state, {
                             type: "",
@@ -1631,7 +1683,7 @@ export const monthlyReportSlice = createSlice({
         // product assessment report
         populatePARTMProduct(state, action: PayloadAction<TMProductSummary[]>) {
             const reducers = monthlyReportSlice.caseReducers;
-            for( let i=state.product_assessment_report.tm_products_summary.length, l=action.payload.length; i<l; i++) {
+            for (let i = state.product_assessment_report.tm_products_summary.length, l = action.payload.length; i < l; i++) {
                 reducers.addPARTMProduct(state)
             }
             action.payload.forEach((tmp: any, i: number) => {
