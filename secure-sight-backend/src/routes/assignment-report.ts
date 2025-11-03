@@ -130,7 +130,8 @@ router.get('/:reportType(monthly|weekly)/:id',
       }
 
       let canSubmitReport = false
-      const assignment = await assignmentController.getAssignmentByIndexForReporter(doc.index!, req.user!._id)
+      // const assignment = await assignmentController.getAssignmentByIndexForReporter(doc.index!, req.user!._id)
+      const assignment = await assignmentController.getAssignmentByIndex(doc.index!)
       if (assignment) {
         canSubmitReport = await assignmentController.isLastReporter(doc.index!, req.user!._id)
       }
