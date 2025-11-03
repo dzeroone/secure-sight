@@ -957,9 +957,11 @@
             <% }); %>
           </tbody>
         </table>
+        <% if(data.high_incident_summary.notes?.length> 0) { %>
         <div>
           <%- include('./partials/recommendations', { notes: data.high_incident_summary.notes }) %>
         </div>
+        <% } %>
     </div>
     <% } %>
 
