@@ -487,9 +487,9 @@ export const monthlyReportSlice = createSlice({
 
                 const top3 = data['Detection Summary from A1']?.['Top 03 Endpoints']
                 if (top3) {
-                    const fcsEntries = Object.entries(top3['File Cleaned/Spyware Object'])
-                    const fqmEntries = Object.entries(top3['File Qurantined(Malware) Object'])
-                    const fdEntries = Object.entries(top3['File Deleted Object'])
+                    const fcsEntries = Object.entries(top3['File Cleaned/Spyware Object'] ?? {})
+                    const fqmEntries = Object.entries(top3['File Qurantined(Malware) Object'] ?? {})
+                    const fdEntries = Object.entries(top3['File Deleted Object'] ?? {})
 
                     for (let i = state.detection_summary_apex_one.tables.table1.length; i < fcsEntries.length; i++) {
                         reducers.addDSAOTableEntry(state, {
@@ -498,8 +498,8 @@ export const monthlyReportSlice = createSlice({
                         })
                     }
 
-                    const cccbEntries = Object.entries(top3['C & C Connection Blocked Object'])
-                    const iabEntries = Object.entries(top3['Intrusion Attempts Blocked Object'])
+                    const cccbEntries = Object.entries(top3['C & C Connection Blocked Object'] ?? {})
+                    const iabEntries = Object.entries(top3['Intrusion Attempts Blocked Object'] ?? {})
                     for (let i = state.detection_summary_apex_one.tables.table2.length; i < cccbEntries.length; i++) {
                         reducers.addDSAOTableEntry(state, {
                             type: '',

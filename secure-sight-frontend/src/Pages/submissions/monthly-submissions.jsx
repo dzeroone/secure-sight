@@ -195,15 +195,15 @@ export default function MonthlySubmissionsPage() {
                 <td>{getAssignmentStatusTitle(assignment.status)} by {getSubmitterInfo(assignment)}</td>
                 <td>
                   <div className="d-flex gap-1">
-                    <Button size="sm" onClick={() => viewReport(assignment)}>
+                    <Button size="sm" onClick={() => viewReport(assignment)} disabled={busy}>
                       <EyeIcon size="1rem" />
                     </Button>
                     {assignment.status !== REPORT_AUDIT_STATUS.APPROVED ? (
                       <>
-                        <Button size="sm" onClick={() => sendReassign(assignment)} color="danger">
+                        <Button size="sm" onClick={() => sendReassign(assignment)} color="danger" disabled={busy}>
                           Reassign
                         </Button>
-                        <Button size="sm" onClick={() => onApproveAssignment(assignment)} color="success">
+                        <Button size="sm" onClick={() => onApproveAssignment(assignment)} color="success" disabled={busy}>
                           {assignment.isRoot ? 'Approve' : 'Submit for approval'}
                         </Button>
                       </>
@@ -235,7 +235,7 @@ export default function MonthlySubmissionsPage() {
           <Button onClick={() => {
             setSelectReporterShown(false)
             approveAssignment(currentAssignmentRef.current)
-          }}>Submit</Button>
+          }} disabled={busy}>Submit</Button>
         </ModalFooter>
       </Modal>
       <ModalLoading
